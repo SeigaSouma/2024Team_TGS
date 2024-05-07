@@ -1,0 +1,18 @@
+#==============================================================================
+#
+# 『読み込みファイル名』スクリプトファイル [filename.txt]
+# Author : 相馬 靜雅
+#
+#==============================================================================
+SCRIPT			# この行は絶対消さないこと！
+
+#------------------------------------------------------------------------------
+# モーションファイル名
+#------------------------------------------------------------------------------
+1MOTION_FILENAME = data/TEXT/character/enemy/practice/setup_practice.txt
+1MOTION_FILENAME = data/TEXT/character/enemy/gobelin/setup_gobelin.txt
+1MOTION_FILENAME = data/TEXT/character/enemy/stonegolem/setup_stonegolem.txt
+1MOTION_FILENAME = data/TEXT/character/enemy/gorira/setup_gorira.txt
+MOTION_FILENAME = data/TEXT/character/player/tyuuni/setup_player.txt
+
+END_SCRIPT		# この行は絶対消さないこと！
