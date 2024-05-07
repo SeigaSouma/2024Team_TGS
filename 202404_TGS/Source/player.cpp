@@ -1359,7 +1359,7 @@ void CPlayer::LimitPos()
 	}
 	SetPosition(pos);
 
-	//CollisionMapObject();
+	CollisionMapObject();
 }
 
 //==========================================================================
@@ -1564,98 +1564,28 @@ void CPlayer::CollisionMapObject()
 
 	// 情報取得
 	MyLib::Vector3 pos = GetPosition();
+	MyLib::Vector3 posOld = GetOldPosition();
 	float radius = GetRadius();
 
-	CEffect3D::Create(
+	/*CEffect3D::Create(
 		pos,
 		MyLib::Vector3(0.0f, 0.0f, 0.0f),
 		D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f),
-		radius, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+		radius, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);*/
+	MyLib::Vector3 crossPos = 0.0f;
 
-	while (mapList.ListLoop(&pObj))
+	pObj = mapList.GetData(0);
+	CObjectX* pObj1 = mapList.GetData(1);
+
+	if (UtilFunc::Collision::IsAABBCollidingWithBox(pObj->GetAABB(), pObj->GetWorldMtx(), pObj1->GetAABB(), pObj1->GetWorldMtx()))
 	{
-		MyLib::Vector3 crossPos = 0.0f;
-		if (UtilFunc::Collision::CollisionCircleToAABB(pos, radius, pObj->GetAABB(), pObj->GetWorldMtx()))
-		{
-			//pos = crossPos;
-
-			MyLib::Vector3 move = GetMove();
-			move.x = 0.0f, move.z = 0.0f;
-			SetMove(move);
-			int n = 0;
-		}
-
-		/*if (UtilFunc::Collision::CircleAABBIntersect(pos, radius, pObj->GetWorldMtx(), pObj->GetAABB(), crossPos)) {
-			pos += crossPos;
-
-		}*/
+		CEffect3D::Create(
+			pos,
+			MyLib::Vector3(0.0f, 0.0f, 0.0f),
+			D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f),
+			400.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
 	}
 
-
-
-	//CObjectX* pppp = mapList.GetData(0);
-
-	//// 球とAABBのパラメータ
-	//D3DXVECTOR3 boxMin = pppp->GetAABB().vtxMin;
-	//D3DXVECTOR3 boxMax = pppp->GetAABB().vtxMax;
-
-	//MyLib::Vector3 rot = pppp->GetRotation();
-
-	//// AABBの回転行列
-	//D3DXMATRIX rotationMatrix;
-	//D3DXMatrixRotationYawPitchRoll(&rotationMatrix, rot.y, rot.x, rot.z);
-
-	//// 回転行列を適用したAABBの最小値と最大値を計算する
-	//D3DXVECTOR3 transformedMin, transformedMax;
-	//TransformBoundingBox(boxMin, boxMax, rotationMatrix, transformedMin, transformedMax);
-
-	//// 球と回転したAABBの当たり判定
-	//bool collision = SphereAABBCollision(pos, radius, transformedMin, transformedMax);
-
-	//if (collision)
-	//{
-	//	// 衝突した場合の処理
-
-	//	// AABBの各辺に対する球の中心からの距離を計算
-	//	float distX = max(transformedMin.x - pos.x, pos.x - transformedMax.x);
-	//	float distY = max(transformedMin.y - pos.y, pos.y - transformedMax.y);
-	//	float distZ = max(transformedMin.z - pos.z, pos.z - transformedMax.z);
-
-	//	// 押し戻しベクトルの初期化
-	//	D3DXVECTOR3 pushBackVector(0.0f, 0.0f, 0.0f);
-
-	//	// 球がAABBの外側にめり込んでいる辺を特定し、対応する方向に押し戻す
-	//	if (distX < distY && distX < distZ) {
-	//		// X軸方向に押し戻す
-	//		pushBackVector.x = (distX + radius) * (pos.x < transformedMin.x ? 1 : -1);
-	//	}
-	//	else if (distY < distX && distY < distZ) {
-	//		// Y軸方向に押し戻す
-	//		pushBackVector.y = (distY + radius) * (pos.y < transformedMin.y ? 1 : -1);
-	//	}
-	//	else {
-	//		// Z軸方向に押し戻す
-	//		pushBackVector.z = (distZ + radius) * (pos.z < transformedMin.z ? 1 : -1);
-	//	}
-
-	//	// 球を押し戻す
-	//	pos += pushBackVector;
-	//}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	SetPosition(pos);
 }
 
 //==========================================================================

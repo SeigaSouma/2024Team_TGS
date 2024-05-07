@@ -9,6 +9,11 @@
 #define _CALCULATION_H_		// 二重インクルード防止のマクロを定義する
 
 #include "constans.h"
+#include "3D_effect.h"
+
+#include <DirectXMath.h>
+
+using namespace DirectX;
 
 /**
 @brief	簡単な説明
@@ -1784,43 +1789,206 @@ namespace UtilFunc	// 便利関数
 		}
 
 
-		// 円とAABBの押し戻し判定
-		inline bool CircleAABBIntersect(const D3DXVECTOR3& circleCenter, float circleRadius, const D3DXMATRIX& aabbMatrix, MyLib::AABB aabb, D3DXVECTOR3& pushVector)
+		// 回転するAABBとボックスの当たり判定を行う関数
+		inline bool checkCollision(MyLib::AABB aabb, const MyLib::Vector3& boxCenter, const MyLib::Vector3& boxSize, const D3DXMATRIX& rotationMatrix)
 		{
-			// AABBの位置と回転を取得
-			D3DXVECTOR3 aabbPosition(aabbMatrix._41, aabbMatrix._42, aabbMatrix._43);
-			D3DXVECTOR3 aabbAxisX(aabbMatrix._11, aabbMatrix._12, aabbMatrix._13);
-			D3DXVECTOR3 aabbAxisY(aabbMatrix._21, aabbMatrix._22, aabbMatrix._23);
-			D3DXVECTOR3 aabbAxisZ(aabbMatrix._31, aabbMatrix._32, aabbMatrix._33);\
-
-				// AABBの半幅
-				MyLib::Vector3 aabbExtents = {
-					(aabb.vtxMax.x - aabb.vtxMin.x) * 0.5f,
-					(aabb.vtxMax.y - aabb.vtxMin.y) * 0.5f,
-					(aabb.vtxMax.z - aabb.vtxMin.z) * 0.5f
+			// AABBの中心
+			MyLib::Vector3 aabbCenter = {
+				(aabb.vtxMin.x + aabb.vtxMax.x) * 0.5f,
+				(aabb.vtxMin.y + aabb.vtxMax.y) * 0.5f,
+				(aabb.vtxMin.z + aabb.vtxMax.z) * 0.5f
 			};
 
-			// 円の中心とAABBの各面との距離を計算
-			float distX = max(std::abs(circleCenter.x - aabbPosition.x) - aabbExtents.x, 0.0f);
-			float distY = max(std::abs(circleCenter.y - aabbPosition.y) - aabbExtents.y, 0.0f);
-			float distZ = max(std::abs(circleCenter.z - aabbPosition.z) - aabbExtents.z, 0.0f);
+			// AABBの半幅
+			MyLib::Vector3 aabbSize = {
+				(aabb.vtxMax.x - aabb.vtxMin.x) * 0.5f,
+				(aabb.vtxMax.y - aabb.vtxMin.y) * 0.5f,
+				(aabb.vtxMax.z - aabb.vtxMin.z) * 0.5f
+			};
 
-			// 円の中心がAABBの外側にあるかどうかを判定
-			float distanceSquared = distX * distX + distY * distY + distZ * distZ;
-			if (distanceSquared > circleRadius * circleRadius) {
-				// 円がAABBの外側にある場合、押し戻しベクトルを計算
-				D3DXVECTOR3 direction = circleCenter - aabbPosition;
-				float length = D3DXVec3Length(&direction);
-				if (length != 0) {
-					float penetrationDepth = circleRadius - length;
-					pushVector = direction * (penetrationDepth / length);
-					return true;
+			// 回転前のAABBの最小および最大座標を計算
+			MyLib::Vector3 aabbMin = aabbCenter - aabbSize;
+			MyLib::Vector3 aabbMax = aabbCenter + aabbSize;
+
+			// ボックスの最小および最大座標を計算
+			MyLib::Vector3 boxMin = boxCenter - boxSize;
+			MyLib::Vector3 boxMax = boxCenter + boxSize;
+
+			// 回転したAABBの最小および最大座標を計算
+			MyLib::Vector3 rotatedAABBMin, rotatedAABBMax;
+			D3DXVec3TransformCoord(&rotatedAABBMin, &aabbMin, &rotationMatrix);
+			D3DXVec3TransformCoord(&rotatedAABBMax, &aabbMax, &rotationMatrix);
+
+			CEffect3D::Create(
+				rotatedAABBMin,
+				MyLib::Vector3(0.0f, 0.0f, 0.0f),
+				D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f),
+				40.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+			CEffect3D::Create(
+				rotatedAABBMax,
+				MyLib::Vector3(0.0f, 0.0f, 0.0f),
+				D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f),
+				40.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+
+			// AABBの境界ボックスとボックスの境界ボックスが一部でも重なっているかどうかを確認
+			bool collisionX = rotatedAABBMax.x >= boxMin.x && rotatedAABBMin.x <= boxMax.x;
+			bool collisionY = rotatedAABBMax.y >= boxMin.y && rotatedAABBMin.y <= boxMax.y;
+			bool collisionZ = rotatedAABBMax.z >= boxMin.z && rotatedAABBMin.z <= boxMax.z;
+
+			return collisionX && collisionY && collisionZ;
+		}
+
+
+		/**
+		@brief	軸に対する射影取得
+		@param	vertices		[in]	頂点配列へのポインタ
+		@param	numVertices		[in]	頂点数
+		@param	axis			[in]	軸
+		@return	D3DXVECTOR2 射影
+		*/
+		inline D3DXVECTOR2 ProjectOntoAxis(const MyLib::Vector3* vertices, int numVertices, const MyLib::Vector3& axis)
+		{
+			float minProjection = D3DXVec3Dot(&vertices[0], &axis);
+			float maxProjection = minProjection;
+
+			for (int i = 1; i < numVertices; ++i) 
+			{
+				float projection = D3DXVec3Dot(&vertices[i], &axis);
+				minProjection = min(minProjection, projection);
+				maxProjection = max(maxProjection, projection);
+			}
+
+			return D3DXVECTOR2(minProjection, maxProjection);
+		}
+
+		/**
+		@brief	射影の交差チェック
+		@param	projection1		[in]	射影1
+		@param	projection2		[in]	射影2
+		@return	bool 交差結果
+		*/
+		inline bool Intersect(const D3DXVECTOR2& projection1, const D3DXVECTOR2& projection2) 
+		{
+			return !(projection1.y < projection2.x || projection1.x > projection2.y);
+		}
+
+		/**
+		@brief	AABBとボックスの当たり判定
+		@param	aabb		[in]	メインのAABB情報
+		@param	aabbMtx		[in]	メインのマトリックス
+		@param	boxAABB		[in]	ボックスのAABB情報
+		@param	boxMtx		[in]	ボックスのマトリックス
+		@return	bool 衝突結果
+		*/
+		inline bool IsAABBCollidingWithBox(const MyLib::AABB& aabb, MyLib::Matrix aabbMtx, const MyLib::AABB& boxAABB, MyLib::Matrix boxMtx)
+		{
+			//=============================
+			// AABB情報
+			//=============================
+			// AABBの中心
+			MyLib::Vector3 aabbCenter = {
+				(aabb.vtxMin.x + aabb.vtxMax.x) * 0.5f,
+				(aabb.vtxMin.y + aabb.vtxMax.y) * 0.5f,
+				(aabb.vtxMin.z + aabb.vtxMax.z) * 0.5f
+			};
+
+			// AABBのサイズ
+			MyLib::Vector3 aabbExtents = {
+				(aabb.vtxMax.x - aabb.vtxMin.x) * 0.5f,
+				(aabb.vtxMax.y - aabb.vtxMin.y) * 0.5f,
+				(aabb.vtxMax.z - aabb.vtxMin.z) * 0.5f
+			};
+
+			//=============================
+			// ボックス情報
+			//=============================
+			// ボックスの中心
+			MyLib::Vector3 boxCenter = {
+				(boxAABB.vtxMin.x + boxAABB.vtxMax.x) * 0.5f,
+				(boxAABB.vtxMin.y + boxAABB.vtxMax.y) * 0.5f,
+				(boxAABB.vtxMin.z + boxAABB.vtxMax.z) * 0.5f
+			};
+
+			// ボックスのサイズ
+			MyLib::Vector3 boxExtents = {
+				(boxAABB.vtxMax.x - boxAABB.vtxMin.x) * 0.5f,
+				(boxAABB.vtxMax.y - boxAABB.vtxMin.y) * 0.5f,
+				(boxAABB.vtxMax.z - boxAABB.vtxMin.z) * 0.5f
+			};
+
+
+			//=============================
+			// 頂点変換
+			//=============================
+			// AABBの8頂点をワールド座標にする
+			MyLib::Vector3 aabbVertices[8];
+			for (int i = 0; i < 8; ++i) 
+			{
+				// 偶数はマイナス、奇数はプラス方向
+				MyLib::Vector3 corner(
+					(i & 1) ? aabbExtents.x : -aabbExtents.x,
+					(i & 2) ? aabbExtents.y : -aabbExtents.y,
+					(i & 4) ? aabbExtents.z : -aabbExtents.z);
+
+				// マトリックスを元に頂点変換
+				aabbVertices[i] = aabbMtx.Coord(corner);
+			}
+
+			// ボックスの8頂点をワールド座標にする
+			MyLib::Vector3 boxVertices[8];
+			for (int i = 0; i < 8; ++i) 
+			{
+				// 偶数はマイナス、奇数はプラス方向
+				MyLib::Vector3 corner(
+					(i & 1) ? boxExtents.x : -boxExtents.x,
+					(i & 2) ? boxExtents.y : -boxExtents.y,
+					(i & 4) ? boxExtents.z : -boxExtents.z);
+
+				// マトリックスを元に頂点変換
+				boxVertices[i] = boxMtx.Coord(corner);
+			}
+
+			//=============================
+			// 分離軸定理
+			//=============================
+			// AABB元の判定
+			for (int i = 0; i < 3; ++i)
+			{
+				MyLib::Vector3 axis(aabbMtx.m[i][0], aabbMtx.m[i][1], aabbMtx.m[i][2]);
+
+				// AABBの射影
+				D3DXVECTOR2 aabbProjection = ProjectOntoAxis(aabbVertices, 8, axis);
+
+				// ボックスの射影
+				D3DXVECTOR2 boxProjection = ProjectOntoAxis(boxVertices, 8, axis);
+
+				// AABBとボックスの交差判定
+				if (!Intersect(aabbProjection, boxProjection)) 
+				{
+					return false;
 				}
 			}
 
-			return false;
-		}
+			// ボックス元の判定
+			for (int i = 0; i < 3; ++i)
+			{
+				MyLib::Vector3 axis(boxMtx.m[i][0], boxMtx.m[i][1], boxMtx.m[i][2]);
 
+				// AABBの射影
+				D3DXVECTOR2 aabbProjection = ProjectOntoAxis(aabbVertices, 8, axis);
+
+				// ボックスの射影
+				D3DXVECTOR2 boxProjection = ProjectOntoAxis(boxVertices, 8, axis);
+
+				// AABBとボックスの交差判定
+				if (!Intersect(aabbProjection, boxProjection))
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
 	}
 
 	/**
