@@ -28,6 +28,8 @@ namespace MyMap
 
 	void ChangeMap(const char* pTextFile);	// ƒ}ƒbƒvØ‚è‘Ö‚¦
 	std::string GetModelFileName(int nIdx);
+	std::vector<std::string> GetModelFileNameAll();
+	std::vector<std::string> GetTextureFileNameAll();
 };
 
 namespace MyMyMap

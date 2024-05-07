@@ -6,21 +6,19 @@ NUM_TEXTURE = 13
 #------------------------------------------------------------------------------
 # テクスチャファイル名
 #------------------------------------------------------------------------------
-TEXTURE_FILENAME = data\\TEXTURE\\FIELD\\concreat.png		# [0]
-TEXTURE_FILENAME = data\\TEXTURE\\FIELD\\senter.png		# [1]
-TEXTURE_FILENAME = data\\TEXTURE\\FIELD\\senterlong.png		# [2]
-TEXTURE_FILENAME = data\\TEXTURE\\FIELD\\sideL.png		# [3]
-TEXTURE_FILENAME = data\\TEXTURE\\FIELD\\sideR.png		# [4]
-TEXTURE_FILENAME = data\\TEXTURE\\FIELD\\odan.png		# [5]
-TEXTURE_FILENAME = data\\TEXTURE\\FIELD\\walkroad.jpg		# [6]
-TEXTURE_FILENAME = data\\TEXTURE\\FIELD\\walkroad_01.jpg		# [7]
-TEXTURE_FILENAME = data\\TEXTURE\\FIELD\\tile_04.jpg		# [8]
-TEXTURE_FILENAME = data\\TEXTURE\\FIELD\\tile_03.jpg		# [9]
-TEXTURE_FILENAME = data\\TEXTURE\\FIELD\\water_02.jpg		# [10]
-
-TEXTURE_FILENAME = data\\TEXTURE\\sky\\sky_02.jpg		# [11]
-
-TEXTURE_FILENAME = data\\TEXTURE\\FIELD\\hiero.png		# [12]
+TEXTURE_FILENAME = data\TEXTURE\FIELD\concreat.png		# [0]
+TEXTURE_FILENAME = data\TEXTURE\FIELD\senter.png		# [1]
+TEXTURE_FILENAME = data\TEXTURE\FIELD\senterlong.png		# [2]
+TEXTURE_FILENAME = data\TEXTURE\FIELD\sideL.png		# [3]
+TEXTURE_FILENAME = data\TEXTURE\FIELD\sideR.png		# [4]
+TEXTURE_FILENAME = data\TEXTURE\FIELD\odan.png		# [5]
+TEXTURE_FILENAME = data\TEXTURE\FIELD\walkroad.jpg		# [6]
+TEXTURE_FILENAME = data\TEXTURE\FIELD\walkroad_01.jpg		# [7]
+TEXTURE_FILENAME = data\TEXTURE\FIELD\tile_04.jpg		# [8]
+TEXTURE_FILENAME = data\TEXTURE\FIELD\tile_03.jpg		# [9]
+TEXTURE_FILENAME = data\TEXTURE\FIELD\water_02.jpg		# [10]
+TEXTURE_FILENAME = data\TEXTURE\sky\sky_02.jpg		# [11]
+TEXTURE_FILENAME = data\TEXTURE\FIELD\hiero.png		# [12]
 
 #------------------------------------------------------------------------------
 # モデル数
@@ -78,7 +76,6 @@ END_SKYSET
 #==============================================================================
 # モデルの配置
 #==============================================================================
-
 MODELSET
 	TYPE = 26
 	POS = 0.00 500.00 500.00

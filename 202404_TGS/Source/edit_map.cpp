@@ -9,6 +9,7 @@
 #include "calculation.h"
 #include "collisionLine_Box.h"
 #include "camera.h"
+#include "map.h"
 
 //==========================================================================
 // 定数定義
@@ -677,6 +678,30 @@ void CEdit_Map::Save()
 		return;
 	}
 
+
+	// テクスチャ取得
+	CTexture* pTexture = CTexture::GetInstance();
+
+	std::vector<std::string> TextureFile = MyMap::GetTextureFileNameAll();
+
+	// ファイルに書き出す
+	fprintf(pFile,
+		"#------------------------------------------------------------------------------\n"
+		"# テクスチャ数\n"
+		"#------------------------------------------------------------------------------\n"
+		"NUM_TEXTURE = %d\n\n", static_cast<int>(TextureFile.size()));
+
+	fprintf(pFile,
+		"#------------------------------------------------------------------------------\n"
+		"# テクスチャファイル名\n"
+		"#------------------------------------------------------------------------------\n");
+
+	// テクスチャファイル名分
+	for (int nCntFileNum = 0; nCntFileNum < static_cast<int>(TextureFile.size()); nCntFileNum++)
+	{
+		fprintf(pFile, "TEXTURE_FILENAME = %s\t\t# [%d]\n", &TextureFile[nCntFileNum][0], nCntFileNum);
+	}
+
 	// ファイルに書き出す
 	fprintf(pFile,
 		"\n"
@@ -695,6 +720,154 @@ void CEdit_Map::Save()
 	{
 		fprintf(pFile, "MODEL_FILENAME = %s\t\t# [%d]\n", m_ModelFile[i].c_str(), i);
 	}
+
+
+
+	//=============================
+	// 空配置
+	//=============================
+	fprintf(pFile,
+		"\n"
+		"#==============================================================================\n"
+		"# 空情報\n"
+		"#==============================================================================\n");
+
+
+	std::map<CObject::LAYER, std::map<int, std::vector<CObject*>>> objects = CObject::GetTop();
+	for (const auto& layer : objects)
+	{
+		for (const auto& priority : layer.second)
+		{
+			for (const auto& obj : priority.second)
+			{
+				// 種類の取得
+				CObject::TYPE TargetType = obj->GetType();
+
+				if (TargetType == CObject::TYPE_MESHDOME)
+				{// メッシュドームだったら
+
+					// Xファイルの情報取得
+					CObject3DMesh* pObjMesh = obj->GetObject3DMesh();
+
+					// テクスチャのインデックス番号
+					int nType = pObjMesh->GetIdxTex();	// 種類
+
+					// テクスチャ名
+					std::vector<std::string>::iterator itr = find(TextureFile.begin(), TextureFile.end(), pTexture->GetTextureInfo(nType).filename);
+					nType = static_cast<int>(std::distance(TextureFile.begin(), itr));
+
+					// 出力
+					fprintf(pFile,
+						"SKYSET\n"
+						"\tTEXTYPE = %d\n"
+						"\tMOVE = %f\n"
+						"END_SKYSET\n\n",
+						nType, 0.0002f);
+				}
+			}
+		}
+	}
+
+
+	//=============================
+	// 山配置
+	//=============================
+	fprintf(pFile,
+		"\n"
+		"#==============================================================================\n"
+		"# 山情報\n"
+		"#==============================================================================\n");
+
+	for (const auto& layer : objects)
+	{
+		for (const auto& priority : layer.second)
+		{
+			for (const auto& obj : priority.second)
+			{
+				// 種類の取得
+				CObject::TYPE TargetType = obj->GetType();
+
+				if (TargetType == CObject::TYPE_MESHCYLINDER)
+				{// メッシュシリンダーだったら
+
+					// Xファイルの情報取得
+					CObject3DMesh* pObjMesh = obj->GetObject3DMesh();
+
+					// テクスチャのインデックス番号
+					int nType = pObjMesh->GetIdxTex();	// 種類
+
+					// テクスチャ名
+					std::vector<std::string>::iterator itr = find(TextureFile.begin(), TextureFile.end(), pTexture->GetTextureInfo(nType).filename);
+					nType = static_cast<int>(std::distance(TextureFile.begin(), itr));
+
+					// 出力
+					fprintf(pFile,
+						"MOUNTAINSET\n"
+						"\tTEXTYPE = %d\n"
+						"END_MOUNTAINSET\n\n", nType);
+				}
+			}
+		}
+	}
+
+
+	//=============================
+	// 地面配置
+	//=============================
+	fprintf(pFile,
+		"\n"
+		"#==============================================================================\n"
+		"# 地面情報\n"
+		"#==============================================================================\n");
+
+
+	for (const auto& layer : objects)
+	{
+		for (const auto& priority : layer.second)
+		{
+			for (const auto& obj : priority.second)
+			{
+				// 種類の取得
+				CObject::TYPE TargetType = obj->GetType();
+
+				if (TargetType == CObject::TYPE_MESHFIELD)
+				{// メッシュフィールドだったら
+
+					// Xファイルの情報取得
+					CObject3DMesh* pObjMesh = obj->GetObject3DMesh();
+
+					// テクスチャのインデックス番号
+					int nType = pObjMesh->GetIdxTex();	// 種類
+
+					// テクスチャ名
+					std::vector<std::string>::iterator itr = find(TextureFile.begin(), TextureFile.end(), pTexture->GetTextureInfo(nType).filename);
+					nType = static_cast<int>(std::distance(TextureFile.begin(), itr));
+
+					MyLib::Vector3 pos = pObjMesh->GetPosition();		// 位置
+					MyLib::Vector3 rot = pObjMesh->GetRotation();		// 向き
+					int nWidth = pObjMesh->GetWidthBlock();			// 横分割数
+					int nHeight = pObjMesh->GetHeightBlock();		// 縦分割数
+					float fWidthLen = pObjMesh->GetWidthLen();		// 横長さ
+					float fHeightLen = pObjMesh->GetHeightLen();	// 縦長さ
+
+					// 出力
+					fprintf(pFile,
+						"FIELDSET\n"
+						"\tTEXTYPE = %d\n"
+						"\tPOS = %.0f %.0f %.0f\n"
+						"\tROT = %.0f %.0f %.0f\n"
+						"\tBLOCK = %d %d\n"
+						"\tSIZE = %.0f %.0f\n"
+						"END_FIELDSET\n\n",
+						nType, pos.x, pos.y, pos.z,
+						rot.x, rot.y, rot.z,
+						nWidth, nHeight,
+						fWidthLen, fHeightLen);
+				}
+			}
+		}
+	}
+
 
 	//=============================
 	// モデル

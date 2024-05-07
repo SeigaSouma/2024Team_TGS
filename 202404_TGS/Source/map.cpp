@@ -442,6 +442,9 @@ HRESULT MyMap::ReadTexture()
 				TextureFile.emplace_back();
 				TextureFile.back() = &aComment[0];
 
+				TextureFile.back() = UtilFunc::Transformation::ReplaceBackslash(TextureFile.back());
+				TextureFile.back() = UtilFunc::Transformation::ReplaceForwardSlashes(TextureFile.back());
+
 				// テクスチャの割り当て
 				CTexture::GetInstance()->Regist(&TextureFile[nCntTexture][0]);
 
@@ -749,75 +752,6 @@ HRESULT MyMap::ReadText(const char *pTextFile)
 			mapdate::nNumObj3DMeshAll++;
 		}
 
-		// モデルの設定
-		if (strcmp(&aComment[0], "MODELSET") == 0)
-		{// モデルの読み込みを開始
-
-			//while (strcmp(&aComment[0], "END_MODELSET"))
-			//{// END_MODELSETが来るまで繰り返し
-
-			//	fscanf(pFile, "%s", &aComment[0]);	// 確認する
-
-			//	if (strcmp(&aComment[0], "TYPE") == 0)
-			//	{// TYPEが来たら種類読み込み
-
-			//		fscanf(pFile, "%s", &aComment[0]);	// =の分
-			//		fscanf(pFile, "%d", &g_Map.nType);	// モデル種類の列挙
-			//	}
-
-			//	if (strcmp(&aComment[0], "POS") == 0)
-			//	{// POSが来たら位置読み込み
-
-			//		fscanf(pFile, "%s", &aComment[0]);	// =の分
-			//		fscanf(pFile, "%f", &g_Map.pos.x);	// X座標
-			//		fscanf(pFile, "%f", &g_Map.pos.y);	// Y座標
-			//		fscanf(pFile, "%f", &g_Map.pos.z);	// Z座標
-			//	}
-
-			//	if (strcmp(&aComment[0], "ROT") == 0)
-			//	{// ROTが来たら向き読み込み
-
-			//		fscanf(pFile, "%s", &aComment[0]);	// =の分
-			//		fscanf(pFile, "%f", &g_Map.rot.x);	// Xの向き
-			//		fscanf(pFile, "%f", &g_Map.rot.y);	// Yの向き
-			//		fscanf(pFile, "%f", &g_Map.rot.z);	// Zの向き
-			//	}
-
-			//	if (strcmp(&aComment[0], "SHADOW") == 0)
-			//	{// SHADOWが来たら向き読み込み
-
-			//		fscanf(pFile, "%s", &aComment[0]);		// =の分
-			//		fscanf(pFile, "%d", &g_Map.nShadow);	// 影を使うかどうか
-			//	}
-
-			//}// END_MODELSETのかっこ
-
-			//if (g_Map.nShadow == 1)
-			//{// 影を使用する場合
-
-			//	// タイプの物を生成
-			//	mapdate::pObjX[mapdate::nNumObjXAll] = CObjectX::Create(&ModelFile[g_Map.nType][0], g_Map.pos, g_Map.rot, true);
-			//}
-			//else
-			//{
-			//	// タイプの物を生成
-			//	mapdate::pObjX[mapdate::nNumObjXAll] = CObjectX::Create(&ModelFile[g_Map.nType][0], g_Map.pos, g_Map.rot, false);
-			//}
-			//ModelIdx.push_back(g_Map.nType);
-
-			//if (mapdate::pObjX[mapdate::nNumObjXAll] == nullptr)
-			//{// 失敗していたら
-			//	return E_FAIL;
-			//}
-
-			//// リストに追加
-			//mapdate::pObjX[mapdate::nNumObjXAll]->RegistList(mapdate::pObjX[mapdate::nNumObjXAll]);
-
-			//// 種類設定
-			//mapdate::pObjX[mapdate::nNumObjXAll]->SetType(CObject::TYPE_XFILE);
-			//mapdate::nNumObjXAll++;
-		}
-
 		if (strcmp(&aComment[0], "END_SCRIPT") == 0)
 		{// 終了文字でループを抜ける
 
@@ -860,6 +794,16 @@ void MyMap::Delete(CObjectX* obj)
 std::string MyMap::GetModelFileName(int nIdx)
 {
 	return ModelFile[nIdx];
+}
+
+std::vector<std::string> MyMap::GetModelFileNameAll()
+{
+	return ModelFile;
+}
+
+std::vector<std::string> MyMap::GetTextureFileNameAll()
+{
+	return TextureFile;
 }
 
 //==========================================================================
