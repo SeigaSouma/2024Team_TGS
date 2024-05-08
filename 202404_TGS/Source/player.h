@@ -19,6 +19,7 @@ class CShadow;
 class CHP_GaugePlayer;
 class CEnemy;
 
+class CPlayerControlMove;	// 移動
 class CPlayerControlAttack;	// 攻撃
 class CPlayerControlDefence;// 防御
 class CPlayerControlAvoid;	// 回避
@@ -157,12 +158,15 @@ public:
 
 	// モーション
 	void SetMotion(int motionIdx);								// モーションの設定
-	bool IsJump() { return m_bJump; }							// ジャンプ判定
-	bool IsAttacking() { return m_bAttacking; }					// 攻撃中フラグ取得
-	float GetDashTime() { return m_fDashTime; }					// ダッシュ時間
-	void SetComboStage(int stage) { m_nComboStage = stage;; }	// コンボの段階設定
-	int GetComboStage() { return m_nComboStage; }				// コンボの段階取得
-	bool IsReadyDashAtk() { return m_bReadyDashAtk; }
+	void SetEnableDash(bool bDash)	{ m_bDash = bDash; }		// ダッシュ状況設定
+	bool IsDash()					{ return m_bDash; }			// ダッシュ判定
+	void SetEnableJump(bool bJump)	{ m_bJump = bJump; }		// ジャンプ状況設定
+	bool IsJump()					{ return m_bJump; }			// ジャンプ判定
+	bool IsAttacking()				{ return m_bAttacking; }	// 攻撃中フラグ取得
+	float GetDashTime()				{ return m_fDashTime; }		// ダッシュ時間
+	void SetComboStage(int stage)	{ m_nComboStage = stage; }	// コンボの段階設定
+	int GetComboStage()				{ return m_nComboStage; }	// コンボの段階取得
+	bool IsReadyDashAtk()			{ return m_bReadyDashAtk; }
 	void SetMotionFrag(SMotionFrag frag) { m_sMotionFrag = frag; }
 	SMotionFrag GetMotionFrag() { return m_sMotionFrag; }
 	void SetDamageInfo(sDamageInfo info) { m_sDamageInfo = info; }	// ダメージ情報設定
@@ -171,6 +175,7 @@ public:
 	//=============================
 	// 操作
 	//=============================
+	void ChangeMoveControl(CPlayerControlMove* control);		// 移動の操作変更
 	void ChangeAtkControl(CPlayerControlAttack* control);		// 攻撃の操作変更
 	void ChangeDefenceControl(CPlayerControlDefence* control);	// 防御の操作変更
 	void ChangeAvoidControl(CPlayerControlAvoid* control);		// 回避の操作変更
@@ -274,6 +279,7 @@ private:
 	CHP_GaugePlayer* m_pHPGauge;	// HPゲージのポインタ
 	
 	// パターン用インスタンス
+	CPlayerControlMove* m_pControlMove;			// 移動操作
 	CPlayerControlAttack* m_pControlAtk;		// 攻撃操作
 	CPlayerControlDefence* m_pControlDefence;	// 防御操作
 	CPlayerControlAvoid* m_pControlAvoid;		// 回避操作

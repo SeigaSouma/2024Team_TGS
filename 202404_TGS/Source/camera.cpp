@@ -30,7 +30,7 @@
 #define MOVE			(2.5f)				// 移動量
 #define MAX_LENGTH		(50000.0f)			// 最大距離
 #define MIN_LENGTH		(10.0f)				// 最少距離
-#define START_CAMERALEN	(1500.0f)			// 元の距離
+#define START_CAMERALEN	(800.0f)			// 元の距離
 #define ROT_MOVE_MOUSE	(0.01f)				// 回転移動量
 #define ROT_MOVE_STICK_Y	(0.00040f)			// 回転移動量
 #define ROT_MOVE_STICK_Z	(0.00020f)			// 回転移動量
@@ -57,7 +57,7 @@
 
 namespace
 {
-	const MyLib::Vector3 DEFAULT_GAMEROT = MyLib::Vector3(0.0f, 0.0f, -0.32f);	// ゲームのデフォルト向き
+	const MyLib::Vector3 DEFAULT_GAMEROT = MyLib::Vector3(0.0f, 0.0f, -0.20f);	// ゲームのデフォルト向き
 	const float MULTIPLY_POSV_CORRECTION = 2.1f;	// (ゲーム時)視点の補正係数倍率
 	const float MULTIPLY_POSR_CORRECTION = 2.1f;	// (ゲーム時)注視点の補正係数倍率
 	const float DISATNCE_POSR_PLAYER = 200.0f;		// (ゲーム時)プレイヤーとの注視点距離

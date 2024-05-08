@@ -132,8 +132,40 @@ void CEdit_Map::Uninit()
 //==========================================================================
 void CEdit_Map::Update()
 {
+	// エディットメニュー
 	ImGui::Begin("Edit", NULL, ImGuiWindowFlags_MenuBar);
+	{
+		// メニューバー処理
+		MenuBar();
 
+		// オブジェクトボタン設定
+		SetObjectButton();
+
+		// ウィンドウのマウスホバー判定
+		ImGuiHoveredFlags frag = 128;
+		m_bHoverWindow = ImGui::IsWindowHovered(frag);
+	}
+	ImGui::End();
+
+
+	// ImGuiの操作
+	EditImGui();
+
+	// 掴み中処理
+	Grab();
+
+	// オブジェクト選択中
+	SelectObject();
+
+	// 再移動中
+	Remove();
+}
+
+//==========================================================================
+// メニューバー処理
+//==========================================================================
+void CEdit_Map::MenuBar()
+{
 	// 書き出し
 	ImGui::BeginMenuBar();
 	if (ImGui::BeginMenu("File"))
@@ -162,7 +194,7 @@ void CEdit_Map::Update()
 
 			// "data"フォルダの絶対パスを求める
 			std::string strDataDir = szCurrentDir;
-			strDataDir += "\\data";
+			strDataDir += "\\data\\TEXT\\map";
 
 			// 存在する場合は、lpstrInitialDirに指定する
 			if (GetFileAttributesA(strDataDir.c_str()) != INVALID_FILE_ATTRIBUTES)
@@ -186,15 +218,21 @@ void CEdit_Map::Update()
 		ImGui::EndMenu();
 	}
 
-	/*if (ImGui::BeginMenu("Load"))
+	// ロード
+	if (ImGui::BeginMenu("Load"))
 	{
 
 		ImGui::EndMenu();
-	}*/
+	}
 
 	ImGui::EndMenuBar();
+}
 
-
+//==========================================================================
+// オブジェクトボタン設定
+//==========================================================================
+void CEdit_Map::SetObjectButton()
+{
 	ImGuiDragDropFlags src_flags = 0;
 	src_flags |= ImGuiDragDropFlags_SourceNoDisableHover;     // Keep the source displayed as hovered
 	src_flags |= ImGuiDragDropFlags_SourceNoHoldToOpenOthers; // Because our dragging is local, we disable the feature of opening foreign treenodes/tabs while dragging
@@ -231,25 +269,14 @@ void CEdit_Map::Update()
 		}
 		ImGui::PopID();
 	}
+}
 
-
-	ImGui::End();
-
-	// ウィンドウのマウスホバー判定
-	ImGuiHoveredFlags frag = 128;
-	bool bHoverWindow = ImGui::IsWindowHovered(frag);
-
-
-	CInputKeyboard* pKeyboard = CInputKeyboard::GetInstance();
-	CInputMouse* pMouse = CInputMouse::GetInstance();
-	MyLib::Vector3 mouseRay = pMouse->GetRay();
-	MyLib::Vector3 mousePos = pMouse->GetNearPosition();
-	MyLib::Vector3 mouseWorldPos = pMouse->GetWorldPosition();
-	MyLib::Vector3 mouseOldWorldPos = pMouse->GetOldWorldPosition();
-
-
-
-
+//==========================================================================
+// ImGuiの操作
+//==========================================================================
+void CEdit_Map::EditImGui()
+{
+	ImVec2 imageSize = ImVec2(50, 50);
 
 	//=============================
 	// Imgui設定
@@ -269,7 +296,7 @@ void CEdit_Map::Update()
 		ImGui::SameLine();
 
 		// スケールボタン
-		if(ImGui::ImageButton(reinterpret_cast<ImTextureID>(m_HandleTex[CHandle::HandleType::TYPE_SCALE]), imageSize))
+		if (ImGui::ImageButton(reinterpret_cast<ImTextureID>(m_HandleTex[CHandle::HandleType::TYPE_SCALE]), imageSize))
 		{
 			m_HandleType = CHandle::HandleType::TYPE_SCALE;
 			ChangeHandle();
@@ -277,8 +304,9 @@ void CEdit_Map::Update()
 		ImGui::SameLine();
 
 
-		if (!bHoverWindow) {
-			bHoverWindow = ImGui::IsWindowHovered(frag);
+		if (!m_bHoverWindow) {
+			ImGuiHoveredFlags frag = 128;
+			m_bHoverWindow = ImGui::IsWindowHovered(frag);
 		}
 
 		//=============================
@@ -436,14 +464,18 @@ void CEdit_Map::Update()
 		}
 		ImGui::End();
 	}
+}
 
+//==========================================================================
+// 掴み中処理
+//==========================================================================
+void CEdit_Map::Grab()
+{
+	CInputMouse* pMouse = CInputMouse::GetInstance();
+	MyLib::Vector3 mouseWorldPos = pMouse->GetWorldPosition();
 
-
-
-
-
-	if (m_bGrab && 
-		!bHoverWindow) {
+	if (m_bGrab &&
+		!m_bHoverWindow) {
 
 		// ウィンドウ外 && オブジェクト無い状態で生成
 		if (m_DragData.objX == nullptr)
@@ -480,7 +512,7 @@ void CEdit_Map::Update()
 		ImGui::IsMouseReleased(0))
 	{// 掴み中 && マウスリリース
 
-		if (!bHoverWindow) {
+		if (!m_bHoverWindow) {
 
 			MyLib::Vector3 setpos = mouseWorldPos;
 			setpos.y = 0.0f;
@@ -488,8 +520,15 @@ void CEdit_Map::Update()
 		}
 		m_bGrab = false;
 	}
+}
 
-
+//==========================================================================
+// オブジェクト選択中
+//==========================================================================
+void CEdit_Map::SelectObject()
+{
+	CInputKeyboard* pKeyboard = CInputKeyboard::GetInstance();
+	CInputMouse* pMouse = CInputMouse::GetInstance();
 
 	// オブジェクト選択中
 	if (!m_bGrab &&
@@ -497,7 +536,7 @@ void CEdit_Map::Update()
 		!m_bReGrab)
 	{
 		if ((pKeyboard->GetPress(DIK_LCONTROL) || pKeyboard->GetPress(DIK_RCONTROL)) &&
-			pKeyboard->GetTrigger(DIK_C)) 
+			pKeyboard->GetTrigger(DIK_C))
 		{// コピー
 			m_pCopyObj = m_pGrabObj;
 		}
@@ -538,9 +577,21 @@ void CEdit_Map::Update()
 			}
 		}
 	}
+}
 
-	// 再移動中
+//==========================================================================
+// 再移動
+//==========================================================================
+void CEdit_Map::Remove()
+{
+	CInputKeyboard* pKeyboard = CInputKeyboard::GetInstance();
+	CInputMouse* pMouse = CInputMouse::GetInstance();
+	MyLib::Vector3 mouseRay = pMouse->GetRay();
+	MyLib::Vector3 mousePos = pMouse->GetNearPosition();
+	MyLib::Vector3 mouseWorldPos = pMouse->GetWorldPosition();
+	MyLib::Vector3 mouseOldWorldPos = pMouse->GetOldWorldPosition();
 	MyLib::Vector3 diffpos = pMouse->GetWorldDiffPosition();
+
 	if (m_bReGrab &&
 		m_pGrabObj != nullptr)
 	{
@@ -582,7 +633,7 @@ void CEdit_Map::Update()
 	}
 
 	if (!pKeyboard->GetPress(DIK_LALT) &&
-		!bHoverWindow &&
+		!m_bHoverWindow &&
 		ImGui::IsMouseClicked(0))
 	{// クリック
 
@@ -621,7 +672,7 @@ void CEdit_Map::Update()
 				if (bHit)
 				{// 被ってる
 					obj->SetState(CObjectX::STATE::STATE_EDIT);
-					
+
 					// 掴みオブジェクト
 					m_pGrabObj = obj;
 
@@ -647,7 +698,6 @@ void CEdit_Map::Update()
 			m_pHandle = nullptr;
 		}
 	}
-
 }
 
 //==========================================================================
