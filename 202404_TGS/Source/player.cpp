@@ -1386,9 +1386,6 @@ MyLib::HitResult_Character CPlayer::ProcessHit(const int nValue, const MyLib::Ve
 		// ダッシュ判定OFF
 		m_bDash = false;
 
-		//花粉ばさぁ処理
-		my_particle::Create(GetPosition() + MyLib::Vector3(0.0f, 100.0f, 0.0f), my_particle::TYPE_POLLENLOST);
-
 		// ゲームパッド情報取得
 		CInputGamepad* pInputGamepad = CInputGamepad::GetInstance();
 		pInputGamepad->SetVibration(CInputGamepad::VIBRATION_STATE_DMG, 0);

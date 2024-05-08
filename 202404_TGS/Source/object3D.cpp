@@ -22,8 +22,6 @@ namespace
 CObject3D::CObject3D(int nPriority) : CObject(nPriority)
 {
 	m_mtxWorld.Identity();				// ワールドマトリックス
-	m_posOrigin = MyLib::Vector3(0.0f, 0.0f, 0.0f);	// 元の位置
-	m_rotOrigin = MyLib::Vector3(0.0f, 0.0f, 0.0f);	// 元の向き
 	m_col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);		// 色
 	m_fSize = MyLib::Vector3(0.0f, 0.0f, 0.0f);		// サイズ
 	m_pVtxBuff = nullptr;							// 頂点バッファ
@@ -170,6 +168,7 @@ void CObject3D::Draw()
 	// 情報取得
 	MyLib::Vector3 pos = GetPosition();
 	MyLib::Vector3 rot = GetRotation();
+	MyLib::Vector3 rotOrigin = GetOriginRotation();
 
 	// 計算用マトリックス宣言
 	MyLib::Matrix mtxRot, mtxTrans, mtxRotOrigin;
@@ -179,7 +178,7 @@ void CObject3D::Draw()
 	m_mtxWorld.Identity();
 
 	// 元の向きを反映する
-	mtxRotOrigin.RotationYawPitchRoll(m_rotOrigin.y, m_rotOrigin.x, m_rotOrigin.z);
+	mtxRotOrigin.RotationYawPitchRoll(rotOrigin.y, rotOrigin.x, rotOrigin.z);
 	m_mtxWorld.Multiply(m_mtxWorld, mtxRotOrigin);
 
 	// 向きを反映する
@@ -305,38 +304,6 @@ void CObject3D::SetWorldMtx(const MyLib::Matrix mtx)
 MyLib::Matrix CObject3D::GetWorldMtx() const
 {
 	return m_mtxWorld;
-}
-
-//==========================================================================
-//	元の位置設定
-//==========================================================================
-void CObject3D::SetOriginPosition(const MyLib::Vector3& pos)
-{
-	m_posOrigin = pos;
-}
-
-//==========================================================================
-//	元の位置取得
-//==========================================================================
-MyLib::Vector3 CObject3D::GetOriginPosition() const
-{
-	return m_posOrigin;
-}
-
-//==========================================================================
-// 元の向き設定
-//==========================================================================
-void CObject3D::SetOriginRotation(const MyLib::Vector3& rot)
-{
-	m_rotOrigin = rot;
-}
-
-//==========================================================================
-// 元の向き取得
-//==========================================================================
-MyLib::Vector3 CObject3D::GetOriginRotation() const
-{
-	return m_rotOrigin;
 }
 
 //==========================================================================
