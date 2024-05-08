@@ -88,7 +88,7 @@ public:
 
 	typedef struct
 	{
-		const char *pFilename;	// ファイル名
+		std::string file;	// ファイル名
 		int nCntLoop;		// ループカウント
 	} SOUNDINFO;
 

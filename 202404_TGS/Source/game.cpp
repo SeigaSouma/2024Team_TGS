@@ -376,6 +376,30 @@ void CGame::Update()
 
 #endif
 
+
+
+
+
+
+
+
+	if (pInputKeyboard->GetTrigger(DIK_I))
+	{
+		//**********************************
+		// プレイヤー
+		//**********************************
+		// キャラ生成
+		CPlayer* pPlayer = CPlayer::Create(0);
+		pPlayer->SetPosition(MyLib::Vector3(UtilFunc::Transformation::Random(-10, 10) * 100.0f, 10.0f, UtilFunc::Transformation::Random(-10, 10) * 100.0f));
+
+	}
+
+
+
+
+
+
+
 	// シーンの更新
 	CScene::Update();
 

@@ -87,7 +87,7 @@ public:
 	SphereCollider GetNowSphereCollider(int nIdx);	// コライダー取得
 	std::vector<SphereCollider> GetSphereColliders();	// スフィアコライダー取得
 
-	HRESULT SetCharacter(const std::string pTextFile) override;	// キャラクター設定
+	HRESULT SetCharacter(const std::string& file) override;	// キャラクター設定
 	CObjectChara *GetObjectChara();
 	CMotion* GetMotion();	// モーションオブジェクト取得
 	static CObjectChara *Create(const std::string pTextFile);	// 生成処理
@@ -126,8 +126,8 @@ public:
 
 protected:
 
-	void LoadObjectData(FILE* pFile, const char* pComment) override;	// オブジェクト毎のデータ読み込み
-	void LoadPartsData(FILE* pFile, const char* pComment, int *pCntParts) override;		// パーツ毎のデータ読み込み
+	void LoadObjectData(FILE* pFile, const std::string& file) override;	// オブジェクト毎のデータ読み込み
+	void LoadPartsData(FILE* pFile, const std::string& file, int *pCntParts) override;		// パーツ毎のデータ読み込み
 	void BindObjectData(int nCntData) override;							// オブジェクト毎のデータ割り当て
 	virtual void AttackAction(CMotion::AttackInfo ATKInfo, int nCntATK);	// 攻撃時処理
 	virtual void AttackInDicision(CMotion::AttackInfo* pATKInfo, int nCntATK);			// 攻撃判定中処理
@@ -137,7 +137,7 @@ protected:
 private:
 
 	// メンバ関数
-	void LoadSphereColliders(const std::string textfile);
+	void LoadSphereColliders(const std::string& textfile);
 	void SaveSphereColliders();
 	void MotionInProgressAction();	// モーション中の行動処理
 

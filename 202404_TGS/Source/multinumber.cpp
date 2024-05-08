@@ -19,7 +19,7 @@
 //==========================================================================
 namespace
 {
-	const char* DEFAULT_TEXTURE = "data\\TEXTURE\\number_blackclover_01.png";	// テクスチャのファイル
+	const std::string DEFAULT_TEXTURE = "data\\TEXTURE\\number_blackclover_01.png";	// テクスチャのファイル
 	const float TEX_U = 0.1f;	// 横分割
 }
 
@@ -104,7 +104,7 @@ CMultiNumber *CMultiNumber::Create(MyLib::Vector3 pos, D3DXVECTOR2 size, int nNu
 //==========================================================================
 // 生成処理(オーバーロード)
 //==========================================================================
-CMultiNumber *CMultiNumber::Create(MyLib::Vector3 pos, D3DXVECTOR2 size, int nNum, CNumber::EObjectType objtype, const char *pTextureFile, bool bDigitDraw, int nPriority)
+CMultiNumber *CMultiNumber::Create(MyLib::Vector3 pos, D3DXVECTOR2 size, int nNum, CNumber::EObjectType objtype, const std::string& file, bool bDigitDraw, int nPriority)
 {
 	// 生成用のオブジェクト
 	CMultiNumber *pNumber = nullptr;
@@ -138,7 +138,7 @@ CMultiNumber *CMultiNumber::Create(MyLib::Vector3 pos, D3DXVECTOR2 size, int nNu
 			pNumber->m_nPriority = nPriority;
 
 			// テクスチャ読み込み
-			pNumber->m_nTexIdx = CTexture::GetInstance()->Regist(pTextureFile);
+			pNumber->m_nTexIdx = CTexture::GetInstance()->Regist(file);
 
 			// 初期化処理
 			pNumber->Init();

@@ -205,9 +205,6 @@ void CStageClearText::StateFadeOut()
 
 		// í‰Ê¶¬
 		CGame::GetInstance()->GetGameManager()->SetType(CGameManager::SceneType::SCENE_DURING_MAINRESULT);
-
-		CPlayer* pPlayer = CPlayer::GetListObj().GetData(0);
-		pPlayer->SetState(CPlayer::STATE::STATE_FLOWERING);
 	}
 
 	if (m_fStateTimer >= TIME_FADEOUT)

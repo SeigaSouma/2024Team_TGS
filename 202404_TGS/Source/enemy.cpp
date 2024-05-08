@@ -131,7 +131,7 @@ CEnemy::~CEnemy()
 //==========================================================================
 // 生成処理
 //==========================================================================
-CEnemy* CEnemy::Create(const char* pFileName, MyLib::Vector3 pos, TYPE type)
+CEnemy* CEnemy::Create(const std::string& file, MyLib::Vector3 pos, TYPE type)
 {
 	// 生成用のオブジェクト
 	CEnemy* pEnemy = nullptr;
@@ -163,7 +163,7 @@ CEnemy* CEnemy::Create(const char* pFileName, MyLib::Vector3 pos, TYPE type)
 		pEnemy->CObject::SetOriginPosition(pos);
 
 		// テキスト読み込み
-		HRESULT hr = pEnemy->RoadText(pFileName);
+		HRESULT hr = pEnemy->RoadText(file);
 		if (FAILED(hr))
 		{// 失敗していたら
 			return nullptr;
@@ -214,10 +214,10 @@ HRESULT CEnemy::Init()
 //==========================================================================
 // テキスト読み込み
 //==========================================================================
-HRESULT CEnemy::RoadText(const char *pFileName)
+HRESULT CEnemy::RoadText(const std::string& file)
 {
 	// キャラ作成
-	HRESULT hr = SetCharacter(pFileName);
+	HRESULT hr = SetCharacter(file);
 	if (FAILED(hr))
 	{// 失敗していたら
 		return E_FAIL;

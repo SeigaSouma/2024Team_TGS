@@ -62,32 +62,22 @@ CMotion::~CMotion()
 //==========================================================================
 // 生成処理
 //==========================================================================
-CMotion *CMotion::Create(const std::string pTextFile, CObjectChara* pObjChara)
+CMotion* CMotion::Create(const std::string& file, CObjectChara* pObjChara)
 {
 	// 生成用のオブジェクト
-	CMotion *pMotion = nullptr;
+	CMotion* pMotion = DEBUG_NEW CMotion;
 
-	if (pMotion == nullptr)
-	{// nullptrだったら
+	if (pMotion != nullptr)
+	{
+		// オブジェクトのポインタを渡す
+		pMotion->m_pObjChara = pObjChara;
 
-		// メモリの確保
-		pMotion = DEBUG_NEW CMotion;
-
-		if (pMotion != nullptr)
-		{// メモリの確保が出来ていたら
-
-			// オブジェクトのポインタを渡す
-			pMotion->m_pObjChara = pObjChara;
-
-			// 初期化処理
-			pMotion->Init();
-			pMotion->ReadText(pTextFile);
-		}
-
-		return pMotion;
+		// 初期化処理
+		pMotion->Init();
+		pMotion->ReadText(file);
 	}
 
-	return nullptr;
+	return pMotion;
 }
 
 //==========================================================================
@@ -1046,18 +1036,18 @@ int CMotion::GetMaxAllCount(int nType)
 //==========================================================================
 // 外部ファイル読み込み
 //==========================================================================
-void CMotion::ReadText(const std::string pTextFile)
+void CMotion::ReadText(const std::string& file)
 {
 	// 読み込み確認
-	for (int nCntData = 0; nCntData < m_nNumLoad; nCntData++)
-	{
-		if (m_sTextFile[nCntData] != pTextFile)
-		{// ファイル名が一致してない
-			continue;
-		}
+	std::vector<std::string>::iterator itr = std::find(m_sTextFile.begin(), m_sTextFile.end(), file);
+	if (itr != m_sTextFile.end())
+	{// ファイル名が一致
+
+		// インデックス算出
+		int nIdx = itr - m_sTextFile.begin();
 
 		// モーション数
-		m_nNumMotion = m_nNumLoadData[nCntData];
+		m_nNumMotion = m_nNumLoadData[nIdx];
 
 		// モーションの情報生成
 		m_pInfo = DEBUG_NEW Info[m_nNumMotion];
@@ -1065,25 +1055,25 @@ void CMotion::ReadText(const std::string pTextFile)
 
 		for (int nCntInfo = 0; nCntInfo < m_nNumMotion; nCntInfo++)
 		{
-			for (int nCntATK = 0; nCntATK < m_aLoadData[nCntData][nCntInfo].nNumAttackInfo; nCntATK++)
+			for (int nCntATK = 0; nCntATK < m_aLoadData[nIdx][nCntInfo].nNumAttackInfo; nCntATK++)
 			{// 攻撃情報分繰り返す
 
 				// 攻撃情報登録
-				SetAttackInfo(m_aLoadAttackData[nCntData][nCntInfo][nCntATK]);
+				SetAttackInfo(m_aLoadAttackData[nIdx][nCntInfo][nCntATK]);
 			}
 
 			// 情報登録
-			SetInfo(m_aLoadData[nCntData][nCntInfo]);
+			SetInfo(m_aLoadData[nIdx][nCntInfo]);
 		}
 		return;
 	}
 
 	// ファイル名保存
-	m_sTextFile.push_back(pTextFile);
+	m_sTextFile.push_back(file);
 
 
 	// ファイルを開く
-	FILE* pFile = fopen(pTextFile.c_str(), "r");
+	FILE* pFile = fopen(file.c_str(), "r");
 	if (pFile == nullptr)
 	{//ファイルが開けなかった場合
 		return;
@@ -1162,11 +1152,11 @@ void CMotion::ReadText(const std::string pTextFile)
 //==========================================================================
 // モーション読み込み
 //==========================================================================
-void CMotion::LoadMotion(const std::string text, int nIdxMotion)
+void CMotion::LoadMotion(const std::string& file, int nIdxMotion)
 {
 
 	// ファイルを開く
-	FILE* pFile = fopen(text.c_str(), "r");
+	FILE* pFile = fopen(file.c_str(), "r");
 	if (pFile == nullptr)
 	{//ファイルが開けなかった場合
 		return;

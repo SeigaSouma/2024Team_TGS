@@ -24,7 +24,6 @@ namespace mylib_const
 	const int PRIORITY_ZSORT = 10;		// Zソート専用の優先順位
 	const int NUM_KEY_MAX = 256;		// キーの最大数
 	const int MAX_STRING = 512;			// 最大文字数
-	const int MAX_MODEL = 64;			// モデル最大数
 	const int MAX_PARTS = 32;			// パーツ最大数
 	const int MAX_PATTEN_ENEMY = 64;	// 敵の最大パターン
 	const int MAX_WAVE_ENEMY = 32;		// 敵の最大パターン

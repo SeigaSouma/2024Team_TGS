@@ -104,7 +104,7 @@ CObjectX *CObjectX::Create()
 //==========================================================================
 // 生成処理
 //==========================================================================
-CObjectX *CObjectX::Create(const char *pFileName)
+CObjectX *CObjectX::Create(const std::string& file)
 {
 	// 生成用のオブジェクト
 	CObjectX *pObjectX = nullptr;
@@ -119,7 +119,7 @@ CObjectX *CObjectX::Create(const char *pFileName)
 		{// メモリの確保が出来ていたら
 
 			// 初期化処理
-			HRESULT hr = pObjectX->Init(pFileName);
+			HRESULT hr = pObjectX->Init(file);
 
 			if (FAILED(hr))
 			{// 失敗していたら
@@ -139,7 +139,7 @@ CObjectX *CObjectX::Create(const char *pFileName)
 //==========================================================================
 // 生成処理
 //==========================================================================
-CObjectX *CObjectX::Create(const char *pFileName, const MyLib::Vector3& pos, const MyLib::Vector3& rot, bool bShadow)
+CObjectX *CObjectX::Create(const std::string& file, const MyLib::Vector3& pos, const MyLib::Vector3& rot, bool bShadow)
 {
 	// 生成用のオブジェクト
 	CObjectX *pObjectX = nullptr;
@@ -159,7 +159,7 @@ CObjectX *CObjectX::Create(const char *pFileName, const MyLib::Vector3& pos, con
 			pObjectX->m_bShadow = bShadow;
 
 			// 初期化処理
-			HRESULT hr = pObjectX->Init(pFileName);
+			HRESULT hr = pObjectX->Init(file);
 
 			if (FAILED(hr))
 			{// 失敗していたら
@@ -262,7 +262,7 @@ HRESULT CObjectX::Init()
 //==========================================================================
 // 初期化処理
 //==========================================================================
-HRESULT CObjectX::Init(const char *pFileName)
+HRESULT CObjectX::Init(const std::string& file)
 {
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
@@ -271,7 +271,7 @@ HRESULT CObjectX::Init(const char *pFileName)
 	CXLoad *pXLoad = CXLoad::GetInstance();
 
 	// Xファイルのロード
-	m_nIdxXFile = pXLoad->XLoad(pFileName);
+	m_nIdxXFile = pXLoad->XLoad(file);
 
 	// Xファイルのデータ割り当て
 	BindXData(m_nIdxXFile);

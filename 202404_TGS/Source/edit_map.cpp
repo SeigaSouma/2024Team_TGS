@@ -16,9 +16,9 @@
 //==========================================================================
 namespace
 {
-	const char* LOADTEXT = "data\\TEXT\\map\\info.txt";		// マップのファイル
-	const char* SAVETEXT = "data\\TEXT\\map\\save_info.txt";
-	const char* TEXTURE_HANDLE[] =							// テクスチャのファイル
+	const std::string LOADTEXT = "data\\TEXT\\map\\info.txt";		// マップのファイル
+	const std::string SAVETEXT = "data\\TEXT\\map\\save_info.txt";
+	const std::string TEXTURE_HANDLE[] =							// テクスチャのファイル
 	{
 		"data\\TEXTURE\\handle\\move.png",
 		"data\\TEXTURE\\handle\\scale.png",
@@ -94,7 +94,7 @@ HRESULT CEdit_Map::Init()
 	int max = static_cast<int>(CHandle::HandleType::TYPE_MAX);
 	for (int i = 0; i < max; i++)
 	{
-		D3DXCreateTextureFromFileEx(pDevive, TEXTURE_HANDLE[i], 0, 0, 0, 0, D3DFMT_UNKNOWN,
+		D3DXCreateTextureFromFileEx(pDevive, TEXTURE_HANDLE[i].c_str(), 0, 0, 0, 0, D3DFMT_UNKNOWN,
 			D3DPOOL_MANAGED, D3DX_DEFAULT, D3DX_DEFAULT, D3DCOLOR_ARGB(255, 255, 255, 255),
 			NULL, NULL, &m_HandleTex[i]);
 	}
@@ -672,7 +672,7 @@ void CEdit_Map::ChangeHandle()
 void CEdit_Map::Save()
 {
 	// ファイルを開く
-	FILE* pFile = fopen(SAVETEXT, "w");
+	FILE* pFile = fopen(SAVETEXT.c_str(), "w");
 	if (pFile == nullptr)
 	{// ファイルが開けなかった場合
 		return;
@@ -926,7 +926,7 @@ void CEdit_Map::Load()
 	ReadXFile();
 
 	// マップファイルを開く
-	FILE* pFile = fopen(LOADTEXT, "r");
+	FILE* pFile = fopen(LOADTEXT.c_str(), "r");
 	if (pFile == nullptr)
 	{//ファイルが開けた場合
 		return;
@@ -1007,7 +1007,7 @@ HRESULT CEdit_Map::ReadXFile()
 	int nFileNum = 0;					// ファイルの数
 
 	// ファイルを開く
-	FILE* pFile = fopen(LOADTEXT, "r");
+	FILE* pFile = fopen(LOADTEXT.c_str(), "r");
 	if (pFile == nullptr)
 	{// ファイルが開けた場合
 		return E_FAIL;

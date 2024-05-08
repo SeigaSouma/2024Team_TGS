@@ -16,8 +16,8 @@
 //==========================================================================
 namespace
 {
-	const char* TEXT_TEXTURE = "data\\TEXTURE\\battlestart\\yoi.png";	// テクスチャのファイル
-	const char* PRESS_TEXTURE = "data\\TEXTURE\\battlestart\\beforebattle_button.png";	// テクスチャのファイル
+	const std::string TEXT_TEXTURE = "data\\TEXTURE\\battlestart\\yoi.png";	// テクスチャのファイル
+	const std::string PRESS_TEXTURE = "data\\TEXTURE\\battlestart\\beforebattle_button.png";	// テクスチャのファイル
 }
 
 //==========================================================================

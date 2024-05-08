@@ -19,10 +19,10 @@
 //==========================================================================
 namespace
 {
-	const char* SWORD_TEXTURE = "data\\TEXTURE\\battlestart\\sword.png";				// テクスチャのファイル
-	const char* SWORD_TEXTURE_COMPLETE = "data\\TEXTURE\\battlestart\\sword_complete.png";				// テクスチャのファイル
-	const char* TEXT_TEXTURE_COMPLETE = "data\\TEXTURE\\battlestart\\don2.png";				// テクスチャのファイル
-	const char* TEXT_TEXTURE = "data\\TEXTURE\\battlestart\\don.png";	// テクスチャのファイル
+	const std::string SWORD_TEXTURE = "data\\TEXTURE\\battlestart\\sword.png";				// テクスチャのファイル
+	const std::string SWORD_TEXTURE_COMPLETE = "data\\TEXTURE\\battlestart\\sword_complete.png";				// テクスチャのファイル
+	const std::string TEXT_TEXTURE_COMPLETE = "data\\TEXTURE\\battlestart\\don2.png";				// テクスチャのファイル
+	const std::string TEXT_TEXTURE = "data\\TEXTURE\\battlestart\\don.png";	// テクスチャのファイル
 	const float TIME_EXPANSION = 1.0f;	// 拡大時間
 	const float TIME_WAIT = 0.4f;		// 待ち時間
 	const float TIME_DROP = 0.5f;		// 落とす時間

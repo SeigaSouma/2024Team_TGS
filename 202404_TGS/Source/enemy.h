@@ -132,13 +132,13 @@ public:
 	// モーション
 	void SetMotion(int motionIdx);	// モーションの設定
 
-	HRESULT RoadText(const char *pFileName);
+	HRESULT RoadText(const std::string& file);
 	void SetParent(CEnemy *pParent);		// 親のポインタ設定
 	CEnemy *GetEnemy();
 	TYPE GetType() { return m_type; }	// 種類取得
 	static int GetNumSurvival() { return m_nNumSurvival; }	// 生存人数
 	static CListManager<CEnemy> GetListObj() { return m_List; }	// リスト取得
-	static CEnemy* Create(const char* pFileName, MyLib::Vector3 pos, TYPE type = TYPE_BOSS);
+	static CEnemy* Create(const std::string& file, MyLib::Vector3 pos, TYPE type = TYPE_BOSS);
 
 protected:
 

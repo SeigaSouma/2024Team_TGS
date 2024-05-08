@@ -24,7 +24,7 @@ public:
 	CModel(int nPriority = mylib_const::PRIORITY_DEFAULT);
 	~CModel();
 
-	HRESULT Init(const char *pFileName);
+	HRESULT Init(const std::string& file);
 	void Uninit();
 	void Update();
 	void Draw();
@@ -58,7 +58,7 @@ public:
 
 	void SetMtxParent(MyLib::Matrix* pMtx);
 
-	static CModel *Create(const char *pFileName, MyLib::Vector3 pos = MyLib::Vector3(0.0f, 0.0f, 0.0f), MyLib::Vector3 rot = MyLib::Vector3(0.0f, 0.0f, 0.0f));
+	static CModel *Create(const std::string& file, MyLib::Vector3 pos = MyLib::Vector3(0.0f, 0.0f, 0.0f), MyLib::Vector3 rot = MyLib::Vector3(0.0f, 0.0f, 0.0f));
 
 	CModel *GetModel();
 	static int GetNumAll();

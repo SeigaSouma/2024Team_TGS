@@ -19,7 +19,7 @@
 //==========================================
 namespace
 {
-	const char* MARKOBJ = "data\\MODEL\\koko.x";
+	const std::string MARKOBJ = "data\\MODEL\\koko.x";
 }
 
 //==========================================================================
