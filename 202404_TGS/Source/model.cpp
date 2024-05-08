@@ -97,7 +97,7 @@ void CModel::SetMtxParent(MyLib::Matrix* pMtx)
 //==========================================================================
 // 生成処理
 //==========================================================================
-CModel *CModel::Create(const char *pFileName, MyLib::Vector3 pos, MyLib::Vector3 rot)
+CModel *CModel::Create(const std::string& file, MyLib::Vector3 pos, MyLib::Vector3 rot)
 {
 	// 生成用のオブジェクト
 	CModel *pModel = nullptr;
@@ -120,7 +120,7 @@ CModel *CModel::Create(const char *pFileName, MyLib::Vector3 pos, MyLib::Vector3
 		{// メモリの確保が出来ていたら
 
 			// 初期化処理
-			HRESULT hr = pModel->Init(pFileName);
+			HRESULT hr = pModel->Init(file);
 
 			if (FAILED(hr))
 			{// 失敗していたら
@@ -143,13 +143,13 @@ CModel *CModel::Create(const char *pFileName, MyLib::Vector3 pos, MyLib::Vector3
 //==========================================================================
 // 初期化処理
 //==========================================================================
-HRESULT CModel::Init(const char *pFileName)
+HRESULT CModel::Init(const std::string& file)
 {
 	// Xファイルのデータ取得
 	CXLoad *pXLoad = CXLoad::GetInstance();
 
 	// Xファイルのロード
-	m_nIdxXFile = pXLoad->XLoad(pFileName);
+	m_nIdxXFile = pXLoad->XLoad(file);
 
 	// Xファイルのデータ割り当て
 	BindXData(m_nIdxXFile);

@@ -46,7 +46,7 @@ public:
 		int nMotionStartIdx;	// モーション開始のインデックス番号
 		int nAddScore;			// スコア加算量
 		MyLib::Vector3 posOrigin;	// 最初の位置
-		LoadData LoadData[mylib_const::MAX_MODEL];
+		std::vector<LoadData> LoadData;
 	};
 
 	// 列挙型定義
@@ -71,13 +71,13 @@ public:
 	MyLib::Matrix GetWorldMtx() const { return m_mtxWorld; }			// マトリックス取得
 	MyLib::Matrix GetmtxWorld() const;			// ワールドマトリックス取得
 	MyLib::Vector3 GetCenterPosition() const;		// 中心の位置取得
-	void SetOriginPosition(const MyLib::Vector3 pos);	// 最初の位置設定
+	void SetOriginPosition(const MyLib::Vector3& pos);	// 最初の位置設定
 	MyLib::Vector3 GetOriginPosition() const;		// 最初の位置取得
 	void SetRadius(const float fRadius);		// 半径設定
 	float GetRadius() const;				// 半径取得
 
-	HRESULT ReadText(const std::string pTextFile);	// 外部ファイル読み込み処理
-	virtual HRESULT SetCharacter(const std::string pTextFile);	// キャラクター設定
+	HRESULT ReadText(const std::string& file);	// 外部ファイル読み込み処理
+	virtual HRESULT SetCharacter(const std::string& file);	// キャラクター設定
 
 	void ChangeObject(int nDeleteParts, int nNewParts);
 	void ChangeObject(int nSwitchType);		// 切り替えの種類
@@ -90,16 +90,16 @@ public:
 	Load GetLoadData(int nIdx);				// 読み込み情報取得
 	CModel **GetModel();				// モデル取得
 	CObjectHierarchy* GetObjectHierarchy();	// 階層オブジェクト取得
-	static CObjectHierarchy *Create(const std::string pTextFile);
+	static CObjectHierarchy *Create(const std::string& pTextFile);
 
 protected:
 
-	virtual void LoadObjectData(FILE* pFile, const char* pComment);	// オブジェクト毎のデータ読み込み
-	virtual void LoadPartsData(FILE* pFile, const char* pComment, int *pCntParts);	// パーツ毎のデータ読み込み
+	virtual void LoadObjectData(FILE* pFile, const std::string& file);	// オブジェクト毎のデータ読み込み
+	virtual void LoadPartsData(FILE* pFile, const std::string& file, int *pCntParts);	// パーツ毎のデータ読み込み
 	virtual void BindObjectData(int nCntData);	// オブジェクト毎のデータ割り当て
 
-	CModel* m_apModel[mylib_const::MAX_MODEL];	// モデル(パーツ)のポインタ
-	static Load m_aLoadData[mylib_const::MAX_MODEL];
+	std::vector<CModel*> m_apModel;		// モデル(パーツ)のポインタ
+	static std::vector<Load> m_aLoadData;
 	static int m_nNumLoad;	// 読み込んだ数
 private:
 

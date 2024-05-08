@@ -21,7 +21,7 @@
 //==========================================================================
 namespace 
 {
-	const char* MODEL[CHandle::HandleType::TYPE_MAX][CHandle::HandleAngle::ANGLE_MAX] =
+	const std::string MODEL[CHandle::HandleType::TYPE_MAX][CHandle::HandleAngle::ANGLE_MAX] =
 	{
 		{// ˆÚ“®
 			"data\\MODEL\\handle\\arrow_red.x",
@@ -35,7 +35,7 @@ namespace
 		},
 	};
 
-	const char* MODEL_CENTER = "data\\MODEL\\handle\\centersphere.x";
+	const std::string MODEL_CENTER = "data\\MODEL\\handle\\centersphere.x";
 
 	const float LENGTH = 200.0f;
 

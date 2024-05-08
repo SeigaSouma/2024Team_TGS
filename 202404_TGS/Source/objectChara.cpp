@@ -59,13 +59,13 @@ CObjectChara* CObjectChara::Create(const std::string pTextFile)
 //==========================================================================
 // キャラ作成
 //==========================================================================
-HRESULT CObjectChara::SetCharacter(const std::string pTextFile)
+HRESULT CObjectChara::SetCharacter(const std::string& file)
 {
 	// キャラ作成
-	CObjectHierarchy::SetCharacter(pTextFile);
+	CObjectHierarchy::SetCharacter(file);
 
 	// モーションの生成処理
-	m_pMotion = CMotion::Create(pTextFile, this);
+	m_pMotion = CMotion::Create(file, this);
 
 	// モーションの設定
 	if (m_pMotion != nullptr)
@@ -77,7 +77,7 @@ HRESULT CObjectChara::SetCharacter(const std::string pTextFile)
 	}
 
 	// スフィアコライダーデータ読み込み
-	LoadSphereColliders(pTextFile);
+	LoadSphereColliders(file);
 
 	return S_OK;
 }
@@ -292,14 +292,14 @@ void CObjectChara::Draw(float fAlpha)
 //==========================================================================
 // オブジェクト毎のデータ読み込み
 //==========================================================================
-void CObjectChara::LoadObjectData(FILE* pFile, const char* pComment)
+void CObjectChara::LoadObjectData(FILE* pFile, const std::string& file)
 {
 	// オブジェクト毎のデータ読み込み
-	CObjectHierarchy::LoadObjectData(pFile, pComment);
+	CObjectHierarchy::LoadObjectData(pFile, file);
 
 	char hoge[MAX_COMMENT];	// コメント
 
-	if (strcmp(pComment, "HEIGHT") == 0)
+	if (file.find("HEIGHT") != std::string::npos)
 	{// HEIGHTで身長
 
 		fscanf(pFile, "%s", &hoge[0]);	// =の分
@@ -307,7 +307,7 @@ void CObjectChara::LoadObjectData(FILE* pFile, const char* pComment)
 		m_fHeight = m_aLoadData[m_nNumLoad].fHeight;
 	}
 
-	if (strcmp(pComment, "VELOCITY") == 0)
+	if (file.find("VELOCITY") != std::string::npos)
 	{// VELOCITYで移動速度
 
 		fscanf(pFile, "%s", &hoge[0]);	// =の分
@@ -315,7 +315,7 @@ void CObjectChara::LoadObjectData(FILE* pFile, const char* pComment)
 		m_fVelocity = m_aLoadData[m_nNumLoad].fVelocity;
 	}
 
-	if (strcmp(pComment, "LIFE") == 0)
+	if (file.find("LIFE") != std::string::npos)
 	{// LIFEで体力
 
 		fscanf(pFile, "%s", &hoge[0]);	// =の分
@@ -324,7 +324,7 @@ void CObjectChara::LoadObjectData(FILE* pFile, const char* pComment)
 		m_nLifeOrigin = m_nLife;	// 元の体力
 	}
 
-	if (strcmp(pComment, "MOTION_STARTPARTS") == 0)
+	if (file.find("MOTION_STARTPARTS") != std::string::npos)
 	{// MOTION_STARTPARTSでモーション開始のインデックス番号
 
 		fscanf(pFile, "%s", &hoge[0]);	// =の分
@@ -332,8 +332,8 @@ void CObjectChara::LoadObjectData(FILE* pFile, const char* pComment)
 		m_nMotionStartIdx = m_aLoadData[m_nNumLoad].nMotionStartIdx;
 	}
 
-	if (strcmp(pComment, "SCORE") == 0)
-	{// LIFEで体力
+	if (file.find("SCORE") != std::string::npos)
+	{// SCORE
 
 		fscanf(pFile, "%s", &hoge[0]);	// =の分
 		fscanf(pFile, "%d", &m_aLoadData[m_nNumLoad].nAddScore);	// 体力
@@ -345,19 +345,19 @@ void CObjectChara::LoadObjectData(FILE* pFile, const char* pComment)
 //==========================================================================
 // パーツ毎のデータ読み込み
 //==========================================================================
-void CObjectChara::LoadPartsData(FILE* pFile, const char* pComment, int *pCntParts)
+void CObjectChara::LoadPartsData(FILE* pFile, const std::string& file, int *pCntParts)
 {
 	// パーツ毎のデータ読み込み
-	CObjectHierarchy::LoadPartsData(pFile, pComment, pCntParts);
+	CObjectHierarchy::LoadPartsData(pFile, file, pCntParts);
 }
 
 //==========================================================================
 // スフィアコライダー読み込み
 //==========================================================================
-void CObjectChara::LoadSphereColliders(const std::string textfile)
+void CObjectChara::LoadSphereColliders(const std::string& file)
 {
 	// ファイルを開く
-	FILE* pFile = fopen(textfile.c_str(), "r");
+	FILE* pFile = fopen(file.c_str(), "r");
 	if (pFile == nullptr)
 	{//ファイルが開けなかった場合
 		return;
@@ -396,14 +396,14 @@ void CObjectChara::LoadSphereColliders(const std::string textfile)
 
 
 	// ファイルからJSONを読み込む
-	std::ifstream file(filename);
-	if (!file.is_open()) 
+	std::ifstream filejson(filename);
+	if (!filejson.is_open())
 	{
 		return;
 	}
 
 	nlohmann::json jsonData;
-	file >> jsonData;	// jsonデータを与える
+	filejson >> jsonData;	// jsonデータを与える
 
 	// jsonデータから読み込む
 	from_json(jsonData);

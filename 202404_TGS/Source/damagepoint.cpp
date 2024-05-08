@@ -15,7 +15,7 @@
 //==========================================================================
 namespace
 {
-	const char* TEXTURE = "data\\TEXTURE\\number\\number_blackclover_01.png";
+	const std::string TEXTURE = "data\\TEXTURE\\number\\number_blackclover_01.png";
 	const float SIZE_NUMBER = 20.0f;	// ÉTÉCÉY
 	const int MAX_DIGIT = 3;			// ç≈ëÂåÖ
 	const float MAX_LIFE = 0.7f;		// ç≈ëÂéıñΩ

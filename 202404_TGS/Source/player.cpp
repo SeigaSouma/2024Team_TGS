@@ -43,7 +43,7 @@
 //==========================================================================
 namespace
 {
-	const char* CHARAFILE = "data\\TEXT\\character\\player\\tyuuni\\setup_player.txt";	// キャラクターファイル
+	const std::string CHARAFILE = "data\\TEXT\\character\\player\\tyuuni\\setup_player.txt";	// キャラクターファイル
 	const float JUMP = 20.0f * 1.5f;			// ジャンプ力初期値
 	const float TIME_DMG = static_cast<float>(20) / static_cast<float>(mylib_const::DEFAULT_FPS);	// ダメージ時間
 	const int INVINCIBLE_INT = 2;				// 無敵の間隔
@@ -55,12 +55,6 @@ namespace
 	const int DEFAULT_STAMINA = 200;			// スタミナのデフォルト値
 	const float SUBVALUE_DASH = 0.1f;			// ダッシュの減算量
 	const float SUBVALUE_AVOID = 25.0f;			// 回避の減算量
-
-	const float VELOCITY_SIDESTEP = 12.0f;
-	const float GOAL_Z = 0000.0f;
-	const float TIME_MAXVELOCITY = 3.0f;	// 最高速になるまでの時間
-	const float TIME_START_VELOCITY = 0.2f;	// 最高速になるまでの時間
-	const float TIME_FLOWERING = 2.0f;		// 開花までの時間
 
 	// ステータス
 	const float DEFAULT_RESPAWNHEAL = 0.45f;			// リスポーン時の回復割合
@@ -95,8 +89,6 @@ CPlayer::STATE_FUNC CPlayer::m_StateFunc[] =
 	&CPlayer::StateAvoid,		// 回避
 	&CPlayer::StatePrayer,		// 祈り
 	&CPlayer::StateCharge,		// チャージ
-	&CPlayer::StateFlowering,	// 開花
-	&CPlayer::StateAfterFlowering,	// 開花
 };
 
 //==========================================================================
@@ -421,12 +413,6 @@ void CPlayer::Update()
 	// 状態更新
 	UpdateState();
 
-	if (CGame::GetInstance()->GetGameManager()->GetType() == CGameManager::SceneType::SCENE_MAIN)
-	{
-		//花粉わふわふ処理
-		my_particle::Create(GetPosition() + MyLib::Vector3(0.0f, 70.0f, 0.0f), my_particle::TYPE_POLLENDROP);
-	}
-
 	// 位置取得
 	MyLib::Vector3 pos = GetPosition();
 
@@ -456,7 +442,7 @@ void CPlayer::Update()
 	// 位置の制限
 	LimitPos();
 
-#if _DEBUG
+#if 0
 
 	// 移動量取得
 	MyLib::Vector3 move = GetMove();
@@ -930,12 +916,6 @@ void CPlayer::Controll()
 		CManager::GetInstance()->GetSound()->SetFrequency(CSound::LABEL_BGM_GAME, fff);
 	}
 
-	D3DXMATRIX adasf;
-	D3DXMATRIX adaaaaasf(adasf);
-
-	MyLib::Matrix mmmmmmm;
-	MyLib::Matrix mmmmmmfafm(mmmmmmm);
-
 	if (pInputKeyboard->GetPress(DIK_J))
 	{
 		CDamagePoint::Create(GetPosition(), UtilFunc::Transformation::Random(1, 99));
@@ -981,8 +961,7 @@ void CPlayer::MotionSet()
 		m_state == STATE_CHARGE ||
 		m_state == STATE_FADEOUT ||
 		m_state == STATE_KNOCKBACK ||
-		m_state == STATE_PRAYER ||
-		m_state == STATE_FLOWERING)
+		m_state == STATE_PRAYER)
 	{
 		return;
 	}
@@ -1498,58 +1477,6 @@ bool CPlayer::Collision(MyLib::Vector3 &pos, MyLib::Vector3 &move)
 	SetRotation(rot);
 
 	return bNowLand;
-}
-
-
-// 球とAABBの当たり判定
-bool SphereAABBCollision(const D3DXVECTOR3& sphereCenter, float sphereRadius, const D3DXVECTOR3& boxMin, const D3DXVECTOR3& boxMax)
-{
-	// 球の中心をAABBの内部にクランプする
-	D3DXVECTOR3 closestPoint;
-	closestPoint.x = max(boxMin.x, min(sphereCenter.x, boxMax.x));
-	closestPoint.y = max(boxMin.y, min(sphereCenter.y, boxMax.y));
-	closestPoint.z = max(boxMin.z, min(sphereCenter.z, boxMax.z));
-
-	// 球の中心とAABBの最も近い点の距離を計算する
-	D3DXVECTOR3 aaaaaaaaaaaa = (sphereCenter - closestPoint);
-	float distanceSquared = D3DXVec3LengthSq(&aaaaaaaaaaaa);
-
-	// 球の半径の2乗と比較する
-	return distanceSquared <= (sphereRadius * sphereRadius);
-}
-
-// 回転行列を適用する関数
-void TransformBoundingBox(const D3DXVECTOR3& boxMin, const D3DXVECTOR3& boxMax, const D3DXMATRIX& rotationMatrix, D3DXVECTOR3& transformedMin, D3DXVECTOR3& transformedMax)
-{
-	D3DXVECTOR3 corners[8] = {
-		D3DXVECTOR3(boxMin.x, boxMin.y, boxMin.z),
-		D3DXVECTOR3(boxMax.x, boxMin.y, boxMin.z),
-		D3DXVECTOR3(boxMin.x, boxMax.y, boxMin.z),
-		D3DXVECTOR3(boxMax.x, boxMax.y, boxMin.z),
-		D3DXVECTOR3(boxMin.x, boxMin.y, boxMax.z),
-		D3DXVECTOR3(boxMax.x, boxMin.y, boxMax.z),
-		D3DXVECTOR3(boxMin.x, boxMax.y, boxMax.z),
-		D3DXVECTOR3(boxMax.x, boxMax.y, boxMax.z)
-	};
-
-	// 各頂点を回転行列で変換する
-	for (int i = 0; i < 8; ++i)
-	{
-		D3DXVec3TransformCoord(&corners[i], &corners[i], &rotationMatrix);
-	}
-
-	// 変換後の頂点から新しいAABBの最小値と最大値を計算する
-	transformedMin = transformedMax = corners[0];
-	for (int i = 1; i < 8; ++i)
-	{
-		transformedMin = D3DXVECTOR3(min(transformedMin.x, corners[i].x),
-			min(transformedMin.y, corners[i].y),
-			min(transformedMin.z, corners[i].z));
-
-		transformedMax = D3DXVECTOR3(max(transformedMax.x, corners[i].x),
-			max(transformedMax.y, corners[i].y),
-			max(transformedMax.z, corners[i].z));
-	}
 }
 
 
@@ -2278,45 +2205,6 @@ void CPlayer::StateCharge()
 	
 
 	
-}
-
-//==========================================================================
-// 開花
-//==========================================================================
-void CPlayer::StateFlowering()
-{
-	// モーション取得
-	CMotion* pMotion = GetMotion();
-	if (pMotion == nullptr)
-	{
-		return;
-	}
-
-	SetMove(0.0f);
-
-	if (pMotion->IsFinish())
-	{
-		m_state = STATE_AFTERFLOWERING;
-	}
-
-	//CManager::GetInstance()->GetCamera()->SetLenDest(4000.0f, 2, 1.0f, 0.015f);
-}
-
-//==========================================================================
-// 開花後
-//==========================================================================
-void CPlayer::StateAfterFlowering()
-{
-	MyLib::Vector3 pos = GetPosition();
-	pos.y += (100.0f - pos.y) * 0.1f;
-	SetPosition(pos);
-	CManager::GetInstance()->GetCamera()->SetLenDest(4000.0f, 2, 1.0f, 0.03f);
-
-
-	MyLib::Vector3 cameraRot = CManager::GetInstance()->GetCamera()->GetRotation();
-	cameraRot.z += (-0.84f - cameraRot.z) * 0.03f;
-	CManager::GetInstance()->GetCamera()->SetRotation(cameraRot);
-
 }
 
 //==========================================================================

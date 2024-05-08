@@ -85,8 +85,10 @@ public:
 	virtual MyLib::Vector3 GetOriginRotation() const;			// 元の向き取得
 
 	// 変更処理
-	virtual void AddPosition(const MyLib::Vector3& pos);			// 位置設定
+	virtual void AddPosition(const MyLib::Vector3& pos);		// 位置加算
+	virtual void AddRotation(const MyLib::Vector3& rot);		// 向き加算
 
+	// 描画・スクリーン関連
 	float ScreenZ() const;											// スクリーン座標
 	static bool ZSort(const CObject* obj1, const CObject* obj2);	// Zソートの比較関数
 	static bool ZSortInverse(const CObject *obj1, const CObject *obj2);	// 逆Zソートの比較関数
@@ -95,6 +97,7 @@ public:
 	bool IsDisp() { return m_bDisp; }					// 描画状況取得
 	void SetEnableHitstopMove() { m_bHitstopMove = true; }	// ヒットストップ中に動くフラグ有効
 
+	// エフェクト関連
 	int SetEffectParent(CEffect3D *pEffect3D);	// エフェクト設定
 	CEffect3D *GetEffectParent(int nIdx);		// 親設定したエフェクト取得
 	int GetEffectParentNum();					// 親設定したエフェクトの数取得

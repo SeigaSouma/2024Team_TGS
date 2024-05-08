@@ -45,7 +45,7 @@ public:
 
 	// オーバーライドされた関数
 	HRESULT Init();
-	HRESULT Init(const char *pFileName);
+	HRESULT Init(const std::string& file);
 	HRESULT Init(int nIdxXFile);
 	void Uninit();
 	void Update();
@@ -79,8 +79,8 @@ public:
 	CCollisionLine_Box* GetCollisionLineBox() { return m_pCollisionLineBox; }	// 当たり判定ボックス取得
 
 	static CObjectX *Create();
-	static CObjectX *Create(const char *pFileName);
-	static CObjectX *Create(const char *pFileName, const MyLib::Vector3& pos, const MyLib::Vector3& rot = 0.0f, bool bShadow = false);
+	static CObjectX *Create(const std::string& file);
+	static CObjectX *Create(const std::string& file, const MyLib::Vector3& pos, const MyLib::Vector3& rot = 0.0f, bool bShadow = false);
 	static CObjectX *Create(int nIdxXFile, const MyLib::Vector3& pos, const MyLib::Vector3& rot = 0.0f, bool bShadow = false);
 	CObjectX *GetObjectX();
 	static int GetNumAll();

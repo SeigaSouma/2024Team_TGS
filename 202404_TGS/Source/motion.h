@@ -14,9 +14,9 @@
 class CModel;
 class CObjectChara;
 
-#define MAX_MOTION	(28)	//モーションの最大数
-#define MAX_KEY		(24)	//キーの最大数
-#define MAX_PARTS	(32)	//パーツの最大数
+#define MAX_MOTION	(28)	// モーションの最大数
+#define MAX_KEY		(24)	// キーの最大数
+#define MAX_PARTS	(32)	// パーツの最大数
 
 //==========================================================================
 // クラス定義
@@ -79,7 +79,7 @@ public:
 	HRESULT Init();
 	void Uninit();
 	void Update(float fBuff = 1.0f);
-	static CMotion *Create(const std::string pTextFile, CObjectChara* pObjChara);
+	static CMotion *Create(const std::string& file, CObjectChara* pObjChara);
 	void Set(int nType, bool bBlend = true);	// モーションの設定処理
 	int GetType();							// 現在のモーションタイプ取得
 	int GetOldType();						// 前回のモーションタイプ取得
@@ -132,8 +132,8 @@ private:
 	}LOOP;
 
 	// メンバ関数
-	void ReadText(const std::string pTextFile);
-	void LoadMotion(const std::string text, int nMotion);
+	void ReadText(const std::string& file);
+	void LoadMotion(const std::string& file, int nMotion);
 
 	// メンバ変数
 	Info* m_pInfo;	// モーションの情報

@@ -238,7 +238,7 @@ int CXLoad::XLoad(std::string file)
 	auto itr = std::find(m_ImageNames.begin(), m_ImageNames.end(), file);
 	if (itr != m_ImageNames.end())
 	{
-		return static_cast<int>(std::distance(m_ImageNames.begin(), itr));
+		return itr - m_ImageNames.begin();
 	}
 
 	// ‘”•Û‘¶
