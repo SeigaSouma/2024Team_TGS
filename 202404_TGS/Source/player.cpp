@@ -1299,6 +1299,8 @@ void CPlayer::CollisionMapObject()
 	pObj = mapList.GetData(0);
 	CObjectX* pObj1 = mapList.GetData(1);
 
+	if (pObj == nullptr || pObj1 == nullptr)return;
+
 	if (UtilFunc::Collision::IsAABBCollidingWithBox(pObj->GetAABB(), pObj->GetWorldMtx(), pObj1->GetAABB(), pObj1->GetWorldMtx()))
 	{
 		CEffect3D::Create(

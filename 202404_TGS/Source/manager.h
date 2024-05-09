@@ -43,7 +43,6 @@ class CPause;
 class CPowerGauge;
 class CResultManager;
 class CRankingManager;
-class CEdit_Map;
 
 //==========================================================================
 // クラス定義
@@ -111,7 +110,6 @@ private:
 	CResultManager *m_pResultManager;	// リザルトマネージャ
 	CRankingManager *m_pRankingManager;	// ランキングマネージャ
 	CMyEffekseer* m_pMyEffekseer;		// エフェクシア
-	CEdit_Map* m_pEditMap;	// マップ
 
 	bool m_bWireframe;					// ワイヤーフレーム
 	bool m_bHitStop;					// ヒットストップの判定

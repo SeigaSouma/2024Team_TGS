@@ -99,7 +99,7 @@ HRESULT CTimer::Init()
 	m_posOrigin = m_pos;	// 元の位置
 	m_fTime = 0.0f;	// 時間
 	m_state = STATE_WAIT;			// 状態
-	m_bAddTime = true;			// タイマー加算のフラグ
+	m_bAddTime = false;			// タイマー加算のフラグ
 
 
 	// 分、秒、ミリ秒の計算

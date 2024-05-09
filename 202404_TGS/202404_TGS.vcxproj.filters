@@ -89,9 +89,6 @@
     <ClCompile Include="Source\collisionobject.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\edit.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Source\edit_enemybase.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -419,6 +416,9 @@
     <ClCompile Include="Source\particle.cpp">
       <Filter>effect</Filter>
     </ClCompile>
+    <ClCompile Include="Source\edit.cpp">
+      <Filter>edit</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ballast.h">
@@ -443,9 +443,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\constans.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\edit.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\edit_enemybase.h">
@@ -780,6 +777,9 @@
     </ClInclude>
     <ClInclude Include="Source\particle.h">
       <Filter>effect</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\edit.h">
+      <Filter>edit</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

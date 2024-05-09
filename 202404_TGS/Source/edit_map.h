@@ -11,12 +11,13 @@
 #include "listmanager.h"
 #include "objectX.h"
 #include "edithandle.h"
+#include "edit.h"
 
 //==========================================================================
 // クラス定義
 //==========================================================================
 // マップエディタ―クラス
-class CEdit_Map
+class CEdit_Map : public CEdit
 {
 public:
 
@@ -44,7 +45,6 @@ public:
 	void Delete(CObjectX* obj);	// 削除
 	void Regist(int idx, MyLib::Vector3 pos, MyLib::Vector3 rot, bool bShadow);	// 割り当て
 
-	static CEdit_Map* Create();	// 生成処理
 	static CListManager<CObjectX> GetListObj() { return m_List; }	// リスト取得
 
 private:
@@ -76,7 +76,6 @@ private:
 	// メンバ変数
 	//=============================
 	std::vector<int> m_nModelIdx;				// モデルインデックス
-	std::vector<std::string> m_ModelFile;		// モデルインデックス
 	std::vector<LPDIRECT3DTEXTURE9> m_pTexture;	// テクスチャのポインタ
 	std::vector<CObjectX*> m_pObjX;			// オブジェクトXのポインタ
 
@@ -94,6 +93,8 @@ private:
 	CHandle::HandleType m_HandleType;	// ハンドルの種類
 	CHandle::HandleAngle m_moveAngle;	// 移動の向き
 
+	static std::vector<std::string> m_ModelFile;		// モデルファイル
+	static bool m_bLoad;					// 読み込み判定
 	static CListManager<CObjectX> m_List;	// リスト
 
 };

@@ -25,7 +25,9 @@ namespace
 		"data\\TEXTURE\\handle\\rotation.png",
 	};
 }
-CListManager<CObjectX> CEdit_Map::m_List = {};	// リスト
+CListManager<CObjectX> CEdit_Map::m_List = {};				// リスト
+std::vector<std::string> CEdit_Map::m_ModelFile = {};		// モデルファイル
+bool CEdit_Map::m_bLoad = false;							// 読み込み判定
 
 //==========================================================================
 // コンストラクタ
@@ -34,7 +36,6 @@ CEdit_Map::CEdit_Map()
 {
 	// 値のクリア
 	m_nModelIdx.clear();	// モデルインデックス
-	m_ModelFile.clear();	// モデルファイル
 	m_pObjX.clear();		// オブジェクトXのポインタ
 	m_bGrab = false;		// 掴み判定
 	m_bReGrab = false;		// 再掴み判定
@@ -56,26 +57,13 @@ CEdit_Map::~CEdit_Map()
 }
 
 //==========================================================================
-// 生成処理
-//==========================================================================
-CEdit_Map* CEdit_Map::Create()
-{
-	// メモリの確保
-	CEdit_Map* pMarker = DEBUG_NEW CEdit_Map;
-	if (pMarker != nullptr)
-	{
-		// 初期化処理
-		pMarker->Init();
-	}
-
-	return pMarker;
-}
-
-//==========================================================================
 // 初期化処理
 //==========================================================================
 HRESULT CEdit_Map::Init()
 {
+
+	bool bLoad = m_bLoad;
+
 	Load();
 
 	// デバイスの取得
@@ -84,6 +72,14 @@ HRESULT CEdit_Map::Init()
 	// 画像のロード
 	for (const auto& file : m_ModelFile)
 	{
+		if (bLoad) {
+			m_nModelIdx.push_back(0);
+
+			// インデックス取得
+			m_nModelIdx.back() = CXLoad::GetInstance()->XLoad(file);
+		}
+		
+
 		m_pTexture.emplace_back();
 
 		HRESULT hr = D3DXCreateTextureFromFileEx(pDevive, file.c_str(), 0, 0, 0, 0, D3DFMT_UNKNOWN,
@@ -109,7 +105,9 @@ void CEdit_Map::Uninit()
 {
 	for (const auto& texture : m_pTexture)
 	{
-		texture->Release();
+		if (texture != nullptr) {
+			texture->Release();
+		}
 	}
 	m_pTexture.clear();
 
@@ -124,7 +122,8 @@ void CEdit_Map::Uninit()
 		m_HandleTex[i] = nullptr;
 	}
 
-	delete this;
+	// 終了処理
+	CEdit::Uninit();
 }
 
 //==========================================================================
@@ -133,7 +132,7 @@ void CEdit_Map::Uninit()
 void CEdit_Map::Update()
 {
 	// エディットメニュー
-	ImGui::Begin("Edit", NULL, ImGuiWindowFlags_MenuBar);
+	ImGui::Begin("MapEdit", NULL, ImGuiWindowFlags_MenuBar);
 	{
 		// メニューバー処理
 		MenuBar();
@@ -968,6 +967,9 @@ void CEdit_Map::Save()
 //==========================================================================
 void CEdit_Map::Load()
 {
+	// 再読み込み回避
+	if (m_bLoad) return;
+
 	char aComment[MAX_COMMENT] = {};	//コメント用
 	int nFileNum = 0;					// ファイルの数
 	int nCntTexture = 0;				// テクスチャ読み込みカウント
@@ -1046,6 +1048,9 @@ void CEdit_Map::Load()
 
 	// ファイルを閉じる
 	fclose(pFile);
+
+	// 読み込み完了
+	m_bLoad = true;
 }
 
 //==========================================================================

@@ -838,22 +838,22 @@ void CManager::Update()
 			MyFog::ToggleFogFrag();
 		}
 
-		if (pInputKeyboard->GetTrigger(DIK_F8))
-		{// F8でエディットモード切替え
+		//if (pInputKeyboard->GetTrigger(DIK_F8))
+		//{// F8でエディットモード切替え
 
-			if (m_pEdit == nullptr)
-			{// nullptrだったら
+		//	if (m_pEdit == nullptr)
+		//	{// nullptrだったら
 
-				// エディットの生成処理
-				m_pEdit = CEdit::Create();
-			}
-			else
-			{
-				// 終了させる
-				m_pEdit->Release();
-				m_pEdit = nullptr;
-			}
-		}
+		//		// エディットの生成処理
+		//		m_pEdit = CEdit::Create();
+		//	}
+		//	else
+		//	{
+		//		// 終了させる
+		//		m_pEdit->Release();
+		//		m_pEdit = nullptr;
+		//	}
+		//}
 #endif
 
 

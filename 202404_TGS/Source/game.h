@@ -25,7 +25,7 @@ class CEnemyManager;
 class CLimitArea;
 class CPlayer;
 class CEnemyBase;
-class CEdit_Map;
+class CEdit;
 
 //==========================================================================
 // クラス定義
@@ -36,10 +36,11 @@ class CGame : public CScene
 public:
 
 	// エディットタイプ
-	enum EEditType
+	enum EditType
 	{
-		EDITTYPE_OFF = 0,			// オフ
-		EDITTYPE_ENEMYBASE,			// 敵拠点
+		EDITTYPE_OFF = 0,		// オフ
+		EDITTYPE_ENEMYBASE,		// 敵拠点
+		EDITTYPE_MAP,			// マップ
 		EDITTYPE_MAX
 	};
 
@@ -53,7 +54,7 @@ public:
 	virtual void Draw() override;
 
 	void ResetBeforeBoss();
-	EEditType GetEditType() { return m_EditType; }
+	EditType GetEditType() { return m_EditType; }
 	CScore *GetScore();
 	CTimer *GetTimer() { return m_pTimer; }	// タイマー取得
 	CStage *GetStage();
@@ -78,6 +79,7 @@ protected:
 	// メンバ関数
 	//=============================
 	void EditReset();
+	void ChangeEdit();	// エディット切り替え処理
 
 	//=============================
 	// メンバ変数
@@ -88,10 +90,10 @@ protected:
 	CEditEnemyBase *m_pEditEnemyBase;		// 敵の拠点エディター
 	CStage *m_pStage;						// ステージのオブジェクト
 	CGameManager *m_pGameManager;			// ゲームマネージャのオブジェクト
-	EEditType m_EditType;					// エディットの種類
+	EditType m_EditType;					// エディットの種類
 	CEnemyManager *m_pEnemyManager;			// 敵マネージャのオブジェクト
 	CEnemyBase *m_pEnemyBase;				// 敵の拠点
-	CEdit_Map* m_pEditMap;	// マップ
+	CEdit* m_pEdit;							// エディター
 	bool m_bEdit;				// エディットの判定
 	bool m_clear; // クリア判定
 	float m_fMaxRokOnDistance;			// ロックオンの最大距離

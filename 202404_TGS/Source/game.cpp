@@ -59,6 +59,7 @@ CGame::CGame()
 	m_bEdit = false;				// エディットの判定
 	m_clear = false;				// クリア判定
 	m_fMaxRokOnDistance = 0.0f;		// ロックオンの最大距離
+	m_pEdit = nullptr;				// エディター
 }
 
 //==========================================================================
@@ -162,7 +163,6 @@ HRESULT CGame::Init()
 	// クリアの判定
 	SetEnableClear(true);
 
-	m_pEditMap = CEdit_Map::Create();
 
 	m_pTimer = CTimer::Create();
 
@@ -302,11 +302,15 @@ void CGame::Update()
 	}
 
 #if _DEBUG
+
+	// エディット切り替え処理
+	ChangeEdit();
+
 	if (pInputKeyboard->GetTrigger(DIK_F4))
 	{// F4でエディット切り替え
 
 		// 切り替え
-		m_EditType = (EEditType)(((int)m_EditType + 1) % (int)EDITTYPE_MAX);	// 追従の種類
+		m_EditType = (EditType)(((int)m_EditType + 1) % (int)EDITTYPE_MAX);	// 追従の種類
 
 		// リセット
 		EditReset();
@@ -366,8 +370,8 @@ void CGame::Update()
 
 #if _DEBUG
 
-	if (m_pEditMap != nullptr) {
-		m_pEditMap->Update();
+	if (m_pEdit != nullptr) {
+		m_pEdit->Update();
 	}
 
 	if (pInputKeyboard->GetTrigger(DIK_F))
@@ -377,12 +381,6 @@ void CGame::Update()
 	}
 
 #endif
-
-
-
-
-
-
 
 
 	if (pInputKeyboard->GetTrigger(DIK_I))
@@ -397,14 +395,68 @@ void CGame::Update()
 	}
 
 
-
-
-
-
-
 	// シーンの更新
 	CScene::Update();
+}
 
+//==========================================================================
+// エディット切り替え処理
+//==========================================================================
+void CGame::ChangeEdit()
+{
+	// エディットメニュー
+	ImGui::Begin("Edit"/*, NULL, ImGuiWindowFlags_MenuBar*/);
+	{
+		// テキスト
+		static const char* items[] = { "OFF", "EnemyBase", "Map" };
+		int selectedItem = m_EditType;
+
+		// [グループ]エディット切り替え
+		if (ImGui::CollapsingHeader("Change Edit Mode"))
+		{
+			// [ラジオボタン]モーション切り替え
+			for (int i = 0; i < EditType::EDITTYPE_MAX; i++)
+			{
+				if (ImGui::RadioButton(items[i], &selectedItem, i))
+				{
+					// エディット終了
+					EditReset();
+					m_EditType = static_cast<EditType>(selectedItem);
+
+					// 生成
+					m_pEdit = CEdit::Create(m_EditType);
+				}
+			}
+		}
+
+
+
+
+		//// コンボボックス
+		//static const char* items[] = { "OFF", "EnemyBase", "Map" };
+		//static int selectedItem = 0;
+
+		//// コンボボックス
+		//if (ImGui::Combo("Change Edit Mode", &selectedItem, items, IM_ARRAYSIZE(items)))
+		//{
+		//	// 選択された項目が変更されたときの処理
+		//	switch (m_EditType)
+		//	{
+		//	case CGame::EDITTYPE_OFF:
+		//		break;
+		//	case CGame::EDITTYPE_ENEMYBASE:
+		//		break;
+		//	case CGame::EDITTYPE_MAX:
+		//		break;
+		//	default:
+		//		break;
+		//	}
+		//}
+
+
+
+	}
+	ImGui::End();
 }
 
 //==========================================================================
@@ -517,4 +569,9 @@ void CGame::EditReset()
 		m_pEditEnemyBase = nullptr;
 	}
 
+	if (m_pEdit != nullptr)
+	{
+		m_pEdit->Uninit();
+		m_pEdit = nullptr;
+	}
 }
