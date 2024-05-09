@@ -8,7 +8,6 @@
 #ifndef _OBJECT_CIRCLEGAUGE2D_H_
 #define _OBJECT_CIRCLEGAUGE2D_H_	// 二重インクルード防止
 
-#include "main.h"
 #include "object.h"
 
 //==========================================================================
@@ -19,7 +18,7 @@ class CObjectCircleGauge2D : public CObject
 {
 public:
 
-	CObjectCircleGauge2D(int nPriority = 7);
+	CObjectCircleGauge2D(int nPriority = 7, const LAYER layer = LAYER::LAYER_2D);
 	~CObjectCircleGauge2D();
 
 	// オーバーライドされた関数

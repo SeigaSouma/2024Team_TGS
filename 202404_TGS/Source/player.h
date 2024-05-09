@@ -19,6 +19,7 @@ class CShadow;
 class CHP_GaugePlayer;
 class CEnemy;
 
+class CPlayerControlMove;	// 移動
 class CPlayerControlAttack;	// 攻撃
 class CPlayerControlDefence;// 防御
 class CPlayerControlAvoid;	// 回避
@@ -156,21 +157,25 @@ public:
 	void SwitchRockOnTarget();		// ロック対象切り替え
 
 	// モーション
-	void SetMotion(int motionIdx);								// モーションの設定
-	bool IsJump() { return m_bJump; }							// ジャンプ判定
-	bool IsAttacking() { return m_bAttacking; }					// 攻撃中フラグ取得
-	float GetDashTime() { return m_fDashTime; }					// ダッシュ時間
-	void SetComboStage(int stage) { m_nComboStage = stage;; }	// コンボの段階設定
-	int GetComboStage() { return m_nComboStage; }				// コンボの段階取得
-	bool IsReadyDashAtk() { return m_bReadyDashAtk; }
-	void SetMotionFrag(SMotionFrag frag) { m_sMotionFrag = frag; }
-	SMotionFrag GetMotionFrag() { return m_sMotionFrag; }
+	void SetMotion(int motionIdx);									// モーションの設定
+	void SetEnableDash(bool bDash)	{ m_bDash = bDash; }			// ダッシュ状況設定
+	bool IsDash()					{ return m_bDash; }				// ダッシュ判定
+	void SetEnableJump(bool bJump)	{ m_bJump = bJump; }			// ジャンプ状況設定
+	bool IsJump()					{ return m_bJump; }				// ジャンプ判定
+	bool IsAttacking()				{ return m_bAttacking; }		// 攻撃中フラグ取得
+	float GetDashTime()				{ return m_fDashTime; }			// ダッシュ時間
+	void SetComboStage(int stage)	{ m_nComboStage = stage; }		// コンボの段階設定
+	int GetComboStage()				{ return m_nComboStage; }		// コンボの段階取得
+	bool IsReadyDashAtk()			{ return m_bReadyDashAtk; }		// ダッシュアタックの準備取得
+	void SetMotionFrag(SMotionFrag frag) { m_sMotionFrag = frag; }	// モーションのフラグ設定
+	SMotionFrag GetMotionFrag() { return m_sMotionFrag; }			// モーションのフラグ取得
 	void SetDamageInfo(sDamageInfo info) { m_sDamageInfo = info; }	// ダメージ情報設定
 	sDamageInfo GetDamageInfo() { return m_sDamageInfo; }			// ダメージ情報取得
 
 	//=============================
 	// 操作
 	//=============================
+	void ChangeMoveControl(CPlayerControlMove* control);		// 移動の操作変更
 	void ChangeAtkControl(CPlayerControlAttack* control);		// 攻撃の操作変更
 	void ChangeDefenceControl(CPlayerControlDefence* control);	// 防御の操作変更
 	void ChangeAvoidControl(CPlayerControlAvoid* control);		// 回避の操作変更
@@ -179,7 +184,8 @@ public:
 	//=============================
 	// その他
 	//=============================
-	int GetMyPlayerIdx() { return m_nMyPlayerIdx; }
+	void SetMyPlayerIdx(int idx) { m_nMyPlayerIdx = idx; }	// 自分のインデックス設定
+	int GetMyPlayerIdx() { return m_nMyPlayerIdx; }			// 自分のインデックス取得
 
 	// ダウン
 	void DownSetting(const MyLib::Vector3& hitpos);
@@ -274,10 +280,11 @@ private:
 	CHP_GaugePlayer* m_pHPGauge;	// HPゲージのポインタ
 	
 	// パターン用インスタンス
+	CPlayerControlMove* m_pControlMove;			// 移動操作
 	CPlayerControlAttack* m_pControlAtk;		// 攻撃操作
 	CPlayerControlDefence* m_pControlDefence;	// 防御操作
 	CPlayerControlAvoid* m_pControlAvoid;		// 回避操作
-	CPlayerGuard* m_pGuard;						// ガード
+	CPlayerGuard* m_pGuard;						// ガード操作
 
 	static CListManager<CPlayer> m_List;	// リスト
 };

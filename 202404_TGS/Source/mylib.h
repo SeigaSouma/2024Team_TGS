@@ -502,7 +502,7 @@ namespace MyLib
 			{
 				for (int j = 0; j < 4; ++j)
 				{
-					this->m[i][j] = (i == j) ? 1.0f : 0.0f;
+					m[i][j] = (i == j) ? 1.0f : 0.0f;
 				}
 			}
 		}

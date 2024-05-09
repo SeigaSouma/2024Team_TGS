@@ -8,7 +8,6 @@
 #ifndef _OBJECT3D_H_
 #define _OBJECT3D_H_	// 二重インクルード防止
 
-#include "main.h"
 #include "object.h"
 
 //==========================================================================
@@ -23,26 +22,23 @@ public:
 	virtual ~CObject3D();
 
 	// オーバーライドされた関数
-	virtual HRESULT Init();
-	virtual void Uninit();
-	virtual void Update();
-	virtual void Draw();
+	virtual HRESULT Init() override;
+	virtual void Uninit() override;
+	virtual void Update() override;
+	virtual void Draw() override;
+
 	virtual void SetVtx();
 	virtual void BindTexture(int nIdx);
 
-	void SetWorldMtx(const MyLib::Matrix mtx);	// マトリックス設定
-	MyLib::Matrix GetWorldMtx() const;			// マトリックス取得
-	void SetOriginPosition(const MyLib::Vector3& pos) override;	//	元の位置設定
-	MyLib::Vector3 GetOriginPosition() const;		//	元の位置取得
-	void SetOriginRotation(const MyLib::Vector3& rot) override;	// 元の向き設定
-	MyLib::Vector3 GetOriginRotation() const;		// 元の向き取得
-	void SetColor(const D3DXCOLOR col);			// 色設定
-	D3DXCOLOR GetColor() const;				// 色取得
+	void SetWorldMtx(const MyLib::Matrix mtx);		// マトリックス設定
+	MyLib::Matrix GetWorldMtx() const;				// マトリックス取得
+	void SetColor(const D3DXCOLOR col);				// 色設定
+	D3DXCOLOR GetColor() const;						// 色取得
 	void SetSize(const MyLib::Vector3& size);		// サイズの設定
-	MyLib::Vector3 GetSize() const;			// サイズの取得
-	void SetSizeOrigin(const MyLib::Vector3& size);		// 元のサイズの設定
+	MyLib::Vector3 GetSize() const;					// サイズの取得
+	void SetSizeOrigin(const MyLib::Vector3& size);	// 元のサイズの設定
 	MyLib::Vector3 GetSizeOrigin() const;			// 元のサイズの取得
-	virtual void SetTex(D3DXVECTOR2 *tex);				// テクスチャ座標の設定
+	virtual void SetTex(D3DXVECTOR2 *tex);			// テクスチャ座標の設定
 	virtual D3DXVECTOR2 *GetTex();					// テクスチャ座標の取得
 
 	static CObject3D *Create(int nPriority);
@@ -55,13 +51,15 @@ protected:
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;	// 頂点バッファ
 
 private:
+
+	//=============================
+	// メンバ変数
+	//=============================
 	MyLib::Matrix m_mtxWorld;	// ワールドマトリックス
-	MyLib::Vector3 m_posOrigin;	// 元の位置
-	MyLib::Vector3 m_rotOrigin;	// 元の向き
 	D3DXVECTOR2 m_fTex[32];		// テクスチャ座標
 	D3DXCOLOR m_col;			// 色
 	MyLib::Vector3 m_fSize;		// サイズ
-	int m_nTexIdx;					// テクスチャのインデックス番号
+	int m_nTexIdx;				// テクスチャのインデックス番号
 };
 
 

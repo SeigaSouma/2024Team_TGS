@@ -42,13 +42,13 @@ public:
 		TYPE_OBJECTMESH,		// オブジェクト3D
 		TYPE_OBJECTX,			// オブジェクトX
 		TYPE_OBJECTBILLBOARD,	// オブジェクトビルボード
-		TYPE_MESHFIELD,		// メッシュフィールド
-		TYPE_MESHWALL,		// メッシュウォール
-		TYPE_MESHCYLINDER,	// メッシュシリンダー
-		TYPE_MESHDOME,		// メッシュドーム
-		TYPE_MESHDONUTS,	// メッシュドーナツ
-		TYPE_MESHSPHERE,	// メッシュスフィア
-		TYPE_NUMBER,		// 数字
+		TYPE_MESHFIELD,			// メッシュフィールド
+		TYPE_MESHWALL,			// メッシュウォール
+		TYPE_MESHCYLINDER,		// メッシュシリンダー
+		TYPE_MESHDOME,			// メッシュドーム
+		TYPE_MESHDONUTS,		// メッシュドーナツ
+		TYPE_MESHSPHERE,		// メッシュスフィア
+		TYPE_NUMBER,			// 数字
 		TYPE_MAX
 	};
 
@@ -89,13 +89,13 @@ public:
 	virtual void AddRotation(const MyLib::Vector3& rot);		// 向き加算
 
 	// 描画・スクリーン関連
-	float ScreenZ() const;											// スクリーン座標
-	static bool ZSort(const CObject* obj1, const CObject* obj2);	// Zソートの比較関数
+	float ScreenZ() const;												// スクリーン座標
+	static bool ZSort(const CObject* obj1, const CObject* obj2);		// Zソートの比較関数
 	static bool ZSortInverse(const CObject *obj1, const CObject *obj2);	// 逆Zソートの比較関数
-	int GetPriority() { return m_nPriority; }	// 優先順位取得
-	void SetEnableDisp(bool bDisp);				// 描画設定
-	bool IsDisp() { return m_bDisp; }					// 描画状況取得
-	void SetEnableHitstopMove() { m_bHitstopMove = true; }	// ヒットストップ中に動くフラグ有効
+	int GetPriority() { return m_nPriority; }							// 優先順位取得
+	void SetEnableDisp(bool bDisp);										// 描画設定
+	bool IsDisp() { return m_bDisp; }									// 描画状況取得
+	void SetEnableHitstopMove() { m_bHitstopMove = true; }				// ヒットストップ中に動くフラグ有効
 
 	// エフェクト関連
 	int SetEffectParent(CEffect3D *pEffect3D);	// エフェクト設定
@@ -104,16 +104,16 @@ public:
 	void ReleaseEffect(int nIdx);				// エフェクトの解放
 	void UninitEffect();						// エフェクトの解放
 
-	static void ReleaseAll();
-	static void UpdateAll();
-	static void DrawAll();
+	static void ReleaseAll();	// 全開放
+	static void UpdateAll();	// 全更新
+	static void DrawAll();		// 全描画
 	static const int GetNumAll() { return m_nNumAll; }
 	static const int GetNumPriorityAll(int nPriority) { return m_nNumPriorityAll[nPriority]; }
 	static std::map<LAYER, std::map<int, std::vector<CObject*>>> GetTop() { return m_pObj; }	// 先頭取得
 
 	bool IsDeath();						// 死亡の判定
-	void SetType(const TYPE type);
-	TYPE GetType() const;
+	void SetType(const TYPE type);		// 種類設定
+	TYPE GetType() const;				// 種類取得
 	virtual CObject *GetObject();
 	virtual CObject2D *GetObject2D();
 	virtual CObject3D *GetObject3D();
@@ -140,9 +140,9 @@ private:
 	// 共通するパラメータ
 	MyLib::Vector3 m_pos;			// 位置
 	MyLib::Vector3 m_posOld;		// 前回の位置
-	MyLib::Vector3 m_posOrigin;	// 元の位置
+	MyLib::Vector3 m_posOrigin;		// 元の位置
 	MyLib::Vector3 m_rot;			// 向き
-	MyLib::Vector3 m_rotOrigin;	// 元の向き
+	MyLib::Vector3 m_rotOrigin;		// 元の向き
 	MyLib::Vector3 m_move;			// 移動量
 
 	// オブジェクト管理用

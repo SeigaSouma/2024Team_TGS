@@ -19,7 +19,7 @@ namespace
 //==========================================================================
 // コンストラクタ
 //==========================================================================
-CObjectCircleGauge2D::CObjectCircleGauge2D(int nPriority) : CObject(nPriority)
+CObjectCircleGauge2D::CObjectCircleGauge2D(int nPriority, const LAYER layer) : CObject(nPriority, layer)
 {
 	m_col = mylib_const::DEFAULT_COLOR;	// 色
 	m_fRate = 0.0f;		// 割合
