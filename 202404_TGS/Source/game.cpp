@@ -164,6 +164,8 @@ HRESULT CGame::Init()
 
 	m_pEditMap = CEdit_Map::Create();
 
+	m_pTimer = CTimer::Create();
+
 	// ¬Œ÷
 	return S_OK;
 }

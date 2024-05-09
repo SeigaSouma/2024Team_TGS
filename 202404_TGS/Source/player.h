@@ -248,8 +248,8 @@ private:
 	void UpdateDamageReciveTimer();	// ダメージ受付時間更新
 
 	// モーション系関数
-	void AttackAction(CMotion::AttackInfo ATKInfo, int nCntATK) override;	// 攻撃時処理
-	void AttackInDicision(CMotion::AttackInfo* pATKInfo, int nCntATK) override;			// 攻撃判定中処理
+	void AttackAction(CMotion::AttackInfo ATKInfo, int nCntATK) override;		// 攻撃時処理
+	void AttackInDicision(CMotion::AttackInfo* pATKInfo, int nCntATK) override;	// 攻撃判定中処理
 
 	//=============================
 	// メンバ変数

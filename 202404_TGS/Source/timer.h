@@ -14,22 +14,11 @@
 // 前方宣言
 //==========================================================================
 class CMultiNumber;
-class CObject2D;
-class CObjectCircleGauge2D;
-
-//==========================================================================
-// 定数定義
-//==========================================================================
-namespace
-{
-	const int NUM_CIRCLE = 10;	// 円の数
-	const float START_TIME = 120;	// 初期時間
-}
 
 //==========================================================================
 // クラス定義
 //==========================================================================
-// タイマークラス定義
+// タイマークラス
 class CTimer
 {
 public:
@@ -47,10 +36,9 @@ public:
 	~CTimer();
 
 	static CTimer *Create();
-	static CTimer *Create(MyLib::Vector3 pos);
 	static CTimer *GetInstance() { return m_pTimer; }
 
-	HRESULT Init(MyLib::Vector3 pos);
+	HRESULT Init();
 	void Uninit();
 	void Update();
 	void Draw();
@@ -61,25 +49,30 @@ public:
 
 private:
 
+	//=============================
 	// 関数リスト
+	//=============================
 	typedef void(CTimer::*STATE_FUNC)();
 	static STATE_FUNC m_StateFuncList[];	// 状態関数リスト
 
+	//=============================
 	// メンバ関数
+	//=============================
 	void StateWait();
 	void StatAppearance();
 	void StatAddLittle();
 	void StateAdjustment();
 
+	//=============================
 	// メンバ変数
+	//=============================
+	MyLib::Vector3 m_pos;			// 位置
+	MyLib::Vector3 m_posOrigin;		// 元の位置
 	eState m_state;					// 状態
 	float m_fStateTime;				// 状態時間
 	float m_fTime;					// 時間
-	MyLib::Vector3 m_pos;				// 位置
-	MyLib::Vector3 m_posOrigin;		// 元の位置
 	bool m_bAddTime;	// タイマー加算のフラグ
-	int m_nProgress;	// 進行状況
-	CObjectCircleGauge2D *m_apCircle[NUM_CIRCLE];	// 数字がわりの円
+	CMultiNumber* m_pClearTime[3];		// 種類ごとの数字
 	static CTimer *m_pTimer;	// 自身のポインタ
 };
 

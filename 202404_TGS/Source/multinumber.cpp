@@ -53,106 +53,78 @@ CMultiNumber::~CMultiNumber()
 //==========================================================================
 // 生成処理
 //==========================================================================
-CMultiNumber *CMultiNumber::Create(MyLib::Vector3 pos, D3DXVECTOR2 size, int nNum, CNumber::EObjectType objtype, bool bDigitDraw, int nPriority)
+CMultiNumber* CMultiNumber::Create(MyLib::Vector3 pos, D3DXVECTOR2 size, int nNum, CNumber::EObjectType objtype, bool bDigitDraw, int nPriority)
 {
-	// 生成用のオブジェクト
-	CMultiNumber *pNumber = nullptr;
+	// メモリの確保
+	CMultiNumber* pNumber = DEBUG_NEW CMultiNumber;
 
-	if (pNumber == nullptr)
-	{// nullptrだったら
+	if (pNumber != nullptr)
+	{// メモリの確保が出来ていたら
 
-	 // メモリの確保
-		pNumber = DEBUG_NEW CMultiNumber;
+		// オブジェクトの種類
+		pNumber->m_objType = objtype;
 
-		if (pNumber != nullptr)
-		{// メモリの確保が出来ていたら
+		// サイズ
+		pNumber->m_size = size;
 
-			// オブジェクトの種類
-			pNumber->m_objType = objtype;
+		// 位置
+		pNumber->SetPosition(pos);
 
-			// サイズ
-			pNumber->m_size = size;
+		// 数字の数
+		pNumber->m_nNumNumber = nNum;
 
-			// 位置
-			pNumber->SetPosition(pos);
+		// 桁数描画
+		pNumber->m_bDigitDraw = bDigitDraw;
 
-			// 数字の数
-			pNumber->m_nNumNumber = nNum;
+		// 優先順位
+		pNumber->m_nPriority = nPriority;
 
-			// 桁数描画
-			pNumber->m_bDigitDraw = bDigitDraw;
-
-			// 優先順位
-			pNumber->m_nPriority = nPriority;
-
-			// 初期化処理
-			pNumber->Init();
-		}
-		else
-		{
-			delete pNumber;
-			pNumber = nullptr;
-		}
-
-		return pNumber;
+		// 初期化処理
+		pNumber->Init();
 	}
 
-	return nullptr;
+	return pNumber;
 }
 
 
 //==========================================================================
 // 生成処理(オーバーロード)
 //==========================================================================
-CMultiNumber *CMultiNumber::Create(MyLib::Vector3 pos, D3DXVECTOR2 size, int nNum, CNumber::EObjectType objtype, const std::string& file, bool bDigitDraw, int nPriority)
+CMultiNumber* CMultiNumber::Create(MyLib::Vector3 pos, D3DXVECTOR2 size, int nNum, CNumber::EObjectType objtype, const std::string& file, bool bDigitDraw, int nPriority)
 {
-	// 生成用のオブジェクト
-	CMultiNumber *pNumber = nullptr;
+	// メモリの確保
+	CMultiNumber* pNumber = DEBUG_NEW CMultiNumber;
 
-	if (pNumber == nullptr)
-	{// nullptrだったら
+	if (pNumber != nullptr)
+	{// メモリの確保が出来ていたら
 
-	 // メモリの確保
-		pNumber = DEBUG_NEW CMultiNumber;
+		// オブジェクトの種類
+		pNumber->m_objType = objtype;
 
-		if (pNumber != nullptr)
-		{// メモリの確保が出来ていたら
+		// サイズ
+		pNumber->m_size = size;
 
-		 // オブジェクトの種類
-			pNumber->m_objType = objtype;
+		// 位置
+		pNumber->SetPosition(pos);
+		pNumber->SetPosition(pos);
 
-			// サイズ
-			pNumber->m_size = size;
+		// 数字の数
+		pNumber->m_nNumNumber = nNum;
 
-			// 位置
-			pNumber->SetPosition(pos);
-			pNumber->SetPosition(pos);
+		// 桁数描画
+		pNumber->m_bDigitDraw = bDigitDraw;
 
-			// 数字の数
-			pNumber->m_nNumNumber = nNum;
+		// 優先順位
+		pNumber->m_nPriority = nPriority;
 
-			// 桁数描画
-			pNumber->m_bDigitDraw = bDigitDraw;
+		// テクスチャ読み込み
+		pNumber->m_nTexIdx = CTexture::GetInstance()->Regist(file);
 
-			// 優先順位
-			pNumber->m_nPriority = nPriority;
-
-			// テクスチャ読み込み
-			pNumber->m_nTexIdx = CTexture::GetInstance()->Regist(file);
-
-			// 初期化処理
-			pNumber->Init();
-		}
-		else
-		{
-			delete pNumber;
-			pNumber = nullptr;
-		}
-
-		return pNumber;
+		// 初期化処理
+		pNumber->Init();
 	}
 
-	return nullptr;
+	return pNumber;
 }
 
 //==========================================================================

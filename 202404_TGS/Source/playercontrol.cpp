@@ -49,6 +49,7 @@ void CPlayerControlMove::Move(CPlayer* player)
 	// ƒJƒƒ‰î•ñŽæ“¾
 	CCamera* pCamera = CManager::GetInstance()->GetCamera();
 	MyLib::Vector3 Camerarot = pCamera->GetRotation();
+	Camerarot.y -= pCamera->GetOriginRotation().y;
 
 	// –Ú•W‚ÌŒü‚«Žæ“¾
 	float fRotDest = player->GetRotDest();
