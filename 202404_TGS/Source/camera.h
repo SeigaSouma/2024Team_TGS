@@ -76,7 +76,9 @@ public:
 	void SetCamera();
 
 	void SetRotation(const MyLib::Vector3 rot);	// 向き設定
-	MyLib::Vector3 GetRotation() const;		// 向き取得
+	MyLib::Vector3 GetRotation() const;			// 向き取得
+	void SetOriginRotation(const MyLib::Vector3 rot) { m_rotOrigin = rot; }	// 元の向き設定
+	MyLib::Vector3 GetOriginRotation() const { return m_rotOrigin; }		// 元の向き取得
 	MyLib::Vector3 GetPositionV() const;		// カメラの位置取得
 	MyLib::Vector3 GetPositionR() const;		// カメラの注視点取得
 	void SetOriginDistance(float fDistance);	// 元になるカメラの距離設定
@@ -200,6 +202,7 @@ private:
 	MyLib::Vector3 m_vecU;				// 上方向ベクトル
 	MyLib::Vector3 m_move;				// 移動量
 	MyLib::Vector3 m_rot;				// 向き
+	MyLib::Vector3 m_rotOrigin;			// 元の向き
 	MyLib::Vector3 m_rotDest;			// 目標の向き
 	MyLib::Vector3 m_Moverot;			// 向きの移動量
 	MyLib::Vector3 m_rotVDest;			// 目標の視点の向き

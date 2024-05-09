@@ -57,7 +57,7 @@
 
 namespace
 {
-	const MyLib::Vector3 DEFAULT_GAMEROT = MyLib::Vector3(0.0f, 0.0f, -0.20f);	// ゲームのデフォルト向き
+	const MyLib::Vector3 DEFAULT_GAMEROT = MyLib::Vector3(0.0f, 0.28f, -0.10f);	// ゲームのデフォルト向き
 	const float MULTIPLY_POSV_CORRECTION = 2.1f;	// (ゲーム時)視点の補正係数倍率
 	const float MULTIPLY_POSR_CORRECTION = 2.1f;	// (ゲーム時)注視点の補正係数倍率
 	const float DISATNCE_POSR_PLAYER = 200.0f;		// (ゲーム時)プレイヤーとの注視点距離
@@ -1262,9 +1262,10 @@ void CCamera::ResetGame()
 	m_posV = MyLib::Vector3(0.0f, 300.0f, m_posR.z + -400.0f);	// 視点(カメラの位置)
 	m_posVDest = m_posV;									// 目標の視点
 	m_posRDest = m_posR;									// 目標の注視点
-	m_vecU = MyLib::Vector3(0.0f, 1.0f, 0.0f);					// 上方向ベクトル
-	m_move = MyLib::Vector3(0.0f, 0.0f, 0.0f);					// 移動量
-	m_rot = DEFAULT_GAMEROT;					// 向き
+	m_vecU = MyLib::Vector3(0.0f, 1.0f, 0.0f);				// 上方向ベクトル
+	m_move = MyLib::Vector3(0.0f, 0.0f, 0.0f);				// 移動量
+	m_rot = DEFAULT_GAMEROT;								// 向き
+	m_rotOrigin = m_rot;									// 元の向き
 	m_rotDest = DEFAULT_GAMEROT;							// 目標の向き
 	m_rotVDest = m_rot;										// 目標の視点の向き
 	m_TargetPos = MyLib::Vector3(0.0f, 0.0f, 0.0f);			// 目標の位置

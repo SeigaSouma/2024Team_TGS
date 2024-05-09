@@ -35,7 +35,29 @@ public:
 	CMultiNumber(int nPriority = 8);
 	~CMultiNumber();
 
+	/**
+	@brief	生成処理
+	@param	pos			[in]	位置
+	@param	size		[in]	サイズ
+	@param	nNum		[in]	桁数
+	@param	objtype		[in]	オブジェクトの種類 [2D / 3D / ビルビード]
+	@param	bDigitDraw	[in]	有ケタ分のみ描画するかの判定
+	@param	nPriority	[in]	描画優先順位
+	@return	生成したポインタ
+	*/
 	static CMultiNumber *Create(MyLib::Vector3 pos, D3DXVECTOR2 size, int nNum, CNumber::EObjectType objtype, bool bDigitDraw = false, int nPriority = 8);
+	
+	/**
+	@brief	生成処理
+	@param	pos			[in]	位置
+	@param	size		[in]	サイズ
+	@param	nNum		[in]	桁数
+	@param	objtype		[in]	オブジェクトの種類 [2D / 3D / ビルビード]
+	@param	file		[in]	テクスチャファイル名
+	@param	bDigitDraw	[in]	有ケタ分のみ描画するかの判定
+	@param	nPriority	[in]	描画優先順位
+	@return	生成したポインタ
+	*/
 	static CMultiNumber *Create(MyLib::Vector3 pos, D3DXVECTOR2 size, int nNum, CNumber::EObjectType objtype, const std::string& file, bool bDigitDraw = true, int nPriority = 8);
 
 	// メンバ関数
