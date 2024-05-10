@@ -61,9 +61,10 @@ CEdit_Map::~CEdit_Map()
 //==========================================================================
 HRESULT CEdit_Map::Init()
 {
-
+	// ロード状況保存
 	bool bLoad = m_bLoad;
 
+	// 読み込み処理
 	Load();
 
 	// デバイスの取得
@@ -79,7 +80,6 @@ HRESULT CEdit_Map::Init()
 			m_nModelIdx.back() = CXLoad::GetInstance()->XLoad(file);
 		}
 		
-
 		m_pTexture.emplace_back();
 
 		HRESULT hr = D3DXCreateTextureFromFileEx(pDevive, file.c_str(), 0, 0, 0, 0, D3DFMT_UNKNOWN,
