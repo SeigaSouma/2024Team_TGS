@@ -1,10 +1,10 @@
 //=============================================================================
 // 
-//  転移ビーコン処理 [transferBeacon.cpp]
+//  荷物処理 [baggage.cpp]
 //  Author : 相馬靜雅
 // 
 //=============================================================================
-#include "sample_objX.h"
+#include "baggage.h"
 #include "manager.h"
 #include "calculation.h"
 
@@ -13,37 +13,32 @@
 //==========================================================================
 namespace
 {
-	const char* MODEL = "data\\MODEL\\box.x";
-}
+	const std::string MODEL[] =
+	{
+		"data\\MODEL\\box.x",	// 布
+	};
 
-//==========================================================================
-// 関数ポインタ
-//==========================================================================
-CSample_ObjX::SAMPLE_FUNC CSample_ObjX::m_SampleFuncList[] =
-{
-	&CSample_ObjX::SampleWho,	// フー
-	&CSample_ObjX::SampleWao,	// ワオ
-};
+}
 
 //==========================================================================
 // 静的メンバ変数
 //==========================================================================
-CListManager<CSample_ObjX> CSample_ObjX::m_List = {};	// リスト
+CListManager<CBaggage> CBaggage::m_List = {};	// リスト
 
 //==========================================================================
 // コンストラクタ
 //==========================================================================
-CSample_ObjX::CSample_ObjX(int nPriority) : CObjectX(nPriority)
+CBaggage::CBaggage(int nPriority) : CObjectX(nPriority)
 {
 	// 値のクリア
-	m_fStateTime = 0.0f;	// 状態カウンター
-	m_state = SAMPLE_WAO;	// 状態
+	m_type = TYPE::TYPE_CLOTH;	// 種類
+	m_fWeight = 0.0f;	// 重さ
 }
 
 //==========================================================================
 // デストラクタ
 //==========================================================================
-CSample_ObjX::~CSample_ObjX()
+CBaggage::~CBaggage()
 {
 	
 }
@@ -51,13 +46,16 @@ CSample_ObjX::~CSample_ObjX()
 //==========================================================================
 // 生成処理
 //==========================================================================
-CSample_ObjX *CSample_ObjX::Create()
+CBaggage *CBaggage::Create(TYPE type)
 {
 	// メモリの確保
-	CSample_ObjX* pObj = DEBUG_NEW CSample_ObjX;
+	CBaggage* pObj = DEBUG_NEW CBaggage;
 
 	if (pObj != nullptr)
 	{
+		// 引数情報
+		pObj->m_type = type;
+
 		// 初期化処理
 		pObj->Init();
 	}
@@ -68,7 +66,7 @@ CSample_ObjX *CSample_ObjX::Create()
 //==========================================================================
 // 初期化処理
 //==========================================================================
-HRESULT CSample_ObjX::Init()
+HRESULT CBaggage::Init()
 {
 	// リストに追加
 	m_List.Regist(this);
@@ -76,8 +74,10 @@ HRESULT CSample_ObjX::Init()
 	// 種類の設定
 	CObject::SetType(TYPE_OBJECTX);
 
+	int typeID = static_cast<int>(m_type);
+
 	// 初期化処理
-	HRESULT hr = CObjectX::Init(MODEL);
+	HRESULT hr = CObjectX::Init(MODEL[typeID]);
 	if (FAILED(hr))
 	{
 		return E_FAIL;
@@ -89,9 +89,8 @@ HRESULT CSample_ObjX::Init()
 //==========================================================================
 // 終了処理
 //==========================================================================
-void CSample_ObjX::Uninit()
+void CBaggage::Uninit()
 {
-	
 	// リストから削除
 	m_List.Delete(this);
 
@@ -102,9 +101,8 @@ void CSample_ObjX::Uninit()
 //==========================================================================
 // 削除
 //==========================================================================
-void CSample_ObjX::Kill()
+void CBaggage::Kill()
 {
-	
 	// リストから削除
 	m_List.Delete(this);
 
@@ -115,36 +113,16 @@ void CSample_ObjX::Kill()
 //==========================================================================
 // 更新処理
 //==========================================================================
-void CSample_ObjX::Update()
-{
-	// 状態カウンター加算
-	m_fStateTime += CManager::GetInstance()->GetDeltaTime();
-
-	// 状態別処理
-	(this->*(m_SampleFuncList[m_state]))();
-
-}
-
-//==========================================================================
-// フー
-//==========================================================================
-void CSample_ObjX::SampleWho()
+void CBaggage::Update()
 {
 	
-}
-
-//==========================================================================
-// ワオ
-//==========================================================================
-void CSample_ObjX::SampleWao()
-{
 
 }
 
 //==========================================================================
 // 描画処理
 //==========================================================================
-void CSample_ObjX::Draw()
+void CBaggage::Draw()
 {
 	// 描画
 	CObjectX::Draw();

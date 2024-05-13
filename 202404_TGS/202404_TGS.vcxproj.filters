@@ -75,6 +75,9 @@
     <Filter Include="checkpoint">
       <UniqueIdentifier>{e351929e-a465-4c59-a3fc-a361fb2bc776}</UniqueIdentifier>
     </Filter>
+    <Filter Include="baggage">
+      <UniqueIdentifier>{9312ed64-aead-4f02-884d-1467aecdfe3c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\ballast.cpp">
@@ -445,6 +448,9 @@
     </ClCompile>
     <ClCompile Include="Source\sample_character.cpp">
       <Filter>SAMPLE</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\baggage.cpp">
+      <Filter>baggage</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -825,6 +831,9 @@
     </ClInclude>
     <ClInclude Include="Source\sample_character.h">
       <Filter>SAMPLE</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\baggage.h">
+      <Filter>baggage</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
