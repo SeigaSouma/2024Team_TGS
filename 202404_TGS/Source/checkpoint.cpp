@@ -154,7 +154,10 @@ void CCheckpoint::Update()
 	if (Playerpos.x >= pos.x)
 	{// チェックポイント通過したら
 
-		m_nSaveID = m_MyIndex;
+		if (m_nSaveID < m_MyIndex)
+		{
+			m_nSaveID = m_MyIndex;
+		}
 	}
 }
 
