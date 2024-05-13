@@ -36,6 +36,7 @@
 #include "edit_map.h"
 #include "objectLine.h"
 #include "goalflag.h"
+#include "checkpoint.h"
 
 #include "sample_obj3D.h"
 
@@ -166,12 +167,15 @@ HRESULT CGame::Init()
 	// ÉNÉäÉAÇÃîªíË
 	SetEnableClear(true);
 
-
 	CSample_Obj3D::Create();
 
 	m_pTimer = CTimer::Create();
 
-	CGoalflagX::Create(MyLib::Vector3(300.0f,0.0f,0.0f));
+	CCheckpoint::Create(MyLib::Vector3(300.0f, 0.0f, 0.0f));
+	CCheckpoint::Create(MyLib::Vector3(1300.0f, 0.0f, 0.0f));
+	CCheckpoint::Create(MyLib::Vector3(2300.0f, 0.0f, 0.0f));
+
+	CGoalflagX::Create(MyLib::Vector3(3300.0f,0.0f,0.0f));
 
 	// ê¨å˜
 	return S_OK;
