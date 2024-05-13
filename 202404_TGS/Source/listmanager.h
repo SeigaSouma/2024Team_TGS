@@ -25,6 +25,7 @@ public:
 	void Regist(T* pList);				// 割り当て
 	void Delete(T* pList);				// 削除
 	bool ListLoop(T** ppList);			// リストループ処理
+	bool ListLoop(Iterator* itr);		// リストループ処理
 	T* GetData(int nIdx);				// データ取得
 	int FindIdx(T* pList);				// リストからインデックス検索
 	void KillAll();					// 全て削除
@@ -139,6 +140,38 @@ template<class T> bool CListManager<T>::ListLoop(T** ppList)
 	}
 
 	return (*ppList != nullptr);	// nullptrで終了
+}
+
+
+//==========================================================================
+// リストループ処理
+//==========================================================================
+template<class T> bool CListManager<T>::ListLoop(Iterator* itr)
+{
+	if (m_ListObj.empty())
+	{// 空の場合即終了
+		return false;
+	}
+
+	if (itr == nullptr)
+	{// 先頭
+		itr = m_ListObj.begin();
+	}
+	else
+	{
+		// 終端のイテレーターを取得
+		Iterator enditr = m_ListObj.end();
+		enditr = std::prev(enditr);
+
+		if ((*itr) == enditr)
+		{// 終端だったら終了
+			return false;
+		}
+
+		itr++;
+	}
+
+	return (itr != nullptr);	// nullptrで終了
 }
 
 //==========================================================================

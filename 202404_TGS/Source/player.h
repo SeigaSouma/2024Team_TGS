@@ -241,6 +241,7 @@ private:
 	// その他関数
 	virtual void Controll();		// 操作
 	void LimitPos();				// 位置制限
+	void ReaspawnCheckPoint();		// チェックポイント復活
 	void CollisionMapObject();		// マップオブジェクトとの当たり判定
 	void MotionBySetState();		// モーション別の状態設定
 	void ResetFrag();				// フラグリセット
