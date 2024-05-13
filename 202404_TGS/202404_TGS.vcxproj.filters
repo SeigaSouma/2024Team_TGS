@@ -425,11 +425,11 @@
     <ClCompile Include="Source\edit.cpp">
       <Filter>edit</Filter>
     </ClCompile>
-    <ClCompile Include="goalflag.cpp">
-      <Filter>goal</Filter>
-    </ClCompile>
     <ClCompile Include="Source\sample_objX.cpp">
       <Filter>SAMPLE</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\goalflag.cpp">
+      <Filter>goal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -793,11 +793,11 @@
     <ClInclude Include="Source\edit.h">
       <Filter>edit</Filter>
     </ClInclude>
-    <ClInclude Include="goalflag.h">
-      <Filter>goal</Filter>
-    </ClInclude>
     <ClInclude Include="Source\sample_objX.h">
       <Filter>SAMPLE</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\goalflag.h">
+      <Filter>goal</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

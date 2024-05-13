@@ -156,7 +156,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="goalflag.cpp" />
     <ClCompile Include="Libraries\Imgui\imgui.cpp" />
     <ClCompile Include="Libraries\Imgui\imgui_demo.cpp" />
     <ClCompile Include="Libraries\Imgui\imgui_draw.cpp" />
@@ -194,6 +193,7 @@
     <ClCompile Include="Source\gamemanager.cpp" />
     <ClCompile Include="Source\game_pressenter.cpp" />
     <ClCompile Include="Source\game_tutorial.cpp" />
+    <ClCompile Include="Source\goalflag.cpp" />
     <ClCompile Include="Source\handle_Move.cpp" />
     <ClCompile Include="Source\handle_Scale.cpp" />
     <ClCompile Include="Source\hp_gauge.cpp" />
@@ -282,7 +282,6 @@
     <ClCompile Include="Source\Xload.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="goalflag.h" />
     <ClInclude Include="Libraries\Imgui\imconfig.h" />
     <ClInclude Include="Libraries\Imgui\imgui.h" />
     <ClInclude Include="Libraries\Imgui\imgui_impl_dx9.h" />
@@ -323,6 +322,7 @@
     <ClInclude Include="Source\gamemanager.h" />
     <ClInclude Include="Source\game_pressenter.h" />
     <ClInclude Include="Source\game_tutorial.h" />
+    <ClInclude Include="Source\goalflag.h" />
     <ClInclude Include="Source\handle_Move.h" />
     <ClInclude Include="Source\handle_Scale.h" />
     <ClInclude Include="Source\hp_gauge.h" />
