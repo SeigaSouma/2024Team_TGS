@@ -35,6 +35,7 @@
 #include "flower_bud.h"
 #include "edit_map.h"
 #include "objectLine.h"
+#include "goalflag.h"
 
 #include "sample_obj3D.h"
 
@@ -169,6 +170,8 @@ HRESULT CGame::Init()
 	CSample_Obj3D::Create();
 
 	m_pTimer = CTimer::Create();
+
+	CGoalflagX::Create(MyLib::Vector3(300.0f,0.0f,0.0f));
 
 	// ê¨å˜
 	return S_OK;
