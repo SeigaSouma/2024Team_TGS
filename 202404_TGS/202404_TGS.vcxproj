@@ -156,6 +156,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="goalflag.cpp" />
     <ClCompile Include="Libraries\Imgui\imgui.cpp" />
     <ClCompile Include="Libraries\Imgui\imgui_demo.cpp" />
     <ClCompile Include="Libraries\Imgui\imgui_draw.cpp" />
@@ -280,6 +281,7 @@
     <ClCompile Include="Source\Xload.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="goalflag.h" />
     <ClInclude Include="Libraries\Imgui\imconfig.h" />
     <ClInclude Include="Libraries\Imgui\imgui.h" />
     <ClInclude Include="Libraries\Imgui\imgui_impl_dx9.h" />
