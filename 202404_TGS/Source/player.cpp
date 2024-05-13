@@ -1111,6 +1111,8 @@ void CPlayer::AttackInDicision(CMotion::AttackInfo* pATKInfo, int nCntATK)
 //==========================================================================
 void CPlayer::LimitPos()
 {
+	return;
+
 	MyLib::Vector3 pos = GetPosition();
 
 	// ƒGƒŠƒA§ŒÀî•ñæ“¾
