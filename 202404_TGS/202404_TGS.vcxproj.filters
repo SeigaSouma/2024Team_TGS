@@ -72,6 +72,9 @@
     <Filter Include="SAMPLE">
       <UniqueIdentifier>{2f9d7de0-6038-4373-9537-6c74de8f2e2c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="checkpoint">
+      <UniqueIdentifier>{e351929e-a465-4c59-a3fc-a361fb2bc776}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\ballast.cpp">
@@ -436,6 +439,9 @@
     </ClCompile>
     <ClCompile Include="Source\sample_obj3D.cpp">
       <Filter>SAMPLE</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\checkpoint.cpp">
+      <Filter>checkpoint</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -810,6 +816,9 @@
     </ClInclude>
     <ClInclude Include="Source\sample_obj2D.h">
       <Filter>SAMPLE</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\checkpoint.h">
+      <Filter>checkpoint</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

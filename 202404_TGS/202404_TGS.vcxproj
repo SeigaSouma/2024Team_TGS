@@ -173,6 +173,7 @@
     <ClCompile Include="Source\beforebattle.cpp" />
     <ClCompile Include="Source\blackframe.cpp" />
     <ClCompile Include="Source\camera.cpp" />
+    <ClCompile Include="Source\checkpoint.cpp" />
     <ClCompile Include="Source\collisionLine_Box.cpp" />
     <ClCompile Include="Source\collisionobject.cpp" />
     <ClCompile Include="Source\damagepoint.cpp" />
@@ -303,6 +304,7 @@
     <ClInclude Include="Source\blackframe.h" />
     <ClInclude Include="Source\calculation.h" />
     <ClInclude Include="Source\camera.h" />
+    <ClInclude Include="Source\checkpoint.h" />
     <ClInclude Include="Source\collisionLine_Box.h" />
     <ClInclude Include="Source\collisionobject.h" />
     <ClInclude Include="Source\constans.h" />
