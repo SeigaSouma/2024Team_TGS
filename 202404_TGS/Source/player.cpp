@@ -35,6 +35,8 @@
 #include "edit_map.h"
 #include "damagepoint.h"
 
+#include "checkpoint.h"
+
 // 使用クラス
 #include "playercontrol.h"
 
@@ -1141,10 +1143,16 @@ void CPlayer::LimitPos()
 //==========================================================================
 void CPlayer::ReaspawnCheckPoint()
 {
-	// チェックポイント取得
-	CListManager<CLimitArea> limitareaList = CLimitArea::GetListObj();
-	
+	// チェックポイントのID取得
+	int saveID = CCheckpoint::GetSaveID();
 
+	// チェックポイント取得
+	CListManager<CCheckpoint> checkpointList = CCheckpoint::GetListObj();
+	CCheckpoint* pCheckPoint = checkpointList.GetData(saveID);
+
+	// 位置取得
+	MyLib::Vector3 pos = pCheckPoint->GetPosition();
+	SetPosition(pos);
 }
 
 //==========================================================================

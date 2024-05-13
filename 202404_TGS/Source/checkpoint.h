@@ -45,6 +45,7 @@ public:
 	// 静的関数
 	//=============================
 	static CCheckpoint* Create(MyLib::Vector3 pos);
+	static int GetSaveID() { return m_nSaveID; }	// セーブID取得
 	static CListManager<CCheckpoint> GetListObj() { return m_List; }	// リスト取得
 
 private:
@@ -70,7 +71,7 @@ private:
 	static CListManager<CCheckpoint> m_List;	// リスト
 
 	static int m_nAll;		// 総数
-	static int m_nSaveID;		// save id
+	static int m_nSaveID;	// save id
 	int m_MyIndex;			// 自分のID
 };
 
