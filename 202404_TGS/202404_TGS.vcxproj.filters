@@ -443,6 +443,9 @@
     <ClCompile Include="Source\checkpoint.cpp">
       <Filter>checkpoint</Filter>
     </ClCompile>
+    <ClCompile Include="Source\sample_character.cpp">
+      <Filter>SAMPLE</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ballast.h">
@@ -819,6 +822,9 @@
     </ClInclude>
     <ClInclude Include="Source\checkpoint.h">
       <Filter>checkpoint</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\sample_character.h">
+      <Filter>SAMPLE</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
