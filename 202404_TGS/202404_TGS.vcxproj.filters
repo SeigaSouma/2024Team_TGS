@@ -69,6 +69,9 @@
     <Filter Include="goal">
       <UniqueIdentifier>{6ab27bb6-67f7-4892-aeae-7674ac92e332}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SAMPLE">
+      <UniqueIdentifier>{2f9d7de0-6038-4373-9537-6c74de8f2e2c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\ballast.cpp">
@@ -424,6 +427,9 @@
     </ClCompile>
     <ClCompile Include="goalflag.cpp">
       <Filter>goal</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\sample_objX.cpp">
+      <Filter>SAMPLE</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -789,6 +795,9 @@
     </ClInclude>
     <ClInclude Include="goalflag.h">
       <Filter>goal</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\sample_objX.h">
+      <Filter>SAMPLE</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
