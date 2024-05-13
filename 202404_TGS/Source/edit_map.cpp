@@ -158,6 +158,18 @@ void CEdit_Map::Update()
 
 	// ÄˆÚ“®’†
 	Remove();
+
+
+	// æ“ª‚ğ•Û‘¶
+	std::list<CObjectX*>::iterator itr = m_List.GetBegin();
+	CObjectX* pObj = nullptr;
+
+	while (m_List.ListLoop(&itr))
+	{
+		pObj = (*itr);
+
+		pObj->GetPosition();
+	}
 }
 
 //==========================================================================

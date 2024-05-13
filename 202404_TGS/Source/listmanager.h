@@ -22,6 +22,8 @@ public:
 	HRESULT Init();
 	void Uninit();
 
+	CListManager<T>::Iterator GetBegin();
+
 	void Regist(T* pList);				// 割り当て
 	void Delete(T* pList);				// 削除
 	bool ListLoop(T** ppList);			// リストループ処理
@@ -41,9 +43,19 @@ private:
 
 
 //==========================================================================
+// 総数取得
+//==========================================================================
+template<class T> 
+typename CListManager<T>::Iterator CListManager<T>::GetBegin()
+{
+	return m_ListObj.begin();
+}
+
+//==========================================================================
 // コンストラクタ
 //==========================================================================
-template<class T> CListManager<T>::CListManager()
+template<class T> 
+CListManager<T>::CListManager()
 {
 	// 値のクリア
 	m_nNumAll = 0;	// 総数リセット
@@ -53,7 +65,8 @@ template<class T> CListManager<T>::CListManager()
 //==========================================================================
 // デストラクタ
 //==========================================================================
-template<class T> CListManager<T>::~CListManager()
+template<class T> 
+CListManager<T>::~CListManager()
 {
 	m_ListObj.clear();
 }
@@ -61,7 +74,8 @@ template<class T> CListManager<T>::~CListManager()
 //==========================================================================
 // 初期化処理
 //==========================================================================
-template<class T> HRESULT CListManager<T>::Init()
+template<class T> 
+HRESULT CListManager<T>::Init()
 {
 	// 総数リセット
 	m_nNumAll = 0;
@@ -72,7 +86,8 @@ template<class T> HRESULT CListManager<T>::Init()
 //==========================================================================
 // 割り当て
 //==========================================================================
-template<class T> void CListManager<T>::Regist(T* pList)
+template<class T> 
+void CListManager<T>::Regist(T* pList)
 {
 	// アイテムのリストに追加
 	m_ListObj.push_back(pList);
@@ -84,7 +99,8 @@ template<class T> void CListManager<T>::Regist(T* pList)
 //==========================================================================
 // 削除
 //==========================================================================
-template<class T> void CListManager<T>::Delete(T* pList)
+template<class T> 
+void CListManager<T>::Delete(T* pList)
 {
 	// 自分自身をリストから探す
 	Iterator itr = std::find(m_ListObj.begin(), m_ListObj.end(), pList);
@@ -103,7 +119,8 @@ template<class T> void CListManager<T>::Delete(T* pList)
 //==========================================================================
 // リストループ処理
 //==========================================================================
-template<class T> bool CListManager<T>::ListLoop(T** ppList)
+template<class T> 
+bool CListManager<T>::ListLoop(T** ppList)
 {
 	if (m_ListObj.empty())
 	{// 空の場合即終了
@@ -146,7 +163,8 @@ template<class T> bool CListManager<T>::ListLoop(T** ppList)
 //==========================================================================
 // リストループ処理
 //==========================================================================
-template<class T> bool CListManager<T>::ListLoop(Iterator* itr)
+template<class T>
+bool CListManager<T>::ListLoop(Iterator* itr)
 {
 	if (m_ListObj.empty())
 	{// 空の場合即終了
@@ -155,7 +173,7 @@ template<class T> bool CListManager<T>::ListLoop(Iterator* itr)
 
 	if (itr == nullptr)
 	{// 先頭
-		itr = m_ListObj.begin();
+		*itr = m_ListObj.begin();
 	}
 	else
 	{
@@ -168,7 +186,7 @@ template<class T> bool CListManager<T>::ListLoop(Iterator* itr)
 			return false;
 		}
 
-		itr++;
+		(*itr)++;
 	}
 
 	return (itr != nullptr);	// nullptrで終了
@@ -177,7 +195,8 @@ template<class T> bool CListManager<T>::ListLoop(Iterator* itr)
 //==========================================================================
 // データ取得
 //==========================================================================
-template<class T> T* CListManager<T>::GetData(int nIdx)
+template<class T> 
+T* CListManager<T>::GetData(int nIdx)
 {
 	if (m_ListObj.empty())
 	{// 例外は即終了
@@ -198,7 +217,8 @@ template<class T> T* CListManager<T>::GetData(int nIdx)
 //==========================================================================
 // リストからインデックス検索
 //==========================================================================
-template<class T> int CListManager<T>::FindIdx(T* pList)
+template<class T> 
+int CListManager<T>::FindIdx(T* pList)
 {
 	if (m_ListObj.empty())
 	{// 空の場合即終了
@@ -214,7 +234,8 @@ template<class T> int CListManager<T>::FindIdx(T* pList)
 //==========================================================================
 // 終了処理
 //==========================================================================
-template<class T> void CListManager<T>::Uninit()
+template<class T> 
+void CListManager<T>::Uninit()
 {
 	// クリア
 	m_ListObj.clear();
@@ -226,7 +247,8 @@ template<class T> void CListManager<T>::Uninit()
 //==========================================================================
 // 全て削除
 //==========================================================================
-template<class T> void CListManager<T>::KillAll()
+template<class T> 
+void CListManager<T>::KillAll()
 {
 	Iterator it = m_ListObj.begin();
 
@@ -252,7 +274,8 @@ template<class T> void CListManager<T>::KillAll()
 //==========================================================================
 // 総数取得
 //==========================================================================
-template<class T> int CListManager<T>::GetNumAll()
+template<class T> 
+int CListManager<T>::GetNumAll()
 {
 	return m_nNumAll;
 }
@@ -260,7 +283,8 @@ template<class T> int CListManager<T>::GetNumAll()
 //==========================================================================
 // リスト取得
 //==========================================================================
-template<class T> std::list<T*> CListManager<T>::GetList() const
+template<class T> 
+std::list<T*> CListManager<T>::GetList() const
 {
 	return m_ListObj;
 }
