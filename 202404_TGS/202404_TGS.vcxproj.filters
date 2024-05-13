@@ -804,12 +804,12 @@
     </ClInclude>
     <ClInclude Include="Source\goalflag.h">
       <Filter>goal</Filter>
-    <ClInclude Include="Source\sample_obj2D.h">
-      <Filter>SAMPLE</Filter>
     </ClInclude>
     <ClInclude Include="Source\sample_obj3D.h">
       <Filter>SAMPLE</Filter>
     </ClInclude>
+    <ClInclude Include="Source\sample_obj2D.h">
+      <Filter>SAMPLE</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
