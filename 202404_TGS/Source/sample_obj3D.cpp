@@ -1,10 +1,10 @@
 //=============================================================================
 // 
-//  サンプル_オブジェクト2D処理 [sample_obj2D.cpp]
+//  サンプル_オブジェクト3D処理 [sample_obj3D.cpp]
 //  Author : 相馬靜雅
 // 
 //=============================================================================
-#include "sample_obj2D.h"
+#include "sample_obj3D.h"
 #include "manager.h"
 #include "calculation.h"
 #include "input.h"
@@ -20,7 +20,7 @@ namespace
 //==========================================================================
 // コンストラクタ
 //==========================================================================
-CSample_Obj2D::CSample_Obj2D(int nPriority) : CObject2D(nPriority)
+CSample_Obj3D::CSample_Obj3D(int nPriority) : CObject3D(nPriority)
 {
 	// 値のクリア
 }
@@ -28,7 +28,7 @@ CSample_Obj2D::CSample_Obj2D(int nPriority) : CObject2D(nPriority)
 //==========================================================================
 // デストラクタ
 //==========================================================================
-CSample_Obj2D::~CSample_Obj2D()
+CSample_Obj3D::~CSample_Obj3D()
 {
 
 }
@@ -36,10 +36,10 @@ CSample_Obj2D::~CSample_Obj2D()
 //==========================================================================
 // 生成処理
 //==========================================================================
-CSample_Obj2D* CSample_Obj2D::Create()
+CSample_Obj3D* CSample_Obj3D::Create()
 {
 	// メモリの確保
-	CSample_Obj2D* pObj = DEBUG_NEW CSample_Obj2D;
+	CSample_Obj3D* pObj = DEBUG_NEW CSample_Obj3D;
 
 	if (pObj != nullptr)
 	{
@@ -53,11 +53,11 @@ CSample_Obj2D* CSample_Obj2D::Create()
 //==========================================================================
 // 初期化処理
 //==========================================================================
-HRESULT CSample_Obj2D::Init()
+HRESULT CSample_Obj3D::Init()
 {
 
-	// オブジェクト2Dの初期化
-	CObject2D::Init();
+	// オブジェクト3Dの初期化
+	CObject3D::Init();
 
 	// テクスチャ設定
 	int texID = CTexture::GetInstance()->Regist(TEXTURE_SAMPLE);
@@ -72,14 +72,16 @@ HRESULT CSample_Obj2D::Init()
 #else	// 縦幅を元にサイズ設定
 	size = UtilFunc::Transformation::AdjustSizeByWidth(size, 240.0f);
 #endif
-	SetSize(size);
-	SetSizeOrigin(size);
+
+	MyLib::Vector3 setsize = MyLib::Vector3(size.x, size.y, 0.0f);
+	SetSize(setsize);
+	SetSizeOrigin(setsize);
 
 
 	// 位置、向き設定は必要があれば追加
 
 	// 種類の設定
-	SetType(CObject::TYPE::TYPE_OBJECT2D);
+	SetType(CObject::TYPE::TYPE_OBJECT3D);
 
 	return S_OK;
 }
@@ -87,26 +89,26 @@ HRESULT CSample_Obj2D::Init()
 //==========================================================================
 // 終了処理
 //==========================================================================
-void CSample_Obj2D::Uninit()
+void CSample_Obj3D::Uninit()
 {
 	// 終了処理
-	CObject2D::Uninit();
+	CObject3D::Uninit();
 }
 
 //==========================================================================
 // 更新処理
 //==========================================================================
-void CSample_Obj2D::Update()
+void CSample_Obj3D::Update()
 {
 	// 更新処理
-	CObject2D::Update();
+	CObject3D::Update();
 }
 
 //==========================================================================
 // 描画処理
 //==========================================================================
-void CSample_Obj2D::Draw()
+void CSample_Obj3D::Draw()
 {
 	// 描画処理
-	CObject2D::Draw();
+	CObject3D::Draw();
 }

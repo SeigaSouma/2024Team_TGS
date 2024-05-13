@@ -36,6 +36,8 @@
 #include "edit_map.h"
 #include "objectLine.h"
 
+#include "sample_obj3D.h"
+
 //==========================================================================
 // 静的メンバ変数宣言
 //==========================================================================
@@ -163,6 +165,8 @@ HRESULT CGame::Init()
 	// クリアの判定
 	SetEnableClear(true);
 
+
+	CSample_Obj3D::Create();
 
 	m_pTimer = CTimer::Create();
 

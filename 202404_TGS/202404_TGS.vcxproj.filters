@@ -434,6 +434,9 @@
     <ClCompile Include="Source\sample_obj2D.cpp">
       <Filter>SAMPLE</Filter>
     </ClCompile>
+    <ClCompile Include="Source\sample_obj3D.cpp">
+      <Filter>SAMPLE</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ballast.h">
@@ -803,6 +806,9 @@
       <Filter>SAMPLE</Filter>
     </ClInclude>
     <ClInclude Include="Source\sample_obj2D.h">
+      <Filter>SAMPLE</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\sample_obj3D.h">
       <Filter>SAMPLE</Filter>
     </ClInclude>
   </ItemGroup>
