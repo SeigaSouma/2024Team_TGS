@@ -431,6 +431,12 @@
     <ClCompile Include="Source\goalflag.cpp">
       <Filter>goal</Filter>
     </ClCompile>
+    <ClCompile Include="Source\sample_obj2D.cpp">
+      <Filter>SAMPLE</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\sample_obj3D.cpp">
+      <Filter>SAMPLE</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ballast.h">
@@ -798,6 +804,12 @@
     </ClInclude>
     <ClInclude Include="Source\goalflag.h">
       <Filter>goal</Filter>
+    <ClInclude Include="Source\sample_obj2D.h">
+      <Filter>SAMPLE</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\sample_obj3D.h">
+      <Filter>SAMPLE</Filter>
+    </ClInclude>
     </ClInclude>
   </ItemGroup>
 </Project>

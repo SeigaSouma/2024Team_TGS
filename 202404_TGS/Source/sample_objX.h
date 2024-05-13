@@ -32,13 +32,17 @@ public:
 	CSample_ObjX(int nPriority = 6);
 	~CSample_ObjX();
 
-	// オーバーライドされた関数
+	//=============================
+	// オーバーライド関数
+	//=============================
 	virtual HRESULT Init() override;
 	virtual void Uninit() override;
 	virtual void Update() override;
 	virtual void Draw() override;
 
+	//=============================
 	// メンバ関数
+	//=============================
 	void Kill();		// 削除
 
 	//=============================
