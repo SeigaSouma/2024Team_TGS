@@ -7,6 +7,7 @@
 #include "baggage.h"
 #include "manager.h"
 #include "calculation.h"
+#include "game.h"
 
 //==========================================================================
 // 定数定義
@@ -15,7 +16,7 @@ namespace
 {
 	const std::string MODEL[] =
 	{
-		"data\\MODEL\\ballast_01.x",	// 布
+		"data\\MODEL\\map_object\\rock_02.x",	// 布
 	};
 	const float LIMIT_HEIGHT = 800.0f;	// 高さ上限
 	const float VELOCITY = 1.0f;
@@ -85,7 +86,7 @@ HRESULT CBaggage::Init()
 	}
 
 	// パラメータ設定
-	m_fWeight = 0.7f;
+	m_fWeight = 1.8f;
 
 	return S_OK;
 }
@@ -119,6 +120,10 @@ void CBaggage::Kill()
 //==========================================================================
 void CBaggage::Update()
 {
+	if (CGame::GetInstance()->GetGameManager()->GetType() == CGameManager::SceneType::SCENE_WAIT_AIRPUSH) {
+		return;
+	}
+
 	// 情報取得
 	MyLib::Vector3 posOrigin = GetOriginPosition();
 	MyLib::Vector3 pos = GetPosition();
@@ -163,7 +168,7 @@ void CBaggage::AddForce(const MyLib::Vector3& power, const MyLib::Vector3& ActPo
 	MyLib::Vector3 move = GetMove();
 
 	float angle = pos.AngleXY(ActPos);
-	m_force.x += sinf(angle) * (power.x);
+	m_force.x = (power.x);
 	m_force.x = fabsf(m_force.x);
 
 	move.y += power.y;

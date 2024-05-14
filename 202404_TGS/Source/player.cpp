@@ -225,7 +225,7 @@ HRESULT CPlayer::Init()
 	m_pBaggage = CBaggage::Create(CBaggage::TYPE::TYPE_CLOTH);
 
 	MyLib::Vector3 pos = GetPosition();
-	m_pBaggage->SetPosition(MyLib::Vector3(pos.x, 500.0f, pos.z));
+	m_pBaggage->SetPosition(MyLib::Vector3(pos.x, 200.0f, pos.z));
 
 	//// スキルポイント生成
 	//m_pSkillPoint = CSkillPoint::Create();
@@ -533,9 +533,9 @@ void CPlayer::Controll()
 
 		// 移動操作
 		m_pControlMove->Move(this);
-		m_pControlBaggage->Action(this, m_pBaggage);		// 荷物操作
 
 	}
+	m_pControlBaggage->Action(this, m_pBaggage);		// 荷物操作
 
 
 

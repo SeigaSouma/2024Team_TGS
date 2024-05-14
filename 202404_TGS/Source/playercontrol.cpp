@@ -10,6 +10,7 @@
 #include "input.h"
 #include "camera.h"
 #include "enemy.h"
+#include "game.h"
 
 namespace
 {
@@ -74,8 +75,8 @@ void CPlayerControlMove::Move(CPlayer* player)
 		state != CPlayer::STATE::STATE_FADEOUT)
 	{// 移動可能モーションの時
 
-		/*move.x += sinf(D3DX_PI * 0.5f + Camerarot.y) * fMove;
-		move.z += cosf(D3DX_PI * 0.5f + Camerarot.y) * fMove;*/
+		move.x += sinf(D3DX_PI * 0.5f + Camerarot.y) * (fMove * 0.5f);
+		move.z += cosf(D3DX_PI * 0.5f + Camerarot.y) * (fMove * 0.5f);
 
 		if (pInputKeyboard->GetPress(DIK_A))
 		{// 左移動
@@ -278,13 +279,22 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	CInputKeyboard* pInputKeyboard = CInputKeyboard::GetInstance();
 	CInputGamepad* pInputGamepad = CInputGamepad::GetInstance();
 
+	CGameManager* pGameMgr = CGame::GetInstance()->GetGameManager();
+
+	if (pGameMgr->GetType() == CGameManager::SceneType::SCENE_WAIT_AIRPUSH &&
+		CInputKeyboard::GetInstance()->GetTrigger(DIK_RETURN))
+	{// 空気送り待ちで空気発射
+		pGameMgr->SetType(CGameManager::SceneType::SCENE_MAIN);
+	}
+
+
 	// 移動量取得
 	MyLib::Vector3 move = player->GetMove();
 	//move *= 0.5f;
 
 	static bool fall = false;
 
-	static float up = 0.7f, power = 0.5f;
+	static float up = 2.5f, power = 2.0f;
 	ImGui::DragFloat("up", &up, 0.1f, 0.0f, 0.0f, "%.2f");
 	ImGui::DragFloat("power", &power, 0.01f, 0.0f, 0.0f, "%.2f");
 	if (CInputKeyboard::GetInstance()->GetPress(DIK_RETURN))

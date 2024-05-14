@@ -100,7 +100,7 @@ HRESULT CGameManager::Init()
 
 #if _DEBUG
 	m_nNowStage = 0;			// 現在のステージ
-	m_SceneType = SceneType::SCENE_DEBUG;	// シーンの種類 
+	m_SceneType = SceneType::SCENE_WAIT_AIRPUSH;	// シーンの種類 
 #else
 	m_nNowStage = 0;			// 現在のステージ
 	m_SceneType = SceneType::SCENE_TRANSITION;	// シーンの種類 
@@ -175,6 +175,11 @@ void CGameManager::Update()
 
 	case SceneType::SCENE_RESULT:
 		m_bControll = false;
+		break;
+
+	case SceneType::SCENE_WAIT_AIRPUSH:
+		m_bControll = false;
+		SceneWaitAirPush();
 		break;
 
 	case SceneType::SCENE_DEBUG:
@@ -355,6 +360,14 @@ void CGameManager::SceneEnhance()
 
 	MyFog::SetFogparam(D3DXCOLOR(1.0f, 0.95f, 0.9f, 1.0f), info.fMaxZ, 3000.0f, D3DFOG_LINEAR);
 	MyFog::ToggleFogFrag(true);
+}
+
+//==========================================================================
+// 空気送り待ち
+//==========================================================================
+void CGameManager::SceneWaitAirPush()
+{
+
 }
 
 //==========================================================================

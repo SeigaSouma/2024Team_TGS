@@ -35,6 +35,7 @@ public:
 		SCENE_TRANSITIONWAIT,	// 遷移待機
 		SCENE_TRANSITION,		// 転移
 		SCENE_RESULT,			// リザルト
+		SCENE_WAIT_AIRPUSH,		// 空気送り待ち
 		SCENE_DEBUG,			// デバッグ
 		SCENE_MAX
 	};
@@ -76,6 +77,7 @@ protected:
 	// メンバ関数
 	virtual void SceneTransition();	// 遷移中
 	virtual void SceneEnhance();
+	virtual void SceneWaitAirPush();
 	virtual void SetEnemy();
 	virtual void SetBoss();
 
