@@ -57,6 +57,7 @@ namespace
 	const int DEFAULT_STAMINA = 200;			// スタミナのデフォルト値
 	const float SUBVALUE_DASH = 0.1f;			// ダッシュの減算量
 	const float SUBVALUE_AVOID = 25.0f;			// 回避の減算量
+	const int RETRY_TIME = 60;					// リトライでボタンを押し続ける時間
 
 	// ステータス
 	const float DEFAULT_RESPAWNHEAL = 0.45f;			// リスポーン時の回復割合
@@ -149,6 +150,8 @@ CPlayer::CPlayer(int nPriority) : CObjectChara(nPriority)
 	m_pControlDefence = nullptr;					// 防御操作
 	m_pControlAvoid = nullptr;						// 回避操作
 	m_pGuard = nullptr;								// ガード
+
+	m_nCntRetry = 0;
 }
 
 //==========================================================================
@@ -425,6 +428,9 @@ void CPlayer::Update()
 
 	// 状態更新
 	UpdateState();
+
+	// リトライ確認
+	RetryCheck();
 
 	// 位置取得
 	MyLib::Vector3 pos = GetPosition();
@@ -1633,6 +1639,27 @@ void CPlayer::UpdateDamageReciveTimer()
 		// ダメージ受け付け判定
 		m_sDamageInfo.bReceived = true;
 		m_sDamageInfo.reciveTime = 0.0f;
+	}
+}
+
+//==========================================================================
+// リトライするか確認
+//==========================================================================
+void CPlayer::RetryCheck()
+{
+	CInputGamepad* pInputGamePad = CInputGamepad::GetInstance();
+	if (pInputGamePad->GetPress(CInputGamepad::BUTTON::BUTTON_Y, 0))
+	{// リトライボタンが押されている
+		m_nCntRetry++;
+		if (m_nCntRetry >= RETRY_TIME)
+		{//リトライする
+			m_nCntRetry = 0;
+			ReaspawnCheckPoint();
+		}
+	}
+	else
+	{// 押されてないのでカウントリセット
+		m_nCntRetry = 0;
 	}
 }
 

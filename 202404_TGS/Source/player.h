@@ -247,6 +247,7 @@ private:
 	void ResetFrag();				// フラグリセット
 	void RockOn();					// ロックオン
 	void UpdateDamageReciveTimer();	// ダメージ受付時間更新
+	void RetryCheck();				// リトライするか確認
 
 	// モーション系関数
 	void AttackAction(CMotion::AttackInfo ATKInfo, int nCntATK) override;		// 攻撃時処理
@@ -286,6 +287,9 @@ private:
 	CPlayerControlDefence* m_pControlDefence;	// 防御操作
 	CPlayerControlAvoid* m_pControlAvoid;		// 回避操作
 	CPlayerGuard* m_pGuard;						// ガード操作
+
+	//リトライカウンタ
+	int m_nCntRetry;
 
 	static CListManager<CPlayer> m_List;	// リスト
 };
