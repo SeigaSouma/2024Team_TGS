@@ -175,7 +175,7 @@ HRESULT CGame::Init()
 	CCheckpoint::Create(MyLib::Vector3(1300.0f, 0.0f, 0.0f));
 	CCheckpoint::Create(MyLib::Vector3(2300.0f, 0.0f, 0.0f));
 
-	CGoalflagX::Create(MyLib::Vector3(3300.0f,0.0f,0.0f));
+	CGoalflagX::Create(MyLib::Vector3(33000.0f,0.0f,0.0f));
 
 	// ê¨å˜
 	return S_OK;

@@ -74,6 +74,9 @@ void CPlayerControlMove::Move(CPlayer* player)
 		state != CPlayer::STATE::STATE_FADEOUT)
 	{// 移動可能モーションの時
 
+		/*move.x += sinf(D3DX_PI * 0.5f + Camerarot.y) * fMove;
+		move.z += cosf(D3DX_PI * 0.5f + Camerarot.y) * fMove;*/
+
 		if (pInputKeyboard->GetPress(DIK_A))
 		{// 左移動
 
@@ -266,6 +269,41 @@ void CPlayerControlMove::Move(CPlayer* player)
 	player->SetRotDest(fRotDest);
 }
 
+//==========================================================================
+// アクション
+//==========================================================================
+void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
+{
+	// インプット情報取得
+	CInputKeyboard* pInputKeyboard = CInputKeyboard::GetInstance();
+	CInputGamepad* pInputGamepad = CInputGamepad::GetInstance();
+
+	// 移動量取得
+	MyLib::Vector3 move = player->GetMove();
+	//move *= 0.5f;
+
+	static bool fall = false;
+
+	static float up = 0.7f, power = 0.5f;
+	ImGui::DragFloat("up", &up, 0.1f, 0.0f, 0.0f, "%.2f");
+	ImGui::DragFloat("power", &power, 0.01f, 0.0f, 0.0f, "%.2f");
+	if (CInputKeyboard::GetInstance()->GetPress(DIK_RETURN))
+	{
+		if (fall) {
+			fall = false;
+			pBaggage->SetForce(0.0f);
+		}
+
+		pBaggage->SetMove(MyLib::Vector3(move.x, pBaggage->GetMove().y, move.z));
+		pBaggage->AddForce(MyLib::Vector3(power, up, 0.0f), player->GetPosition() + move);
+	}
+
+	if (CInputKeyboard::GetInstance()->GetRelease(DIK_RETURN))
+	{
+		// 降下状態
+		fall = true;
+	}
+}
 
 //==========================================================================
 // 攻撃可能フラグ取得

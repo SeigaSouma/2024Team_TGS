@@ -15,9 +15,10 @@ namespace
 {
 	const std::string MODEL[] =
 	{
-		"data\\MODEL\\box.x",	// 布
+		"data\\MODEL\\ballast_01.x",	// 布
 	};
-
+	const float LIMIT_HEIGHT = 800.0f;	// 高さ上限
+	const float VELOCITY = 1.0f;
 }
 
 //==========================================================================
@@ -33,6 +34,7 @@ CBaggage::CBaggage(int nPriority) : CObjectX(nPriority)
 	// 値のクリア
 	m_type = TYPE::TYPE_CLOTH;	// 種類
 	m_fWeight = 0.0f;	// 重さ
+	m_bDrop = false;	// 落下判定
 }
 
 //==========================================================================
@@ -74,14 +76,16 @@ HRESULT CBaggage::Init()
 	// 種類の設定
 	CObject::SetType(TYPE_OBJECTX);
 
-	int typeID = static_cast<int>(m_type);
-
 	// 初期化処理
+	int typeID = static_cast<int>(m_type);
 	HRESULT hr = CObjectX::Init(MODEL[typeID]);
 	if (FAILED(hr))
 	{
 		return E_FAIL;
 	}
+
+	// パラメータ設定
+	m_fWeight = 0.7f;
 
 	return S_OK;
 }
@@ -115,8 +119,56 @@ void CBaggage::Kill()
 //==========================================================================
 void CBaggage::Update()
 {
-	
+	// 情報取得
+	MyLib::Vector3 posOrigin = GetOriginPosition();
+	MyLib::Vector3 pos = GetPosition();
+	MyLib::Vector3 move = GetMove();
+	ImGui::DragFloat("weight", &m_fWeight, 0.1f, 0.0f, 0.0f, "%.2f");
 
+	// 位置更新
+	pos += move;
+	pos += m_force;
+
+	// 重力加算
+	move.y -= mylib_const::GRAVITY * m_fWeight;
+
+	if (pos.y <= 0.0f) pos.y = 0.0f, move.y = 0.0f;
+
+	// 落下判定
+	m_bDrop = pos.y <= 0.0f;
+
+	// 慣性補正
+	move.x += (0.0f - move.x) * 0.25f;
+	move.z += (0.0f - move.z) * 0.25f;
+	/*m_force.x += (0.0f - m_force.x) * 0.01f;
+	m_force.z += (0.0f - m_force.z) * 0.01f;*/
+
+	// 情報設定
+	SetPosition(pos);
+	SetMove(move);
+
+
+	// 限界高度
+	(posOrigin.y + LIMIT_HEIGHT);
+
+}
+
+//==========================================================================
+// 力追加
+//==========================================================================
+void CBaggage::AddForce(const MyLib::Vector3& power, const MyLib::Vector3& ActPos)
+{
+	// 情報取得
+	MyLib::Vector3 pos = GetPosition();
+	MyLib::Vector3 move = GetMove();
+
+	float angle = pos.AngleXY(ActPos);
+	m_force.x += sinf(angle) * (power.x);
+	m_force.x = fabsf(m_force.x);
+
+	move.y += power.y;
+
+	SetMove(move);
 }
 
 //==========================================================================

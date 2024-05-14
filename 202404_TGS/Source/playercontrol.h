@@ -9,6 +9,7 @@
 #define _PLAYERCONTROL_H_	// 二重インクルード防止
 
 #include "player.h"
+#include "baggage.h"
 
 //==========================================================================
 // プレイヤーコントロールクラス定義
@@ -24,6 +25,20 @@ public:
 	CPlayerControlMove() {}
 
 	virtual void Move(CPlayer* player);	// 移動
+
+};
+
+//=============================
+// 荷物操作
+//=============================
+class CPlayerControlBaggage
+{
+public:
+
+	// コンストラクタ
+	CPlayerControlBaggage() {}
+
+	virtual void Action(CPlayer* player, CBaggage* pBaggage);	// アクション
 
 };
 

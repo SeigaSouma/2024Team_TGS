@@ -18,8 +18,10 @@
 class CShadow;
 class CHP_GaugePlayer;
 class CEnemy;
+class CBaggage;
 
-class CPlayerControlMove;	// 移動
+class CPlayerControlMove;		// 移動
+class CPlayerControlBaggage;	// 荷物操作
 class CPlayerControlAttack;	// 攻撃
 class CPlayerControlDefence;// 防御
 class CPlayerControlAvoid;	// 回避
@@ -176,6 +178,7 @@ public:
 	// 操作
 	//=============================
 	void ChangeMoveControl(CPlayerControlMove* control);		// 移動の操作変更
+	void ChangeBaggageControl(CPlayerControlBaggage* control);	// 荷物の操作変更
 	void ChangeAtkControl(CPlayerControlAttack* control);		// 攻撃の操作変更
 	void ChangeDefenceControl(CPlayerControlDefence* control);	// 防御の操作変更
 	void ChangeAvoidControl(CPlayerControlAvoid* control);		// 回避の操作変更
@@ -279,9 +282,11 @@ private:
 	sPlayerStatus m_PlayerStatus;	// プレイヤーステータス
 	sDamageInfo m_sDamageInfo;		// ダメージ情報
 	CHP_GaugePlayer* m_pHPGauge;	// HPゲージのポインタ
+	CBaggage* m_pBaggage;			// 荷物のポインタ
 	
 	// パターン用インスタンス
 	CPlayerControlMove* m_pControlMove;			// 移動操作
+	CPlayerControlBaggage* m_pControlBaggage;	// 荷物操作
 	CPlayerControlAttack* m_pControlAtk;		// 攻撃操作
 	CPlayerControlDefence* m_pControlDefence;	// 防御操作
 	CPlayerControlAvoid* m_pControlAvoid;		// 回避操作

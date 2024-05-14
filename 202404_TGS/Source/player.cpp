@@ -36,6 +36,7 @@
 #include "damagepoint.h"
 
 #include "checkpoint.h"
+#include "baggage.h"
 
 // 使用クラス
 #include "playercontrol.h"
@@ -141,10 +142,12 @@ CPlayer::CPlayer(int nPriority) : CObjectChara(nPriority)
 	m_sDamageInfo = sDamageInfo();					// ダメージ情報
 
 	m_nMyPlayerIdx = 0;								// プレイヤーインデックス番号
-	m_pShadow = nullptr;								// 影の情報
+	m_pShadow = nullptr;							// 影の情報
 	m_pHPGauge = nullptr;							// HPゲージのポインタ
+	m_pBaggage = nullptr;							// 荷物のポインタ
 
 	m_pControlMove = nullptr;						// 移動操作
+	m_pControlBaggage = nullptr;					// 荷物操作
 	m_pControlAtk = nullptr;						// 攻撃操作
 	m_pControlDefence = nullptr;					// 防御操作
 	m_pControlAvoid = nullptr;						// 回避操作
@@ -209,10 +212,17 @@ HRESULT CPlayer::Init()
 
 	// 操作関連
 	ChangeMoveControl(DEBUG_NEW CPlayerControlMove());
+	ChangeBaggageControl(DEBUG_NEW CPlayerControlBaggage);
 	ChangeAtkControl(DEBUG_NEW CPlayerControlAttack());
 	ChangeDefenceControl(DEBUG_NEW CPlayerControlDefence());
 	ChangeAvoidControl(DEBUG_NEW CPlayerControlAvoid());
 	ChangeGuardGrade(DEBUG_NEW CPlayerGuard());
+
+	// 荷物生成
+	m_pBaggage = CBaggage::Create(CBaggage::TYPE::TYPE_CLOTH);
+
+	MyLib::Vector3 pos = GetPosition();
+	m_pBaggage->SetPosition(MyLib::Vector3(pos.x, 500.0f, pos.z));
 
 	//// スキルポイント生成
 	//m_pSkillPoint = CSkillPoint::Create();
@@ -233,6 +243,15 @@ void CPlayer::ChangeMoveControl(CPlayerControlMove* control)
 {
 	delete m_pControlMove;
 	m_pControlMove = control;
+}
+
+//==========================================================================
+// 荷物の操作変更
+//==========================================================================
+void CPlayer::ChangeBaggageControl(CPlayerControlBaggage* control)
+{
+	delete m_pControlBaggage;
+	m_pControlBaggage = control;
 }
 
 //==========================================================================
@@ -487,7 +506,7 @@ void CPlayer::Controll()
 	CInputKeyboard *pInputKeyboard = CInputKeyboard::GetInstance();
 
 	// ゲームパッド情報取得
-	CInputGamepad *pInputGamepad = CInputGamepad::GetInstance();\
+	CInputGamepad *pInputGamepad = CInputGamepad::GetInstance();
 
 	// 経過時間取得
 	float fCurrentTime = CManager::GetInstance()->GetDeltaTime();
@@ -508,6 +527,7 @@ void CPlayer::Controll()
 
 		// 移動操作
 		m_pControlMove->Move(this);
+		m_pControlBaggage->Action(this, m_pBaggage);		// 荷物操作
 
 	}
 

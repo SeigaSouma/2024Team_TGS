@@ -86,6 +86,7 @@ public:
 
 	// 変更処理
 	virtual void AddPosition(const MyLib::Vector3& pos);		// 位置加算
+	virtual void AddMove(const MyLib::Vector3& move);			// 移動量加算
 	virtual void AddRotation(const MyLib::Vector3& rot);		// 向き加算
 
 	// 描画・スクリーン関連

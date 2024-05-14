@@ -43,6 +43,9 @@ public:
 	// メンバ関数
 	//=============================
 	void Kill();		// 削除
+	void SetForce(const MyLib::Vector3& power) { m_force = power; }				// 力設定
+	void AddForce(const MyLib::Vector3& power, const MyLib::Vector3& ActPos);	// 力追加
+	bool IsDrop() { return m_bDrop; }	// 落下判定取得
 
 	//=============================
 	// 静的関数
@@ -61,8 +64,10 @@ private:
 	//=============================
 	// メンバ変数
 	//=============================
-	TYPE m_type;		// 種類
-	float m_fWeight;	// 重さ
+	TYPE m_type;			// 種類
+	float m_fWeight;		// 重さ
+	MyLib::Vector3 m_force;	// 力
+	bool m_bDrop;		// 落下判定
 	static CListManager<CBaggage> m_List;	// リスト
 
 };
