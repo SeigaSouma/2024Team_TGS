@@ -127,12 +127,17 @@ void CBaggage::Update()
 	// 情報取得
 	MyLib::Vector3 posOrigin = GetOriginPosition();
 	MyLib::Vector3 pos = GetPosition();
+	MyLib::Vector3 rot = GetRotation();
 	MyLib::Vector3 move = GetMove();
 	ImGui::DragFloat("weight", &m_fWeight, 0.1f, 0.0f, 0.0f, "%.2f");
 
 	// 位置更新
 	pos += move;
 	pos += m_force;
+
+	rot.x += fabsf(move.x) * 0.01f;
+	rot.y += fabsf(move.y) * 0.01f;
+	UtilFunc::Transformation::RotNormalize(rot);
 
 	// 重力加算
 	move.y -= mylib_const::GRAVITY * m_fWeight;
@@ -150,6 +155,7 @@ void CBaggage::Update()
 
 	// 情報設定
 	SetPosition(pos);
+	SetRotation(rot);
 	SetMove(move);
 
 
