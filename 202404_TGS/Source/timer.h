@@ -31,6 +31,7 @@ public:
 		STATE_ADJ,			// ’²®
 		STATE_BEFORECONTROLL,	// ‘€ì‘O
 		STATE_AFTERCONTROLL,	// ‘€ìŒã
+		STATE_GOAL,			// ƒS[ƒ‹
 		STATE_MAX
 	};
 
@@ -66,6 +67,7 @@ private:
 	void StateAdjustment();
 	void StateBeforeControll();
 	void StateAfterControll();
+	void StateGoal();
 
 	//=============================
 	// ƒƒ“ƒo•Ï”

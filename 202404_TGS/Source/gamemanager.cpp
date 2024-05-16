@@ -135,6 +135,7 @@ void CGameManager::Update()
 
 	case CGameManager::SceneType::SCENE_MAINCLEAR:
 		m_bControll = false;
+		SceneGoal();
 		break;
 
 	case SceneType::SCENE_MAINRESULT:
@@ -383,6 +384,14 @@ void CGameManager::SceneWaitAirPush()
 			pTimer->SetState(CTimer::eState::STATE_BEFORECONTROLL);
 		}
 	}
+}
+
+//==========================================================================
+// ƒS[ƒ‹ó‘Ô
+//==========================================================================
+void CGameManager::SceneGoal()
+{
+	CGame::GetInstance()->GetTimer()->SetState(CTimer::eState::STATE_GOAL);
 }
 
 //==========================================================================

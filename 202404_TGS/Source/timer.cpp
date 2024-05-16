@@ -40,6 +40,7 @@ CTimer::STATE_FUNC CTimer::m_StateFuncList[] =
 	&CTimer::StateAdjustment,	// ’²®
 	&CTimer::StateBeforeControll,	// ‘€ì‘O
 	&CTimer::StateAfterControll,// ‘€ìŒã
+	&CTimer::StateGoal,			// ƒS[ƒ‹
 };
 
 //==========================================================================
@@ -267,6 +268,14 @@ void CTimer::StateBeforeControll()
 void CTimer::StateAfterControll()
 {
 	m_bAddTime = true;
+}
+
+//==========================================================================
+// ƒS[ƒ‹ó‘Ô
+//==========================================================================
+void CTimer::StateGoal()
+{
+	m_bAddTime = false;
 }
 
 //==========================================================================
