@@ -336,6 +336,25 @@ void CCamera::MoveCameraStick(int nIdx)
 }
 
 //==========================================================================
+// カメラワープ処理
+//==========================================================================
+void CCamera::WarpCamera(MyLib::Vector3 pos)
+{
+	// 注視点の代入
+	m_posR.x = (pos.x + sinf(m_rot.y) * DISATNCE_POSR_PLAYER);
+	m_posR.z = (pos.z + cosf(m_rot.y) * DISATNCE_POSR_PLAYER);
+	m_posR.y = pos.y;
+	m_posRDest = m_posR;		// 目標の注視点
+
+	// 視点の代入
+	m_posV.x = m_posR.x + cosf(m_rot.z) * sinf(m_rot.y) * -m_fDistance;
+	m_posV.z = m_posR.z + cosf(m_rot.z) * cosf(m_rot.y) * -m_fDistance;
+	m_posV.y = m_posR.y + sinf(m_rot.z) * -m_fDistance;
+	m_posVDest = m_posV;								// 目標の視点
+
+}
+
+//==========================================================================
 // マウスでの移動処理
 //==========================================================================
 void CCamera::MoveCameraMouse()
@@ -1424,15 +1443,8 @@ void CCamera::ResetRanking()
 	m_rot = RANKINGROT_NONE;							// 向き
 	m_rotVDest = m_rot;									// 目標の視点の向き
 
-	// 注視点の代入
-	m_posR = MyLib::Vector3(0.0f, 0.0f, 0.0f);			// 注視点(見たい場所)
-
-	// 視点の代入
-	m_posV.x = m_posR.x + cosf(m_rot.z) * sinf(m_rot.y) * -m_fDistance;
-	m_posV.z = m_posR.z + cosf(m_rot.z) * cosf(m_rot.y) * -m_fDistance;
-	m_posV.y = m_posR.y + sinf(m_rot.z) * -m_fDistance;
-	m_posVDest = m_posV;								// 目標の視点
-	m_posRDest = m_posR;								// 目標の注視点
+	// カメラワープ
+	WarpCamera(MyLib::Vector3(0.0f, 0.0f, 0.0f));
 }
 
 //==========================================================================
