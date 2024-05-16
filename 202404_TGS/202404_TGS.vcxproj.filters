@@ -176,12 +176,6 @@
     <ClCompile Include="Source\enemy.cpp">
       <Filter>enemy</Filter>
     </ClCompile>
-    <ClCompile Include="Source\enemy_boss.cpp">
-      <Filter>enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\enemy_gobelin.cpp">
-      <Filter>enemy</Filter>
-    </ClCompile>
     <ClCompile Include="Source\targetpoint.cpp">
       <Filter>mesh</Filter>
     </ClCompile>
@@ -548,12 +542,6 @@
       <Filter>mesh</Filter>
     </ClInclude>
     <ClInclude Include="Source\enemy.h">
-      <Filter>enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\enemy_boss.h">
-      <Filter>enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\enemy_gobelin.h">
       <Filter>enemy</Filter>
     </ClInclude>
     <ClInclude Include="Source\targetpoint.h">

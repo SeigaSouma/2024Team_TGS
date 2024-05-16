@@ -18,28 +18,7 @@
 std::string CMyEffekseer::m_EffectName[CMyEffekseer::EFKLABEL_MAX] =	// エフェクトのファイル名
 {
 	"data/Effekseer/Laser01.efkefc",			// サンプルのレーザー
-	"data/Effekseer/CounterParticle_01.efkefc",	// カウンターの線
-	"data/Effekseer/counter2.efkefc",			// カウンターの線2
-	"data/Effekseer/CounterParticle_02.efkefc",	// カウンターのキラキラ
-	"data/Effekseer/CounterBreak.efkefc",		// カウンターブレイク
-	"data/Effekseer/BackgroundFire.efkefc",		// 背景の炎
-	"data/Effekseer/HitParticle_Red_01.efkefc",	// ヒットマーク[赤]
-	"data/Effekseer/strongATK.efkefc",			// 強攻撃のサイン
-	"data/Effekseer/SonicBoom.efkefc",			// ボスのローリング
-	"data/Effekseer/stonebase_light.efkefc",	// 石板の光
-	"data/Effekseer/stonebase_begin.efkefc",	// 石板起動
-	"data/Effekseer/transfer.efkefc",			// 石板起動
-	"data/Effekseer/chargeatk_01.efkefc",		// チャージ完了
-	"data/Effekseer/powerloop.efkefc",			// チャージ完了
-	"data/Effekseer/titlelight.efkefc",			// タイトルの光
-	"data/Effekseer/enemyatk_sand.efkefc",		// 敵攻撃の煙
-	"data/Effekseer/normalATK_left.efkefc",		// 通常攻撃左振り
-	"data/Effekseer/normalATK_right.efkefc",	// 通常攻撃右振り
-	"data/Effekseer/normalATK.efkefc",			// 通常攻撃
-	"data/Effekseer/chargeatk.efkefc",			// チャージ攻撃
-	"data/Effekseer/respawn_start.efkefc",		// 復活開始
-	"data/Effekseer/respawn_wind.efkefc",		// 復活開始
-	"data/Effekseer/boost2.efkefc",		// 復活開始
+	"data/Effekseer/bress.efkefc",			// 息
 };
 CMyEffekseer* CMyEffekseer::m_pMyEffekseer = nullptr;	// 自身のポインタ
 

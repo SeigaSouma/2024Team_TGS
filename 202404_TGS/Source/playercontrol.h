@@ -40,6 +40,8 @@ public:
 
 	virtual void Action(CPlayer* player, CBaggage* pBaggage);	// ƒAƒNƒVƒ‡ƒ“
 
+private:
+	Effekseer::Handle m_BressHandle;
 };
 
 //=============================

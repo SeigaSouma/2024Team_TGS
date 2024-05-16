@@ -28,8 +28,6 @@
 #include "rockon_marker.h"
 
 // 子クラス
-#include "enemy_boss.h"
-#include "enemy_gobelin.h"
 
 //==========================================================================
 // 定数定義
@@ -136,21 +134,21 @@ CEnemy* CEnemy::Create(const std::string& file, MyLib::Vector3 pos, TYPE type)
 	// 生成用のオブジェクト
 	CEnemy* pEnemy = nullptr;
 
-	// メモリの確保
-	switch (type)
-	{
-	case TYPE_BOSS:
-		pEnemy = DEBUG_NEW CEnemyBoss;
-		break;
+	//// メモリの確保
+	//switch (type)
+	//{
+	//case TYPE_BOSS:
+	//	pEnemy = DEBUG_NEW CEnemyBoss;
+	//	break;
 
-	case TYPE_GOBELIN:
-		pEnemy = DEBUG_NEW CEnemyGobelin;
-		break;
+	//case TYPE_GOBELIN:
+	//	pEnemy = DEBUG_NEW CEnemyGobelin;
+	//	break;
 
-	default:
-		return nullptr;
-		break;
-	}
+	//default:
+	//	return nullptr;
+	//	break;
+	//}
 
 	if (pEnemy != nullptr)
 	{// メモリの確保が出来ていたら

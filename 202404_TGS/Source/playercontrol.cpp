@@ -292,7 +292,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 
 	if (pGameMgr->GetType() == CGameManager::SceneType::SCENE_WAIT_AIRPUSH &&
 		(CInputKeyboard::GetInstance()->GetTrigger(DIK_RETURN) ||
-		CInputGamepad::GetInstance()->GetTrigger(CInputGamepad::BUTTON::BUTTON_A, 0)))
+			CInputGamepad::GetInstance()->GetTrigger(CInputGamepad::BUTTON::BUTTON_A, 0)))
 	{// 空気送り待ちで空気発射
 
 		// メインに移行
@@ -359,18 +359,44 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 			if (fall) {
 				fall = false;
 				pBaggage->SetForce(0.0f);
+
+				MyLib::Vector3 d = pos;
+				d.y = posBaggageOrigin.y;
+				/*m_BressHandle = CMyEffekseer::GetInstance()->SetEffect(
+					CMyEffekseer::EFKLABEL::EFKLABEL_BRESS,
+					d, 0.0f, 0.0f, 25.0f, true);*/
 			}
 
 			pBaggage->SetMove(MyLib::Vector3(move.x, pBaggage->GetMove().y, move.z));
 			pBaggage->AddForce(MyLib::Vector3(ratio * power, up * ratioHeight, 0.0f), player->GetPosition() + move);
 		}
 
-		if (CInputKeyboard::GetInstance()->GetRelease(DIK_RETURN))
+		if (CInputKeyboard::GetInstance()->GetRelease(DIK_RETURN) ||
+			CInputGamepad::GetInstance()->GetRelease(CInputGamepad::BUTTON::BUTTON_A, 0))
 		{
 			// 降下状態
 			fall = true;
 		}
 	}
+
+	if (posBaggage.y <= 10.0f)
+	{
+		fall = true;
+	}
+
+	if (fall && m_BressHandle != 0 )
+	{
+		//CMyEffekseer::GetInstance()->Stop(m_BressHandle);
+		CMyEffekseer::GetInstance()->SetTrigger(m_BressHandle, 1);
+	}
+
+
+	MyLib::Vector3 d = pos;
+	d.y = posBaggageOrigin.y;
+
+	// 位置設定
+	CMyEffekseer::GetInstance()->SetPosition(m_BressHandle, d);
+
 }
 
 //==========================================================================
