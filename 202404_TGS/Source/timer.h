@@ -29,6 +29,8 @@ public:
 		STATE_APPEARANCE,	// oŒ»
 		STATE_ADD_LITTLE,	// ­‚µ‰ÁZ
 		STATE_ADJ,			// ’²®
+		STATE_BEFORECONTROLL,	// ‘€ì‘O
+		STATE_AFTERCONTROLL,	// ‘€ìŒã
 		STATE_MAX
 	};
 
@@ -62,6 +64,8 @@ private:
 	void StatAppearance();
 	void StatAddLittle();
 	void StateAdjustment();
+	void StateBeforeControll();
+	void StateAfterControll();
 
 	//=============================
 	// ƒƒ“ƒo•Ï”

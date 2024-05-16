@@ -1185,6 +1185,9 @@ void CPlayer::ReaspawnCheckPoint()
 	//カメラ瞬間移動
 	CCamera* pCamera = CManager::GetInstance()->GetCamera();
 	pCamera->WarpCamera(pos + MyLib::Vector3(0.0f, 150.0f, 0.0f));
+
+	//タイマーストップ
+	CGame::GetInstance()->GetGameManager()->SetType(CGameManager::SceneType::SCENE_WAIT_AIRPUSH);
 }
 
 //==========================================================================

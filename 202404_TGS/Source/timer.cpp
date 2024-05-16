@@ -38,6 +38,8 @@ CTimer::STATE_FUNC CTimer::m_StateFuncList[] =
 	&CTimer::StatAppearance,	// oŒ»
 	&CTimer::StatAddLittle,		// ­‚µ‰ÁZ
 	&CTimer::StateAdjustment,	// ’²®
+	&CTimer::StateBeforeControll,	// ‘€ì‘O
+	&CTimer::StateAfterControll,// ‘€ìŒã
 };
 
 //==========================================================================
@@ -249,6 +251,22 @@ void CTimer::StateAdjustment()
 	//	m_state = STATE_WAIT;
 	//	m_fStateTime = 0.0f;
 	//}
+}
+
+//==========================================================================
+// ‘€ì‘Oó‘Ô
+//==========================================================================
+void CTimer::StateBeforeControll()
+{
+	m_bAddTime = false;
+}
+
+//==========================================================================
+// ‘€ìŒãó‘Ô
+//==========================================================================
+void CTimer::StateAfterControll()
+{
+	m_bAddTime = true;
 }
 
 //==========================================================================
