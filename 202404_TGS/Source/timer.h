@@ -29,6 +29,9 @@ public:
 		STATE_APPEARANCE,	// 出現
 		STATE_ADD_LITTLE,	// 少し加算
 		STATE_ADJ,			// 調整
+		STATE_BEFORECONTROLL,	// 操作前
+		STATE_AFTERCONTROLL,	// 操作後
+		STATE_GOAL,			// ゴール
 		STATE_MAX
 	};
 
@@ -62,6 +65,9 @@ private:
 	void StatAppearance();
 	void StatAddLittle();
 	void StateAdjustment();
+	void StateBeforeControll();
+	void StateAfterControll();
+	void StateGoal();
 
 	//=============================
 	// メンバ変数

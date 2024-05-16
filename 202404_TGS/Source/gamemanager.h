@@ -78,6 +78,7 @@ protected:
 	virtual void SceneTransition();	// ‘JˆÚ’†
 	virtual void SceneEnhance();
 	virtual void SceneWaitAirPush();
+	virtual void SceneGoal();
 	virtual void SetEnemy();
 	virtual void SetBoss();
 

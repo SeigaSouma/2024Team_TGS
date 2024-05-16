@@ -25,6 +25,8 @@
 #include "fade.h"
 #include "beforebattle.h"
 #include "stagename.h"
+#include "timer.h"
+#include "input.h"
 
 //==========================================================================
 // 定数定義
@@ -133,6 +135,7 @@ void CGameManager::Update()
 
 	case CGameManager::SceneType::SCENE_MAINCLEAR:
 		m_bControll = false;
+		SceneGoal();
 		break;
 
 	case SceneType::SCENE_MAINRESULT:
@@ -367,7 +370,28 @@ void CGameManager::SceneEnhance()
 //==========================================================================
 void CGameManager::SceneWaitAirPush()
 {
+	CTimer* pTimer = CGame::GetInstance()->GetTimer();
+	if (pTimer != nullptr)
+	{//タイマーオブジェクトある
+		CInputGamepad* pInputGamepad = CInputGamepad::GetInstance();
+		if (pInputGamepad->GetPress(CInputGamepad::BUTTON::BUTTON_A, 0))
+		{//何かしら操作がされた
+			pTimer->SetState(CTimer::eState::STATE_AFTERCONTROLL);
+			m_SceneType = CGameManager::SceneType::SCENE_MAIN;
+		}
+		else
+		{
+			pTimer->SetState(CTimer::eState::STATE_BEFORECONTROLL);
+		}
+	}
+}
 
+//==========================================================================
+// ゴール状態
+//==========================================================================
+void CGameManager::SceneGoal()
+{
+	CGame::GetInstance()->GetTimer()->SetState(CTimer::eState::STATE_GOAL);
 }
 
 //==========================================================================
