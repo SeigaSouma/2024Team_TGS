@@ -140,6 +140,7 @@ public:
 	void ResetBoss();						// リセット
 	bool IsOnScreen(const MyLib::Vector3 pos);	// スクリーン内の判定
 	void MoveCameraStick(int nIdx = 0);			// スティック操作
+	void WarpCamera(MyLib::Vector3 pos);		// カメラワープ
 
 	// 情報取得
 	void SetPositionR(const MyLib::Vector3& pos) { m_posR = pos; }
