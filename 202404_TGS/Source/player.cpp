@@ -1181,6 +1181,10 @@ void CPlayer::ReaspawnCheckPoint()
 	// ˆÊ’uŽæ“¾
 	MyLib::Vector3 pos = pCheckPoint->GetPosition();
 	SetPosition(pos);
+
+	//ƒJƒƒ‰uŠÔˆÚ“®
+	CCamera* pCamera = CManager::GetInstance()->GetCamera();
+	pCamera->WarpCamera(pos + MyLib::Vector3(0.0f, 150.0f, 0.0f));
 }
 
 //==========================================================================
