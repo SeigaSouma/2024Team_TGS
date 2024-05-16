@@ -17,6 +17,8 @@ namespace
 	const float MULTIPLIY_DASH = 2.0f;		// ダッシュの倍率
 	const float STAMINA_AVOID = 30.0f;		// 回避のスタミナ消費量
 	const float LENGTH_AUTOFACE = 200.0f;	// 自動で向く長さ
+	const float LENGTH_COLLISIONRANGE = 400.0f;		// 当たり判定する範囲の長さ
+	const float LENGTH_COLLISIONHEIGHT = 1000.0f;	// 当たり判定する高さ上限
 }
 
 //==========================================================================
@@ -67,8 +69,6 @@ void CPlayerControlMove::Move(CPlayer* player)
 	CPlayer::STATE state = player->GetState();
 
 	if ((pMotion->IsGetMove(nMotionType) == 1 || pMotion->IsGetCancelable()) &&
-		//!m_pControlAtk->IsReserve() &&
-		//!motionFrag.bATK &&
 		state != CPlayer::STATE::STATE_KNOCKBACK &&
 		state != CPlayer::STATE::STATE_DEAD &&
 		state != CPlayer::STATE::STATE_DEADWAIT &&
@@ -167,10 +167,17 @@ void CPlayerControlMove::Move(CPlayer* player)
 			float stickrot = pInputGamepad->GetStickRotL(player->GetMyPlayerIdx());
 			UtilFunc::Transformation::RotNormalize(stickrot);
 
+#if 0
 			// 移動量と向き設定
 			move.x += sinf(stickrot + Camerarot.y) * fMove;
 			move.z += cosf(stickrot + Camerarot.y) * fMove;
 			fRotDest = D3DX_PI + stickrot + Camerarot.y;
+#endif
+			int angle = (stickrot <= 0.0f) ? -1 : 1;
+
+			move.x += sinf(D3DX_PI * 0.5f + Camerarot.y) * (fMove * angle);
+			move.z += cosf(D3DX_PI * 0.5f + Camerarot.y) * (fMove * angle);
+			fRotDest = angle * (-D3DX_PI * 0.5f) + Camerarot.y;
 		}
 
 		// ジャンプ状況取得
@@ -194,6 +201,7 @@ void CPlayerControlMove::Move(CPlayer* player)
 			}
 		}
 
+#if 0
 		if (!bJump &&
 			(pInputKeyboard->GetTrigger(DIK_SPACE) || pInputGamepad->GetTrigger(CInputGamepad::BUTTON_A, player->GetMyPlayerIdx())))
 		{// ジャンプ
@@ -207,6 +215,7 @@ void CPlayerControlMove::Move(CPlayer* player)
 			// サウンド再生
 			CManager::GetInstance()->GetSound()->PlaySound(CSound::LABEL_SE_JUMP);
 		}
+#endif
 
 		// ジャンプ判定設定
 		player->SetEnableJump(bJump);
@@ -282,36 +291,85 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	CGameManager* pGameMgr = CGame::GetInstance()->GetGameManager();
 
 	if (pGameMgr->GetType() == CGameManager::SceneType::SCENE_WAIT_AIRPUSH &&
-		CInputKeyboard::GetInstance()->GetTrigger(DIK_RETURN))
+		(CInputKeyboard::GetInstance()->GetTrigger(DIK_RETURN) ||
+		CInputGamepad::GetInstance()->GetTrigger(CInputGamepad::BUTTON::BUTTON_A, 0)))
 	{// 空気送り待ちで空気発射
+
+		// メインに移行
 		pGameMgr->SetType(CGameManager::SceneType::SCENE_MAIN);
 	}
 
 
-	// 移動量取得
+	// 情報取得
 	MyLib::Vector3 move = player->GetMove();
-	//move *= 0.5f;
+	MyLib::Vector3 pos = player->GetPosition();
+	MyLib::Vector3 posBaggage = pBaggage->GetPosition();
+	MyLib::Vector3 posBaggageOrigin = pBaggage->GetOriginPosition();
+
 
 	static bool fall = false;
 
-	static float up = 2.5f, power = 2.0f;
+	static float up = 8.3f, power = 6.8f;
+	//static float up = 2.5f, power = 2.0f;
 	ImGui::DragFloat("up", &up, 0.1f, 0.0f, 0.0f, "%.2f");
 	ImGui::DragFloat("power", &power, 0.01f, 0.0f, 0.0f, "%.2f");
-	if (CInputKeyboard::GetInstance()->GetPress(DIK_RETURN))
+
+	float ratio = (posBaggage.y - posBaggageOrigin.y) / LENGTH_COLLISIONHEIGHT;
+	float ratioHeight = 1.0f - ratio;
+	ratioHeight = UtilFunc::Transformation::Clamp(ratioHeight, 0.3f, 1.0f);
+
+	ratio = UtilFunc::Transformation::Clamp(ratio, 0.1f, 1.0f);
+
+	float range = ratio * LENGTH_COLLISIONRANGE;
+
+#if _DEBUG
+	MyLib::Vector3 a = pos, b = pos;
+	a.x += range; b.x -= range;
+	a.y = posBaggage.y; b.y = posBaggage.y;
+
+	MyLib::Vector3 c = pos;
+	c.y = posBaggageOrigin.y + LENGTH_COLLISIONHEIGHT;
+
+	CEffect3D::Create(
+		c,
+		MyLib::Vector3(0.0f, 0.0f, 0.0f),
+		D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f),
+		20.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+
+	CEffect3D::Create(
+		a,
+		MyLib::Vector3(0.0f, 0.0f, 0.0f),
+		D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f),
+		20.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+
+	CEffect3D::Create(
+		b,
+		MyLib::Vector3(0.0f, 0.0f, 0.0f),
+		D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f),
+		20.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+#endif
+
+	if (posBaggage.y <= LENGTH_COLLISIONHEIGHT &&
+		posBaggage.x <= pos.x + range &&
+		posBaggage.x >= pos.x - range)
 	{
-		if (fall) {
-			fall = false;
-			pBaggage->SetForce(0.0f);
+		if (CInputKeyboard::GetInstance()->GetPress(DIK_RETURN) ||
+			CInputGamepad::GetInstance()->GetPress(CInputGamepad::BUTTON::BUTTON_A, 0))
+		{
+			if (fall) {
+				fall = false;
+				pBaggage->SetForce(0.0f);
+			}
+
+			pBaggage->SetMove(MyLib::Vector3(move.x, pBaggage->GetMove().y, move.z));
+			pBaggage->AddForce(MyLib::Vector3(ratio * power, up * ratioHeight, 0.0f), player->GetPosition() + move);
 		}
 
-		pBaggage->SetMove(MyLib::Vector3(move.x, pBaggage->GetMove().y, move.z));
-		pBaggage->AddForce(MyLib::Vector3(power, up, 0.0f), player->GetPosition() + move);
-	}
-
-	if (CInputKeyboard::GetInstance()->GetRelease(DIK_RETURN))
-	{
-		// 降下状態
-		fall = true;
+		if (CInputKeyboard::GetInstance()->GetRelease(DIK_RETURN))
+		{
+			// 降下状態
+			fall = true;
+		}
 	}
 }
 
