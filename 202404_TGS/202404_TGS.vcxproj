@@ -187,8 +187,6 @@
     <ClCompile Include="Source\enemy.cpp" />
     <ClCompile Include="Source\enemybase.cpp" />
     <ClCompile Include="Source\enemymanager.cpp" />
-    <ClCompile Include="Source\enemy_boss.cpp" />
-    <ClCompile Include="Source\enemy_gobelin.cpp" />
     <ClCompile Include="Source\fade.cpp" />
     <ClCompile Include="Source\fog.cpp" />
     <ClCompile Include="Source\game.cpp" />
@@ -321,8 +319,6 @@
     <ClInclude Include="Source\enemy.h" />
     <ClInclude Include="Source\enemybase.h" />
     <ClInclude Include="Source\enemymanager.h" />
-    <ClInclude Include="Source\enemy_boss.h" />
-    <ClInclude Include="Source\enemy_gobelin.h" />
     <ClInclude Include="Source\fade.h" />
     <ClInclude Include="Source\fog.h" />
     <ClInclude Include="Source\game.h" />

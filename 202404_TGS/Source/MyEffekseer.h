@@ -38,28 +38,7 @@ public:
 	enum EFKLABEL
 	{
 		EFKLABEL_SAMPLE_LASER = 0,	// サンプルのレーザー
-		EFKLABEL_COUNTERLINE,		// カウンターの線
-		EFKLABEL_COUNTERLINE2,		// カウンターの線2
-		EFKLABEL_COUNTER_KRKR,		// カウンターのキラキラ
-		EFKLABEL_COUNTER_BREAK,		// カウンターブレイク
-		EFKLABEL_BGFIRE,			// 背景の炎
-		EFKLABEL_HITMARK_RED,		// ヒットマーク[赤]
-		EFKLABEL_STRONGATK_SIGN,		// 強攻撃のサイン
-		EFKLABEL_BOSS_ROLLING,		// ボスのローリング
-		EFKLABEL_STONEBASE_LIGHT,		// 石板の光
-		EFKLABEL_STONEBASE_BEGIN,		// 石板起動
-		EFKLABEL_TRANSFER,				// 転移
-		EFKLABEL_CHARGEFINISH,			// チャージ完了
-		EFKLABEL_CHARGE,			// チャージ完了後
-		EFKLABEL_TITLEBLUR,			// タイトルの光
-		EFKLABEL_ENEMYATK_SAND,			// 敵攻撃の煙
-		EFKLABEL_NORMALATK_LEFT,		// 通常攻撃左振り
-		EFKLABEL_NORMALATK_RIGHT,		// 通常攻撃右振り
-		EFKLABEL_NORMALATK,				// 通常攻撃
-		EFKLABEL_CHARGEATK,				// チャージ攻撃
-		EFKLABEL_RESPAWN_START,			// 復活開始
-		EFKLABEL_RESPAWN_WIND,			// 復活インパクト
-		EFKLABEL_BOOST,			// ブースト
+		EFKLABEL_BRESS,				// 息
 		EFKLABEL_MAX
 	};
 

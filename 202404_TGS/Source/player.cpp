@@ -226,6 +226,7 @@ HRESULT CPlayer::Init()
 
 	MyLib::Vector3 pos = GetPosition();
 	m_pBaggage->SetPosition(MyLib::Vector3(pos.x, 200.0f, pos.z));
+	m_pBaggage->SetOriginPosition(m_pBaggage->GetPosition());
 
 	//// スキルポイント生成
 	//m_pSkillPoint = CSkillPoint::Create();
@@ -691,19 +692,6 @@ void CPlayer::Controll()
 		}
 	}
 
-	////if (m_pWeaponHandle != nullptr)
-	//{
-	//	// 武器の位置
-	//	MyLib::Vector3 weponpos = UtilFunc::Transformation::WorldMtxChangeToPosition(GetModel()[16]->GetWorldMtx());
-
-	//	// 武器のマトリックス取得
-	//	D3DXMATRIX weaponWorldMatrix = GetModel()[16]->GetWorldMtx();
-
-	//	// 軌跡のマトリックス設定
-	//	CMyEffekseer::GetInstance()->SetMatrix(m_WeaponHandle, weaponWorldMatrix);
-	//	CMyEffekseer::GetInstance()->SetPosition(m_WeaponHandle, weponpos);
-	//}
-
 	// デバッグ用
 #if _DEBUG
 
@@ -725,12 +713,6 @@ void CPlayer::Controll()
 		fff += 0.1f;
 		CManager::GetInstance()->GetSound()->SetFrequency(CSound::LABEL_BGM_GAME, fff);
 
-		MyLib::Vector3 weponpos = 0.0f;
-		weponpos.y += 150.0f;
-		weponpos.z += 800.0f;
-		CMyEffekseer::GetInstance()->SetEffect(
-			CMyEffekseer::EFKLABEL_COUNTERLINE2,
-			weponpos, 0.0f, 0.0f, 60.0f);
 
 	}
 	if (pInputKeyboard->GetTrigger(DIK_DOWN))
@@ -1116,9 +1098,6 @@ void CPlayer::AttackInDicision(CMotion::AttackInfo* pATKInfo, int nCntATK)
 						pEnemy->SetMove(MyLib::Vector3(sinf(fRot) * 8.0f, 0.0f, cosf(fRot) * 8.0f));
 					}
 
-					CMyEffekseer::GetInstance()->SetEffect(
-						CMyEffekseer::EFKLABEL_HITMARK_RED,
-						hitresult.hitpos, 0.0f, 0.0f, 50.0f);
 
 					// ダメージ表記
 					enemypos.y += pEnemy->GetHeight() * 0.5f;

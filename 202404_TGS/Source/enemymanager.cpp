@@ -12,7 +12,6 @@
 #include "gamemanager.h"
 #include "renderer.h"
 #include "enemy.h"
-#include "enemy_boss.h"
 #include "particle.h"
 #include "fade.h"
 #include "elevation.h"
