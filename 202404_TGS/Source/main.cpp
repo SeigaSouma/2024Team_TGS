@@ -24,12 +24,18 @@ void LoadInBackground();
 int g_nCountFPS;
 CLoadManager* LoadManager = nullptr;
 HWND hWnd;	// ウインドウハンドル(識別子)
+HINSTANCE g_hInstance;
+RECT g_Rect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };	// 画面サイズの構造体
+int g_CmbShow;
 
 //==========================================================================
 // メイン関数
 //==========================================================================
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hInstancePrev, LPSTR lpCmbLine, int nCmbShow)
 {
+	g_hInstance = hInstance;
+	g_CmbShow = nCmbShow;
+
 	// メモリリークを出力
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
@@ -40,7 +46,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hInstancePrev, LPSTR lpCmbLine
 		WindowProc,							// ウインドウプロシージャ
 		0,									// 0にする(通常は使用しない)
 		0,									// 0にする(通常は使用しない)
-		hInstance,							// インスタンスハンドル
+		g_hInstance,							// インスタンスハンドル
 		LoadIcon(nullptr, IDI_APPLICATION),	// タスクバーのアイコン
 		LoadCursor(nullptr, IDC_ARROW),		// マウスカーソル
 		(HBRUSH)(COLOR_WINDOW + 1),			// クライアント領域の背景色
@@ -49,32 +55,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hInstancePrev, LPSTR lpCmbLine
 		LoadIcon(nullptr, IDI_APPLICATION)		// ファイルのアイコン
 	};
 
-	//HWND hWnd;	// ウインドウハンドル(識別子)
 	MSG msg;	// メッセージを格納する変数
-
-	RECT rect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };	// 画面サイズの構造体
 
 	// ウインドウクラスの登録
 	RegisterClassEx(&wcex);
 
 	// クライアント領域を指定のサイズに調整
-	AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, FALSE);
+	AdjustWindowRect(&g_Rect, WS_OVERLAPPEDWINDOW, FALSE);
 
 	// ウインドウの生成
-	hWnd = CreateWindowEx(
-		0,									// 拡張ウインドウスタイル
-		CLASS_NAME,							// ウインドウクラスの名前
-		WINDOW_NAME,						// ウインドウの名前
-		WS_OVERLAPPEDWINDOW,				// ウインドウスタイル
-		CW_USEDEFAULT,						// ウインドウの左上X座標
-		CW_USEDEFAULT,						// ウインドウの左上Y座標
-		(rect.right - rect.left),			// ウインドウの幅
-		(rect.bottom - rect.top),			// ウインドウの高さ
-		nullptr,								// 親ウインドウのハンドル
-		nullptr,								// メニューハンドルまたは子ウインドウID
-		hInstance,							// インスタンスハンドル
-		nullptr								// ウインドウ作成データ
-	);
+	ResetWnd();
 
 	DWORD dwCurrentTime;					// 現在時刻
 	DWORD dwExecLastTime;					// 最後に処理した時刻
@@ -106,7 +96,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hInstancePrev, LPSTR lpCmbLine
 	{// メモリの確保が出来ていたら
 
 		// 初期化処理
-		if (FAILED(pManager->Init(hInstance, hWnd, TRUE)))
+		if (FAILED(pManager->Init(g_hInstance, hWnd, TRUE)))
 		{// 初期化処理が失敗した場合
 
 			return -1;
@@ -121,7 +111,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hInstancePrev, LPSTR lpCmbLine
 	dwExecLastTime = timeGetTime();	// 現在時刻を取得(保存)
 
 	// ウインドウの表示
-	ShowWindow(hWnd, nCmbShow);		// ウインドウの表示状態を設定
+	ShowWindow(hWnd, g_CmbShow);		// ウインドウの表示状態を設定
 	UpdateWindow(hWnd);				// クライアント領域を更新
 
 	dwFrameCount = 0;
@@ -288,3 +278,28 @@ int GetFPS()
 }
 
 HWND GetWnd() { return hWnd; }
+
+void ResetWnd()
+{
+	// ウインドウの生成
+	hWnd = CreateWindowEx(
+		0,									// 拡張ウインドウスタイル
+		CLASS_NAME,							// ウインドウクラスの名前
+		WINDOW_NAME,						// ウインドウの名前
+		WS_OVERLAPPEDWINDOW,				// ウインドウスタイル
+		CW_USEDEFAULT,						// ウインドウの左上X座標
+		CW_USEDEFAULT,						// ウインドウの左上Y座標
+		(g_Rect.right - g_Rect.left),			// ウインドウの幅
+		(g_Rect.bottom - g_Rect.top),			// ウインドウの高さ
+		nullptr,								// 親ウインドウのハンドル
+		nullptr,								// メニューハンドルまたは子ウインドウID
+		g_hInstance,							// インスタンスハンドル
+		nullptr								// ウインドウ作成データ
+	);
+	int n = 0;
+}
+
+int GetCmbShow()
+{
+	return g_CmbShow;
+}

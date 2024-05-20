@@ -160,7 +160,7 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	{// メモリの確保が出来ていたら
 
 		// 初期化処理
-		hr = m_pRenderer->Init(hWnd, TRUE);
+		hr = m_pRenderer->Init(hWnd, bWindow);
 		if (FAILED(hr))
 		{// 初期化処理が失敗した場合
 			return E_FAIL;
@@ -877,6 +877,14 @@ void CManager::Update()
 		// デバッグ表示の更新処理
 		m_pDebugProc->Update();
 	}
+
+
+	if (pInputKeyboard->GetTrigger(DIK_0))
+	{
+		m_pRenderer->SetFullScreen();
+	}
+
+
 }
 
 //==========================================================================

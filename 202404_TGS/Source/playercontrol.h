@@ -11,6 +11,10 @@
 #include "player.h"
 #include "baggage.h"
 
+#if _DEBUG
+#include "debug_bressrange.h"
+#endif
+
 //==========================================================================
 // プレイヤーコントロールクラス定義
 //==========================================================================
@@ -42,6 +46,10 @@ public:
 
 private:
 	Effekseer::Handle m_BressHandle;
+	CDebugBressRange* m_pBressRange = nullptr;
+	CDebugBressRange* m_pBressHeight = nullptr;
+	float m_fHeight = 0.0f;
+	float m_fHeightVelocity = 10.0f;
 };
 
 //=============================

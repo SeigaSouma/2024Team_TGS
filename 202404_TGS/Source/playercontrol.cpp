@@ -17,9 +17,14 @@ namespace
 	const float MULTIPLIY_DASH = 2.0f;		// ダッシュの倍率
 	const float STAMINA_AVOID = 30.0f;		// 回避のスタミナ消費量
 	const float LENGTH_AUTOFACE = 200.0f;	// 自動で向く長さ
-	const float LENGTH_COLLISIONRANGE = 400.0f;		// 当たり判定する範囲の長さ
+	const float LENGTH_COLLISIONRANGE = 500.0f;		// 当たり判定する範囲の長さ
 	const float LENGTH_COLLISIONHEIGHT = 1000.0f;	// 当たり判定する高さ上限
+	float ADD_HEIGHT = 25.0f;					// 高さの加算量
+	const float MIN_HEIGHT = 100.0f;
+	const float HEIGHT_VELOCITY = 10.0f;
 }
+
+#define GEKIMUZU (true)
 
 //==========================================================================
 // 通常移動
@@ -175,6 +180,8 @@ void CPlayerControlMove::Move(CPlayer* player)
 #endif
 			int angle = (stickrot <= 0.0f) ? -1 : 1;
 
+			if (angle == -1) fMove *= 0.3f;
+
 			move.x += sinf(D3DX_PI * 0.5f + Camerarot.y) * (fMove * angle);
 			move.z += cosf(D3DX_PI * 0.5f + Camerarot.y) * (fMove * angle);
 			fRotDest = angle * (-D3DX_PI * 0.5f) + Camerarot.y;
@@ -307,18 +314,32 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	MyLib::Vector3 posBaggageOrigin = pBaggage->GetOriginPosition();
 
 
+	if (m_pBressRange == nullptr)
+	{
+		m_pBressRange = CDebugBressRange::Create();
+	}
+	if (m_pBressHeight == nullptr)
+	{
+		m_pBressHeight = CDebugBressRange::Create();
+		m_pBressHeight->SetColor(D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
+	}
+
 	static bool fall = false;
 
-	static float up = 8.3f, power = 6.8f;
+	static float up = 8.3f, power = 9.0f;
+	//static float up = 8.3f, power = 6.8f;
 	//static float up = 2.5f, power = 2.0f;
 	ImGui::DragFloat("up", &up, 0.1f, 0.0f, 0.0f, "%.2f");
 	ImGui::DragFloat("power", &power, 0.01f, 0.0f, 0.0f, "%.2f");
 
+	ImGui::DragFloat("Add Height", &ADD_HEIGHT, 1.0f, 0.0f, 0.0f, "%.2f");
+
+
 	float ratio = (posBaggage.y - posBaggageOrigin.y) / LENGTH_COLLISIONHEIGHT;
 	float ratioHeight = 1.0f - ratio;
-	ratioHeight = UtilFunc::Transformation::Clamp(ratioHeight, 0.3f, 1.0f);
+	ratioHeight = UtilFunc::Transformation::Clamp(ratioHeight, 0.5f, 1.0f);
 
-	ratio = UtilFunc::Transformation::Clamp(ratio, 0.1f, 1.0f);
+	ratio = UtilFunc::Transformation::Clamp(ratio, 0.3f, 1.0f);
 
 	float range = ratio * LENGTH_COLLISIONRANGE;
 
@@ -347,39 +368,89 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 		MyLib::Vector3(0.0f, 0.0f, 0.0f),
 		D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f),
 		20.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+
+	MyLib::Vector3 leftup = posBaggageOrigin, rightup = posBaggageOrigin, leftdw = posBaggageOrigin, rightdw = posBaggageOrigin;
+	leftup.y += LENGTH_COLLISIONHEIGHT; leftup.x -= LENGTH_COLLISIONRANGE;
+	rightup.y += LENGTH_COLLISIONHEIGHT; rightup.x += LENGTH_COLLISIONRANGE;
+	leftdw.x -= LENGTH_COLLISIONRANGE * 0.3f;
+	rightdw.x += LENGTH_COLLISIONRANGE * 0.3f;
+
+	if (m_pBressRange != nullptr)
+	{
+		m_pBressRange->SetRange(leftup, rightup, leftdw, rightdw);
+		m_pBressRange->SetPosition(pos);
+	}
 #endif
 
-	if (posBaggage.y <= LENGTH_COLLISIONHEIGHT &&
-		posBaggage.x <= pos.x + range &&
-		posBaggage.x >= pos.x - range)
+#if GEKIMUZU
+	if (posBaggage.y <= posBaggageOrigin.y) posBaggage.y = posBaggageOrigin.y;
+	pBaggage->SetPosition(MyLib::Vector3(pos.x, posBaggage.y, pos.z));
+#endif
+
+	if (m_pBressHeight != nullptr)
 	{
-		if (CInputKeyboard::GetInstance()->GetPress(DIK_RETURN) ||
-			CInputGamepad::GetInstance()->GetPress(CInputGamepad::BUTTON::BUTTON_A, 0))
-		{
-			if (fall) {
-				fall = false;
-				pBaggage->SetForce(0.0f);
+		float ratiooo = m_fHeight / LENGTH_COLLISIONHEIGHT;
 
-				MyLib::Vector3 d = pos;
-				d.y = posBaggageOrigin.y;
-				/*m_BressHandle = CMyEffekseer::GetInstance()->SetEffect(
-					CMyEffekseer::EFKLABEL::EFKLABEL_BRESS,
-					d, 0.0f, 0.0f, 25.0f, true);*/
-			}
+		float rangeee = ratiooo * LENGTH_COLLISIONRANGE;
 
-			pBaggage->SetMove(MyLib::Vector3(move.x, pBaggage->GetMove().y, move.z));
-			pBaggage->AddForce(MyLib::Vector3(ratio * power, up * ratioHeight, 0.0f), player->GetPosition() + move);
-		}
-
-		if (CInputKeyboard::GetInstance()->GetRelease(DIK_RETURN) ||
-			CInputGamepad::GetInstance()->GetRelease(CInputGamepad::BUTTON::BUTTON_A, 0))
-		{
-			// 降下状態
-			fall = true;
-		}
+		/*leftup.x = -rangeee - (LENGTH_COLLISIONRANGE * 0.3f);
+		rightup.x = rangeee + (LENGTH_COLLISIONRANGE * 0.3f);*/
+		leftup.y = posBaggageOrigin.y + m_fHeight;
+		rightup.y = posBaggageOrigin.y + m_fHeight;
+		m_pBressHeight->SetRange(leftup, rightup, leftdw, rightdw);
+		m_pBressHeight->SetPosition(pos);
 	}
 
-	if (posBaggage.y <= 10.0f)
+
+	if (CInputKeyboard::GetInstance()->GetPress(DIK_RETURN) ||
+		CInputGamepad::GetInstance()->GetPress(CInputGamepad::BUTTON::BUTTON_A, 0))
+	{
+		if (fall) {
+			fall = false;
+			pBaggage->SetForce(0.0f);
+
+			MyLib::Vector3 d = pos;
+			d.y = posBaggageOrigin.y;
+			/*m_BressHandle = CMyEffekseer::GetInstance()->SetEffect(
+				CMyEffekseer::EFKLABEL::EFKLABEL_BRESS,
+				d, 0.0f, 0.0f, 25.0f, true);*/
+		}
+
+		m_fHeightVelocity += (0.0f - m_fHeightVelocity) * 0.2f;
+		m_fHeight += ADD_HEIGHT + m_fHeightVelocity;
+		m_fHeight = UtilFunc::Transformation::Clamp(m_fHeight, MIN_HEIGHT, LENGTH_COLLISIONHEIGHT);
+
+		if (posBaggage.y <= posBaggageOrigin.y + m_fHeight &&
+			posBaggage.x <= pos.x + range &&
+			posBaggage.x >= pos.x - range)
+		{
+
+#if GEKIMUZU
+			pBaggage->AddForce(MyLib::Vector3(0.0f, up * ratioHeight, 0.0f), player->GetPosition() + move);
+#else
+			pBaggage->SetMove(MyLib::Vector3(move.x, pBaggage->GetMove().y, move.z));
+			pBaggage->AddForce(MyLib::Vector3(ratio * power, up * ratioHeight, 0.0f), player->GetPosition() + move);
+#endif
+		}
+	}
+	else
+	{
+		m_fHeight -= ADD_HEIGHT * 2.0f;
+		m_fHeightVelocity += (m_fHeightVelocity - HEIGHT_VELOCITY) * 0.1f;
+		m_fHeightVelocity = UtilFunc::Transformation::Clamp(m_fHeightVelocity, 0.0f, HEIGHT_VELOCITY);
+	}
+	m_fHeight = UtilFunc::Transformation::Clamp(m_fHeight, MIN_HEIGHT, LENGTH_COLLISIONHEIGHT);
+
+	if (CInputKeyboard::GetInstance()->GetRelease(DIK_RETURN) ||
+		CInputGamepad::GetInstance()->GetRelease(CInputGamepad::BUTTON::BUTTON_A, 0))
+	{
+		// 降下状態
+		fall = true;
+
+	}
+
+
+	if (posBaggage.y <= MIN_HEIGHT)
 	{
 		fall = true;
 	}
