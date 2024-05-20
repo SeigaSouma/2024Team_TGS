@@ -40,12 +40,15 @@ class CPlayerControlBaggage
 public:
 
 	// コンストラクタ
-	CPlayerControlBaggage() {}
+	CPlayerControlBaggage() 
+	{
+		m_BressHandle = nullptr;
+	}
 
 	virtual void Action(CPlayer* player, CBaggage* pBaggage);	// アクション
 
 private:
-	Effekseer::Handle m_BressHandle;
+	Effekseer::Handle* m_BressHandle = nullptr;
 	CDebugBressRange* m_pBressRange = nullptr;
 	CDebugBressRange* m_pBressHeight = nullptr;
 	float m_fHeight = 0.0f;

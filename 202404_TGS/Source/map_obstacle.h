@@ -1,35 +1,31 @@
 //=============================================================================
 // 
-//  荷物ヘッダー [baggage.h]
+//  マップの障害物ヘッダー [map_obstacle.h]
 //  Author : 相馬靜雅
 // 
 //=============================================================================
 
-#ifndef _BAGGAGE_H_
-#define _BAGGAGE_H_		// 二重インクルード防止
+#ifndef _MAP_OBSTACLE_H_
+#define _MAP_OBSTACLE_H_		// 二重インクルード防止
 
 #include "objectX.h"
 #include "listmanager.h"
+#include "map_obstacleManager.h"
 
 //==========================================================================
 // クラス定義
 //==========================================================================
-// 荷物クラス
-class CBaggage : public CObjectX
+// マップの障害物クラス
+class CMap_Obstacle : public CObjectX
 {
 public:
 	
 	//=============================
 	// 列挙型定義
 	//=============================
-	enum TYPE
-	{
-		TYPE_CLOTH = 0,	// 布
-		TYPE_MAX
-	};
 
-	CBaggage(int nPriority = 6);
-	~CBaggage();
+	CMap_Obstacle(int nPriority = 6);
+	~CMap_Obstacle();
 
 	//=============================
 	// オーバーライド関数
@@ -42,16 +38,16 @@ public:
 	//=============================
 	// メンバ関数
 	//=============================
-	void Kill();		// 削除
-	void SetForce(const MyLib::Vector3& power) { m_force = power; }				// 力設定
-	void AddForce(const MyLib::Vector3& power, const MyLib::Vector3& ActPos);	// 力追加
-	bool IsDrop() { return m_bDrop; }	// 落下判定取得
+	void Kill();	// 削除
+	void Save();	// セーブ
+	void Load();	// ロード
+
 
 	//=============================
 	// 静的関数
 	//=============================
-	static CBaggage *Create(TYPE type);
-	static CListManager<CBaggage> GetListObj() { return m_List; }	// リスト取得
+	static CMap_Obstacle *Create(const CMap_ObstacleManager::SObstacleInfo& info);	// 生成処理
+	static CListManager<CMap_Obstacle> GetListObj() { return m_List; }				// リスト取得
 
 private:
 
@@ -65,10 +61,8 @@ private:
 	// メンバ変数
 	//=============================
 	TYPE m_type;			// 種類
-	float m_fWeight;		// 重さ
-	MyLib::Vector3 m_force;	// 力
-	bool m_bDrop;		// 落下判定
-	static CListManager<CBaggage> m_List;	// リスト
+	CMap_ObstacleManager::SObstacleInfo m_ObstacleInfo;	// 障害物情報
+	static CListManager<CMap_Obstacle> m_List;	// リスト
 
 };
 

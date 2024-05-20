@@ -314,7 +314,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	MyLib::Vector3 posBaggageOrigin = pBaggage->GetOriginPosition();
 
 
-	if (m_pBressRange == nullptr)
+	/*if (m_pBressRange == nullptr)
 	{
 		m_pBressRange = CDebugBressRange::Create();
 	}
@@ -322,9 +322,9 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	{
 		m_pBressHeight = CDebugBressRange::Create();
 		m_pBressHeight->SetColor(D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
-	}
+	}*/
 
-	static bool fall = false;
+	static bool fall = true;
 
 	static float up = 8.3f, power = 9.0f;
 	//static float up = 8.3f, power = 6.8f;
@@ -409,11 +409,17 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 			fall = false;
 			pBaggage->SetForce(0.0f);
 
+			if (m_BressHandle != nullptr)
+			{
+				CMyEffekseer::GetInstance()->SetTrigger(*m_BressHandle, 1);
+			}
+
 			MyLib::Vector3 d = pos;
 			d.y = posBaggageOrigin.y;
-			/*m_BressHandle = CMyEffekseer::GetInstance()->SetEffect(
+			CMyEffekseer::GetInstance()->SetEffect(
+				&m_BressHandle,
 				CMyEffekseer::EFKLABEL::EFKLABEL_BRESS,
-				d, 0.0f, 0.0f, 25.0f, true);*/
+				d, 0.0f, 0.0f, 25.0f, true);
 		}
 
 		m_fHeightVelocity += (0.0f - m_fHeightVelocity) * 0.2f;
@@ -455,10 +461,10 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 		fall = true;
 	}
 
-	if (fall && m_BressHandle != 0 )
+	if (fall && m_BressHandle != nullptr)
 	{
 		//CMyEffekseer::GetInstance()->Stop(m_BressHandle);
-		CMyEffekseer::GetInstance()->SetTrigger(m_BressHandle, 1);
+		CMyEffekseer::GetInstance()->SetTrigger(*m_BressHandle, 1);
 	}
 
 
@@ -466,7 +472,10 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	d.y = posBaggageOrigin.y;
 
 	// ˆÊ’uÝ’è
-	CMyEffekseer::GetInstance()->SetPosition(m_BressHandle, d);
+	if (m_BressHandle != nullptr)
+	{
+		CMyEffekseer::GetInstance()->SetPosition(*m_BressHandle, d);
+	}
 
 }
 

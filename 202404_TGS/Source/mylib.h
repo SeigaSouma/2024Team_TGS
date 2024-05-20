@@ -47,6 +47,19 @@ namespace MyLib
 		}
 
 		//--------------------------
+		// jsonのフレンド化
+		//--------------------------
+		friend void from_json(const nlohmann::json& j, MyLib::Vector3& v)
+		{
+			v.from_json(j);
+		}
+
+		friend void to_json(nlohmann::json& j, const MyLib::Vector3& v)
+		{
+			v.to_json(j);
+		}
+
+		//--------------------------
 		// 加算
 		//--------------------------
 		inline Vector3 operator + (const float& o) const
@@ -741,25 +754,65 @@ namespace MyLib
 		AABB(const MyLib::Vector3& min, const MyLib::Vector3& max) : vtxMin(min), vtxMax(max) {}
 	};
 
+
+	/**
+	@brief	BOXコライダー
+	*/
+	struct Collider_BOX
+	{
+		MyLib::Vector3 vtxMin;	// 最小値
+		MyLib::Vector3 vtxMax;	// 最大値
+		MyLib::Vector3 offset;	// オフセット位置
+		MyLib::Matrix worldmtx;	// ワールドマトリックス
+
+		// デフォルトコンストラクタ
+		Collider_BOX() : vtxMin(), vtxMax(), offset(), worldmtx() {}
+
+		// パラメータ付きコンストラクタ
+		Collider_BOX(const MyLib::Vector3& min, const MyLib::Vector3& max, const MyLib::Vector3& offset, const MyLib::Matrix mtx) :
+			vtxMin(min), vtxMax(max), offset(offset), worldmtx(mtx) {}
+
+
+		// JSONからの読み込み
+		void from_json(const nlohmann::json& j)
+		{
+			j.at("vtxMin").get_to(vtxMin);
+			j.at("vtxMax").get_to(vtxMax);
+			j.at("offset").get_to(offset);
+		}
+
+		// JSONへの書き込み
+		void to_json(nlohmann::json& j) const
+		{
+			j = nlohmann::json
+			{
+				{"vtxMin", vtxMin},
+				{"vtxMax", vtxMax},
+				{"offset", offset},
+			};
+		}
+	};
 	
 }
 
-
+#if 0
 // nlohmann::jsonの特殊化
 namespace nlohmann 
 {
-	template <> struct adl_serializer<MyLib::Vector3>
+	template <> 
+	struct adl_serializer<MyLib::Vector3>
 	{
-		static void to_json(json& j, const MyLib::Vector3& v)
-		{
-			v.to_json(j);
-		}
-
 		static void from_json(const json& j, MyLib::Vector3& v)
 		{
 			v.from_json(j);
 		}
+
+		static void to_json(json& j, const MyLib::Vector3& v)
+		{
+			v.to_json(j);
+		}
 	};
 }
+#endif
 
 #endif
