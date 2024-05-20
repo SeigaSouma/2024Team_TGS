@@ -179,6 +179,7 @@
     <ClCompile Include="Source\collisionobject.cpp" />
     <ClCompile Include="Source\damagepoint.cpp" />
     <ClCompile Include="Source\debugproc.cpp" />
+    <ClCompile Include="Source\debug_bressrange.cpp" />
     <ClCompile Include="Source\edit.cpp" />
     <ClCompile Include="Source\edithandle.cpp" />
     <ClCompile Include="Source\edit_enemybase.cpp" />
@@ -311,6 +312,7 @@
     <ClInclude Include="Source\constans.h" />
     <ClInclude Include="Source\damagepoint.h" />
     <ClInclude Include="Source\debugproc.h" />
+    <ClInclude Include="Source\debug_bressrange.h" />
     <ClInclude Include="Source\edit.h" />
     <ClInclude Include="Source\edithandle.h" />
     <ClInclude Include="Source\edit_enemybase.h" />

@@ -19,9 +19,9 @@ namespace
 {
 	const char* TEXTURE = "data\\TEXTURE\\number\\number_oradano.png";	// テクスチャのファイル
 
-	const MyLib::Vector3 DEFAULT_POSITION = MyLib::Vector3(880.0f, 237.0f, 0.0f);	// 初期位置
-	const D3DXVECTOR2 SIZE_NUMBER = D3DXVECTOR2(50.0f, 50.0f);
-	const float DSTANCE_TIMER = SIZE_NUMBER.x * 2;
+	const MyLib::Vector3 DEFAULT_POSITION = MyLib::Vector3(1100.0f, 100.0f, 0.0f);	// 初期位置
+	const D3DXVECTOR2 SIZE_NUMBER = D3DXVECTOR2(30.0f, 30.0f);
+	const float DSTANCE_TIMER = SIZE_NUMBER.x * 2.25f;
 }
 
 //==========================================================================

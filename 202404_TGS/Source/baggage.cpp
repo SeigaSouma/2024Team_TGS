@@ -124,6 +124,7 @@ void CBaggage::Update()
 		return;
 	}
 
+
 	// î•ñæ“¾
 	MyLib::Vector3 posOrigin = GetOriginPosition();
 	MyLib::Vector3 pos = GetPosition();
@@ -142,7 +143,15 @@ void CBaggage::Update()
 	// d—Í‰ÁZ
 	move.y -= mylib_const::GRAVITY * m_fWeight;
 
-	if (pos.y <= 0.0f) pos.y = 0.0f, move.y = 0.0f;
+	static float limitMoveY = 30.0f;
+	ImGui::DragFloat("Limit MoveY", &limitMoveY, 1.0f, 0.0f, 0.0f, "%.2f");
+
+	if (move.y >= limitMoveY)
+	{
+		move.y = limitMoveY;
+	}
+
+	if (pos.y <= GetOriginPosition().y) pos.y = GetOriginPosition().y, move.y = 0.0f;
 
 	// —‰º”»’è
 	m_bDrop = pos.y <= 0.0f;

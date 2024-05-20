@@ -26,9 +26,18 @@ public:
 	void Draw();
 	LPDIRECT3DDEVICE9 GetDevice() const;
 	LPDIRECT3D9 GetD3D() const { return m_pD3D; }
+
+	HRESULT SetFullScreen();
+
 private:
+
+	void ResetRendererState();
+
 	LPDIRECT3D9 m_pD3D;					// Direct3Dオブジェクトへのポインタ
 	LPDIRECT3DDEVICE9 m_pD3DDevice;		// Direct3Dデバイスへのポインタ
+	D3DPRESENT_PARAMETERS m_d3dpp;	// プレゼンテーションモード
+
+
 };
 
 

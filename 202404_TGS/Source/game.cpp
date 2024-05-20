@@ -167,7 +167,7 @@ HRESULT CGame::Init()
 	// ƒNƒŠƒA‚Ì”»’è
 	SetEnableClear(true);
 
-	CSample_Obj3D::Create();
+	//CSample_Obj3D::Create();
 
 	m_pTimer = CTimer::Create();
 

@@ -446,6 +446,9 @@
     <ClCompile Include="Source\baggage.cpp">
       <Filter>baggage</Filter>
     </ClCompile>
+    <ClCompile Include="Source\debug_bressrange.cpp">
+      <Filter>SAMPLE</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ballast.h">
@@ -822,6 +825,9 @@
     </ClInclude>
     <ClInclude Include="Source\baggage.h">
       <Filter>baggage</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\debug_bressrange.h">
+      <Filter>SAMPLE</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
