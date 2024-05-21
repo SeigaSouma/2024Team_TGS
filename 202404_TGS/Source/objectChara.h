@@ -96,9 +96,6 @@ public:
 	// JSONからの読み込み
 	void from_json(const json& j)
 	{
-		// 基底クラスの読み込み
-		//CObjectHierarchy::from_json(j);
-		
 		for (const auto& colliderData : j.at("colliders")) 
 		{
 			SphereCollider collider;
@@ -110,9 +107,6 @@ public:
 	// CObjectCharaのJSONへの書き込み
 	void to_json(json& j) const
 	{
-		// 基底クラスの書き込み
-		//CObjectHierarchy::to_json(j);
-
 		j["colliders"] = json::array(); // 空の配列を作成
 
 		for (const auto& collider : m_SphereColliders)
