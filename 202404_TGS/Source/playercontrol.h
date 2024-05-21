@@ -56,128 +56,20 @@ private:
 };
 
 //=============================
-// UŒ‚
+// •‚ã‘€ì
 //=============================
-class CPlayerControlAttack
+class CPlayerControlSurfacing
 {
 public:
 
-	CPlayerControlAttack() : m_bAttackReserved(false) {}
+	// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	CPlayerControlSurfacing() {}
 
-	virtual void Attack(CPlayer* player);	// ’ÊíUŒ‚
-	bool IsReserve() { return m_bAttackReserved; }
-
-protected:
-
-	virtual bool IsAttack(CPlayer* player);	// UŒ‚‰Â”\ƒtƒ‰ƒOŽæ“¾
-
-	virtual void StageByReset(CPlayer* player)	// ’iŠK–ˆ‚ÌƒŠƒZƒbƒgˆ—
-	{
-		// ’iŠKŽæ“¾
-		int combostage = player->GetComboStage();
-
-		// ƒRƒ“ƒ{‚Ì’iŠK‰ÁŽZ
-		combostage++;
-		
-		player->SetComboStage(combostage);
-	}
-
-	bool m_bAttackReserved;	// UŒ‚‚Ì—\–ñ”»’è
-};
-
-class CPlayerControlAttack_Level1 : public CPlayerControlAttack
-{
-public:
-
-	CPlayerControlAttack_Level1() : m_bChargePossible(false) {}
-
-	virtual void Attack(CPlayer* player) override;	// ’ÊíUŒ‚
+	virtual float Surfacing(CPlayer* player);	// ˆÚ“®
 
 private:
-	bool m_bChargePossible;	// ƒ`ƒƒ[ƒW‰Â”\ƒtƒ‰ƒO
+
+	float m_fHeight = 0.0f;	// •‚ã‚‚³
 };
-
-
-//=============================
-// –hŒä
-//=============================
-class CPlayerControlDefence
-{
-public:
-	CPlayerControlDefence() {}
-
-	virtual void Defence(CPlayer* player);	// –hŒä
-};
-
-// –hŒäƒŒƒxƒ‹1
-class CPlayerControlDefence_Level1 : public CPlayerControlDefence
-{
-public:
-	CPlayerControlDefence_Level1() {}
-
-	virtual void Defence(CPlayer* player) override;	// –hŒä
-};
-
-
-//=============================
-// ‰ñ”ð
-//=============================
-class CPlayerControlAvoid
-{
-public:
-	CPlayerControlAvoid() {}
-
-	virtual void Avoid(CPlayer* player);	// ‰ñ”ð
-};
-
-
-//=============================
-// ƒK[ƒh
-//=============================
-class CPlayerGuard
-{
-public:
-	CPlayerGuard() {}
-
-	virtual void HitProcess(CPlayer* player, MyLib::Vector3 enemypos);	// Žó‚¯‚½Žž‚Ìˆ—
-};
-
-class CPlayerGuard_Level1 : public CPlayerGuard
-{
-public:
-	CPlayerGuard_Level1() {}
-
-	// Žó‚¯‚½Žž‚Ìˆ—
-	virtual void HitProcess(CPlayer* player, MyLib::Vector3 enemypos) override
-	{
-		CPlayerGuard::HitProcess(player, enemypos);
-
-		MyLib::Vector3 rot = player->GetRotation();
-		player->SetMove(MyLib::Vector3(
-			sinf(rot.y) * 20.0f,
-			0.0f,
-			cosf(rot.y) * 20.0f));
-	}
-};
-
-class CPlayerGuard_Level2 : public CPlayerGuard
-{
-public:
-	CPlayerGuard_Level2() {}
-
-	// Žó‚¯‚½Žž‚Ìˆ—
-	virtual void HitProcess(CPlayer* player, MyLib::Vector3 enemypos) override
-	{
-		CPlayerGuard::HitProcess(player, enemypos);
-
-		MyLib::Vector3 rot = player->GetRotation();
-		player->SetMove(MyLib::Vector3(
-			sinf(rot.y) * 5.0f,
-			0.0f,
-			cosf(rot.y) * 5.0f));
-	}
-};
-
-
 
 #endif

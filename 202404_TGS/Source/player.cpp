@@ -73,6 +73,7 @@ namespace
 	const bool DEFAULT_IS_CHARGEFLINCH = true;			// チャージ時怯みフラグ
 	const int DEFAULT_RESPAWN_PERCENT = 20;			// 復活確率
 	const float MULTIPLY_CHARGEATK = 2.0f;				// チャージ攻撃の倍率
+	const float MAX_HEIGHT = 200.0f;					// 最大高さ
 }
 
 //==========================================================================
@@ -149,10 +150,7 @@ CPlayer::CPlayer(int nPriority) : CObjectChara(nPriority)
 
 	m_pControlMove = nullptr;						// 移動操作
 	m_pControlBaggage = nullptr;					// 荷物操作
-	m_pControlAtk = nullptr;						// 攻撃操作
-	m_pControlDefence = nullptr;					// 防御操作
-	m_pControlAvoid = nullptr;						// 回避操作
-	m_pGuard = nullptr;								// ガード
+	m_pControlSurfacing = nullptr;					// 浮上操作
 
 	m_nCntRetry = 0;
 }
@@ -216,16 +214,13 @@ HRESULT CPlayer::Init()
 	// 操作関連
 	ChangeMoveControl(DEBUG_NEW CPlayerControlMove());
 	ChangeBaggageControl(DEBUG_NEW CPlayerControlBaggage);
-	ChangeAtkControl(DEBUG_NEW CPlayerControlAttack());
-	ChangeDefenceControl(DEBUG_NEW CPlayerControlDefence());
-	ChangeAvoidControl(DEBUG_NEW CPlayerControlAvoid());
-	ChangeGuardGrade(DEBUG_NEW CPlayerGuard());
+	ChangeSurfacingControl(DEBUG_NEW CPlayerControlSurfacing);
 
 	// 荷物生成
 	m_pBaggage = CBaggage::Create(CBaggage::TYPE::TYPE_CLOTH);
 
 	MyLib::Vector3 pos = GetPosition();
-	m_pBaggage->SetPosition(MyLib::Vector3(pos.x, 200.0f, pos.z));
+	m_pBaggage->SetPosition(MyLib::Vector3(pos.x, MAX_HEIGHT, pos.z));
 	m_pBaggage->SetOriginPosition(m_pBaggage->GetPosition());
 
 	//// スキルポイント生成
@@ -259,39 +254,12 @@ void CPlayer::ChangeBaggageControl(CPlayerControlBaggage* control)
 }
 
 //==========================================================================
-// 攻撃の操作変更
+// 荷物の操作変更
 //==========================================================================
-void CPlayer::ChangeAtkControl(CPlayerControlAttack* control)
-{ 
-	delete m_pControlAtk;
-	m_pControlAtk = control;
-}
-
-//==========================================================================
-// 防御の操作変更
-//==========================================================================
-void CPlayer::ChangeDefenceControl(CPlayerControlDefence* control)
-{ 
-	delete m_pControlDefence;
-	m_pControlDefence = control;
-}
-
-//==========================================================================
-// 回避の操作変更
-//==========================================================================
-void CPlayer::ChangeAvoidControl(CPlayerControlAvoid* control)
-{ 
-	delete m_pControlAvoid;
-	m_pControlAvoid = control;
-}
-
-//==========================================================================
-// ガード性能変更
-//==========================================================================
-void CPlayer::ChangeGuardGrade(CPlayerGuard* guard)
+void CPlayer::ChangeSurfacingControl(CPlayerControlSurfacing* control)
 {
-	delete m_pGuard;
-	m_pGuard = guard;
+	delete m_pControlSurfacing;
+	m_pControlSurfacing = control;
 }
 
 //==========================================================================
@@ -312,26 +280,7 @@ void CPlayer::Uninit()
 	}
 
 	// 操作系
-	if (m_pControlAtk != nullptr)
-	{
-		delete m_pControlAtk;
-		m_pControlAtk = nullptr;
-	}
-	if (m_pControlDefence != nullptr)
-	{
-		delete m_pControlDefence;
-		m_pControlDefence = nullptr;
-	}
-	if (m_pControlAvoid != nullptr)
-	{
-		delete m_pControlAvoid;
-		m_pControlAvoid = nullptr;
-	}
-	if (m_pGuard != nullptr)
-	{
-		delete m_pGuard;
-		m_pGuard = nullptr;
-	}
+	DeleteControl();
 
 	// 終了処理
 	CObjectChara::Uninit();
@@ -363,26 +312,7 @@ void CPlayer::Kill()
 	}
 
 	// 操作系
-	if (m_pControlAtk != nullptr)
-	{
-		delete m_pControlAtk;
-		m_pControlAtk = nullptr;
-	}
-	if (m_pControlDefence != nullptr)
-	{
-		delete m_pControlDefence;
-		m_pControlDefence = nullptr;
-	}
-	if (m_pControlAvoid != nullptr)
-	{
-		delete m_pControlAvoid;
-		m_pControlAvoid = nullptr;
-	}
-	if (m_pGuard != nullptr)
-	{
-		delete m_pGuard;
-		m_pGuard = nullptr;
-	}
+	DeleteControl();
 
 	// ロックオン設定
 	CCamera* pCamera = CManager::GetInstance()->GetCamera();
@@ -527,17 +457,19 @@ void CPlayer::Controll()
 			m_state != STATE_DEADWAIT &&
 			m_state != STATE_FADEOUT)
 		{
-			m_pControlAtk->Attack(this);		// 攻撃操作
-			m_pControlDefence->Defence(this);	// 防御操作
-			m_pControlAvoid->Avoid(this);		// 回避操作
 		}
 
 		// 移動操作
 		m_pControlMove->Move(this);
 
 	}
+	
+	{ // 浮上操作
+		float fHeight = m_pControlSurfacing->Surfacing(this);
+		MyLib::Vector3 pos = m_pBaggage->GetPosition();
+		m_pBaggage->SetOriginPosition(MyLib::Vector3(0.0f, MAX_HEIGHT + fHeight, 0.0f));
+	}
 	m_pControlBaggage->Action(this, m_pBaggage);		// 荷物操作
-
 
 
 	// 位置取得
@@ -726,6 +658,27 @@ void CPlayer::Controll()
 		CDamagePoint::Create(GetPosition(), UtilFunc::Transformation::Random(1, 99));
 	}
 #endif
+}
+
+//==========================================================================
+// 操作関連削除
+//==========================================================================
+void CPlayer::DeleteControl()
+{
+	if (m_pControlMove != nullptr) {
+		delete m_pControlMove;
+		m_pControlMove = nullptr;
+	}
+
+	if (m_pControlBaggage != nullptr) {
+		delete m_pControlBaggage;
+		m_pControlBaggage = nullptr;
+	}
+
+	if (m_pControlSurfacing != nullptr) {
+		delete m_pControlSurfacing;
+		m_pControlSurfacing = nullptr;
+	}
 }
 
 //==========================================================================
