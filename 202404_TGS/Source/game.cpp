@@ -385,10 +385,6 @@ void CGame::Update()
 
 #if _DEBUG
 
-	if (m_pEdit != nullptr) {
-		m_pEdit->Update();
-	}
-
 	if (pInputKeyboard->GetTrigger(DIK_F))
 	{
 		// モード設定
@@ -444,31 +440,9 @@ void CGame::ChangeEdit()
 			}
 		}
 
-
-
-
-		//// コンボボックス
-		//static const char* items[] = { "OFF", "EnemyBase", "Map" };
-		//static int selectedItem = 0;
-
-		//// コンボボックス
-		//if (ImGui::Combo("Change Edit Mode", &selectedItem, items, IM_ARRAYSIZE(items)))
-		//{
-		//	// 選択された項目が変更されたときの処理
-		//	switch (m_EditType)
-		//	{
-		//	case CGame::EDITTYPE_OFF:
-		//		break;
-		//	case CGame::EDITTYPE_ENEMYBASE:
-		//		break;
-		//	case CGame::EDITTYPE_MAX:
-		//		break;
-		//	default:
-		//		break;
-		//	}
-		//}
-
-
+		if (m_pEdit != nullptr) {
+			m_pEdit->Update();
+		}
 
 	}
 	ImGui::End();

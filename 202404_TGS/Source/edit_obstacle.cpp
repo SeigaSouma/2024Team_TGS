@@ -48,10 +48,12 @@ HRESULT CEdit_Obstacle::Init()
 	CMap_ObstacleManager* pObstacleMgr = CMap_ObstacleManager::GetInstance();
 	std::vector<CMap_ObstacleManager::SObstacleInfo> vecInfo = pObstacleMgr->GetObstacleInfo();
 
-	MyLib::Vector3 pos = MyLib::Vector3(0.0f, 300.0f, 0.0f);
+	MyLib::Vector3 pos = MyLib::Vector3(0.0f, 1000.0f, 0.0f);
 	for (const auto& info : vecInfo)
 	{
 		CObjectX* pObj = CObjectX::Create(info.modelFile, pos);
+		pObj->SetType(CObject::TYPE::TYPE_OBJECTX);
+
 		m_pObjX.push_back(pObj);
 
 		pos.x += DISTANCE_OBJ;
@@ -91,7 +93,7 @@ void CEdit_Obstacle::Update()
 {
 
 	// エディットメニュー
-	ImGui::Begin("Obstacle Edit", NULL, ImGuiWindowFlags_MenuBar);
+	if (ImGui::CollapsingHeader("Obstacle Edit"))
 	{
 		MenuBar();
 
@@ -109,7 +111,7 @@ void CEdit_Obstacle::Update()
 
 		Resize();
 	}
-	ImGui::End();
+	//ImGui::End();
 
 
 
@@ -128,7 +130,6 @@ void CEdit_Obstacle::MenuBar()
 	CMap_ObstacleManager* pObstacleMgr = CMap_ObstacleManager::GetInstance();
 
 	// 書き出し
-	ImGui::BeginMenuBar();
 	if (ImGui::BeginMenu("File"))
 	{
 		if (ImGui::MenuItem("Save"))
@@ -176,17 +177,16 @@ void CEdit_Obstacle::MenuBar()
 				int n = 0;
 			}
 		}
+
+		// ロード
+		if (ImGui::MenuItem("Load"))
+		{
+
+		}
+
 		ImGui::EndMenu();
 	}
 
-	// ロード
-	if (ImGui::BeginMenu("Load"))
-	{
-
-		ImGui::EndMenu();
-	}
-
-	ImGui::EndMenuBar();
 }
 
 //==========================================================================
@@ -224,6 +224,10 @@ void CEdit_Obstacle::Resize()
 	ImGui::Dummy(ImVec2(0.0f, 10.0f));
 	{
 		ImGui::Text("VtxMax");
+		ImGui::SameLine();
+		if (ImGui::Button("VtxMax RESET")) {
+			collider.vtxMax = 0.0f;
+		}
 
 		// MaxX
 		ImGui::PushID(1); // ウィジェットごとに異なるIDを割り当てる
@@ -255,6 +259,10 @@ void CEdit_Obstacle::Resize()
 	ImGui::Dummy(ImVec2(0.0f, 10.0f));
 	{
 		ImGui::Text("VtxMin");
+		ImGui::SameLine();
+		if (ImGui::Button("VtxMin RESET")) {
+			collider.vtxMin = 0.0f;
+		}
 
 		// MinX
 		ImGui::PushID(0); // ウィジェットごとに異なるIDを割り当てる
@@ -286,6 +294,10 @@ void CEdit_Obstacle::Resize()
 	ImGui::Dummy(ImVec2(0.0f, 10.0f));
 	{
 		ImGui::Text("Offset");
+		ImGui::SameLine();
+		if (ImGui::Button("Offset RESET")) {
+			collider.offset = 0.0f;
+		}
 
 		// X
 		ImGui::PushID(2); // ウィジェットごとに異なるIDを割り当てる
@@ -323,4 +335,15 @@ void CEdit_Obstacle::Resize()
 	// BOXコライダー設定
 	info.boxcolliders[m_nColliderIdx] = collider;
 	pObstacleMgr->SetObstacleInfo(info, m_nEditIdx);
+
+	collider.TransformOffset(m_pObjX[m_nEditIdx]->GetWorldMtx());
+	m_pCollisionLineBox->SetPosition(collider.GetMtx().GetWorldPosition());
+
+
+	CEffect3D* pEffect = CEffect3D::Create(
+		m_pObjX[m_nEditIdx]->GetPosition(),
+		MyLib::Vector3(0.0f, 0.0f, 0.0f),
+		D3DXCOLOR(0.6f, 0.2f, 1.0f, 1.0f),
+		20.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+	pEffect->SetDisableZSort();
 }
