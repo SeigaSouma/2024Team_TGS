@@ -37,6 +37,7 @@
 #include "objectLine.h"
 #include "goalflag.h"
 #include "checkpoint.h"
+#include "map_obstacleManager.h"
 
 #include "sample_obj3D.h"
 
@@ -176,6 +177,9 @@ HRESULT CGame::Init()
 	CCheckpoint::Create(MyLib::Vector3(2300.0f, 0.0f, 0.0f));
 
 	CGoalflagX::Create(MyLib::Vector3(33000.0f,0.0f,0.0f));
+
+	// 障害物マネージャ
+	CMap_ObstacleManager::Create();
 
 	// 成功
 	return S_OK;
@@ -419,7 +423,7 @@ void CGame::ChangeEdit()
 	ImGui::Begin("Edit"/*, NULL, ImGuiWindowFlags_MenuBar*/);
 	{
 		// テキスト
-		static const char* items[] = { "OFF", "EnemyBase", "Map" };
+		static const char* items[] = { "OFF", "EnemyBase", "Map", "Obstacle"};
 		int selectedItem = m_EditType;
 
 		// [グループ]エディット切り替え

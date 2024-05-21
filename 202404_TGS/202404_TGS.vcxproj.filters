@@ -458,6 +458,9 @@
     <ClCompile Include="Source\map_obstacleManager.cpp">
       <Filter>map</Filter>
     </ClCompile>
+    <ClCompile Include="Source\edit_obstacle.cpp">
+      <Filter>edit</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ballast.h">
@@ -843,6 +846,9 @@
     </ClInclude>
     <ClInclude Include="Source\map_obstacleManager.h">
       <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\edit_obstacle.h">
+      <Filter>edit</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
