@@ -2,13 +2,13 @@ Metasequoia Document
 Format Text Ver 1.0
 
 Scene {
-	pos -204.2416 -489.8674 6144.0020
+	pos 177.9816 -0.9772 3840.0012
 	lookat 0.0000 0.0000 0.0000
-	head 47.9502
-	pich 0.1400
+	head 53.3702
+	pich -0.0500
 	bank 0.0000
 	ortho 0
-	zoom2 1.2207
+	zoom2 1.9531
 	amb 0.250 0.250 0.250
 	dirlights 1 {
 		light {
@@ -20,10 +20,10 @@ Scene {
 Material 6 {
 	"initialShadingGroup" col(1.000 0.843 0.635 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00)
 	"lambert3SG" col(0.043 0.043 0.043 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00)
-	"mat1" col(1.000 0.373 0.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00)
+	"mat1" col(1.000 0.373 0.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("wood02.png")
 	"mat2" col(0.122 0.122 0.122 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00)
 	"mat3" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00)
-	"mat4" col(0.224 0.620 0.498 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00)
+	"mat4" col(0.224 0.620 0.498 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("23776105_s.jpg")
 }
 Object "obj1" {
 	visible 15
