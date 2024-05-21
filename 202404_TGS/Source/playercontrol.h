@@ -55,6 +55,21 @@ private:
 	float m_fHeightVelocity = 10.0f;
 };
 
+//=============================
+// 浮上操作
+//=============================
+class CPlayerControlSurfacing
+{
+public:
 
+	// コンストラクタ
+	CPlayerControlSurfacing() {}
+
+	virtual float Surfacing(CPlayer* player);	// 移動
+
+private:
+
+	float m_fHeight = 0.0f;	// 浮上高さ
+};
 
 #endif

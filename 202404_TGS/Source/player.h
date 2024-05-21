@@ -22,6 +22,7 @@ class CBaggage;
 
 class CPlayerControlMove;		// 移動
 class CPlayerControlBaggage;	// 荷物操作
+class CPlayerControlSurfacing;	// 浮上操作
 
 //==========================================================================
 // クラス定義
@@ -175,7 +176,7 @@ public:
 	//=============================
 	void ChangeMoveControl(CPlayerControlMove* control);		// 移動の操作変更
 	void ChangeBaggageControl(CPlayerControlBaggage* control);	// 荷物の操作変更
-	
+	void ChangeSurfacingControl(CPlayerControlSurfacing* control);	// 浮上の操作変更
 
 	//=============================
 	// その他
@@ -236,6 +237,7 @@ private:
 
 	// その他関数
 	virtual void Controll();		// 操作
+	virtual void DeleteControl();	// 操作削除
 	void LimitPos();				// 位置制限
 	void ReaspawnCheckPoint();		// チェックポイント復活
 	void CollisionMapObject();		// マップオブジェクトとの当たり判定
@@ -281,6 +283,7 @@ private:
 	// パターン用インスタンス
 	CPlayerControlMove* m_pControlMove;			// 移動操作
 	CPlayerControlBaggage* m_pControlBaggage;	// 荷物操作
+	CPlayerControlSurfacing* m_pControlSurfacing;	// 浮上操作
 
 	//リトライカウンタ
 	int m_nCntRetry;
