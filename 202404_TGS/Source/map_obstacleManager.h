@@ -84,7 +84,7 @@ public:
 	//=============================
 	void Kill();	// 削除
 	void Save();	// セーブ
-	void SaveInfo(const std::string& file);	// 情報セーブ
+	void SaveInfo();	// 情報セーブ
 	void Load();	// ロード
 	void LoadInfo(const std::string& file);	// 情報ロード
 
