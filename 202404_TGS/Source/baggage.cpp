@@ -8,6 +8,7 @@
 #include "manager.h"
 #include "calculation.h"
 #include "game.h"
+#include "map_obstacle.h"
 
 //==========================================================================
 // 定数定義
@@ -189,6 +190,8 @@ void CBaggage::AddForce(const MyLib::Vector3& power, const MyLib::Vector3& ActPo
 	move.y += power.y;
 
 	SetMove(move);
+
+	Hit();	// 障害物との衝突判定
 }
 
 //==========================================================================
@@ -200,3 +203,25 @@ void CBaggage::Draw()
 	CObjectX::Draw();
 }
 
+//==========================================================================
+// 障害物との判定
+//==========================================================================
+void CBaggage::Hit()
+{
+	// リストループ
+	CListManager<CMap_Obstacle> sampleList = CMap_Obstacle::GetListObj();
+	CMap_Obstacle* pObj = nullptr;
+
+	while (sampleList.ListLoop(&pObj))
+	{
+		MyLib::Vector3 MyPos = GetPosition();
+		MyLib::Vector3 ObjPos = pObj->GetPosition();
+
+		// pObjを使って処理
+		if (UtilFunc::Collision::SphereRange(MyPos, ObjPos, 100.0f, 100.0f).ishit) {
+			MyLib::Vector3 move = GetMove();
+			move *= -1.0f;
+			SetMove(move);
+		}
+	}
+}
