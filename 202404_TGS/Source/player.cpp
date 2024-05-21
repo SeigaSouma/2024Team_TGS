@@ -149,10 +149,6 @@ CPlayer::CPlayer(int nPriority) : CObjectChara(nPriority)
 
 	m_pControlMove = nullptr;						// 移動操作
 	m_pControlBaggage = nullptr;					// 荷物操作
-	m_pControlAtk = nullptr;						// 攻撃操作
-	m_pControlDefence = nullptr;					// 防御操作
-	m_pControlAvoid = nullptr;						// 回避操作
-	m_pGuard = nullptr;								// ガード
 
 	m_nCntRetry = 0;
 }
@@ -216,10 +212,6 @@ HRESULT CPlayer::Init()
 	// 操作関連
 	ChangeMoveControl(DEBUG_NEW CPlayerControlMove());
 	ChangeBaggageControl(DEBUG_NEW CPlayerControlBaggage);
-	ChangeAtkControl(DEBUG_NEW CPlayerControlAttack());
-	ChangeDefenceControl(DEBUG_NEW CPlayerControlDefence());
-	ChangeAvoidControl(DEBUG_NEW CPlayerControlAvoid());
-	ChangeGuardGrade(DEBUG_NEW CPlayerGuard());
 
 	// 荷物生成
 	m_pBaggage = CBaggage::Create(CBaggage::TYPE::TYPE_CLOTH);
@@ -259,42 +251,6 @@ void CPlayer::ChangeBaggageControl(CPlayerControlBaggage* control)
 }
 
 //==========================================================================
-// 攻撃の操作変更
-//==========================================================================
-void CPlayer::ChangeAtkControl(CPlayerControlAttack* control)
-{ 
-	delete m_pControlAtk;
-	m_pControlAtk = control;
-}
-
-//==========================================================================
-// 防御の操作変更
-//==========================================================================
-void CPlayer::ChangeDefenceControl(CPlayerControlDefence* control)
-{ 
-	delete m_pControlDefence;
-	m_pControlDefence = control;
-}
-
-//==========================================================================
-// 回避の操作変更
-//==========================================================================
-void CPlayer::ChangeAvoidControl(CPlayerControlAvoid* control)
-{ 
-	delete m_pControlAvoid;
-	m_pControlAvoid = control;
-}
-
-//==========================================================================
-// ガード性能変更
-//==========================================================================
-void CPlayer::ChangeGuardGrade(CPlayerGuard* guard)
-{
-	delete m_pGuard;
-	m_pGuard = guard;
-}
-
-//==========================================================================
 // 終了処理
 //==========================================================================
 void CPlayer::Uninit()
@@ -312,26 +268,7 @@ void CPlayer::Uninit()
 	}
 
 	// 操作系
-	if (m_pControlAtk != nullptr)
-	{
-		delete m_pControlAtk;
-		m_pControlAtk = nullptr;
-	}
-	if (m_pControlDefence != nullptr)
-	{
-		delete m_pControlDefence;
-		m_pControlDefence = nullptr;
-	}
-	if (m_pControlAvoid != nullptr)
-	{
-		delete m_pControlAvoid;
-		m_pControlAvoid = nullptr;
-	}
-	if (m_pGuard != nullptr)
-	{
-		delete m_pGuard;
-		m_pGuard = nullptr;
-	}
+	
 
 	// 終了処理
 	CObjectChara::Uninit();
@@ -363,26 +300,7 @@ void CPlayer::Kill()
 	}
 
 	// 操作系
-	if (m_pControlAtk != nullptr)
-	{
-		delete m_pControlAtk;
-		m_pControlAtk = nullptr;
-	}
-	if (m_pControlDefence != nullptr)
-	{
-		delete m_pControlDefence;
-		m_pControlDefence = nullptr;
-	}
-	if (m_pControlAvoid != nullptr)
-	{
-		delete m_pControlAvoid;
-		m_pControlAvoid = nullptr;
-	}
-	if (m_pGuard != nullptr)
-	{
-		delete m_pGuard;
-		m_pGuard = nullptr;
-	}
+	
 
 	// ロックオン設定
 	CCamera* pCamera = CManager::GetInstance()->GetCamera();
@@ -527,9 +445,6 @@ void CPlayer::Controll()
 			m_state != STATE_DEADWAIT &&
 			m_state != STATE_FADEOUT)
 		{
-			m_pControlAtk->Attack(this);		// 攻撃操作
-			m_pControlDefence->Defence(this);	// 防御操作
-			m_pControlAvoid->Avoid(this);		// 回避操作
 		}
 
 		// 移動操作

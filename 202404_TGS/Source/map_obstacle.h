@@ -19,10 +19,6 @@
 class CMap_Obstacle : public CObjectX
 {
 public:
-	
-	//=============================
-	// 列挙型定義
-	//=============================
 
 	CMap_Obstacle(int nPriority = 6);
 	~CMap_Obstacle();
@@ -41,7 +37,7 @@ public:
 	void Kill();	// 削除
 	void Save();	// セーブ
 	void Load();	// ロード
-
+	CMap_ObstacleManager::SObstacleInfo GetObstacleInfo() { return m_ObstacleInfo; }	// 障害物情報取得
 
 	//=============================
 	// 静的関数

@@ -19,10 +19,6 @@ namespace
 }
 
 //==========================================================================
-// 静的メンバ変数
-//==========================================================================
-
-//==========================================================================
 // コンストラクタ
 //==========================================================================
 CMap_ObstacleManager::CMap_ObstacleManager()
@@ -61,8 +57,8 @@ CMap_ObstacleManager *CMap_ObstacleManager::Create()
 //==========================================================================
 HRESULT CMap_ObstacleManager::Init()
 {
-	
-	
+	// 読み込み
+	Load();
 	return S_OK;
 }
 
@@ -95,6 +91,69 @@ void CMap_ObstacleManager::Update()
 // セーブ
 //==========================================================================
 void CMap_ObstacleManager::Save()
+{
+	// リスト取得
+	CListManager<CMap_Obstacle> list = CMap_Obstacle::GetListObj();
+
+	// 先頭を保存
+	std::list<CMap_Obstacle*>::iterator itr = list.GetBegin();
+	CMap_Obstacle* pObj = nullptr;
+
+	// ファイルを開く
+	std::ofstream File(TEXT);
+	if (!File.is_open()) {
+		return;
+	}
+
+
+	// テキストファイル名目次
+	File << TEXT_LINE << "\n" << std::endl;
+	File << " テキストファイル名" << std::endl;
+	File << TEXT_LINE << std::endl;
+
+	int i = 0;
+	for (const auto& info : m_ObstacleInfo)
+	{
+		// テキストファイル名
+		File << "TEXT_FILENAME = " << info.textFile << "\t\t# [" << i << "]" << std::endl;
+		i++;
+	}
+	File << "" << std::endl;
+
+	File << TEXT_LINE << "\n" << std::endl;
+	File << " モデルの配置" << std::endl;
+	File << TEXT_LINE << std::endl;
+	while (list.ListLoop(&itr))
+	{
+		pObj = (*itr);
+
+		// 障害物情報取得
+		MyLib::Vector3 pos = pObj->GetPosition(), rot = pObj->GetRotation();
+		SObstacleInfo info = pObj->GetObstacleInfo();
+		std::string text = info.textFile;
+
+		const auto& obItr = std::find_if(m_ObstacleInfo.begin(), m_ObstacleInfo.end(), [&text](const SObstacleInfo& string) {return string.textFile == text; });
+		int type = (obItr - m_ObstacleInfo.begin());
+
+		// モデル情報
+		File << "MODELSET" << std::endl;
+		File << "\tTYPE = " << type << std::endl;
+		File << "\tPOS = " << pos.x << pos.y << pos.z << std::endl;
+		File << "\tROT = " << rot.x << rot.y << rot.z << std::endl;
+		File << "END_MODELSET" << std::endl;
+		File << "" << std::endl;
+	}
+
+	// ファイルを閉じる
+	File << "\nEND_SCRIPT\t\t# この行は絶対消さないこと！" << std::endl;
+	File.close();
+
+}
+
+//==========================================================================
+// 情報セーブ
+//==========================================================================
+void CMap_ObstacleManager::SaveInfo()
 {
 	for (const auto& info : m_ObstacleInfo)
 	{
@@ -149,8 +208,9 @@ void CMap_ObstacleManager::Save()
 		}
 
 
+		// ファイルを閉じる
 		File << "\nEND_SCRIPT\t\t# この行は絶対消さないこと！" << std::endl;
-
+		File.close();
 
 		// ファイルにキャラクターのデータを書き込む
 		std::ofstream outFile(info.colliderFile);
@@ -162,15 +222,6 @@ void CMap_ObstacleManager::Save()
 		nlohmann::json outputData;
 		info.to_json(outputData);
 	}
-
-}
-
-//==========================================================================
-// 情報セーブ
-//==========================================================================
-void SaveInfo(const std::string& file)
-{
-
 }
 
 //==========================================================================

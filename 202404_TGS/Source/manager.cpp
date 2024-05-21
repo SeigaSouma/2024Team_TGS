@@ -881,7 +881,7 @@ void CManager::Update()
 
 	if (pInputKeyboard->GetTrigger(DIK_0))
 	{
-		m_pRenderer->SetFullScreen();
+		//m_pRenderer->SetFullScreen();
 	}
 
 
