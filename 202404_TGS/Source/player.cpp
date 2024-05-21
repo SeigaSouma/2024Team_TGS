@@ -73,6 +73,7 @@ namespace
 	const bool DEFAULT_IS_CHARGEFLINCH = true;			// チャージ時怯みフラグ
 	const int DEFAULT_RESPAWN_PERCENT = 20;			// 復活確率
 	const float MULTIPLY_CHARGEATK = 2.0f;				// チャージ攻撃の倍率
+	const float MAX_HEIGHT = 200.0f;					// 最大高さ
 }
 
 //==========================================================================
@@ -149,6 +150,7 @@ CPlayer::CPlayer(int nPriority) : CObjectChara(nPriority)
 
 	m_pControlMove = nullptr;						// 移動操作
 	m_pControlBaggage = nullptr;					// 荷物操作
+	m_pControlSurfacing = nullptr;					// 浮上操作
 
 	m_nCntRetry = 0;
 }
@@ -212,12 +214,13 @@ HRESULT CPlayer::Init()
 	// 操作関連
 	ChangeMoveControl(DEBUG_NEW CPlayerControlMove());
 	ChangeBaggageControl(DEBUG_NEW CPlayerControlBaggage);
+	ChangeSurfacingControl(DEBUG_NEW CPlayerControlSurfacing);
 
 	// 荷物生成
 	m_pBaggage = CBaggage::Create(CBaggage::TYPE::TYPE_CLOTH);
 
 	MyLib::Vector3 pos = GetPosition();
-	m_pBaggage->SetPosition(MyLib::Vector3(pos.x, 200.0f, pos.z));
+	m_pBaggage->SetPosition(MyLib::Vector3(pos.x, MAX_HEIGHT, pos.z));
 	m_pBaggage->SetOriginPosition(m_pBaggage->GetPosition());
 
 	//// スキルポイント生成
@@ -251,6 +254,15 @@ void CPlayer::ChangeBaggageControl(CPlayerControlBaggage* control)
 }
 
 //==========================================================================
+// 荷物の操作変更
+//==========================================================================
+void CPlayer::ChangeSurfacingControl(CPlayerControlSurfacing* control)
+{
+	delete m_pControlSurfacing;
+	m_pControlSurfacing = control;
+}
+
+//==========================================================================
 // 終了処理
 //==========================================================================
 void CPlayer::Uninit()
@@ -268,7 +280,7 @@ void CPlayer::Uninit()
 	}
 
 	// 操作系
-	
+	DeleteControl();
 
 	// 終了処理
 	CObjectChara::Uninit();
@@ -300,7 +312,7 @@ void CPlayer::Kill()
 	}
 
 	// 操作系
-	
+	DeleteControl();
 
 	// ロックオン設定
 	CCamera* pCamera = CManager::GetInstance()->GetCamera();
@@ -451,8 +463,13 @@ void CPlayer::Controll()
 		m_pControlMove->Move(this);
 
 	}
+	
+	{ // 浮上操作
+		float fHeight = m_pControlSurfacing->Surfacing(this);
+		MyLib::Vector3 pos = m_pBaggage->GetPosition();
+		m_pBaggage->SetOriginPosition(MyLib::Vector3(0.0f, MAX_HEIGHT + fHeight, 0.0f));
+	}
 	m_pControlBaggage->Action(this, m_pBaggage);		// 荷物操作
-
 
 
 	// 位置取得
@@ -641,6 +658,27 @@ void CPlayer::Controll()
 		CDamagePoint::Create(GetPosition(), UtilFunc::Transformation::Random(1, 99));
 	}
 #endif
+}
+
+//==========================================================================
+// 操作関連削除
+//==========================================================================
+void CPlayer::DeleteControl()
+{
+	if (m_pControlMove != nullptr) {
+		delete m_pControlMove;
+		m_pControlMove = nullptr;
+	}
+
+	if (m_pControlBaggage != nullptr) {
+		delete m_pControlBaggage;
+		m_pControlBaggage = nullptr;
+	}
+
+	if (m_pControlSurfacing != nullptr) {
+		delete m_pControlSurfacing;
+		m_pControlSurfacing = nullptr;
+	}
 }
 
 //==========================================================================

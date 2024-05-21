@@ -22,6 +22,8 @@ namespace
 	float ADD_HEIGHT = 25.0f;					// 高さの加算量
 	const float MIN_HEIGHT = 100.0f;
 	const float HEIGHT_VELOCITY = 10.0f;
+	float MAX_SURHEIGHT = 100.0f;
+	float SURHEIGHT_VELOCITY = (10.0f);
 }
 
 #define GEKIMUZU (true)
@@ -314,7 +316,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	MyLib::Vector3 posBaggageOrigin = pBaggage->GetOriginPosition();
 
 
-	/*if (m_pBressRange == nullptr)
+	if (m_pBressRange == nullptr)
 	{
 		m_pBressRange = CDebugBressRange::Create();
 	}
@@ -322,7 +324,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	{
 		m_pBressHeight = CDebugBressRange::Create();
 		m_pBressHeight->SetColor(D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
-	}*/
+	}
 
 	static bool fall = true;
 
@@ -477,4 +479,51 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 		CMyEffekseer::GetInstance()->SetPosition(*m_BressHandle, d);
 	}
 
+}
+
+//==========================================================================
+// 浮上操作
+//==========================================================================
+float CPlayerControlSurfacing::Surfacing(CPlayer* player)
+{
+	// インプット情報取得
+	CInputKeyboard* pInputKeyboard = CInputKeyboard::GetInstance();
+	CInputGamepad* pInputGamepad = CInputGamepad::GetInstance();
+
+	// 浮上判定
+	bool bUp = false;
+
+	// モーション情報取得
+	CMotion* pMotion = player->GetMotion();
+
+	//if (pMotion->) {	// 浮上可能ではない
+	//	return m_fHeight;
+	//}
+
+	if (CInputKeyboard::GetInstance()->GetPress(DIK_W) ||
+		CInputGamepad::GetInstance()->GetPress(CInputGamepad::BUTTON::BUTTON_RB, 0))
+	{// 入力している
+		bUp = true;
+	}
+
+	ImGui::DragFloat("SurHeight", &MAX_SURHEIGHT, 0.1f, 0.0f, 0.0f, "%.2f");
+	ImGui::DragFloat("SurSpeed", &SURHEIGHT_VELOCITY, 0.1f, 0.0f, 0.0f, "%.2f");
+
+
+	if (bUp) {	// 上昇
+		m_fHeight += SURHEIGHT_VELOCITY;
+
+		if (m_fHeight > MAX_SURHEIGHT) {
+			m_fHeight = MAX_SURHEIGHT;
+		}
+	}
+	else {	// 下降
+		m_fHeight -= SURHEIGHT_VELOCITY;
+
+		if (m_fHeight < 0.0f) {
+			m_fHeight = 0.0f;
+		}
+	}
+
+	return m_fHeight;
 }
