@@ -17,6 +17,7 @@ namespace
 	const std::string TEXT = "data\\TEXT\\map\\obstacle.txt";	// 設置情報スクリプトファイル
 	const std::string TEXT_LINE = "#------------------------------------------------------------------------------";	// テキストのライン
 }
+CMap_ObstacleManager* CMap_ObstacleManager::m_ThisPtr = nullptr;	// 自身のポインタ
 
 //==========================================================================
 // コンストラクタ
@@ -40,16 +41,19 @@ CMap_ObstacleManager::~CMap_ObstacleManager()
 //==========================================================================
 CMap_ObstacleManager *CMap_ObstacleManager::Create()
 {
-	// メモリの確保
-	CMap_ObstacleManager* pObj = DEBUG_NEW CMap_ObstacleManager;
-
-	if (pObj != nullptr)
+	if (m_ThisPtr == nullptr)
 	{
-		// 初期化処理
-		pObj->Init();
+		// メモリの確保
+		m_ThisPtr = DEBUG_NEW CMap_ObstacleManager;
+
+		if (m_ThisPtr != nullptr)
+		{
+			// 初期化処理
+			m_ThisPtr->Init();
+		}
 	}
 
-	return pObj;
+	return m_ThisPtr;
 }
 
 //==========================================================================
@@ -57,6 +61,28 @@ CMap_ObstacleManager *CMap_ObstacleManager::Create()
 //==========================================================================
 HRESULT CMap_ObstacleManager::Init()
 {
+#if 0
+	SObstacleInfo info;
+
+	MyLib::Collider_BOX box;
+	info.boxcolliders.push_back(box);
+
+	// ファイルにキャラクターのデータを書き込む
+	std::ofstream outFile("data/TEXT/mapobstacle/stone/collider.json");
+	if (!outFile.is_open())
+	{
+		return E_FAIL;
+	}
+
+	nlohmann::json outputData;
+	info.to_json(outputData);
+
+	// ファイルにデータを書き込む
+	outFile << std::setw(4) << outputData << std::endl;
+
+	outFile.close();
+#endif
+
 	// 読み込み
 	Load();
 	return S_OK;
@@ -67,7 +93,8 @@ HRESULT CMap_ObstacleManager::Init()
 //==========================================================================
 void CMap_ObstacleManager::Uninit()
 {
-	
+	delete m_ThisPtr;
+	m_ThisPtr = nullptr;
 }
 
 //==========================================================================
@@ -107,7 +134,7 @@ void CMap_ObstacleManager::Save()
 
 
 	// テキストファイル名目次
-	File << TEXT_LINE << "\n" << std::endl;
+	File << TEXT_LINE << std::endl;
 	File << " テキストファイル名" << std::endl;
 	File << TEXT_LINE << std::endl;
 
@@ -120,7 +147,7 @@ void CMap_ObstacleManager::Save()
 	}
 	File << "" << std::endl;
 
-	File << TEXT_LINE << "\n" << std::endl;
+	File << TEXT_LINE << std::endl;
 	File << " モデルの配置" << std::endl;
 	File << TEXT_LINE << std::endl;
 	while (list.ListLoop(&itr))
@@ -173,7 +200,7 @@ void CMap_ObstacleManager::SaveInfo()
 
 		{
 			// モデルファイル名目次
-			File << TEXT_LINE << "\n" << std::endl;
+			File << TEXT_LINE << std::endl;
 			File << " モデルファイル名" << std::endl;
 			File << TEXT_LINE << std::endl;
 
@@ -184,7 +211,7 @@ void CMap_ObstacleManager::SaveInfo()
 
 		{
 			// モデル情報目次
-			File << TEXT_LINE << "\n" << std::endl;
+			File << TEXT_LINE << std::endl;
 			File << " モデル情報" << std::endl;
 			File << TEXT_LINE << std::endl;
 
@@ -198,7 +225,7 @@ void CMap_ObstacleManager::SaveInfo()
 
 		{
 			// コライダー目次
-			File << TEXT_LINE << "\n" << std::endl;
+			File << TEXT_LINE << std::endl;
 			File << " コライダー情報" << std::endl;
 			File << TEXT_LINE << std::endl;
 
@@ -221,6 +248,10 @@ void CMap_ObstacleManager::SaveInfo()
 
 		nlohmann::json outputData;
 		info.to_json(outputData);
+
+		// ファイルにデータを書き込む
+		outFile << std::setw(4) << outputData << std::endl;
+		outFile.close();
 	}
 }
 
@@ -255,8 +286,8 @@ void CMap_ObstacleManager::Load()
 		// ストリーム作成
 		std::istringstream lineStream(line);
 
-		if (line.find("MODEL_FILENAME") != std::string::npos)
-		{// MODEL_FILENAMEでモデル名読み込み
+		if (line.find("TEXT_FILENAME") != std::string::npos)
+		{// TEXT_FILENAMEでモデル名読み込み
 
 			// ストリーム作成
 			std::istringstream lineStream(line);
@@ -266,6 +297,7 @@ void CMap_ObstacleManager::Load()
 
 			// 情報渡す
 			lineStream >>
+				hoge >>
 				hoge >>			// ＝
 				filename.back();// モデルファイル名
 
@@ -281,7 +313,7 @@ void CMap_ObstacleManager::Load()
 			int type;
 			MyLib::Vector3 pos, rot;
 
-			while (line.find("END_MODELSET") != std::string::npos)
+			while (line.find("END_MODELSET") == std::string::npos)
 			{
 				std::getline(File, line);
 				if (line.find("TYPE") != std::string::npos)
@@ -292,6 +324,7 @@ void CMap_ObstacleManager::Load()
 
 					// 情報渡す
 					lineStream >>
+						hoge >>
 						hoge >>	// ＝
 						type;	// 配置物の種類
 					continue;
@@ -305,6 +338,7 @@ void CMap_ObstacleManager::Load()
 
 					// 情報渡す
 					lineStream >>
+						hoge >>
 						hoge >>						// ＝
 						pos.x >> pos.y >> pos.z;	// 位置
 					continue;
@@ -318,6 +352,7 @@ void CMap_ObstacleManager::Load()
 
 					// 情報渡す
 					lineStream >>
+						hoge >>
 						hoge >>						// ＝
 						rot.x >> rot.y >> rot.z;	// 向き
 					continue;
@@ -383,6 +418,7 @@ void CMap_ObstacleManager::LoadInfo(const std::string& file)
 			// 情報渡す
 			lineStream >>
 				hoge >>		// ＝
+				hoge >>		// ＝
 				obstacleInfo.modelFile;	// モデルファイル名
 			continue;
 		}
@@ -395,6 +431,7 @@ void CMap_ObstacleManager::LoadInfo(const std::string& file)
 
 			// 情報渡す
 			lineStream >>
+				hoge >>
 				hoge >>			// ＝
 				obstacleInfo.colliderFile;	// コライダー名
 
@@ -415,6 +452,9 @@ void CMap_ObstacleManager::LoadInfo(const std::string& file)
 
 				// jsonデータから読み込む
 				obstacleInfo.from_json(jsonData);
+
+
+				int n = 0;
 			}
 			continue;
 		}
@@ -422,7 +462,7 @@ void CMap_ObstacleManager::LoadInfo(const std::string& file)
 		if (line.find("SETUP") != std::string::npos)
 		{// SETUPで情報読み込み
 
-			while (line.find("END_SETUP") != std::string::npos)
+			while (line.find("END_SETUP") == std::string::npos)
 			{
 				std::getline(File, line);
 				if (line.find("IS_AIR") != std::string::npos)
@@ -433,6 +473,7 @@ void CMap_ObstacleManager::LoadInfo(const std::string& file)
 
 					// 情報渡す
 					lineStream >>
+						hoge >>
 						hoge >>	// ＝
 						obstacleInfo.setup.isAir;	// 空気貫通
 					continue;
@@ -446,6 +487,7 @@ void CMap_ObstacleManager::LoadInfo(const std::string& file)
 
 					// 情報渡す
 					lineStream >>
+						hoge >>
 						hoge >>	// ＝
 						obstacleInfo.setup.isMove;	// 動き
 					continue;

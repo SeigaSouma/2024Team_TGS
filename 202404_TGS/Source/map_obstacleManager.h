@@ -83,6 +83,14 @@ public:
 	// メンバ関数
 	//=============================
 	void Kill();	// 削除
+
+	// 情報系
+	void SetObstacleInfo(const std::vector<SObstacleInfo>& info) { m_ObstacleInfo = info; }		// 障害物情報設定
+	void SetObstacleInfo(const SObstacleInfo& info, int idx) { m_ObstacleInfo[idx] = info; }	// 障害物情報設定
+	std::vector<SObstacleInfo> GetObstacleInfo() { return m_ObstacleInfo; }						// 障害物情報取得
+	SObstacleInfo GetObstacleInfo(int idx) { return m_ObstacleInfo[idx]; }						// 障害物情報取得
+
+	// 入出力
 	void Save();	// セーブ
 	void SaveInfo();	// 情報セーブ
 	void Load();	// ロード
@@ -91,14 +99,15 @@ public:
 	//=============================
 	// 静的関数
 	//=============================
-	static CMap_ObstacleManager *Create();
-
+	static CMap_ObstacleManager* Create();	// 生成
+	static CMap_ObstacleManager* GetInstance() { return m_ThisPtr; }	// インスタンス取得
 private:
 
 	//=============================
 	// メンバ変数
 	//=============================
 	std::vector<SObstacleInfo> m_ObstacleInfo;	// 障害物情報
+	static CMap_ObstacleManager* m_ThisPtr;		// 自身のポインタ
 };
 
 

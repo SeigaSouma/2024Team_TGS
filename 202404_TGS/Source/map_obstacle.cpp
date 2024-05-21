@@ -107,8 +107,10 @@ void CMap_Obstacle::Kill()
 //==========================================================================
 void CMap_Obstacle::Update()
 {
-	
-
+	for (auto& collider : m_ObstacleInfo.boxcolliders)
+	{
+		collider.TransformOffset(GetWorldMtx());
+	}
 }
 
 //==========================================================================

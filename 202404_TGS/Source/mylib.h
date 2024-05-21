@@ -791,6 +791,17 @@ namespace MyLib
 				{"offset", offset},
 			};
 		}
+
+		// マトリックス取得
+		MyLib::Matrix GetMtx() { return worldmtx; }
+
+		// オフセット計算
+		inline void TransformOffset(const MyLib::Matrix& mtx)
+		{
+			MyLib::Matrix transMtx;
+			transMtx.Translation(offset);
+			worldmtx.Multiply(transMtx, mtx);
+		}
 	};
 	
 }
