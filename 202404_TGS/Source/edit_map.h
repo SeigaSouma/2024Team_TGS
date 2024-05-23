@@ -8,6 +8,7 @@
 #ifndef _EDIT_MAP_H_
 #define _EDIT_MAP_H_	// 二重インクルード防止
 
+#include "manager.h"
 #include "listmanager.h"
 #include "objectX.h"
 #include "edithandle.h"
@@ -35,17 +36,20 @@ public:
 	CEdit_Map();
 	~CEdit_Map();
 	
-	HRESULT Init();
-	void Uninit();
-	void Update();
-
+	virtual HRESULT Init() override;
+	virtual void Uninit() override;
+	virtual void Update() override;
 
 	void Save();	// セーブ
-	void Load();	// ロード
+	void Load(const std::string& file);	// ロード
 	void Delete(CObjectX* obj);	// 削除
 	void Regist(int idx, MyLib::Vector3 pos, MyLib::Vector3 rot, bool bShadow);	// 割り当て
 
-	static CListManager<CObjectX> GetListObj() { return m_List; }	// リスト取得
+	static CEdit_Map* Create(const std::string& file, CManager::BuildMode mode);	// 生成
+	static CListManager<CObjectX> GetListObj() { return m_List; }		// リスト取得
+
+protected:
+	std::string m_Filename;	// ファイル名
 
 private:
 
@@ -61,7 +65,8 @@ private:
 	//=============================
 	// メンバ関数
 	//=============================
-	HRESULT ReadXFile();	// ファイル読み込み
+	HRESULT ReadTexture(const std::string& file);	// ファイル読み込み
+	HRESULT ReadXFile(const std::string& file);	// ファイル読み込み
 	void ChangeHandle();	// ハンドル切り替え
 
 	// エディット中関数
@@ -93,10 +98,21 @@ private:
 	CHandle::HandleType m_HandleType;	// ハンドルの種類
 	CHandle::HandleAngle m_moveAngle;	// 移動の向き
 
+	static std::vector<std::string> m_TextureFile;		// テクスチャファイル
 	static std::vector<std::string> m_ModelFile;		// モデルファイル
 	static bool m_bLoad;					// 読み込み判定
 	static CListManager<CObjectX> m_List;	// リスト
 
 };
 
+// マップエディタ―リリース版
+class CEdit_Map_Release : public CEdit_Map
+{
+public:
+
+	CEdit_Map_Release();
+	~CEdit_Map_Release();
+
+	virtual HRESULT Init() override;
+};
 #endif

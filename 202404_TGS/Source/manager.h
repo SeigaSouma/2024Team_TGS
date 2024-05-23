@@ -51,6 +51,14 @@ class CRankingManager;
 class CManager
 {
 public:
+
+	enum BuildMode
+	{
+		MODE_DEBUG = 0,
+		MODE_RELEASE,
+		MODE_MAX
+	};
+
 	CManager();
 	~CManager();
 
