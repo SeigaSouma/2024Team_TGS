@@ -185,6 +185,12 @@ void CShadow::Update()
 
 	// 頂点情報設定
 	CObject3D::SetVtx();
+
+	// テクスチャの割り当て
+	m_nTexIdx = CTexture::GetInstance()->Regist("data\\TEXTURE\\effect\\effect000.jpg");
+
+	// テクスチャの割り当て
+	BindTexture(m_nTexIdx);
 }
 
 //==========================================================================
