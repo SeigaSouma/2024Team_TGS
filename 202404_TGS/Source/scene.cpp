@@ -15,6 +15,7 @@
 #include "camera.h"
 #include "MyEffekseer.h"
 #include "fog.h"
+#include "edit_map.h"
 
 // 遷移先
 #include "game.h"
@@ -118,10 +119,19 @@ HRESULT CScene::Init()
 	//**********************************
 	// マップの生成
 	//**********************************
+#if _DEBUG
 	if (FAILED(MyMap::Create(MAP_TEXT)))
 	{// 失敗した場合
 		return E_FAIL;
 	}
+#endif
+
+	//**********************************
+	// マップの生成
+	//**********************************
+#ifndef _DEBUG
+	CEdit_Map_Release::Create(MAP_TEXT, CManager::BuildMode::MODE_RELEASE);
+#endif
 
 	//**********************************
 	// 起伏の地面

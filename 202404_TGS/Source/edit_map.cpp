@@ -10,6 +10,10 @@
 #include "collisionLine_Box.h"
 #include "camera.h"
 #include "map.h"
+#include "object3DMesh.h"
+#include "meshfield.h"
+#include "meshcylinder.h"
+#include "meshdome.h"
 
 //==========================================================================
 // 定数定義
@@ -26,6 +30,7 @@ namespace
 	};
 }
 CListManager<CObjectX> CEdit_Map::m_List = {};				// リスト
+std::vector<std::string> CEdit_Map::m_TextureFile = {};		// テクスチャファイル
 std::vector<std::string> CEdit_Map::m_ModelFile = {};		// モデルファイル
 bool CEdit_Map::m_bLoad = false;							// 読み込み判定
 
@@ -57,6 +62,33 @@ CEdit_Map::~CEdit_Map()
 }
 
 //==========================================================================
+// 生成
+//==========================================================================
+CEdit_Map* CEdit_Map::Create(const std::string& file, CManager::BuildMode mode)
+{
+	CEdit_Map* pEdit = nullptr;
+
+	switch (mode)
+	{
+	case CManager::MODE_DEBUG:
+		pEdit = DEBUG_NEW CEdit_Map;
+		break;
+
+	case CManager::MODE_RELEASE:
+		pEdit = DEBUG_NEW CEdit_Map_Release;
+		break;
+	}
+
+	if (pEdit != nullptr)
+	{
+		pEdit->m_Filename = file;
+		pEdit->Init();
+	}
+
+	return pEdit;
+}
+
+//==========================================================================
 // 初期化処理
 //==========================================================================
 HRESULT CEdit_Map::Init()
@@ -65,8 +97,9 @@ HRESULT CEdit_Map::Init()
 	bool bLoad = m_bLoad;
 
 	// 読み込み処理
-	Load();
+	Load(LOADTEXT);
 
+#if _DEBUG
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevive = CManager::GetInstance()->GetRenderer()->GetDevice();
 
@@ -94,7 +127,7 @@ HRESULT CEdit_Map::Init()
 			D3DPOOL_MANAGED, D3DX_DEFAULT, D3DX_DEFAULT, D3DCOLOR_ARGB(255, 255, 255, 255),
 			NULL, NULL, &m_HandleTex[i]);
 	}
-
+#endif
 	return S_OK;
 }
 
@@ -131,6 +164,7 @@ void CEdit_Map::Uninit()
 //==========================================================================
 void CEdit_Map::Update()
 {
+#if _DEBUG
 	// エディットメニュー
 	ImGui::Begin("MapEdit", NULL, ImGuiWindowFlags_MenuBar);
 	{
@@ -170,6 +204,7 @@ void CEdit_Map::Update()
 
 		pObj->GetPosition();
 	}
+#endif
 }
 
 //==========================================================================
@@ -977,7 +1012,7 @@ void CEdit_Map::Save()
 //==========================================================================
 // ロード
 //==========================================================================
-void CEdit_Map::Load()
+void CEdit_Map::Load(const std::string& file)
 {
 	// 再読み込み回避
 	if (m_bLoad) return;
@@ -986,11 +1021,14 @@ void CEdit_Map::Load()
 	int nFileNum = 0;					// ファイルの数
 	int nCntTexture = 0;				// テクスチャ読み込みカウント
 
+	// テクスチャファイル読み込み
+	ReadTexture(file);
+
 	// Xファイル読み込み
-	ReadXFile();
+	ReadXFile(file);
 
 	// マップファイルを開く
-	FILE* pFile = fopen(LOADTEXT.c_str(), "r");
+	FILE* pFile = fopen(file.c_str(), "r");
 	if (pFile == nullptr)
 	{//ファイルが開けた場合
 		return;
@@ -1001,6 +1039,148 @@ void CEdit_Map::Load()
 
 		// 文字列の読み込み
 		fscanf(pFile, "%s", &aComment[0]);
+
+
+
+
+#if 1
+		// メッシュフィールドの設定
+		if (strcmp(&aComment[0], "FIELDSET") == 0)
+		{// モデルの読み込みを開始
+
+			MyLib::Vector3 pos, rot;
+			int width, height;
+			float widthlen, heightlen;
+			int type;
+			while (strcmp(&aComment[0], "END_FIELDSET"))
+			{// END_FIELDSETが来るまで繰り返し
+
+				fscanf(pFile, "%s", &aComment[0]);	// 確認する
+
+				if (strcmp(&aComment[0], "TEXTYPE") == 0)
+				{// TEXTYPEが来たら種類読み込み
+
+					fscanf(pFile, "%s", &aComment[0]);	// =の分
+					fscanf(pFile, "%d", &type);		// モデル種類の列挙
+				}
+
+				if (strcmp(&aComment[0], "POS") == 0)
+				{// POSが来たら位置読み込み
+
+					fscanf(pFile, "%s", &aComment[0]);	// =の分
+					fscanf(pFile, "%f", &pos.x);		// X座標
+					fscanf(pFile, "%f", &pos.y);		// Y座標
+					fscanf(pFile, "%f", &pos.z);		// Z座標
+				}
+
+				if (strcmp(&aComment[0], "ROT") == 0)
+				{// ROTが来たら向き読み込み
+
+					fscanf(pFile, "%s", &aComment[0]);		 // =の分
+					fscanf(pFile, "%f", &rot.x);		 // Xの向き
+					fscanf(pFile, "%f", &rot.y);		 // Yの向き
+					fscanf(pFile, "%f", &rot.z);		 // Zの向き
+					rot.x = D3DXToRadian(rot.x); // 360度形式から変換
+					rot.y = D3DXToRadian(rot.y); // 360度形式から変換
+					rot.z = D3DXToRadian(rot.z); // 360度形式から変換
+				}
+
+				if (strcmp(&aComment[0], "BLOCK") == 0)
+				{//BLOCKが来たら向き読み込み
+
+					fscanf(pFile, "%s", &aComment[0]);		// =の分
+					fscanf(pFile, "%d", &width);		// 横の分割数
+					fscanf(pFile, "%d", &height);	// 縦の分割数
+				}
+
+				if (strcmp(&aComment[0], "SIZE") == 0)
+				{//SIZEが来たら向き読み込み
+
+					fscanf(pFile, "%s", &aComment[0]);		// =の分
+					fscanf(pFile, "%f", &widthlen);		// 横の長さ
+					fscanf(pFile, "%f", &heightlen);	// 縦の長さ
+				}
+
+			}// END_FIELDSETのかっこ
+
+			//**********************************
+			// 生成処理
+			//**********************************
+			CMeshField::Create(
+				pos, rot,
+				widthlen, heightlen,
+				width, height,
+				(CMeshField::TYPE)type, m_TextureFile[type].c_str());
+		}
+
+#endif
+		// メッシュシリンダーの設定
+		if (strcmp(&aComment[0], "MOUNTAINSET") == 0)
+		{// モデルの読み込みを開始
+
+			int type;
+			while (strcmp(&aComment[0], "END_MOUNTAINSET"))
+			{// END_MOUNTAINSETが来るまで繰り返し
+
+				fscanf(pFile, "%s", &aComment[0]);	// 確認する
+
+				if (strcmp(&aComment[0], "TEXTYPE") == 0)
+				{// TEXTYPEが来たら種類読み込み
+
+					fscanf(pFile, "%s", &aComment[0]);	// =の分
+					fscanf(pFile, "%d", &type);	// モデル種類の列挙
+				}
+
+			}// END_MOUNTAINSETのかっこ
+
+			//**********************************
+			// 生成処理
+			//**********************************
+			CMeshCylinder::Create(m_TextureFile[type].c_str());
+
+		}
+
+		// メッシュドームの設定
+		if (strcmp(&aComment[0], "SKYSET") == 0)
+		{// モデルの読み込みを開始
+
+			int type;
+			float move;
+			while (strcmp(&aComment[0], "END_SKYSET"))
+			{// END_MOUNTAINSETが来るまで繰り返し
+
+				fscanf(pFile, "%s", &aComment[0]);	// 確認する
+
+				if (strcmp(&aComment[0], "TEXTYPE") == 0)
+				{// TEXTYPEが来たら種類読み込み
+
+					fscanf(pFile, "%s", &aComment[0]);	// =の分
+					fscanf(pFile, "%d", &type);		// モデル種類の列挙
+				}
+
+				if (strcmp(&aComment[0], "MOVE") == 0)
+				{//MOVEが来たら移動読み込み
+
+					fscanf(pFile, "%s", &aComment[0]);	// =の分
+					fscanf(pFile, "%f", &move);			// 移動量
+				}
+
+			}// END_SKYSETのかっこ
+
+			//**********************************
+			// 生成処理
+			//**********************************
+			CMeshDome::Create(move, m_TextureFile[type].c_str());
+
+		}
+
+		if (strcmp(&aComment[0], "END_SCRIPT") == 0)
+		{// 終了文字でループを抜ける
+
+			break;
+		}
+
+
 
 		// モデルの設定
 		if (strcmp(&aComment[0], "MODELSET") == 0)
@@ -1065,16 +1245,80 @@ void CEdit_Map::Load()
 	m_bLoad = true;
 }
 
+
 //==========================================================================
 // モデル読み込み処理
 //==========================================================================
-HRESULT CEdit_Map::ReadXFile()
+HRESULT CEdit_Map::ReadTexture(const std::string& file)
 {
 	char aComment[MAX_COMMENT] = {};	// コメント用
 	int nFileNum = 0;					// ファイルの数
 
 	// ファイルを開く
-	FILE* pFile = fopen(LOADTEXT.c_str(), "r");
+	FILE* pFile = fopen(file.c_str(), "r");
+	if (pFile == nullptr)
+	{// ファイルが開けた場合
+		return E_FAIL;
+	}
+
+	int textureNum = 0;
+	m_TextureFile.clear();
+
+	while (1)
+	{// END_SCRIPTが来るまで繰り返す
+
+		// 文字列の読み込み
+		fscanf(pFile, "%s", &aComment[0]);
+
+		// テクスチャ数の設定
+		if (strcmp(&aComment[0], "NUM_TEXTURE") == 0)
+		{// NUM_MODELがきたら
+
+			fscanf(pFile, "%s", &aComment[0]);	// =の分
+			fscanf(pFile, "%d", &nFileNum);		// テクスチャ数
+		}
+
+		while (textureNum != nFileNum)
+		{// テクスチャの数分読み込むまで繰り返し
+
+			// 文字列の読み込み
+			fscanf(pFile, "%s", &aComment[0]);
+
+			// テクスチャ名の設定
+			if (strcmp(&aComment[0], "TEXTURE_FILENAME") == 0)
+			{
+				fscanf(pFile, "%s", &aComment[0]);	// =の分
+				fscanf(pFile, "%s", &aComment[0]);	// ファイル名
+
+				// 追加
+				m_TextureFile.push_back(&aComment[0]);
+
+				textureNum++;	// テクスチャ数加算
+			}
+		}
+
+		if (strcmp(&aComment[0], "END_SCRIPT") == 0)
+		{// 終了文字でループを抜ける
+			break;
+		}
+	}
+
+	// ファイルを閉じる
+	fclose(pFile);
+
+	return S_OK;
+}
+
+//==========================================================================
+// モデル読み込み処理
+//==========================================================================
+HRESULT CEdit_Map::ReadXFile(const std::string& file)
+{
+	char aComment[MAX_COMMENT] = {};	// コメント用
+	int nFileNum = 0;					// ファイルの数
+
+	// ファイルを開く
+	FILE* pFile = fopen(file.c_str(), "r");
 	if (pFile == nullptr)
 	{// ファイルが開けた場合
 		return E_FAIL;
@@ -1195,4 +1439,33 @@ void CEdit_Map::Regist(int idx, MyLib::Vector3 pos, MyLib::Vector3 rot, bool bSh
 			m_pHandle = CHandle::Create(CHandle::HandleType::TYPE_MOVE, m_pGrabObj->GetPosition());
 		}
 	}
+}
+
+
+//==========================================================================
+// コンストラクタ
+//==========================================================================
+CEdit_Map_Release::CEdit_Map_Release() : CEdit_Map()
+{
+	
+}
+
+//==========================================================================
+// デストラクタ
+//==========================================================================
+CEdit_Map_Release::~CEdit_Map_Release()
+{
+
+}
+
+//==========================================================================
+// 初期化処理
+//==========================================================================
+HRESULT CEdit_Map_Release::Init()
+{
+	
+	// 読み込み処理
+	Load(m_Filename);
+
+	return S_OK;
 }

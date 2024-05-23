@@ -11,6 +11,7 @@
 #include "camera.h"
 #include "enemy.h"
 #include "game.h"
+#include "debugproc.h"
 
 namespace
 {
@@ -466,7 +467,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	if (fall && m_BressHandle != nullptr)
 	{
 		//CMyEffekseer::GetInstance()->Stop(m_BressHandle);
-		CMyEffekseer::GetInstance()->SetTrigger(*m_BressHandle, 1);
+		CMyEffekseer::GetInstance()->SetTrigger(*m_BressHandle, 0);
 	}
 
 
@@ -477,6 +478,12 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	if (m_BressHandle != nullptr)
 	{
 		CMyEffekseer::GetInstance()->SetPosition(*m_BressHandle, d);
+
+		// デバッグ表示
+		CManager::GetInstance()->GetDebugProc()->Print(
+			"------------------[プレイヤーの操作]------------------\n"
+			"移動中のエフェクト 【%d】\n"
+			, *m_BressHandle);
 	}
 
 }
