@@ -23,7 +23,7 @@ TEXTURE_FILENAME = data\TEXTURE\FIELD\hiero.png		# [12]
 #------------------------------------------------------------------------------
 # モデル数
 #------------------------------------------------------------------------------
-NUM_MODEL = 27
+NUM_MODEL = 28
 
 #------------------------------------------------------------------------------
 # モデルファイル名
@@ -55,6 +55,7 @@ MODEL_FILENAME = data\\MODEL\\map_object\\rock_04_superhuge.x		# [23]
 MODEL_FILENAME = data\\MODEL\\map_object\\rock_05_superhuge.x		# [24]
 MODEL_FILENAME = data\\MODEL\\map_object\\tree_03_huge.x		# [25]
 MODEL_FILENAME = data\\MODEL\\box.x		# [26]
+MODEL_FILENAME = data\\MODEL\\map\\map_mati000.x		# [27]
 
 #==============================================================================
 # 空情報

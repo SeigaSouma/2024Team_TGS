@@ -670,7 +670,8 @@ void CEdit_Map::Remove()
 	}
 
 
-	if (m_bReGrab &&
+	if (m_pHandle != nullptr &&
+		m_bReGrab &&
 		!pKeyboard->GetPress(DIK_LALT) &&
 		ImGui::IsMouseReleased(0))
 	{// リリース
@@ -678,7 +679,8 @@ void CEdit_Map::Remove()
 		m_pHandle->SetState(CHandle::State::STATE_NONE);
 	}
 
-	if (!pKeyboard->GetPress(DIK_LALT) &&
+	if (!m_bReGrab &&
+		!pKeyboard->GetPress(DIK_LALT) &&
 		!m_bHoverWindow &&
 		ImGui::IsMouseClicked(0))
 	{// クリック
@@ -739,7 +741,9 @@ void CEdit_Map::Remove()
 			}
 		}
 
-		if (!bHit && m_pHandle != nullptr) {
+		if (m_pHandle != nullptr &&
+			!m_pHandle->IsHoverHandle() &&
+			!bHit && m_pHandle != nullptr) {
 			m_pHandle->Kill();
 			m_pHandle = nullptr;
 		}
@@ -1043,7 +1047,7 @@ void CEdit_Map::Load(const std::string& file)
 
 
 
-#if 1
+#ifndef _DEBUG
 		// メッシュフィールドの設定
 		if (strcmp(&aComment[0], "FIELDSET") == 0)
 		{// モデルの読み込みを開始
@@ -1113,7 +1117,6 @@ void CEdit_Map::Load(const std::string& file)
 				(CMeshField::TYPE)type, m_TextureFile[type].c_str());
 		}
 
-#endif
 		// メッシュシリンダーの設定
 		if (strcmp(&aComment[0], "MOUNTAINSET") == 0)
 		{// モデルの読み込みを開始
@@ -1179,6 +1182,7 @@ void CEdit_Map::Load(const std::string& file)
 
 			break;
 		}
+#endif
 
 
 
