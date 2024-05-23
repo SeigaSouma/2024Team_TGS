@@ -1297,6 +1297,10 @@ HRESULT CEdit_Map::ReadTexture(const std::string& file)
 				// 追加
 				m_TextureFile.push_back(&aComment[0]);
 
+				// \\変換
+				m_TextureFile.back() = UtilFunc::Transformation::ReplaceBackslash(m_TextureFile.back());
+				m_TextureFile.back() = UtilFunc::Transformation::ReplaceForwardSlashes(m_TextureFile.back());
+
 				textureNum++;	// テクスチャ数加算
 			}
 		}
