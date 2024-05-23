@@ -65,6 +65,7 @@ CGame::CGame()
 	m_clear = false;				// クリア判定
 	m_fMaxRokOnDistance = 0.0f;		// ロックオンの最大距離
 	m_pEdit = nullptr;				// エディター
+	m_pObstacleManager = nullptr;	// 障害物マネージャ
 }
 
 //==========================================================================
@@ -179,7 +180,7 @@ HRESULT CGame::Init()
 	CGoalflagX::Create(MyLib::Vector3(33000.0f,0.0f,0.0f));
 
 	// 障害物マネージャ
-	CMap_ObstacleManager::Create();
+	m_pObstacleManager = CMap_ObstacleManager::Create();
 
 	// 成功
 	return S_OK;
@@ -280,6 +281,14 @@ void CGame::Uninit()
 		delete m_pEnemyBase;
 		m_pEnemyBase = nullptr;
 	}
+
+	// 障害物マネージャ
+	if (m_pObstacleManager != nullptr)
+	{
+		m_pObstacleManager->Uninit();
+		m_pObstacleManager = nullptr;
+	}
+
 
 	// 終了処理
 	CScene::Uninit();
@@ -424,7 +433,7 @@ void CGame::ChangeEdit()
 	static bool no_close = false;
 	static bool no_nav = false;
 	static bool no_background = false;
-	static bool no_bring_to_front = false;
+	static bool no_bring_to_front = true;
 	static bool unsaved_document = false;
 
 	ImGuiWindowFlags window_flags = 0;

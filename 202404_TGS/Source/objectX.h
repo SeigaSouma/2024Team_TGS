@@ -62,6 +62,7 @@ public:
 	void SetColor(const D3DXCOLOR col);			// 色設定
 	D3DXCOLOR GetColor() const;					// 色取得
 	void SetSize(const MyLib::Vector3 size);	// サイズの設定
+	void SetAABB(const MyLib::AABB& aabb) { m_AABB = aabb; }
 	MyLib::Vector3 GetSize() const;				// サイズの取得
 	MyLib::Vector3 GetVtxMax() const;			// 頂点の最大値取得
 	MyLib::Vector3 GetVtxMin() const;			// 頂点の最小値取得
