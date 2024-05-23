@@ -392,6 +392,8 @@ void ImguiMgr::Update()
 void ImguiMgr::Draw()
 {
 
+	ImGui::ShowDemoWindow();
+
 	// ImGuiƒtƒŒ[ƒ€‚ÌI—¹
 	ImGui::EndFrame();
 	ImGui::Render();

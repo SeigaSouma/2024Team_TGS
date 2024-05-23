@@ -179,10 +179,12 @@
     <ClCompile Include="Source\collisionobject.cpp" />
     <ClCompile Include="Source\damagepoint.cpp" />
     <ClCompile Include="Source\debugproc.cpp" />
+    <ClCompile Include="Source\debug_bressrange.cpp" />
     <ClCompile Include="Source\edit.cpp" />
     <ClCompile Include="Source\edithandle.cpp" />
     <ClCompile Include="Source\edit_enemybase.cpp" />
     <ClCompile Include="Source\edit_map.cpp" />
+    <ClCompile Include="Source\edit_obstacle.cpp" />
     <ClCompile Include="Source\elevation.cpp" />
     <ClCompile Include="Source\enemy.cpp" />
     <ClCompile Include="Source\enemybase.cpp" />
@@ -214,6 +216,8 @@
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\manager.cpp" />
     <ClCompile Include="Source\map.cpp" />
+    <ClCompile Include="Source\map_obstacle.cpp" />
+    <ClCompile Include="Source\map_obstacleManager.cpp" />
     <ClCompile Include="Source\meshcylinder.cpp" />
     <ClCompile Include="Source\meshdome.cpp" />
     <ClCompile Include="Source\meshfield.cpp" />
@@ -311,10 +315,12 @@
     <ClInclude Include="Source\constans.h" />
     <ClInclude Include="Source\damagepoint.h" />
     <ClInclude Include="Source\debugproc.h" />
+    <ClInclude Include="Source\debug_bressrange.h" />
     <ClInclude Include="Source\edit.h" />
     <ClInclude Include="Source\edithandle.h" />
     <ClInclude Include="Source\edit_enemybase.h" />
     <ClInclude Include="Source\edit_map.h" />
+    <ClInclude Include="Source\edit_obstacle.h" />
     <ClInclude Include="Source\elevation.h" />
     <ClInclude Include="Source\enemy.h" />
     <ClInclude Include="Source\enemybase.h" />
@@ -346,6 +352,8 @@
     <ClInclude Include="Source\main.h" />
     <ClInclude Include="Source\manager.h" />
     <ClInclude Include="Source\map.h" />
+    <ClInclude Include="Source\map_obstacle.h" />
+    <ClInclude Include="Source\map_obstacleManager.h" />
     <ClInclude Include="Source\meshcylinder.h" />
     <ClInclude Include="Source\meshdome.h" />
     <ClInclude Include="Source\meshfield.h" />

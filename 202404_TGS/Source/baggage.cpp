@@ -8,6 +8,7 @@
 #include "manager.h"
 #include "calculation.h"
 #include "game.h"
+#include "map_obstacle.h"
 
 //==========================================================================
 // 定数定義
@@ -124,6 +125,7 @@ void CBaggage::Update()
 		return;
 	}
 
+
 	// 情報取得
 	MyLib::Vector3 posOrigin = GetOriginPosition();
 	MyLib::Vector3 pos = GetPosition();
@@ -142,7 +144,15 @@ void CBaggage::Update()
 	// 重力加算
 	move.y -= mylib_const::GRAVITY * m_fWeight;
 
-	if (pos.y <= 0.0f) pos.y = 0.0f, move.y = 0.0f;
+	static float limitMoveY = 30.0f;
+	ImGui::DragFloat("Limit MoveY", &limitMoveY, 1.0f, 0.0f, 0.0f, "%.2f");
+
+	if (move.y >= limitMoveY)
+	{
+		move.y = limitMoveY;
+	}
+
+	if (pos.y <= GetOriginPosition().y) pos.y = GetOriginPosition().y, move.y = 0.0f;
 
 	// 落下判定
 	m_bDrop = pos.y <= 0.0f;
@@ -161,6 +171,7 @@ void CBaggage::Update()
 
 	// 限界高度
 	(posOrigin.y + LIMIT_HEIGHT);
+	Hit();	// 障害物との衝突判定
 
 }
 
@@ -180,6 +191,7 @@ void CBaggage::AddForce(const MyLib::Vector3& power, const MyLib::Vector3& ActPo
 	move.y += power.y;
 
 	SetMove(move);
+
 }
 
 //==========================================================================
@@ -191,3 +203,25 @@ void CBaggage::Draw()
 	CObjectX::Draw();
 }
 
+//==========================================================================
+// 障害物との判定
+//==========================================================================
+void CBaggage::Hit()
+{
+	// リストループ
+	CListManager<CMap_Obstacle> sampleList = CMap_Obstacle::GetListObj();
+	CMap_Obstacle* pObj = nullptr;
+
+	MyLib::Vector3 MyPos = GetPosition();
+	while (sampleList.ListLoop(&pObj))
+	{
+		MyLib::Vector3 ObjPos = pObj->GetPosition();
+
+		// pObjを使って処理
+		if (UtilFunc::Collision::SphereRange(MyPos, ObjPos, 100.0f, 100.0f).ishit) {
+			MyLib::Vector3 move = GetMove();
+			move *= -1.0f;
+			SetMove(move);
+		}
+	}
+}

@@ -71,6 +71,8 @@ typedef struct
 //==========================================================================
 int GetFPS();
 HWND GetWnd();
+void ResetWnd();
+int GetCmbShow();
 
 class CMyEffekseer;
 class CLoadManager;

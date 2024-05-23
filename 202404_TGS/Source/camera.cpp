@@ -30,7 +30,7 @@
 #define MOVE			(2.5f)				// 移動量
 #define MAX_LENGTH		(50000.0f)			// 最大距離
 #define MIN_LENGTH		(10.0f)				// 最少距離
-#define START_CAMERALEN	(800.0f)			// 元の距離
+#define START_CAMERALEN	(4000.0f)			// 元の距離
 #define ROT_MOVE_MOUSE	(0.01f)				// 回転移動量
 #define ROT_MOVE_STICK_Y	(0.00040f)			// 回転移動量
 #define ROT_MOVE_STICK_Z	(0.00020f)			// 回転移動量
@@ -276,11 +276,11 @@ void CCamera::Update()
 		"【交差点】[X：%f Y：%f Z：%f]\n",
 		pos.x, pos.y, pos.z);
 
-	CEffect3D::Create(
+	/*CEffect3D::Create(
 		pos,
 		MyLib::Vector3(0.0f, 0.0f, 0.0f),
 		D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f),
-		80.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+		80.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);*/
 }
 
 //==========================================================================

@@ -41,6 +41,7 @@ public:
 		EDITTYPE_OFF = 0,		// オフ
 		EDITTYPE_ENEMYBASE,		// 敵拠点
 		EDITTYPE_MAP,			// マップ
+		EDITTYPE_OBSTACLE,		// 障害物
 		EDITTYPE_MAX
 	};
 

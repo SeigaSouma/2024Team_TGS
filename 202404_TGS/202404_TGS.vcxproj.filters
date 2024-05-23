@@ -78,6 +78,9 @@
     <Filter Include="baggage">
       <UniqueIdentifier>{9312ed64-aead-4f02-884d-1467aecdfe3c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="map">
+      <UniqueIdentifier>{16fc8c4d-80db-41aa-b4a0-e8ed95d5486c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\ballast.cpp">
@@ -445,6 +448,18 @@
     </ClCompile>
     <ClCompile Include="Source\baggage.cpp">
       <Filter>baggage</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\debug_bressrange.cpp">
+      <Filter>SAMPLE</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\map_obstacle.cpp">
+      <Filter>map</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\map_obstacleManager.cpp">
+      <Filter>map</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\edit_obstacle.cpp">
+      <Filter>edit</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -822,6 +837,18 @@
     </ClInclude>
     <ClInclude Include="Source\baggage.h">
       <Filter>baggage</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\debug_bressrange.h">
+      <Filter>SAMPLE</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\map_obstacle.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\map_obstacleManager.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\edit_obstacle.h">
+      <Filter>edit</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
