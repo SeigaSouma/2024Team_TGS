@@ -588,10 +588,6 @@ HRESULT MyMap::ReadText(const char *pTextFile)
 		break;
 	}
 
-
-	// Xファイル読み込み
-	ReadXFile(FileName.c_str());
-
 	// マップファイルを開く
 	pFile = fopen(FileName.c_str(), "r");
 
