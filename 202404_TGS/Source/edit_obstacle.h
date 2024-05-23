@@ -46,6 +46,8 @@ private:
 	//=============================
 	void Resize();
 	void MenuBar();
+	void CreateBoxLine();	// 当たり判定ボックス生成
+	void DeleteBoxLine();	// 当たり判定ボックス削除
 
 	//=============================
 	// メンバ変数
@@ -54,7 +56,7 @@ private:
 	int m_nColliderIdx;					// 調整するコライダーのインデックス
 	std::vector<CObjectX*> m_pObjX;		// オブジェクトXのポインタ
 	MyLib::AABB m_AABB;	// AABB情報
-	CCollisionLine_Box* m_pCollisionLineBox;	// 当たり判定ボックス
+	std::vector<CCollisionLine_Box*> m_pCollisionLineBox;	// 当たり判定ボックス
 };
 
 #endif

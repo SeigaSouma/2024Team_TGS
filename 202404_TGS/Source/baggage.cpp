@@ -171,6 +171,7 @@ void CBaggage::Update()
 
 	// ŒÀŠE‚“x
 	(posOrigin.y + LIMIT_HEIGHT);
+	Hit();	// áŠQ•¨‚Æ‚ÌÕ“Ë”»’è
 
 }
 
@@ -191,7 +192,6 @@ void CBaggage::AddForce(const MyLib::Vector3& power, const MyLib::Vector3& ActPo
 
 	SetMove(move);
 
-	Hit();	// áŠQ•¨‚Æ‚ÌÕ“Ë”»’è
 }
 
 //==========================================================================
@@ -212,9 +212,9 @@ void CBaggage::Hit()
 	CListManager<CMap_Obstacle> sampleList = CMap_Obstacle::GetListObj();
 	CMap_Obstacle* pObj = nullptr;
 
+	MyLib::Vector3 MyPos = GetPosition();
 	while (sampleList.ListLoop(&pObj))
 	{
-		MyLib::Vector3 MyPos = GetPosition();
 		MyLib::Vector3 ObjPos = pObj->GetPosition();
 
 		// pObj‚ğg‚Á‚Äˆ—

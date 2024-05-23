@@ -8,7 +8,7 @@ TEXT_FILENAME = data\\TEXT\\mapobstacle\\stone\\setup.txt		# [0]
 #==============================================================================
 MODELSET
 	TYPE = 0
-	POS = 0.00 300.00 0.00
+	POS = 400.00 500.00 0.00
 	ROT = 0.00 0.00 0.00
 END_MODELSET
 

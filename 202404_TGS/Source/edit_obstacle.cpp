@@ -28,7 +28,7 @@ CEdit_Obstacle::CEdit_Obstacle()
 	m_nEditIdx = 0;		// 調整するインデックス	
 	m_nColliderIdx = 0;	// 調整するコライダーのインデックス
 	m_pObjX.clear();	// オブジェクトXのポインタ
-	m_pCollisionLineBox = nullptr;
+	m_pCollisionLineBox.clear();
 }
 
 //==========================================================================
@@ -59,11 +59,8 @@ HRESULT CEdit_Obstacle::Init()
 		pos.x += DISTANCE_OBJ;
 	}
 
-	// 当たり判定ボックス生成
-	CMap_ObstacleManager::SObstacleInfo info = pObstacleMgr->GetObstacleInfo(m_nEditIdx);
-	m_AABB.vtxMax = info.boxcolliders[0].vtxMax;
-	m_AABB.vtxMin = info.boxcolliders[0].vtxMin;
-	m_pCollisionLineBox = CCollisionLine_Box::Create(m_AABB, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
+	// 当たり判定BOX生成
+	CreateBoxLine();
 
 	return S_OK;
 }
@@ -79,8 +76,8 @@ void CEdit_Obstacle::Uninit()
 	}
 	m_pObjX.clear();
 
-	m_pCollisionLineBox->Kill();
-	m_pCollisionLineBox = nullptr;
+	// 当たり判定BOX削除
+	DeleteBoxLine();
 
 	// 終了処理
 	CEdit::Uninit();
@@ -100,25 +97,83 @@ void CEdit_Obstacle::Update()
 		//***********************
 		// 現在のキー変更
 		//***********************
-		ImGui::Dummy(ImVec2(0.0f, 10.0f));
-		ImGui::SetNextItemWidth(140.0f);
-
 		// [スライダー]調整するインデックス
-		if (ImGui::SliderInt("Edit Idx", &m_nEditIdx, 0, m_pObjX.size() - 1))
+		ImGui::Dummy(ImVec2(0.0f, 5.0f));
+		// リサイズ
+		if (ImGui::TreeNode("Target"))
 		{
+			ImGui::SeparatorText("ChangeTarget Info");
 
+			ImGui::SetNextItemWidth(140.0f);
+			if (ImGui::SliderInt("Edit Idx", &m_nEditIdx, 0, m_pObjX.size() - 1))
+			{
+
+			}
+			ImGui::Dummy(ImVec2(0.0f, 10.0f));
+			ImGui::TreePop();
 		}
 
-		Resize();
+
+		if (ImGui::TreeNode("Collider"))
+		{
+			ImGui::SeparatorText("ChangeCollider Info");
+
+			// 障害物マネージャ取得
+			CMap_ObstacleManager* pObstacleMgr = CMap_ObstacleManager::GetInstance();
+			CMap_ObstacleManager::SObstacleInfo info = pObstacleMgr->GetObstacleInfo(m_nEditIdx);
+			
+			// 総数変更
+			ImGui::AlignTextToFramePadding();
+			ImGui::Text("Change Coolider Num:");
+			ImGui::SameLine();
+			if (ImGui::ArrowButton("##left", ImGuiDir_Left)) 
+			{ 
+				pObstacleMgr->SubCollider(m_nEditIdx);
+				CreateBoxLine();
+			}
+			ImGui::SameLine(0.0f);
+			if (ImGui::ArrowButton("##right", ImGuiDir_Right)) 
+			{
+				pObstacleMgr->AddCollider(m_nEditIdx);
+				CreateBoxLine();
+			}
+			ImGui::SameLine();
+			ImGui::Text("%d", info.boxcolliders.size());
+
+			Resize();
+			ImGui::Dummy(ImVec2(0.0f, 10.0f));
+			ImGui::TreePop();
+		}
 	}
-	//ImGui::End();
 
 
 
 	// カメラの情報取得
 	CCamera* pCamera = CManager::GetInstance()->GetCamera();
 	pCamera->SetTargetPosition(m_pObjX[m_nEditIdx]->GetPosition());
+
+	for (int i = 0; i < 4; i++)
+	{
+		CEffect3D* pEffect = CEffect3D::Create(
+			m_pObjX[m_nEditIdx]->GetPosition(),
+			MyLib::Vector3(0.0f, 0.0f, 0.0f),
+			D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f),
+			20.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE::TYPE_BLACK);
+		pEffect->SetDisableZSort();
+	}
 	
+	// 障害物マネージャ取得
+	CMap_ObstacleManager* pObstacleMgr = CMap_ObstacleManager::GetInstance();
+	CMap_ObstacleManager::SObstacleInfo info = pObstacleMgr->GetObstacleInfo(m_nEditIdx);
+
+	for (int i = 0; i < static_cast<int>(info.boxcolliders.size()); i++)
+	{
+		// BOXコライダー
+		MyLib::Collider_BOX collider = info.boxcolliders[i];
+
+		collider.TransformOffset(m_pObjX[m_nEditIdx]->GetWorldMtx());
+		m_pCollisionLineBox[i]->SetPosition(collider.GetMtx().GetWorldPosition());
+	}
 }
 
 //==========================================================================
@@ -156,7 +211,7 @@ void CEdit_Obstacle::MenuBar()
 
 			// "data"フォルダの絶対パスを求める
 			std::string strDataDir = szCurrentDir;
-			strDataDir += "\\data\\TEXT\\map";
+			strDataDir += "\\data\\TEXT\\mapobstacle";
 
 			// 存在する場合は、lpstrInitialDirに指定する
 			if (GetFileAttributesA(strDataDir.c_str()) != INVALID_FILE_ATTRIBUTES)
@@ -198,9 +253,7 @@ void CEdit_Obstacle::Resize()
 	CMap_ObstacleManager* pObstacleMgr = CMap_ObstacleManager::GetInstance();
 	CMap_ObstacleManager::SObstacleInfo info = pObstacleMgr->GetObstacleInfo(m_nEditIdx);
 
-
 	// [スライダー]調整するコライダーのインデックス
-	ImGui::Dummy(ImVec2(0.0f, 10.0f));
 	ImGui::SetNextItemWidth(140.0f);
 	if (ImGui::SliderInt("Collider Idx", &m_nColliderIdx, 0, info.boxcolliders.size() - 1))
 	{
@@ -210,140 +263,182 @@ void CEdit_Obstacle::Resize()
 	float windowWidth = 100.0f;
 	const float  POS_MOVE = 0.5f;
 
-	// BOXコライダー
-	MyLib::Collider_BOX collider = info.boxcolliders[m_nColliderIdx];
-
-	// リセット
-	ImGui::Dummy(ImVec2(0.0f, 10.0f));
-	if (ImGui::Button("ALL RESET")) {
-		collider.vtxMin = 0.0f;
-		collider.vtxMax = 0.0f;
-		collider.offset = 0.0f;
-	}
-
-	ImGui::Dummy(ImVec2(0.0f, 10.0f));
+	ImGui::Dummy(ImVec2(0.0f, 5.0f));
+	// リサイズ
+	if (ImGui::TreeNode("Resize"))
 	{
-		ImGui::Text("VtxMax");
-		ImGui::SameLine();
+		ImGui::SeparatorText("ChangeAABB Info");
+
+		// BOXコライダー
+		MyLib::Collider_BOX collider = info.boxcolliders[m_nColliderIdx];
+
+		// リセット
+		if (ImGui::Button("ALL RESET")) {
+			collider.vtxMin = 0.0f;
+			collider.vtxMax = 0.0f;
+			collider.offset = 0.0f;
+		}
+
 		if (ImGui::Button("VtxMax RESET")) {
 			collider.vtxMax = 0.0f;
 		}
-
-		// MaxX
-		ImGui::PushID(1); // ウィジェットごとに異なるIDを割り当てる
-		{
-			ImGui::SetNextItemWidth(windowWidth);
-			ImGui::DragFloat("x", &collider.vtxMax.x, POS_MOVE, 0.0f, 0.0f, "%.2f");
-			ImGui::SameLine();
-		}
-		ImGui::PopID();
-
-		// MaxY
-		ImGui::PushID(1); // ウィジェットごとに異なるIDを割り当てる
-		{
-			ImGui::SetNextItemWidth(windowWidth);
-			ImGui::DragFloat("y", &collider.vtxMax.y, POS_MOVE, 0.0f, 0.0f, "%.2f");
-			ImGui::SameLine();
-		}
-		ImGui::PopID();
-
-		// MaxZ
-		ImGui::PushID(1); // ウィジェットごとに異なるIDを割り当てる
-		{
-			ImGui::SetNextItemWidth(windowWidth);
-			ImGui::DragFloat("z", &collider.vtxMax.z, POS_MOVE, 0.0f, 0.0f, "%.2f");
-		}
-		ImGui::PopID();
-	}
-
-	ImGui::Dummy(ImVec2(0.0f, 10.0f));
-	{
-		ImGui::Text("VtxMin");
 		ImGui::SameLine();
+
 		if (ImGui::Button("VtxMin RESET")) {
 			collider.vtxMin = 0.0f;
 		}
-
-		// MinX
-		ImGui::PushID(0); // ウィジェットごとに異なるIDを割り当てる
-		{
-			ImGui::SetNextItemWidth(windowWidth);
-			ImGui::DragFloat("x", &collider.vtxMin.x, POS_MOVE, 0.0f, 0.0f, "%.2f");
-			ImGui::SameLine();
-		}
-		ImGui::PopID();
-
-		// MinY
-		ImGui::PushID(0); // ウィジェットごとに異なるIDを割り当てる
-		{
-			ImGui::SetNextItemWidth(windowWidth);
-			ImGui::DragFloat("y", &collider.vtxMin.y, POS_MOVE, 0.0f, 0.0f, "%.2f");
-			ImGui::SameLine();
-		}
-		ImGui::PopID();
-
-		// MinZ
-		ImGui::PushID(0); // ウィジェットごとに異なるIDを割り当てる
-		{
-			ImGui::SetNextItemWidth(windowWidth);
-			ImGui::DragFloat("z", &collider.vtxMin.z, POS_MOVE, 0.0f, 0.0f, "%.2f");
-		}
-		ImGui::PopID();
-	}
-
-	ImGui::Dummy(ImVec2(0.0f, 10.0f));
-	{
-		ImGui::Text("Offset");
 		ImGui::SameLine();
+
 		if (ImGui::Button("Offset RESET")) {
 			collider.offset = 0.0f;
 		}
 
-		// X
-		ImGui::PushID(2); // ウィジェットごとに異なるIDを割り当てる
+		ImGui::Dummy(ImVec2(0.0f, 5.0f));
 		{
-			ImGui::SetNextItemWidth(windowWidth);
-			ImGui::DragFloat("x", &collider.offset.x, POS_MOVE, 0.0f, 0.0f, "%.2f");
+			ImGui::Text("VtxMax");
 			ImGui::SameLine();
-		}
-		ImGui::PopID();
+			// MaxX
+			ImGui::PushID(1); // ウィジェットごとに異なるIDを割り当てる
+			{
+				ImGui::SetNextItemWidth(windowWidth);
+				ImGui::DragFloat("x", &collider.vtxMax.x, POS_MOVE, 0.0f, 0.0f, "%.2f");
+				ImGui::SameLine();
+			}
+			ImGui::PopID();
 
-		// Y
-		ImGui::PushID(2); // ウィジェットごとに異なるIDを割り当てる
+			// MaxY
+			ImGui::PushID(1); // ウィジェットごとに異なるIDを割り当てる
+			{
+				ImGui::SetNextItemWidth(windowWidth);
+				ImGui::DragFloat("y", &collider.vtxMax.y, POS_MOVE, 0.0f, 0.0f, "%.2f");
+				ImGui::SameLine();
+			}
+			ImGui::PopID();
+
+			// MaxZ
+			ImGui::PushID(1); // ウィジェットごとに異なるIDを割り当てる
+			{
+				ImGui::SetNextItemWidth(windowWidth);
+				ImGui::DragFloat("z", &collider.vtxMax.z, POS_MOVE, 0.0f, 0.0f, "%.2f");
+			}
+			ImGui::PopID();
+		}
+
 		{
-			ImGui::SetNextItemWidth(windowWidth);
-			ImGui::DragFloat("y", &collider.offset.y, POS_MOVE, 0.0f, 0.0f, "%.2f");
+			ImGui::Text("VtxMin");
 			ImGui::SameLine();
-		}
-		ImGui::PopID();
+			// MinX
+			ImGui::PushID(0); // ウィジェットごとに異なるIDを割り当てる
+			{
+				ImGui::SetNextItemWidth(windowWidth);
+				ImGui::DragFloat("x", &collider.vtxMin.x, POS_MOVE, 0.0f, 0.0f, "%.2f");
+				ImGui::SameLine();
+			}
+			ImGui::PopID();
 
-		// Z
-		ImGui::PushID(2); // ウィジェットごとに異なるIDを割り当てる
-		{
-			ImGui::SetNextItemWidth(windowWidth);
-			ImGui::DragFloat("z", &collider.offset.z, POS_MOVE, 0.0f, 0.0f, "%.2f");
+			// MinY
+			ImGui::PushID(0); // ウィジェットごとに異なるIDを割り当てる
+			{
+				ImGui::SetNextItemWidth(windowWidth);
+				ImGui::DragFloat("y", &collider.vtxMin.y, POS_MOVE, 0.0f, 0.0f, "%.2f");
+				ImGui::SameLine();
+			}
+			ImGui::PopID();
+
+			// MinZ
+			ImGui::PushID(0); // ウィジェットごとに異なるIDを割り当てる
+			{
+				ImGui::SetNextItemWidth(windowWidth);
+				ImGui::DragFloat("z", &collider.vtxMin.z, POS_MOVE, 0.0f, 0.0f, "%.2f");
+			}
+			ImGui::PopID();
 		}
-		ImGui::PopID();
+
+		{
+
+			ImGui::Text("Offset");
+			ImGui::SameLine();
+			// X
+			ImGui::PushID(2); // ウィジェットごとに異なるIDを割り当てる
+			{
+				ImGui::SetNextItemWidth(windowWidth);
+				ImGui::DragFloat("x", &collider.offset.x, POS_MOVE, 0.0f, 0.0f, "%.2f");
+				ImGui::SameLine();
+			}
+			ImGui::PopID();
+
+			// Y
+			ImGui::PushID(2); // ウィジェットごとに異なるIDを割り当てる
+			{
+				ImGui::SetNextItemWidth(windowWidth);
+				ImGui::DragFloat("y", &collider.offset.y, POS_MOVE, 0.0f, 0.0f, "%.2f");
+				ImGui::SameLine();
+			}
+			ImGui::PopID();
+
+			// Z
+			ImGui::PushID(2); // ウィジェットごとに異なるIDを割り当てる
+			{
+				ImGui::SetNextItemWidth(windowWidth);
+				ImGui::DragFloat("z", &collider.offset.z, POS_MOVE, 0.0f, 0.0f, "%.2f");
+			}
+			ImGui::PopID();
+		}
+
+		// BOX設定
+		MyLib::AABB aabb = MyLib::AABB(collider.vtxMin, collider.vtxMax);
+		m_pCollisionLineBox[m_nColliderIdx]->SetAABB(aabb);
+
+
+		// BOXコライダー設定
+		info.boxcolliders[m_nColliderIdx] = collider;
+		pObstacleMgr->SetObstacleInfo(info, m_nEditIdx);
+
+		ImGui::Dummy(ImVec2(0.0f, 10.0f));
+		ImGui::TreePop();
+	}
+}
+
+//==========================================================================
+// 当たり判定ボックス生成
+//==========================================================================
+void CEdit_Obstacle::CreateBoxLine()
+{
+	// 当たり判定ボックス削除
+	DeleteBoxLine();
+
+	// 障害物マネージャ取得
+	CMap_ObstacleManager* pObstacleMgr = CMap_ObstacleManager::GetInstance();
+
+	// 当たり判定ボックス取得
+	CMap_ObstacleManager::SObstacleInfo info = pObstacleMgr->GetObstacleInfo(m_nEditIdx);
+
+	for (auto& boxcollider : info.boxcolliders)
+	{
+		// AABB設定
+		MyLib::AABB aabb = MyLib::AABB(boxcollider.vtxMin, boxcollider.vtxMax);
+
+		// 生成処理
+		CCollisionLine_Box* pBox;
+		pBox = CCollisionLine_Box::Create(aabb, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
+		m_pCollisionLineBox.push_back(pBox);
+
+		// 位置設定
+		boxcollider.TransformOffset(m_pObjX[m_nEditIdx]->GetWorldMtx());
+		m_pCollisionLineBox.back()->SetPosition(boxcollider.GetMtx().GetWorldPosition());
 	}
 
-	// BOX設定
-	m_AABB.vtxMax = collider.vtxMax;
-	m_AABB.vtxMin = collider.vtxMin;
-	m_pCollisionLineBox->SetAABB(m_AABB);
-
-
-	// BOXコライダー設定
-	info.boxcolliders[m_nColliderIdx] = collider;
-	pObstacleMgr->SetObstacleInfo(info, m_nEditIdx);
-
-	collider.TransformOffset(m_pObjX[m_nEditIdx]->GetWorldMtx());
-	m_pCollisionLineBox->SetPosition(collider.GetMtx().GetWorldPosition());
-
-
-	CEffect3D* pEffect = CEffect3D::Create(
-		m_pObjX[m_nEditIdx]->GetPosition(),
-		MyLib::Vector3(0.0f, 0.0f, 0.0f),
-		D3DXCOLOR(0.6f, 0.2f, 1.0f, 1.0f),
-		20.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
-	pEffect->SetDisableZSort();
 }
+
+//==========================================================================
+// 当たり判定ボックス削除
+//==========================================================================
+void CEdit_Obstacle::DeleteBoxLine()
+{
+	for (const auto& box : m_pCollisionLineBox)
+	{
+		box->Kill();
+	}
+	m_pCollisionLineBox.clear();
+}
+

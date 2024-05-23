@@ -362,7 +362,8 @@ void CMap_ObstacleManager::Load()
 			// 生成
 			if (type < static_cast<int>(m_ObstacleInfo.size()))
 			{
-				CMap_Obstacle::Create(m_ObstacleInfo[type]);
+				CMap_Obstacle* pObj = CMap_Obstacle::Create(m_ObstacleInfo[type]);
+				pObj->SetPosition(pos);
 			}
 		}
 
@@ -501,9 +502,37 @@ void CMap_ObstacleManager::LoadInfo(const std::string& file)
 		}
 	}
 
+	if (obstacleInfo.boxcolliders.empty())
+	{
+		obstacleInfo.boxcolliders.push_back(MyLib::Collider_BOX());
+	}
+
 	// 情報追加
 	m_ObstacleInfo.push_back(obstacleInfo);
 
 	// ファイルを閉じる
 	File.close();
+}
+
+//==========================================================================
+// コライダー追加
+//==========================================================================
+void CMap_ObstacleManager::AddCollider(int idx)
+{
+	if (static_cast<int>(m_ObstacleInfo.size()) <= idx) {
+		return;
+	}
+
+	m_ObstacleInfo[idx].boxcolliders.push_back(MyLib::Collider_BOX());
+}
+
+//==========================================================================
+// コライダー削除
+//==========================================================================
+void CMap_ObstacleManager::SubCollider(int idx)
+{
+	if (static_cast<int>(m_ObstacleInfo[idx].boxcolliders.size()) >= 1)
+	{
+		m_ObstacleInfo[idx].boxcolliders.pop_back();
+	}
 }

@@ -415,9 +415,52 @@ void CGame::Update()
 //==========================================================================
 void CGame::ChangeEdit()
 {
+	static bool no_titlebar = false;
+	static bool no_scrollbar = true;
+	static bool no_menu = true;
+	static bool no_move = true;
+	static bool no_resize = true;
+	static bool no_collapse = false;
+	static bool no_close = false;
+	static bool no_nav = false;
+	static bool no_background = false;
+	static bool no_bring_to_front = false;
+	static bool unsaved_document = false;
+
+	ImGuiWindowFlags window_flags = 0;
+	if (no_titlebar)        window_flags |= ImGuiWindowFlags_NoTitleBar;
+	if (no_scrollbar)       window_flags |= ImGuiWindowFlags_NoScrollbar;
+	if (!no_menu)           window_flags |= ImGuiWindowFlags_MenuBar;
+	if (no_move)            window_flags |= ImGuiWindowFlags_NoMove;
+	if (no_resize)          window_flags |= ImGuiWindowFlags_NoResize;
+	if (no_collapse)        window_flags |= ImGuiWindowFlags_NoCollapse;
+	if (no_nav)             window_flags |= ImGuiWindowFlags_NoNav;
+	if (no_background)      window_flags |= ImGuiWindowFlags_NoBackground;
+	if (no_bring_to_front)  window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus;
+	if (unsaved_document)   window_flags |= ImGuiWindowFlags_UnsavedDocument;
+
 	// エディットメニュー
-	ImGui::Begin("Edit"/*, NULL, ImGuiWindowFlags_MenuBar*/);
+	ImGui::Begin("Edit", 0, window_flags);
 	{
+		if (ImGui::CollapsingHeader("Window options"))
+		{
+			if (ImGui::BeginTable("split", 3))
+			{
+				ImGui::TableNextColumn(); ImGui::Checkbox("No titlebar", &no_titlebar);
+				ImGui::TableNextColumn(); ImGui::Checkbox("No scrollbar", &no_scrollbar);
+				ImGui::TableNextColumn(); ImGui::Checkbox("No menu", &no_menu);
+				ImGui::TableNextColumn(); ImGui::Checkbox("No move", &no_move);
+				ImGui::TableNextColumn(); ImGui::Checkbox("No resize", &no_resize);
+				ImGui::TableNextColumn(); ImGui::Checkbox("No collapse", &no_collapse);
+				ImGui::TableNextColumn(); ImGui::Checkbox("No close", &no_close);
+				ImGui::TableNextColumn(); ImGui::Checkbox("No nav", &no_nav);
+				ImGui::TableNextColumn(); ImGui::Checkbox("No background", &no_background);
+				ImGui::TableNextColumn(); ImGui::Checkbox("No bring to front", &no_bring_to_front);
+				ImGui::TableNextColumn(); ImGui::Checkbox("Unsaved document", &unsaved_document);
+				ImGui::EndTable();
+			}
+		}
+
 		// テキスト
 		static const char* items[] = { "OFF", "EnemyBase", "Map", "Obstacle"};
 		int selectedItem = m_EditType;

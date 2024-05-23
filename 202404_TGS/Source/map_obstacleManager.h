@@ -89,6 +89,8 @@ public:
 	void SetObstacleInfo(const SObstacleInfo& info, int idx) { m_ObstacleInfo[idx] = info; }	// 障害物情報設定
 	std::vector<SObstacleInfo> GetObstacleInfo() { return m_ObstacleInfo; }						// 障害物情報取得
 	SObstacleInfo GetObstacleInfo(int idx) { return m_ObstacleInfo[idx]; }						// 障害物情報取得
+	void AddCollider(int idx);	// コライダー追加
+	void SubCollider(int idx);	// コライダー削除
 
 	// 入出力
 	void Save();	// セーブ
