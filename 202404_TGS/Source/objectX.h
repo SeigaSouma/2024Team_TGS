@@ -55,6 +55,7 @@ public:
 	void BindTexture(int *nIdx);
 	void BindXData(int nIdxXFile);
 
+	void CalWorldMtx();							// ワールドマトリックスの計算処理
 	void SetWorldMtx(const MyLib::Matrix mtx);	// マトリックス設定
 	MyLib::Matrix GetWorldMtx() const;			// マトリックス取得
 	void SetScale(const MyLib::Vector3 scale);	// スケール設定
@@ -110,7 +111,6 @@ private:
 	void StateEdit();	// エディット
 
 	// その他
-	void CalWorldMtx();			// ワールドマトリックスの計算処理
 	void SetCollisionBoxData();	// 当たり判定ボックスデータ設定
 	
 

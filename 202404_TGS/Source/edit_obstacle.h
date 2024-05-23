@@ -108,8 +108,9 @@ public:
 	void CreateBoxLine() override;	// 当たり判定ボックス生成
 
 private:
-	bool m_bButtonDrag = false;	// 掴み判定
+	bool m_bButtonDrag = false;		// 掴み判定
 	bool m_bHoverWindow = false;	// ウィンドウのホバー判定
+	CObjectX* m_pDragObj = nullptr;	// ドラッグ中のオブジェクト
 	CMap_ObstacleManager::SObstacleInfo m_ObstacleInfo;	// 障害物情報
 
 };

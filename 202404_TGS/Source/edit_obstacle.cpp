@@ -209,10 +209,43 @@ void CEdit_Obstacle_Arrangment::Update()
 		m_bButtonDrag = true;
 	}
 
+	// 見た目のみ配置
+	if (m_bButtonDrag &&
+		!m_bHoverWindow)
+	{// ドラッグ中 && ウィンドウ外
+
+		if (m_pDragObj != nullptr) {
+			m_pDragObj->Kill();
+			m_pDragObj = nullptr;
+		}
+
+		// 生成
+		m_pDragObj = CObjectX::Create(m_ObstacleInfo.modelFile);
+		m_pDragObj->SetType(CObject::TYPE::TYPE_OBJECTX);
+	}
+
+
+	// マウス情報取得
+	CInputMouse* pMouse = CInputMouse::GetInstance();
+	MyLib::Vector3 mouseWorldPos = pMouse->GetWorldPosition();
+
+	if (m_pDragObj != nullptr) {
+
+		MyLib::Vector3 setpos = mouseWorldPos;
+		setpos.y = 0.0f;
+
+		m_pDragObj->SetPosition(setpos);
+	}
+
 	// 配置
 	if (m_bButtonDrag &&
 		ImGui::IsMouseReleased(0))
 	{// 掴み中 && マウスリリース
+
+		if (m_pDragObj != nullptr) {
+			m_pDragObj->Kill();
+			m_pDragObj = nullptr;
+		}
 
 		if (!m_bHoverWindow) {
 
@@ -224,6 +257,9 @@ void CEdit_Obstacle_Arrangment::Update()
 
 			CMap_Obstacle* pObj = CMap_Obstacle::Create(m_ObstacleInfo);
 			pObj->SetPosition(setpos);
+			pObj->CalWorldMtx();
+
+			CreateBoxLine();
 		}
 		m_bButtonDrag = false;
 	}
