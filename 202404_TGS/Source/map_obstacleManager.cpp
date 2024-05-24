@@ -166,8 +166,8 @@ void CMap_ObstacleManager::Save()
 		// ƒ‚ƒfƒ‹î•ñ
 		File << "MODELSET" << std::endl;
 		File << "\tTYPE = " << type << std::endl;
-		File << "\tPOS = " << pos.x << pos.y << pos.z << std::endl;
-		File << "\tROT = " << rot.x << rot.y << rot.z << std::endl;
+		File << "\tPOS = " << std::fixed << std::setprecision(2) << pos.x << " " << pos.y << " " << pos.z << std::endl;
+		File << "\tROT = " << std::fixed << std::setprecision(2) << rot.x << " " << rot.y << " " << rot.z << std::endl;
 		File << "END_MODELSET" << std::endl;
 		File << "" << std::endl;
 	}

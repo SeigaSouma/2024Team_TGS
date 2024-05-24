@@ -289,7 +289,7 @@ void CEdit_Map::SetObjectButton()
 			{
 				SDragDropData dragData;
 				dragData.nType = m_nModelIdx[i];
-				m_DragData.nType = m_nModelIdx[i];
+				m_DragData.nType = i;
 
 				ImGui::SetDragDropPayload("MY_COORDINATE_TYPE", &dragData, sizeof(SDragDropData));
 
@@ -518,7 +518,7 @@ void CEdit_Map::Grab()
 		// ウィンドウ外 && オブジェクト無い状態で生成
 		if (m_DragData.objX == nullptr)
 		{
-			m_DragData.objX = CObjectX::Create(m_DragData.nType, mouseWorldPos, MyLib::Vector3(0.0f), true);
+			m_DragData.objX = CObjectX::Create(m_nModelIdx[m_DragData.nType], mouseWorldPos, MyLib::Vector3(0.0f), true);
 			m_DragData.objX->SetType(CObject::TYPE_XFILE);
 			m_DragData.objX->CreateCollisionBox();
 		}
@@ -1359,8 +1359,12 @@ HRESULT CEdit_Map::ReadXFile(const std::string& file)
 				m_ModelFile.push_back(&aComment[0]);
 				m_nModelIdx.push_back(0);
 
+				// \\変換
+				m_ModelFile.back() = UtilFunc::Transformation::ReplaceBackslash(m_ModelFile.back());
+				m_ModelFile.back() = UtilFunc::Transformation::ReplaceForwardSlashes(m_ModelFile.back());
+
 				// インデックス取得
-				m_nModelIdx.back() = CXLoad::GetInstance()->XLoad(aComment);
+				m_nModelIdx.back() = CXLoad::GetInstance()->XLoad(m_ModelFile.back());
 
 				modelNum++;	// モデル数加算
 			}

@@ -108,9 +108,20 @@ public:
 	void CreateBoxLine() override;	// 当たり判定ボックス生成
 
 private:
+
+	void ObjectSelect();	// オブジェクト選択
+
 	bool m_bButtonDrag = false;		// 掴み判定
+	bool m_bReGrab = false;			// 再掴み判定
+	bool m_bGrabHandle = false;			// 掴み判定
 	bool m_bHoverWindow = false;	// ウィンドウのホバー判定
 	CObjectX* m_pDragObj = nullptr;	// ドラッグ中のオブジェクト
+	CObjectX* m_pGrabObj = nullptr;	// 掴みオブジェクト
+
+	CHandle* m_pHandle = nullptr;					// 移動ハンドル
+	CHandle::HandleType m_HandleType = CHandle::HandleType::TYPE_MOVE;	// ハンドルの種類
+	CHandle::HandleAngle m_moveAngle = CHandle::HandleAngle::ANGLE_X;	// 移動の向き
+
 	CMap_ObstacleManager::SObstacleInfo m_ObstacleInfo;	// 障害物情報
 
 };

@@ -156,15 +156,41 @@ void CEdit_Obstacle_Arrangment::CreateBoxLine()
 //==========================================================================
 void CEdit_Obstacle_Arrangment::Update()
 {
-	// ウィンドウのマウスホバー判定
-	ImGuiHoveredFlags frag = 128;
-	m_bHoverWindow = ImGui::IsWindowHovered(frag);
-
-
 
 	// 障害物マネージャ取得
 	CMap_ObstacleManager* pObstacleMgr = CMap_ObstacleManager::GetInstance();
 	std::vector<CMap_ObstacleManager::SObstacleInfo> vecInfo = pObstacleMgr->GetObstacleInfo();
+
+	// コンボボックス
+	static const char* savetext[] = { "Save", "Save_as", "Load" };
+	static int saveselect = 0;
+	float width = 150.0f;
+
+	ImGui::SetNextItemWidth(width);
+	if (ImGui::Button("Save"))
+	{
+		pObstacleMgr->Save();
+	}
+	ImGui::SameLine();
+
+	ImGui::SetNextItemWidth(width);
+	if (ImGui::Button("Save_as"))
+	{
+		pObstacleMgr->Save();
+	}
+	ImGui::SameLine();
+
+	ImGui::SetNextItemWidth(width);
+	if (ImGui::Button("Load"))
+	{
+
+	}
+
+
+	// ウィンドウのマウスホバー判定
+	ImGuiHoveredFlags frag = 128;
+	m_bHoverWindow = ImGui::IsWindowHovered(frag);
+
 
 	std::vector<std::string> items;
 	std::vector<const char*> items_c_str;
@@ -265,10 +291,188 @@ void CEdit_Obstacle_Arrangment::Update()
 	}
 
 
+	// オブジェクト選択
+	ObjectSelect();
+
+
+	// 障害物のリスト取得
+	CListManager<CMap_Obstacle> list = CMap_Obstacle::GetListObj();
+
+	// 先頭を保存
+	std::list<CMap_Obstacle*>::iterator itr = list.GetEnd();
+	CMap_Obstacle* pObj = nullptr;
+
+	int i = 0;
+	while (list.ListLoop(itr))
+	{
+		CMap_Obstacle* pObj = *itr;
+
+		for (auto& boxcollider : pObj->GetObstacleInfo().boxcolliders)
+		{
+			// 位置設定
+			boxcollider.TransformOffset(pObj->GetWorldMtx());
+			m_pCollisionLineBox[i]->SetPosition(boxcollider.GetMtx().GetWorldPosition());
+			i++;
+		}
+	}
 
 }
 
+//==========================================================================
+// オブジェクト選択
+//==========================================================================
+void CEdit_Obstacle_Arrangment::ObjectSelect()
+{
+	CInputKeyboard* pKeyboard = CInputKeyboard::GetInstance();
+	CInputMouse* pMouse = CInputMouse::GetInstance();
+	MyLib::Vector3 mouseRay = pMouse->GetRay();
+	MyLib::Vector3 mousePos = pMouse->GetNearPosition();
+	MyLib::Vector3 mouseWorldPos = pMouse->GetWorldPosition();
+	MyLib::Vector3 mouseOldWorldPos = pMouse->GetOldWorldPosition();
+	MyLib::Vector3 diffpos = pMouse->GetWorldDiffPosition();
 
+	// 障害物のリスト取得
+	CListManager<CMap_Obstacle> list = CMap_Obstacle::GetListObj();
+
+	// 先頭を保存
+	std::list<CMap_Obstacle*>::iterator itr = list.GetEnd();
+
+	if (!m_bHoverWindow &&
+		!m_bGrabHandle &&
+		(m_pHandle == nullptr || (m_pHandle != nullptr && !m_pHandle->IsHoverHandle())) &&
+		!pKeyboard->GetPress(DIK_LALT) &&
+		ImGui::IsMouseClicked(0))
+	{// クリック
+
+		// 再掴み判定
+		m_bReGrab = false;
+
+		m_pGrabObj = nullptr;
+
+		// 先頭を保存
+		CMap_Obstacle* pObject = nullptr;
+
+		// リストコピー
+		std::vector<CObjectX*> pObjectSort;
+
+		while (list.ListLoop(itr))
+		{
+			// 要素を末尾に追加
+			pObjectSort.push_back((*itr));
+		}
+
+		// Zソート
+		std::sort(pObjectSort.begin(), pObjectSort.end(), CObject::ZSortInverse);
+
+		bool bHit = false;
+		for (const auto& obj : pObjectSort)
+		{
+			if (!bHit) 
+			{
+				MyLib::AABB aabb;
+				aabb.vtxMin = obj->GetVtxMin();
+				aabb.vtxMax = obj->GetVtxMax();
+
+				MyLib::Matrix mtx = obj->GetWorldMtx();
+				float time = 0.0f;
+				MyLib::Vector3 OBpos;
+
+				bHit = UtilFunc::Collision::CollisionRayAABB(&mousePos, &mouseRay, &aabb, &mtx, time, &OBpos);
+
+				if (bHit)
+				{// 被ってる
+					obj->SetState(CObjectX::STATE::STATE_EDIT);
+
+					// 掴みオブジェクト
+					m_pGrabObj = obj;
+
+					if (m_pHandle != nullptr) {
+						m_pHandle->SetPosition(m_pGrabObj->GetPosition());
+					}
+
+					if (m_pHandle == nullptr) {
+						m_pHandle = CHandle::Create(m_HandleType, m_pGrabObj->GetPosition());
+					}
+
+					// 再掴み判定
+					m_bReGrab = true;
+				}
+				else {
+					obj->SetState(CObjectX::STATE::STATE_NONE);
+				}
+			}
+			else {
+				obj->SetState(CObjectX::STATE::STATE_NONE);
+			}
+		}
+
+		if (m_pHandle != nullptr &&
+			!m_pHandle->IsHoverHandle() &&
+			!bHit) 
+		{
+			m_pHandle->Kill();
+			m_pHandle = nullptr;
+		}
+	}
+
+
+
+
+	if (m_pHandle != nullptr && 
+		m_pHandle->IsHoverHandle() &&
+		!pKeyboard->GetPress(DIK_LALT) &&
+		ImGui::IsMouseClicked(0))
+	{// ハンドルにホバー中クリック
+
+		// 移動の向き
+		m_moveAngle = m_pHandle->GetHoverAngle();
+		m_pHandle->SetState(CHandle::State::STATE_GRAB);
+		m_bGrabHandle = true;
+	}
+
+
+	if (m_bGrabHandle &&
+		m_pGrabObj != nullptr)
+	{
+		MyLib::Vector3 pos = m_pGrabObj->GetPosition();
+		MyLib::Vector3 rot = m_pGrabObj->GetRotation();
+		MyLib::Vector3 scale = m_pGrabObj->GetScale();
+
+		// 差分取得
+		CHandle::SEditHandleInfo info = m_pHandle->GetDiff(m_moveAngle);
+		pos += info.pos;
+		rot += info.rot;
+		UtilFunc::Transformation::RotNormalize(rot);
+
+		scale += info.scale;
+		if (scale.x <= 0.1f) scale.x = 0.1f;
+		if (scale.y <= 0.1f) scale.y = 0.1f;
+		if (scale.z <= 0.1f) scale.z = 0.1f;
+
+		m_pGrabObj->SetPosition(pos);
+		m_pGrabObj->SetRotation(rot);
+		m_pGrabObj->SetScale(scale);
+
+		if (m_pGrabObj->GetCollisionLineBox() != nullptr) {
+			m_pGrabObj->GetCollisionLineBox()->SetPosition(pos);
+		}
+
+		if (m_pHandle != nullptr) {
+			m_pHandle->SetPosition(m_pGrabObj->GetPosition());
+		}
+	}
+
+
+	if (m_pHandle != nullptr &&
+		!pKeyboard->GetPress(DIK_LALT) &&
+		ImGui::IsMouseReleased(0))
+	{// リリース
+
+		m_bGrabHandle = false;
+		m_pHandle->SetState(CHandle::State::STATE_NONE);
+	}
+
+}
 
 
 
