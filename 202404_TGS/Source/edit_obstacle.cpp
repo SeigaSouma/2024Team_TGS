@@ -192,19 +192,25 @@ void CEdit_Obstacle_Arrangment::Update()
 	m_bHoverWindow = ImGui::IsWindowHovered(frag);
 
 
+
 	std::vector<std::string> items;
-	std::vector<const char*> items_c_str;
 	for (const auto& info : vecInfo)
 	{
 		std::string file = UtilFunc::Transformation::RemoveFilePath(info.modelFile);
 		items.push_back(file);
-		items_c_str.push_back(items.back().c_str());
+	}
+
+	// char* の配列に変換
+	std::vector<const char*> items_cstr;
+	for (const auto& item : items)
+	{
+		items_cstr.push_back(item.c_str());
 	}
 
 	static int select = 0;
 
 	ImGui::Dummy(ImVec2(0.0f, 10.0f));
-	if (ImGui::Combo("SetType", &select, items_c_str.data(), items_c_str.size()))
+	if (ImGui::Combo("SetType", &select, items_cstr.data(), items_cstr.size()))
 	{
 		// 障害物情報設定
 		m_ObstacleInfo = vecInfo[select];
@@ -291,8 +297,15 @@ void CEdit_Obstacle_Arrangment::Update()
 	}
 
 
+	
+	// ハンドル切り替え
+	ChangeHandle();
+
+
 	// オブジェクト選択
 	ObjectSelect();
+
+	Transform();
 
 
 	// 障害物のリスト取得
@@ -312,6 +325,7 @@ void CEdit_Obstacle_Arrangment::Update()
 			// 位置設定
 			boxcollider.TransformOffset(pObj->GetWorldMtx());
 			m_pCollisionLineBox[i]->SetPosition(boxcollider.GetMtx().GetWorldPosition());
+			m_pCollisionLineBox[i]->SetRotation(pObj->GetRotation());
 			i++;
 		}
 	}
@@ -474,7 +488,205 @@ void CEdit_Obstacle_Arrangment::ObjectSelect()
 
 }
 
+//==========================================================================
+// ハンドル切り替え
+//==========================================================================
+void CEdit_Obstacle_Arrangment::ChangeHandle()
+{
+	bool bChange = false;
 
+	// 移動ボタン
+	if (ImGui::Button("Move", ImVec2(50.0f, 50.0f)))
+	{
+		m_HandleType = CHandle::HandleType::TYPE_MOVE;
+		bChange = true;
+	}
+	ImGui::SameLine();
+
+	// スケールボタン
+	if (ImGui::Button("Scale", ImVec2(50.0f, 50.0f)))
+	{
+		m_HandleType = CHandle::HandleType::TYPE_SCALE;
+		bChange = true;
+	}
+	ImGui::SameLine();
+
+	if (bChange)
+	{
+		// 削除
+		if (m_pHandle != nullptr) {
+			m_pHandle->Kill();
+			m_pHandle = nullptr;
+		}
+
+		// ハンドル生成
+		m_pHandle = CHandle::Create(m_HandleType, m_pGrabObj->GetPosition());
+	}
+
+}
+
+//==========================================================================
+// トランスフォーム処理
+//==========================================================================
+void CEdit_Obstacle_Arrangment::Transform()
+{
+
+	//=============================
+	// 向き設定
+	//=============================
+	ImGui::Dummy(ImVec2(0.0f, 10.0f));
+	if (ImGui::TreeNode("Transform"))
+	{
+		float windowWidth = 100.0f;
+		const float  ROT_MOVE = D3DX_PI * 0.01f;
+		const float  POS_MOVE = 0.5f;
+
+		if (m_pGrabObj == nullptr)
+		{
+			ImGui::Text(":None Obj:");
+			ImGui::TreePop();
+			return;
+		}
+
+		// リセット
+		if (ImGui::Button("ALL RESET")) {
+			m_pGrabObj->SetPosition(0.0f);
+			m_pGrabObj->SetRotation(0.0f);
+			m_pGrabObj->SetScale(1.0f);
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("POS RESET")) {
+			m_pGrabObj->SetPosition(0.0f);
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("ROT RESET")) {
+			m_pGrabObj->SetRotation(0.0f);
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("SCALE RESET")) {
+			m_pGrabObj->SetScale(1.0f);
+		}
+
+		//=============================
+		// 位置設定
+		//=============================
+		MyLib::Vector3 pos = m_pGrabObj->GetPosition();
+		ImGui::Text("pos");
+		ImGui::SameLine();
+
+		// X
+		ImGui::PushID(0); // ウィジェットごとに異なるIDを割り当てる
+		{
+			ImGui::SetNextItemWidth(windowWidth);
+			ImGui::DragFloat("x", &pos.x, POS_MOVE, 0.0f, 0.0f, "%.2f");
+			ImGui::SameLine();
+		}
+		ImGui::PopID();
+
+		// Y
+		ImGui::PushID(0); // ウィジェットごとに異なるIDを割り当てる
+		{
+			ImGui::SetNextItemWidth(windowWidth);
+			ImGui::DragFloat("y", &pos.y, POS_MOVE, 0.0f, 0.0f, "%.2f");
+			ImGui::SameLine();
+		}
+		ImGui::PopID();
+
+		// Z
+		ImGui::PushID(0); // ウィジェットごとに異なるIDを割り当てる
+		{
+			ImGui::SetNextItemWidth(windowWidth);
+			ImGui::DragFloat("z", &pos.z, POS_MOVE, 0.0f, 0.0f, "%.2f");
+		}
+		ImGui::PopID();
+
+		// 位置設定
+		m_pGrabObj->SetPosition(pos);
+		if (m_pGrabObj->GetCollisionLineBox() != nullptr) {
+			m_pGrabObj->GetCollisionLineBox()->SetPosition(pos);
+		}
+		if (m_pHandle != nullptr) {
+			m_pHandle->SetPosition(m_pGrabObj->GetPosition());
+		}
+
+
+		//=============================
+		// 向き設定
+		//=============================
+		MyLib::Vector3 rot = m_pGrabObj->GetRotation();
+		ImGui::Text("rot");
+		ImGui::SameLine();
+
+		// X
+		ImGui::PushID(1); // ウィジェットごとに異なるIDを割り当てる
+		{
+			ImGui::SetNextItemWidth(windowWidth);
+			ImGui::DragFloat("x", &rot.x, ROT_MOVE, 0.0f, 0.0f, "%.2f");
+			ImGui::SameLine();
+		}
+		ImGui::PopID();
+
+		// Y
+		ImGui::PushID(1); // ウィジェットごとに異なるIDを割り当てる
+		{
+			ImGui::SetNextItemWidth(windowWidth);
+			ImGui::DragFloat("y", &rot.y, ROT_MOVE, 0.0f, 0.0f, "%.2f");
+			ImGui::SameLine();
+		}
+		ImGui::PopID();
+
+		// Z
+		ImGui::PushID(1); // ウィジェットごとに異なるIDを割り当てる
+		{
+			ImGui::SetNextItemWidth(windowWidth);
+			ImGui::DragFloat("z", &rot.z, ROT_MOVE, 0.0f, 0.0f, "%.2f");
+		}
+		ImGui::PopID();
+
+		// 向き設定
+		UtilFunc::Transformation::RotNormalize(rot);
+		m_pGrabObj->SetRotation(rot);
+
+
+		//=============================
+		// 拡縮設定
+		//=============================
+		MyLib::Vector3 scale = m_pGrabObj->GetScale();
+		ImGui::Text("scale");
+		ImGui::SameLine();
+
+		// X
+		ImGui::PushID(2); // ウィジェットごとに異なるIDを割り当てる
+		{
+			ImGui::SetNextItemWidth(windowWidth);
+			ImGui::DragFloat("x", &scale.x, 0.01f, 0.0f, 0.0f, "%.2f");
+			ImGui::SameLine();
+		}
+		ImGui::PopID();
+
+		// Y
+		ImGui::PushID(2); // ウィジェットごとに異なるIDを割り当てる
+		{
+			ImGui::SetNextItemWidth(windowWidth);
+			ImGui::DragFloat("y", &scale.y, 0.01f, 0.0f, 0.0f, "%.2f");
+			ImGui::SameLine();
+		}
+		ImGui::PopID();
+
+		// Z
+		ImGui::PushID(2); // ウィジェットごとに異なるIDを割り当てる
+		{
+			ImGui::SetNextItemWidth(windowWidth);
+			ImGui::DragFloat("z", &scale.z, 0.01f, 0.0f, 0.0f, "%.2f");
+		}
+		ImGui::PopID();
+
+		// 拡縮設定
+		m_pGrabObj->SetScale(scale);
+
+		ImGui::TreePop();
+	}
+}
 
 
 //==========================================================================

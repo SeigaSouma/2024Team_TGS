@@ -110,6 +110,8 @@ public:
 private:
 
 	void ObjectSelect();	// オブジェクト選択
+	void ChangeHandle();
+	void Transform();
 
 	bool m_bButtonDrag = false;		// 掴み判定
 	bool m_bReGrab = false;			// 再掴み判定
