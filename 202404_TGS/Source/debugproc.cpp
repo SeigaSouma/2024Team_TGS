@@ -119,7 +119,7 @@ void CDebugProc::Update()
 //==========================================================================
 void CDebugProc::Draw()
 {
-	return;
+	//return;
 	RECT rect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 
 	if (m_bDisp)
@@ -138,7 +138,7 @@ void CDebugProc::Draw()
 //==========================================================================
 void CDebugProc::Print(const char *fmt, ...)
 {
-	return;
+	//return;
 	va_list args;
 	char aString[MAX_DEBUGSTRING];		// w’è•¶šŠi”[—p
 	char aSaveString[MAX_DEBUGSTRING];	// ‰Â•Ïˆø”’†gŠi”[—p

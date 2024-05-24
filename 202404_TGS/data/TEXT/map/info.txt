@@ -1,29 +1,17 @@
 #------------------------------------------------------------------------------
 # テクスチャ数
 #------------------------------------------------------------------------------
-NUM_TEXTURE = 13
+NUM_TEXTURE = 1
 
 #------------------------------------------------------------------------------
 # テクスチャファイル名
 #------------------------------------------------------------------------------
-TEXTURE_FILENAME = data\TEXTURE\FIELD\concreat.png		# [0]
-TEXTURE_FILENAME = data\TEXTURE\FIELD\senter.png		# [1]
-TEXTURE_FILENAME = data\TEXTURE\FIELD\senterlong.png		# [2]
-TEXTURE_FILENAME = data\TEXTURE\FIELD\sideL.png		# [3]
-TEXTURE_FILENAME = data\TEXTURE\FIELD\sideR.png		# [4]
-TEXTURE_FILENAME = data\TEXTURE\FIELD\odan.png		# [5]
-TEXTURE_FILENAME = data\TEXTURE\FIELD\walkroad.jpg		# [6]
-TEXTURE_FILENAME = data\TEXTURE\FIELD\walkroad_01.jpg		# [7]
-TEXTURE_FILENAME = data\TEXTURE\FIELD\tile_04.jpg		# [8]
-TEXTURE_FILENAME = data\TEXTURE\FIELD\tile_03.jpg		# [9]
-TEXTURE_FILENAME = data\TEXTURE\FIELD\water_02.jpg		# [10]
-TEXTURE_FILENAME = data\TEXTURE\sky\sky_02.jpg		# [11]
-TEXTURE_FILENAME = data\TEXTURE\FIELD\hiero.png		# [12]
+TEXTURE_FILENAME = data\TEXTURE\sky\sky_02.jpg		# [1]
 
 #------------------------------------------------------------------------------
 # モデル数
 #------------------------------------------------------------------------------
-NUM_MODEL = 27
+NUM_MODEL = 28
 
 #------------------------------------------------------------------------------
 # モデルファイル名
@@ -55,12 +43,13 @@ MODEL_FILENAME = data\\MODEL\\map_object\\rock_04_superhuge.x		# [23]
 MODEL_FILENAME = data\\MODEL\\map_object\\rock_05_superhuge.x		# [24]
 MODEL_FILENAME = data\\MODEL\\map_object\\tree_03_huge.x		# [25]
 MODEL_FILENAME = data\\MODEL\\box.x		# [26]
+MODEL_FILENAME = data\\MODEL\\map\\map_mati000.x		# [27]
 
 #==============================================================================
 # 空情報
 #==============================================================================
 SKYSET
-	TEXTYPE = 11
+	TEXTYPE = 0
 	MOVE = 0.000200
 END_SKYSET
 

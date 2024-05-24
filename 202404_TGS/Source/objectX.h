@@ -55,6 +55,7 @@ public:
 	void BindTexture(int *nIdx);
 	void BindXData(int nIdxXFile);
 
+	void CalWorldMtx();							// ワールドマトリックスの計算処理
 	void SetWorldMtx(const MyLib::Matrix mtx);	// マトリックス設定
 	MyLib::Matrix GetWorldMtx() const;			// マトリックス取得
 	void SetScale(const MyLib::Vector3 scale);	// スケール設定
@@ -62,6 +63,7 @@ public:
 	void SetColor(const D3DXCOLOR col);			// 色設定
 	D3DXCOLOR GetColor() const;					// 色取得
 	void SetSize(const MyLib::Vector3 size);	// サイズの設定
+	void SetAABB(const MyLib::AABB& aabb) { m_AABB = aabb; }
 	MyLib::Vector3 GetSize() const;				// サイズの取得
 	MyLib::Vector3 GetVtxMax() const;			// 頂点の最大値取得
 	MyLib::Vector3 GetVtxMin() const;			// 頂点の最小値取得
@@ -109,7 +111,6 @@ private:
 	void StateEdit();	// エディット
 
 	// その他
-	void CalWorldMtx();			// ワールドマトリックスの計算処理
 	void SetCollisionBoxData();	// 当たり判定ボックスデータ設定
 	
 

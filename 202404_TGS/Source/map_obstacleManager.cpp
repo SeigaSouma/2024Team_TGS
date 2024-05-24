@@ -102,7 +102,8 @@ void CMap_ObstacleManager::Uninit()
 //==========================================================================
 void CMap_ObstacleManager::Kill()
 {
-	
+	delete m_ThisPtr;
+	m_ThisPtr = nullptr;
 }
 
 //==========================================================================
@@ -123,7 +124,7 @@ void CMap_ObstacleManager::Save()
 	CListManager<CMap_Obstacle> list = CMap_Obstacle::GetListObj();
 
 	// 先頭を保存
-	std::list<CMap_Obstacle*>::iterator itr = list.GetBegin();
+	std::list<CMap_Obstacle*>::iterator itr = list.GetEnd();
 	CMap_Obstacle* pObj = nullptr;
 
 	// ファイルを開く
@@ -150,7 +151,7 @@ void CMap_ObstacleManager::Save()
 	File << TEXT_LINE << std::endl;
 	File << " モデルの配置" << std::endl;
 	File << TEXT_LINE << std::endl;
-	while (list.ListLoop(&itr))
+	while (list.ListLoop(itr))
 	{
 		pObj = (*itr);
 
@@ -165,8 +166,8 @@ void CMap_ObstacleManager::Save()
 		// モデル情報
 		File << "MODELSET" << std::endl;
 		File << "\tTYPE = " << type << std::endl;
-		File << "\tPOS = " << pos.x << pos.y << pos.z << std::endl;
-		File << "\tROT = " << rot.x << rot.y << rot.z << std::endl;
+		File << "\tPOS = " << std::fixed << std::setprecision(2) << pos.x << " " << pos.y << " " << pos.z << std::endl;
+		File << "\tROT = " << std::fixed << std::setprecision(2) << rot.x << " " << rot.y << " " << rot.z << std::endl;
 		File << "END_MODELSET" << std::endl;
 		File << "" << std::endl;
 	}

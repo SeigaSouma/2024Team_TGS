@@ -26,6 +26,7 @@ class CLimitArea;
 class CPlayer;
 class CEnemyBase;
 class CEdit;
+class CMap_ObstacleManager;
 
 //==========================================================================
 // クラス定義
@@ -95,6 +96,7 @@ protected:
 	CEnemyManager *m_pEnemyManager;			// 敵マネージャのオブジェクト
 	CEnemyBase *m_pEnemyBase;				// 敵の拠点
 	CEdit* m_pEdit;							// エディター
+	CMap_ObstacleManager* m_pObstacleManager;	// 障害物マネージャ
 	bool m_bEdit;				// エディットの判定
 	bool m_clear; // クリア判定
 	float m_fMaxRokOnDistance;			// ロックオンの最大距離

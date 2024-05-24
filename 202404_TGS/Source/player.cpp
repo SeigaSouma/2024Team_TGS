@@ -1230,6 +1230,17 @@ bool CPlayer::Collision(MyLib::Vector3 &pos, MyLib::Vector3 &move)
 		}
 	}
 
+	if (pos.y <= 0.0f)
+	{
+		pos.y = 0.0f;
+
+		// ジャンプ使用可能にする
+		m_bJump = false;
+		move.y = 0.0f;
+		bNowLand = true;
+		m_sMotionFrag.bJump = false;
+	}
+
 	// リストループ
 	CListManager<CEnemy> enemyList = CEnemy::GetListObj();
 	CEnemy* pEnemy = nullptr;

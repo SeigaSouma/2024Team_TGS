@@ -61,7 +61,7 @@ CHandle::STATE_FUNC CHandle::m_StateFunc[] =
 //==========================================================================
 // コンストラクタ
 //==========================================================================
-CHandle::CHandle(int nPriority) : CObject(nPriority)
+CHandle::CHandle(int nPriority, const LAYER layer) : CObject(nPriority, layer)
 {
 	// 値のクリア
 	memset(m_pArrow, 0, sizeof(m_pArrow));

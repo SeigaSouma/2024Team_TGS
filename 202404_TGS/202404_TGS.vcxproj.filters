@@ -383,9 +383,6 @@
     <ClCompile Include="Source\debugproc.cpp">
       <Filter>system</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Imguimanager.cpp">
-      <Filter>edit</Filter>
-    </ClCompile>
     <ClCompile Include="Source\impactwave.cpp">
       <Filter>mesh</Filter>
     </ClCompile>
@@ -460,6 +457,9 @@
     </ClCompile>
     <ClCompile Include="Source\edit_obstacle.cpp">
       <Filter>edit</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Imguimanager.cpp">
+      <Filter>Imgui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -766,9 +766,6 @@
     <ClInclude Include="Source\debugproc.h">
       <Filter>system</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Imguimanager.h">
-      <Filter>edit</Filter>
-    </ClInclude>
     <ClInclude Include="Source\impactwave.h">
       <Filter>mesh</Filter>
     </ClInclude>
@@ -849,6 +846,9 @@
     </ClInclude>
     <ClInclude Include="Source\edit_obstacle.h">
       <Filter>edit</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Imguimanager.h">
+      <Filter>Imgui</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
