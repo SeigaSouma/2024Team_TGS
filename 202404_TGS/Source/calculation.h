@@ -2566,6 +2566,24 @@ namespace UtilFunc	// 便利関数
 			return str;
 		}
 
+		/**
+		@brief	ファイルパスを消す
+		@param	filePath	[in]	文字列
+		@return	変換されたstring文字
+		*/
+		inline std::string RemoveFilePath(const std::string& filePath)
+		{
+			// 最後のスラッシュまたはバックスラッシュを見つける
+			size_t pos = filePath.find_last_of("/\\");
+
+			if (pos != std::string::npos) 
+			{
+				// 見つかった位置の次の文字から最後までを取得
+				return filePath.substr(pos + 1);
+			}
+
+			return filePath;
+		}
 	}
 
 }

@@ -193,17 +193,6 @@ void CEdit_Map::Update()
 	// ÄˆÚ“®’†
 	Remove();
 
-
-	// æ“ª‚ğ•Û‘¶
-	std::list<CObjectX*>::iterator itr = m_List.GetBegin();
-	CObjectX* pObj = nullptr;
-
-	while (m_List.ListLoop(&itr))
-	{
-		pObj = (*itr);
-
-		pObj->GetPosition();
-	}
 #endif
 }
 
@@ -303,7 +292,10 @@ void CEdit_Map::SetObjectButton()
 				m_DragData.nType = m_nModelIdx[i];
 
 				ImGui::SetDragDropPayload("MY_COORDINATE_TYPE", &dragData, sizeof(SDragDropData));
-				ImGui::Text(m_ModelFile[i].c_str());
+
+				std::string file = UtilFunc::Transformation::RemoveFilePath(m_ModelFile[i]);
+				ImGui::Text(file.c_str());
+
 				ImGui::EndDragDropSource();
 			}
 
