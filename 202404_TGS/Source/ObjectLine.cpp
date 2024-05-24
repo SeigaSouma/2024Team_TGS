@@ -12,7 +12,7 @@
 //==========================================================================
 // コンストラクタ
 //==========================================================================
-CObjectLine::CObjectLine(int nPriority) : CObject(nPriority)
+CObjectLine::CObjectLine(int nPriority, const LAYER layer) : CObject(nPriority, layer)
 {
 	m_Info = SLineInfo();
 	m_bZSort = false;				// Zソートのフラグ
