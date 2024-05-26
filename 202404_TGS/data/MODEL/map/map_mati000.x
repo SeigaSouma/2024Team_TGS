@@ -324,7 +324,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "TEXTURE\\ishigaki000.png";
+    "data\\TEXTURE\\map_object\\ishigaki000.png";
    }
   }
   Material {
@@ -333,7 +333,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "TEXTURE\\ishigaki000.png";
+    "data\\TEXTURE\\map_object\\ishigaki000.png";
    }
   }
   Material {

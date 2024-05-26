@@ -137,6 +137,10 @@ void CObjectLine::Draw()
 		pDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);	// 常に描画する
 	}
 
+
+	// 背面のカリングなし
+	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+
 	// 情報取得
 	MyLib::Vector3 pos = GetPosition();
 	MyLib::Vector3 rot = GetRotation();
@@ -174,6 +178,10 @@ void CObjectLine::Draw()
 	// Zテストを有効にする
 	pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
 	pDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+
+	// カリングのデフォルト
+	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+
 }
 
 //==========================================================================
