@@ -18,14 +18,14 @@ class CCollisionLine_Box : public CObject
 {
 public:
 
-	CCollisionLine_Box(int nPriority = 0);
+	CCollisionLine_Box(int nPriority = 3, const LAYER layer = LAYER::LAYER_LINE);
 	~CCollisionLine_Box();
 
 	//  オーバーライド関数
 	HRESULT Init() override;
 	void Uninit() override;
 	void Update() override;
-	void Draw() override {}
+	void Draw() override;
 	void SetPosition(const MyLib::Vector3& pos) override;	// 位置設定
 
 	void SetAABB(MyLib::AABB aabb);	// AAbB情報設定

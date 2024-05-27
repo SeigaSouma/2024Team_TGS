@@ -8,6 +8,7 @@
 #include "manager.h"
 #include "calculation.h"
 #include "game.h"
+#include "collisionLine_Box.h"
 
 //==========================================================================
 // 定数定義
@@ -75,6 +76,15 @@ HRESULT CMap_Obstacle::Init()
 		return E_FAIL;
 	}
 
+#if _DEBUG
+
+	for (const auto& box : m_ObstacleInfo.boxcolliders)
+	{
+		CCollisionLine_Box* pBox = CCollisionLine_Box::Create(MyLib::AABB(box.vtxMin, box.vtxMax), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));	// 当たり判定ボックス
+		m_pCollisionLineBox.push_back(pBox);
+	}
+#endif
+
 	return S_OK;
 }
 
@@ -83,6 +93,12 @@ HRESULT CMap_Obstacle::Init()
 //==========================================================================
 void CMap_Obstacle::Uninit()
 {
+	for (const auto& box : m_pCollisionLineBox)
+	{
+		box->Kill();
+	}
+	m_pCollisionLineBox.clear();
+
 	// リストから削除
 	m_List.Delete(this);
 
@@ -95,6 +111,12 @@ void CMap_Obstacle::Uninit()
 //==========================================================================
 void CMap_Obstacle::Kill()
 {
+	for (const auto& box : m_pCollisionLineBox)
+	{
+		box->Kill();
+	}
+	m_pCollisionLineBox.clear();
+
 	// リストから削除
 	m_List.Delete(this);
 
@@ -111,6 +133,15 @@ void CMap_Obstacle::Update()
 	{
 		collider.TransformOffset(GetWorldMtx());
 	}
+
+#if _DEBUG
+	int i = 0;
+	for (const auto& box : m_pCollisionLineBox)
+	{
+		box->SetPosition(m_ObstacleInfo.boxcolliders[i].worldmtx.GetWorldPosition());
+		i++;
+	}
+#endif
 }
 
 //==========================================================================

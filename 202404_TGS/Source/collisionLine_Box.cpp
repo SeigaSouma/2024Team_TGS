@@ -22,7 +22,7 @@ namespace
 //==========================================================================
 // コンストラクタ
 //==========================================================================
-CCollisionLine_Box::CCollisionLine_Box(int nPriority) : CObject(nPriority)
+CCollisionLine_Box::CCollisionLine_Box(int nPriority, const LAYER layer) : CObject(nPriority, layer)
 {
 	// 値のクリア
 	memset(m_pLine, 0, sizeof(m_pLine));
@@ -161,6 +161,17 @@ void CCollisionLine_Box::Update()
 		m_pLine[i]->SetPosition(pos);
 		m_pLine[i]->SetRotation(rot);
 		m_pLine[i]->SetEnableDisp(bDisp);
+	}
+}
+
+void CCollisionLine_Box::Draw()
+{
+	for (int i = 0; i < 12; ++i)
+	{
+		if (m_pLine[i] == nullptr) {
+			continue;
+		}
+		m_pLine[i]->Draw();
 	}
 }
 
