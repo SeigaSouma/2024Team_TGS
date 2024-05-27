@@ -208,20 +208,29 @@ void CBaggage::Draw()
 //==========================================================================
 void CBaggage::Hit()
 {
-	// リストループ
-	CListManager<CMap_Obstacle> sampleList = CMap_Obstacle::GetListObj();
+	// 障害物のリスト取得
+	CListManager<CMap_Obstacle> list = CMap_Obstacle::GetListObj();
+
+	// 先頭を保存
+	std::list<CMap_Obstacle*>::iterator itr = list.GetEnd();
 	CMap_Obstacle* pObj = nullptr;
 
 	MyLib::Vector3 MyPos = GetPosition();
-	while (sampleList.ListLoop(&pObj))
+	while (list.ListLoop(itr))
 	{
+		CMap_Obstacle* pObj = *itr;
 		MyLib::Vector3 ObjPos = pObj->GetPosition();
 
-		// pObjを使って処理
-		if (UtilFunc::Collision::SphereRange(MyPos, ObjPos, 100.0f, 100.0f).ishit) {
-			MyLib::Vector3 move = GetMove();
-			move *= -1.0f;
-			SetMove(move);
+		CMap_ObstacleManager::SObstacleInfo info = pObj->GetObstacleInfo();
+		for (const auto& collider : info.boxcolliders)
+		{
+			if (UtilFunc::Collision::IsAABBCollidingWithBox(GetAABB(), GetWorldMtx(), MyLib::AABB(collider.vtxMin, collider.vtxMax), collider.worldmtx))
+			{
+				MyLib::Vector3 move = GetMove();
+				move *= -1.0f;
+				SetMove(move);
+				return;
+			}
 		}
 	}
 }

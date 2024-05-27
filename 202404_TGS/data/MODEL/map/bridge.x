@@ -1209,7 +1209,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\wood-plank-wood-grain-texture-plank-wood-floor-background-3d-illustration_357568-4993.jpg";
+    "data\\TEXTURE\\map_object\\wood_01.png";
    }
   }
   Material {
@@ -1218,7 +1218,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\2024 êßçÏ\\wood-texture_00003.jpg";
+    "data\\TEXTURE\\map_object\\wood_01.png";
    }
   }
  }

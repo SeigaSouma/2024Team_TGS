@@ -15,7 +15,7 @@
 //==========================================================================
 namespace
 {
-	const float DISTANCE_OBJ = 500.0f;
+	const float DISTANCE_OBJ = 2000.0f;
 }
 
 //==========================================================================
@@ -844,7 +844,37 @@ void CEdit_Obstacle_Collider::MenuBar()
 	// 障害物マネージャ取得
 	CMap_ObstacleManager* pObstacleMgr = CMap_ObstacleManager::GetInstance();
 
+	
 
+
+	// コンボボックス
+	static const char* savetext[] = { "Save", "Save_as", "Load" };
+	static int saveselect = 0;
+	float width = 150.0f;
+
+	ImGui::SetNextItemWidth(width);
+	if (ImGui::Button("Save"))
+	{
+		pObstacleMgr->SaveInfo();
+	}
+	ImGui::SameLine();
+
+	ImGui::SetNextItemWidth(width);
+	if (ImGui::Button("Save_as"))
+	{
+		pObstacleMgr->SaveInfo();
+	}
+	ImGui::SameLine();
+
+	ImGui::SetNextItemWidth(width);
+	if (ImGui::Button("Load"))
+	{
+
+	}
+
+
+
+#if 0
 	// コンボボックス
 	static const char* items[] = { "Save", "Save_as", "Load" };
 	int select = 0;
@@ -906,6 +936,7 @@ void CEdit_Obstacle_Collider::MenuBar()
 			break;
 		}
 	}
+#endif
 
 #if 0
 	// 書き出し
