@@ -27,18 +27,24 @@ public:
 
 public:
 	// コンストラクタ
-	CKeyConfig() {}
+	CKeyConfig(Control type);
 
 	//=============================
 	// メンバ関数
 	//=============================
 	
 	// 静的メンバ関数
-	static CKeyConfig* GetKeyConfig(Control type) { return m_apKeyConfig[type]; }
-
+	static CKeyConfig* GetKeyConfig(Control type);
+	static void Release();
+	virtual void Uninit() = 0;
+	virtual bool GetPress(const int type) = 0;
+	virtual bool GetTrigger(const int type) = 0;
+	virtual bool GetRelease(const int type) = 0;
+	virtual bool GetRepeat(const int type) = 0;
 
 private:
 
+	// 静的メンバ変数
 	static CKeyConfig* m_apKeyConfig[CKeyConfig::Control::CONTROL_MAX];	// 情報格納場所
 };
 

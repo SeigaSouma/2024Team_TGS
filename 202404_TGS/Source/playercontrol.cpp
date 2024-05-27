@@ -12,6 +12,7 @@
 #include "enemy.h"
 #include "game.h"
 #include "debugproc.h"
+#include "keyconfig_gamepad.h"
 
 namespace
 {
@@ -297,12 +298,14 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	// インプット情報取得
 	CInputKeyboard* pInputKeyboard = CInputKeyboard::GetInstance();
 	CInputGamepad* pInputGamepad = CInputGamepad::GetInstance();
+	CkeyConfigPad* pConfigPad = new CkeyConfigPad(CKeyConfig::CONTROL_INPAD);
+	pConfigPad->Join(0, CInputGamepad::BUTTON_A);
 
 	CGameManager* pGameMgr = CGame::GetInstance()->GetGameManager();
 
 	if (pGameMgr->GetType() == CGameManager::SceneType::SCENE_WAIT_AIRPUSH &&
 		(CInputKeyboard::GetInstance()->GetTrigger(DIK_RETURN) ||
-			CInputGamepad::GetInstance()->GetTrigger(CInputGamepad::BUTTON::BUTTON_A, 0)))
+			pConfigPad->GetTrigger(0)))
 	{// 空気送り待ちで空気発射
 
 		// メインに移行
@@ -406,7 +409,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 
 
 	if (CInputKeyboard::GetInstance()->GetPress(DIK_RETURN) ||
-		CInputGamepad::GetInstance()->GetPress(CInputGamepad::BUTTON::BUTTON_A, 0))
+		pConfigPad->GetPress(0))
 	{
 		if (fall) {
 			fall = false;
@@ -486,6 +489,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 			, *m_BressHandle);
 	}
 
+	CKeyConfig::Release();
 }
 
 //==========================================================================
