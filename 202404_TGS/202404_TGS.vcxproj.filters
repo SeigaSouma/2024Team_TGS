@@ -81,6 +81,9 @@
     <Filter Include="map">
       <UniqueIdentifier>{16fc8c4d-80db-41aa-b4a0-e8ed95d5486c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="keyconfig">
+      <UniqueIdentifier>{798ed9c4-d084-4216-885c-c23d994aee58}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\ballast.cpp">
@@ -460,6 +463,12 @@
     </ClCompile>
     <ClCompile Include="Source\Imguimanager.cpp">
       <Filter>Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\keyconfig.cpp">
+      <Filter>keyconfig</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\keyconfig_gamepad.cpp">
+      <Filter>keyconfig</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -849,6 +858,12 @@
     </ClInclude>
     <ClInclude Include="Source\Imguimanager.h">
       <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\keyconfig.h">
+      <Filter>keyconfig</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\keyconfig_gamepad.h">
+      <Filter>keyconfig</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
