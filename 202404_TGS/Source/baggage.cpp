@@ -90,6 +90,7 @@ HRESULT CBaggage::Init()
 	m_fWeight = 1.8f;
 
 	CreateCollisionBox();
+	SetState(CObjectX::STATE::STATE_EDIT);
 
 	return S_OK;
 }
@@ -128,6 +129,8 @@ void CBaggage::Update()
 	}
 
 	CObjectX::Update();
+
+	Hit();	// áŠQ•¨‚Æ‚ÌÕ“Ë”»’è
 
 	// î•ñæ“¾
 	MyLib::Vector3 posOrigin = GetOriginPosition();
@@ -171,7 +174,6 @@ void CBaggage::Update()
 	SetRotation(rot);
 	SetMove(move);
 
-	Hit();	// áŠQ•¨‚Æ‚ÌÕ“Ë”»’è
 
 }
 
