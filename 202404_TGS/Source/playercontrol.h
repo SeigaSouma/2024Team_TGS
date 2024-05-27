@@ -48,6 +48,11 @@ public:
 	virtual void Action(CPlayer* player, CBaggage* pBaggage);	// アクション
 
 private:
+
+	// メンバ関数
+	bool CollisionObstacle(CPlayer* player, CBaggage* pBaggage);	// 障害物判定
+
+	// メンバ変数
 	Effekseer::Handle* m_BressHandle = nullptr;
 	CDebugBressRange* m_pBressRange = nullptr;
 	CDebugBressRange* m_pBressHeight = nullptr;

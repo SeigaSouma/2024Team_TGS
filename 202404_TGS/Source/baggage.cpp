@@ -130,7 +130,8 @@ void CBaggage::Update()
 
 	CObjectX::Update();
 
-	Hit();	// áŠQ•¨‚Æ‚ÌÕ“Ë”»’è
+	// áŠQ•¨‚Æ‚ÌÕ“Ë”»’è
+	Hit();
 
 	// î•ñæ“¾
 	MyLib::Vector3 posOrigin = GetOriginPosition();

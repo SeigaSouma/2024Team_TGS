@@ -15,7 +15,7 @@ MODEL_FILENAME = data/MODEL/map/bridge.x
  ƒ‚ƒfƒ‹î•ñ
 #------------------------------------------------------------------------------
 SETUP
-	IS_AIR = 0		# ‹ó‹C‚ð’Ê‚·‚©[0:’Ê‚³‚È‚¢ / 1:’Ê‚·]
+	IS_AIR = 1		# ‹ó‹C‚ð’Ê‚·‚©[0:’Ê‚³‚È‚¢ / 1:’Ê‚·]
 	IS_MOVE = 0		# “®‚«‚ðŽ‚½‚¹‚é‚©[0:“®‚­ / 1:“®‚©‚È‚¢]
 END_SETUP
 
