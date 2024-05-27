@@ -24,7 +24,7 @@ namespace
 CEdit_Obstacle::CEdit_Obstacle()
 {
 	// 値のクリア
-	m_editType = EditType::TYPE_COLLIDER;
+	m_editType = EditType::TYPE_ARRANGMENT;
 	m_pEditControl = nullptr;	// 種類操作
 }
 
@@ -42,7 +42,7 @@ CEdit_Obstacle::~CEdit_Obstacle()
 HRESULT CEdit_Obstacle::Init()
 {
 	// 操作変更
-	ChangeMode(EditType::TYPE_COLLIDER);
+	ChangeMode(m_editType);
 	return S_OK;
 }
 
@@ -83,6 +83,7 @@ void CEdit_Obstacle::ChangeMode(EditType type)
 {
 	if (m_pEditControl != nullptr)
 	{
+		m_pEditControl->DeleteBoxLine();
 		m_pEditControl->Uninit();
 		m_pEditControl = nullptr;
 	}
@@ -698,7 +699,7 @@ void CEdit_Obstacle_Collider::Init()
 	CMap_ObstacleManager* pObstacleMgr = CMap_ObstacleManager::GetInstance();
 	std::vector<CMap_ObstacleManager::SObstacleInfo> vecInfo = pObstacleMgr->GetObstacleInfo();
 
-	MyLib::Vector3 pos = MyLib::Vector3(0.0f, 1000.0f, 0.0f);
+	MyLib::Vector3 pos = MyLib::Vector3(0.0f, 5000.0f, 0.0f);
 	for (const auto& info : vecInfo)
 	{
 		CObjectX* pObj = CObjectX::Create(info.modelFile, pos);
@@ -812,28 +813,28 @@ void CEdit_Obstacle_Collider::Update()
 	CCamera* pCamera = CManager::GetInstance()->GetCamera();
 	pCamera->SetTargetPosition(m_pObjX[m_nEditIdx]->GetPosition());
 
-	for (int i = 0; i < 4; i++)
-	{
-		CEffect3D* pEffect = CEffect3D::Create(
-			m_pObjX[m_nEditIdx]->GetPosition(),
-			MyLib::Vector3(0.0f, 0.0f, 0.0f),
-			D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f),
-			20.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE::TYPE_BLACK);
-		pEffect->SetDisableZSort();
-	}
+	//for (int i = 0; i < 4; i++)
+	//{
+	//	CEffect3D* pEffect = CEffect3D::Create(
+	//		m_pObjX[m_nEditIdx]->GetPosition(),
+	//		MyLib::Vector3(0.0f, 0.0f, 0.0f),
+	//		D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f),
+	//		20.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE::TYPE_BLACK);
+	//	pEffect->SetDisableZSort();
+	//}
 
 	// 障害物マネージャ取得
 	CMap_ObstacleManager* pObstacleMgr = CMap_ObstacleManager::GetInstance();
 	CMap_ObstacleManager::SObstacleInfo info = pObstacleMgr->GetObstacleInfo(m_nEditIdx);
 
-	for (int i = 0; i < static_cast<int>(info.boxcolliders.size()); i++)
-	{
-		// BOXコライダー
-		MyLib::Collider_BOX collider = info.boxcolliders[i];
+	//for (int i = 0; i < static_cast<int>(info.boxcolliders.size()); i++)
+	//{
+	//	// BOXコライダー
+	//	MyLib::Collider_BOX collider = info.boxcolliders[i];
 
-		collider.TransformOffset(m_pObjX[m_nEditIdx]->GetWorldMtx());
-		m_pCollisionLineBox[i]->SetPosition(collider.GetMtx().GetWorldPosition());
-	}
+	//	collider.TransformOffset(m_pObjX[m_nEditIdx]->GetWorldMtx());
+	//	m_pCollisionLineBox[i]->SetPosition(collider.GetMtx().GetWorldPosition());
+	//}
 }
 
 //==========================================================================
