@@ -138,8 +138,6 @@ void CObjectLine::Draw()
 	}
 
 
-	// 背面のカリングなし
-	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
 	// 情報取得
 	MyLib::Vector3 pos = GetPosition();
@@ -179,8 +177,6 @@ void CObjectLine::Draw()
 	pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
 	pDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 
-	// カリングのデフォルト
-	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 
 }
 

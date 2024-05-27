@@ -83,6 +83,7 @@ void CEdit_Obstacle::ChangeMode(EditType type)
 {
 	if (m_pEditControl != nullptr)
 	{
+		m_pEditControl->DeleteBoxLine();
 		m_pEditControl->Uninit();
 		m_pEditControl = nullptr;
 	}
@@ -698,7 +699,7 @@ void CEdit_Obstacle_Collider::Init()
 	CMap_ObstacleManager* pObstacleMgr = CMap_ObstacleManager::GetInstance();
 	std::vector<CMap_ObstacleManager::SObstacleInfo> vecInfo = pObstacleMgr->GetObstacleInfo();
 
-	MyLib::Vector3 pos = MyLib::Vector3(0.0f, 1000.0f, 0.0f);
+	MyLib::Vector3 pos = MyLib::Vector3(0.0f, 5000.0f, 0.0f);
 	for (const auto& info : vecInfo)
 	{
 		CObjectX* pObj = CObjectX::Create(info.modelFile, pos);
@@ -812,15 +813,15 @@ void CEdit_Obstacle_Collider::Update()
 	CCamera* pCamera = CManager::GetInstance()->GetCamera();
 	pCamera->SetTargetPosition(m_pObjX[m_nEditIdx]->GetPosition());
 
-	for (int i = 0; i < 4; i++)
-	{
-		CEffect3D* pEffect = CEffect3D::Create(
-			m_pObjX[m_nEditIdx]->GetPosition(),
-			MyLib::Vector3(0.0f, 0.0f, 0.0f),
-			D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f),
-			20.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE::TYPE_BLACK);
-		pEffect->SetDisableZSort();
-	}
+	//for (int i = 0; i < 4; i++)
+	//{
+	//	CEffect3D* pEffect = CEffect3D::Create(
+	//		m_pObjX[m_nEditIdx]->GetPosition(),
+	//		MyLib::Vector3(0.0f, 0.0f, 0.0f),
+	//		D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f),
+	//		20.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE::TYPE_BLACK);
+	//	pEffect->SetDisableZSort();
+	//}
 
 	// 障害物マネージャ取得
 	CMap_ObstacleManager* pObstacleMgr = CMap_ObstacleManager::GetInstance();

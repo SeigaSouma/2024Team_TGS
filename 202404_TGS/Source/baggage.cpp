@@ -89,6 +89,8 @@ HRESULT CBaggage::Init()
 	// パラメータ設定
 	m_fWeight = 1.8f;
 
+	CreateCollisionBox();
+
 	return S_OK;
 }
 
@@ -125,6 +127,7 @@ void CBaggage::Update()
 		return;
 	}
 
+	CObjectX::Update();
 
 	// 情報取得
 	MyLib::Vector3 posOrigin = GetOriginPosition();
@@ -168,9 +171,6 @@ void CBaggage::Update()
 	SetRotation(rot);
 	SetMove(move);
 
-
-	// 限界高度
-	(posOrigin.y + LIMIT_HEIGHT);
 	Hit();	// 障害物との衝突判定
 
 }
@@ -227,7 +227,7 @@ void CBaggage::Hit()
 			if (UtilFunc::Collision::IsAABBCollidingWithBox(GetAABB(), GetWorldMtx(), MyLib::AABB(collider.vtxMin, collider.vtxMax), collider.worldmtx))
 			{
 				MyLib::Vector3 move = GetMove();
-				move *= -1.0f;
+				move.y *= -1.0f;
 				SetMove(move);
 				return;
 			}
