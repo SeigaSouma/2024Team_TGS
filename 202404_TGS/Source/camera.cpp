@@ -13,7 +13,6 @@
 #include "calculation.h"
 #include "player.h"
 #include "elevation.h"
-#include "enemymanager.h"
 #include "title.h"
 #include "instantfade.h"
 #include "light.h"
