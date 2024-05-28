@@ -17,18 +17,14 @@
 
 #include "input.h"
 #include "player.h"
-#include "enemy.h"
 #include "score.h"
 #include "timer.h"
 #include "map.h"
 #include "elevation.h"
 #include "sound.h"
-#include "edit_enemybase.h"
 #include "stage.h"
 
-#include "enemymanager.h"
 #include "player.h"
-#include "enemybase.h"
 #include "limitarea.h"
 #include "particle.h"
 #include "myeffekseer.h"
@@ -55,12 +51,9 @@ CGame::CGame()
 	m_pScore = nullptr;				// スコアのオブジェクト
 	m_pTimer = nullptr;				// タイマーのオブジェクト
 	m_pLimitArea = nullptr;			// エリア制限のオブジェクト
-	m_pEditEnemyBase = nullptr;		// 敵の拠点エディター
 	m_pStage = nullptr;				// ステージのオブジェクト
 	m_pGameManager = nullptr;		// ゲームマネージャのオブジェクト
 	m_EditType = EDITTYPE_OFF;		// エディットの種類
-	m_pEnemyBase = nullptr;			// 敵の拠点
-	m_pEnemyManager = nullptr;		// 敵マネージャのオブジェクト
 	m_bEdit = false;				// エディットの判定
 	m_clear = false;				// クリア判定
 	m_fMaxRokOnDistance = 0.0f;		// ロックオンの最大距離
@@ -240,14 +233,6 @@ void CGame::Uninit()
 		m_pTimer = nullptr;
 	}
 
-	if (m_pEditEnemyBase != nullptr)
-	{
-		// 終了させる
-		m_pEditEnemyBase->Uninit();
-		delete m_pEditEnemyBase;
-		m_pEditEnemyBase = nullptr;
-	}
-
 	// ステージの破棄
 	if (m_pStage != nullptr)
 	{// メモリの確保が出来ていたら
@@ -266,21 +251,6 @@ void CGame::Uninit()
 		m_pGameManager = nullptr;
 	}
 
-	// 敵マネージャ
-	if (m_pEnemyManager != nullptr)
-	{
-		m_pEnemyManager->Uninit();
-		delete m_pEnemyManager;
-		m_pEnemyManager = nullptr;
-	}
-
-	// 敵の拠点
-	if (m_pEnemyBase != nullptr)
-	{
-		m_pEnemyBase->Uninit();
-		delete m_pEnemyBase;
-		m_pEnemyBase = nullptr;
-	}
 
 	// 障害物マネージャ
 	if (m_pObstacleManager != nullptr)
@@ -318,8 +288,7 @@ void CGame::Update()
 	CInputGamepad *pInputGamepad = CInputGamepad::GetInstance();
 
 	if (m_pScore != nullptr &&
-		CManager::GetInstance()->GetEdit() == nullptr &&
-		m_pEnemyManager != nullptr)
+		CManager::GetInstance()->GetEdit() == nullptr)
 	{
 		// スコアの更新処理
 		m_pScore->Update();
@@ -349,34 +318,10 @@ void CGame::Update()
 			m_bEdit = false;
 			break;
 
-		case EDITTYPE_ENEMYBASE:
-			if (m_pEditEnemyBase == nullptr)
-			{// nullptrだったら
-
-				// エディットの生成処理
-				m_pEditEnemyBase = CEditEnemyBase::Create();
-			}
-			break;
-
 		}
 	}
 #endif
 
-	if (GetEnemyManager() != nullptr)
-	{// 敵マネージャの更新処理
-		GetEnemyManager()->Update();
-	}
-
-	if (m_pEditEnemyBase != nullptr)
-	{// 敵の拠点エディターの更新処理
-		m_pEditEnemyBase->Update();
-	}
-
-	// 敵の拠点
-	if (m_pEnemyBase != nullptr)
-	{
-		m_pEnemyBase->Update();
-	}
 
 	// ステージの更新
 	if (m_pStage != nullptr)
@@ -533,22 +478,6 @@ CGameManager *CGame::GetGameManager()
 }
 
 //==========================================================================
-// 敵マネージャの取得
-//==========================================================================
-CEnemyManager *CGame::GetEnemyManager()
-{
-	return m_pEnemyManager;
-}
-
-//==========================================================================
-// 敵の拠点
-//==========================================================================
-CEnemyBase *CGame::GetEnemyBase()
-{
-	return m_pEnemyBase;
-}
-
-//==========================================================================
 // リセット処理
 //==========================================================================
 void CGame::ResetBeforeBoss()
@@ -600,16 +529,6 @@ void CGame::ResetBeforeBoss()
 //==========================================================================
 void CGame::EditReset()
 {
-	
-	if (m_pEditEnemyBase != nullptr)
-	{
-		// 終了させる
-		m_pEditEnemyBase->Release();
-		m_pEditEnemyBase->Uninit();
-		delete m_pEditEnemyBase;
-		m_pEditEnemyBase = nullptr;
-	}
-
 	if (m_pEdit != nullptr)
 	{
 		m_pEdit->Uninit();

@@ -9,8 +9,6 @@
 #include "texture.h"
 #include "manager.h"
 #include "game.h"
-#include "enemy.h"
-#include "enemymanager.h"
 #include "player.h"
 #include "calculation.h"
 
@@ -206,31 +204,7 @@ void CCollisionObject::Update()
 void CCollisionObject::CollisionEnemy()
 {
 	
-	// 位置取得
-	MyLib::Vector3 pos = GetPosition();
-
-	// 敵のリスト取得
-	CListManager<CEnemy> enemyList = CEnemy::GetListObj();
-	CEnemy* pEnemy = nullptr;
-
-	// リストループ
-	while (enemyList.ListLoop(&pEnemy))
-	{
-		// 敵の位置取得
-		MyLib::Vector3 TargetPos = pEnemy->GetPosition();
-
-		// 判定サイズ取得
-		float fTargetRadius = pEnemy->GetRadius();
-
-		if (UtilFunc::Collision::SphereRange(pos, TargetPos, m_fRadius, fTargetRadius).ishit)
-		{// 球の判定
-
-			if (pEnemy->Hit(m_nDamage, pos))
-			{// 当たってたら
-
-			}
-		}
-	}
+	
 }
 
 //==========================================================================
