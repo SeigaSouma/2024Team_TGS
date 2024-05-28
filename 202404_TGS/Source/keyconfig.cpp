@@ -7,25 +7,35 @@
 #include "keyconfig.h"
 
 //==========================================================================
-// 静的メンバ変数
+// 静的メンバ変数宣言
 //==========================================================================
-CKeyConfig* CKeyConfig::m_apKeyConfig[CKeyConfig::Control::CONTROL_MAX] = {};
+CKeyConfigManager* CKeyConfigManager::m_pInstance = nullptr;
 
 //==========================================================================
 // コンストラクタ
 //==========================================================================
-CKeyConfig::CKeyConfig(Control type)
+CKeyConfigManager::CKeyConfigManager()
 {
-	if (type < CONTROL_MAX)	// 列挙範囲内
-	{
-		m_apKeyConfig[type] = this;
+	// 値のクリア
+	for (int i = 0; i < Control::CONTROL_MAX; i++) {
+		m_apKeyConfig[i] = nullptr;
 	}
 }
 
 //==========================================================================
-// 開放
+// インスタンス生成
 //==========================================================================
-void CKeyConfig::Release()
+CKeyConfigManager* CKeyConfigManager::Create()
+{
+	if (m_pInstance != nullptr) { return m_pInstance; }	// インスタンスが存在
+	m_pInstance = new CKeyConfigManager;
+	return m_pInstance;
+}
+
+//==========================================================================
+// 終了処理
+//==========================================================================
+void CKeyConfigManager::Uninit()
 {
 	for (int i = 0; i < CONTROL_MAX; i++)
 	{
@@ -36,4 +46,24 @@ void CKeyConfig::Release()
 		delete m_apKeyConfig[i];
 		m_apKeyConfig[i] = nullptr;
 	}
+
+	if (m_pInstance == nullptr) { return; }	// インスタンスが存在しない
+
+	// 終了処理
+	delete m_pInstance;
+	m_pInstance = nullptr;
+}
+
+//==========================================================================
+// 内部に登録
+//==========================================================================
+bool CKeyConfigManager::Bind(CKeyConfig* pConfig, const int type)
+{
+	// エラーチェック
+	if (type >= Control::CONTROL_MAX || type < Control::CONTROL_INPAD) { return false; }	// 範囲外
+	if (m_apKeyConfig[type] != nullptr) { return false; }	// すでに登録済み
+
+	m_apKeyConfig[type] = pConfig;	// 登録
+
+	return true;
 }
