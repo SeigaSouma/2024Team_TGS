@@ -182,13 +182,9 @@
     <ClCompile Include="Source\debug_bressrange.cpp" />
     <ClCompile Include="Source\edit.cpp" />
     <ClCompile Include="Source\edithandle.cpp" />
-    <ClCompile Include="Source\edit_enemybase.cpp" />
     <ClCompile Include="Source\edit_map.cpp" />
     <ClCompile Include="Source\edit_obstacle.cpp" />
     <ClCompile Include="Source\elevation.cpp" />
-    <ClCompile Include="Source\enemy.cpp" />
-    <ClCompile Include="Source\enemybase.cpp" />
-    <ClCompile Include="Source\enemymanager.cpp" />
     <ClCompile Include="Source\fade.cpp" />
     <ClCompile Include="Source\fog.cpp" />
     <ClCompile Include="Source\game.cpp" />
@@ -320,13 +316,9 @@
     <ClInclude Include="Source\debug_bressrange.h" />
     <ClInclude Include="Source\edit.h" />
     <ClInclude Include="Source\edithandle.h" />
-    <ClInclude Include="Source\edit_enemybase.h" />
     <ClInclude Include="Source\edit_map.h" />
     <ClInclude Include="Source\edit_obstacle.h" />
     <ClInclude Include="Source\elevation.h" />
-    <ClInclude Include="Source\enemy.h" />
-    <ClInclude Include="Source\enemybase.h" />
-    <ClInclude Include="Source\enemymanager.h" />
     <ClInclude Include="Source\fade.h" />
     <ClInclude Include="Source\fog.h" />
     <ClInclude Include="Source\game.h" />

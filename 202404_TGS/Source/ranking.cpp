@@ -11,7 +11,6 @@
 #include "calculation.h"
 #include "debugproc.h"
 #include "rankingscore.h"
-#include "enemymanager.h"
 
 //==========================================================================
 // Ã“Iƒƒ“ƒo•Ï”éŒ¾

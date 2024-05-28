@@ -10,12 +10,9 @@
 #include "manager.h"
 #include "renderer.h"
 #include "player.h"
-#include "enemy.h"
 #include "camera.h"
 #include "sound.h"
 #include "blackframe.h"
-#include "enemybase.h"
-#include "enemymanager.h"
 #include "stage.h"
 #include "map.h"
 #include "stagecleartext.h"
@@ -436,17 +433,6 @@ void CGameManager::SetEnemy()
 
 	// 種類設定
 	m_SceneType = SCENE_MAIN;
-
-	// 敵の再配置
-	CEnemyManager *pEnemyManager = CGame::GetInstance()->GetEnemyManager();
-	if (pEnemyManager != nullptr)
-	{
-		// 敵の再配置
-		pEnemyManager->SetStageEnemy();
-
-		// 変更中じゃなくする
-		pEnemyManager->SetEnableChangeStage(false);
-	}
 }
 
 //==========================================================================
