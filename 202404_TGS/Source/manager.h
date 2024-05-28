@@ -12,6 +12,7 @@
 #include "object.h"
 #include "scene.h"
 #include "sound.h"
+#include "MyEffekseer.h"
 
 #include "input_mouse.h"
 #include "input_keyboard.h"

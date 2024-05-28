@@ -11,7 +11,6 @@
 #include "debugproc.h"
 #include "renderer.h"
 #include "input.h"
-#include "enemy.h"
 #include "calculation.h"
 #include "Xload.h"
 #include "model.h"
@@ -321,14 +320,6 @@ void CPlayer::Kill()
 		pCamera->SetRockOn(0.0f, false);
 	}
 
-	// リストループ
-	CListManager<CEnemy> enemyList = CEnemy::GetListObj();
-	CEnemy* pEnemy = nullptr;
-	while (enemyList.ListLoop(&pEnemy))
-	{
-		pEnemy->SetEnableRockOn(false);
-	}
-
 }
 
 //==========================================================================
@@ -592,13 +583,7 @@ void CPlayer::Controll()
 			// ロックオン設定
 			CManager::GetInstance()->GetCamera()->SetRockOn(0.0f, false);
 
-			// リストループ
-			CListManager<CEnemy> enemyList = CEnemy::GetListObj();
-			CEnemy* pEnemy = nullptr;
-			while (enemyList.ListLoop(&pEnemy))
-			{
-				pEnemy->SetEnableRockOn(false);
-			}
+			
 		}
 		else
 		{
@@ -607,22 +592,7 @@ void CPlayer::Controll()
 		}
 	}
 
-	// リストループ
-	CListManager<CEnemy> enemyList = CEnemy::GetListObj();
-	CEnemy* pEnemy = nullptr;
-	while (enemyList.ListLoop(&pEnemy))
-	{
-		if (CGame::GetInstance()->GetRockOnDistance() <= UtilFunc::Calculation::GetPosLength3D(pos, pEnemy->GetPosition()))
-		{
-			if (pEnemy->IsRockOnAccept())
-			{
-				// ロックオン設定
-				CManager::GetInstance()->GetCamera()->SetRockOn(0.0f, false);
-			}
-
-			pEnemy->SetEnableRockOn(false);
-		}
-	}
+	
 
 	// デバッグ用
 #if _DEBUG
@@ -636,7 +606,7 @@ void CPlayer::Controll()
 		//CManager::GetInstance()->GetSound()->PlaySound(CSound::LABEL_SE_NORMALATK_HIT2);
 		CManager::GetInstance()->GetSound()->PlaySound(CSound::LABEL::LABEL_SE_COUNTER_TURN, false);
 
-		CPlayer::Hit(10000, CGameManager::AttackType::ATTACK_NORMAL);
+		CPlayer::Hit(10000);
 	}
 
 	static float fff = 1.0f;
@@ -827,52 +797,7 @@ void CPlayer::ResetFrag()
 //==========================================================================
 void CPlayer::RockOn()
 {
-	// カメラ取得
-	CCamera* pCamera = CManager::GetInstance()->GetCamera();
-
-	// 敵のリスト取得
-	CListManager<CEnemy> enemyList = CEnemy::GetListObj();
-	CEnemy* pEnemy = nullptr;
-
-	float fNearLen = CGame::GetInstance()->GetRockOnDistance();
-	int nMaxIdx = 0;
-	MyLib::Vector3 targetpos(0.0f);
-
-	// 位置取得
-	MyLib::Vector3 pos = GetPosition();
-
-	// リストループ
-	int i = 0;
-	MyLib::Vector3 enemypos(0.0f);
-	while (enemyList.ListLoop(&pEnemy))
-	{
-		// 敵の位置取得
-		enemypos = pEnemy->GetPosition();
-
-		if (pCamera->IsOnScreen(enemypos))
-		{
-			float len = UtilFunc::Calculation::GetPosLength3D(pos, enemypos);
-			if (fNearLen > len)
-			{
-				fNearLen = len;
-				nMaxIdx = i;
-			}
-		}
-
-		// インデックス加算
-		i++;
-	}
-
-	if (fNearLen < CGame::GetInstance()->GetRockOnDistance())
-	{// ロックオン距離内なら
-
-		// ロックオン設定
-		//pCamera->SetRockOn(enemyList.GetData(nMaxIdx)->GetPosition(), true);
-		enemyList.GetData(nMaxIdx)->SetEnableRockOn(true);
-
-		// インデックス番号設定
-		m_nIdxRockOn = nMaxIdx;
-	}
+	
 }
 
 //==========================================================================
@@ -880,64 +805,7 @@ void CPlayer::RockOn()
 //==========================================================================
 void CPlayer::SwitchRockOnTarget()
 {
-	// カメラ取得
-	CCamera* pCamera = CManager::GetInstance()->GetCamera();
-
-	// 位置取得
-	MyLib::Vector3 pos = GetPosition();
-
-	// ゲームパッド情報取得
-	CInputGamepad* pInputGamepad = CInputGamepad::GetInstance();
-
-	// 敵のリスト取得
-	CListManager<CEnemy> enemyList = CEnemy::GetListObj();
-	CEnemy* pEnemy = nullptr;
-
-	bool bSwitch = true;
-	if (pInputGamepad->GetRStickTrigger(CInputGamepad::STICK_X))
-	{// 左右どちらかに切り替え
-
-		bool bSwitch = true;
-
-		// リストループ
-		int i = 0, nMaxIdx = m_nIdxRockOn;
-		float fNearLen = CGame::GetInstance()->GetRockOnDistance();
-		pEnemy = nullptr;
-		MyLib::Vector3 enemypos(0.0f);
-		while (enemyList.ListLoop(&pEnemy))
-		{
-			// 敵の位置取得
-			enemypos = pEnemy->GetPosition();
-
-			if (pCamera->IsOnScreen(enemypos))
-			{
-				float len = UtilFunc::Calculation::GetPosLength3D(pos, enemypos);
-				if (fNearLen > len &&
-					m_nIdxRockOn != i)
-				{
-					fNearLen = len;
-					nMaxIdx = i;
-				}
-			}
-
-			// インデックス加算
-			i++;
-		}
-
-		if (enemyList.GetData(m_nIdxRockOn) != nullptr)
-		{
-			// 今までロックオンしてた対象リセット
-			enemyList.GetData(m_nIdxRockOn)->SetEnableRockOn(false);
-		}
-
-		// ロックオン設定
-		CEnemy* pSetEnemy = enemyList.GetData(nMaxIdx);
-		//CManager::GetInstance()->GetCamera()->SetRockOn(pSetEnemy->GetPosition(), true);
-		pSetEnemy->SetEnableRockOn(true);
-
-		// インデックス番号設定
-		m_nIdxRockOn = nMaxIdx;
-	}
+	
 }
 
 //==========================================================================
@@ -1014,54 +882,7 @@ void CPlayer::AttackInDicision(CMotion::AttackInfo* pATKInfo, int nCntATK)
 		return;
 	}
 
-	// 敵のリスト取得
-	CListManager<CEnemy> enemyList = CEnemy::GetListObj();
-	CEnemy* pEnemy = nullptr;
-
-	// リストループ
-	while (enemyList.ListLoop(&pEnemy))
-	{
-		// コライダーの数繰り返し
-		std::vector<SphereCollider> colliders = pEnemy->GetSphereColliders();
-		for (const auto& collider : colliders)
-		{
-			MyLib::HitResult hitresult = UtilFunc::Collision::SphereRange(weponpos, collider.center, pATKInfo->fRangeSize, collider.radius);
-			if (hitresult.ishit)
-			{// 球の判定
-
-				int damage = static_cast<int>(static_cast<float>(pATKInfo->nDamage) * m_PlayerStatus.attackMultiply);
-
-				
-
-				if (pEnemy->Hit(damage, GetPosition()))
-				{// 当たってたら
-
-					pATKInfo->bEndAtk = true;
-
-					// 位置
-					MyLib::Vector3 pos = GetPosition();
-					MyLib::Vector3 enemypos = pEnemy->GetPosition();
-
-					if (!pEnemy->IsActiveSuperArmor())
-					{
-						// ターゲットと敵との向き
-						float fRot = enemypos.AngleXZ(pos);
-						UtilFunc::Transformation::RotNormalize(fRot);
-
-						pEnemy->SetMove(MyLib::Vector3(sinf(fRot) * 8.0f, 0.0f, cosf(fRot) * 8.0f));
-					}
-
-
-					// ダメージ表記
-					enemypos.y += pEnemy->GetHeight() * 0.5f;
-					enemypos += UtilFunc::Transformation::GetRandomPositionSphere(enemypos, collider.radius * 0.5f);
-
-					
-					break;
-				}
-			}
-		}
-	}
+	
 }
 
 //==========================================================================
@@ -1241,29 +1062,7 @@ bool CPlayer::Collision(MyLib::Vector3 &pos, MyLib::Vector3 &move)
 		m_sMotionFrag.bJump = false;
 	}
 
-	// リストループ
-	CListManager<CEnemy> enemyList = CEnemy::GetListObj();
-	CEnemy* pEnemy = nullptr;
-	MyLib::Vector3 enemypos;
-	float radius = GetRadius();
-	float enemyradius = 0.0f;
-
-	while (enemyList.ListLoop(&pEnemy))
-	{
-		enemypos = pEnemy->GetCenterPosition();
-		enemyradius = pEnemy->GetRadius();
-		enemyradius *= 0.5f;
-
-		if (UtilFunc::Collision::CircleRange3D(pos, enemypos, radius, enemyradius))
-		{
-			// ターゲットと敵との向き
-			float fRot = atan2f((pos.x - enemypos.x), (pos.z - enemypos.z));
-			float totalradius = radius + enemyradius;
-
-			pos.x = enemypos.x + sinf(fRot) * totalradius;
-			pos.z = enemypos.z + cosf(fRot) * totalradius;
-		}
-	}
+	
 
 	// 向き設定
 	SetRotation(rot);
@@ -1312,163 +1111,38 @@ void CPlayer::CollisionMapObject()
 //==========================================================================
 // ヒット処理
 //==========================================================================
-MyLib::HitResult_Character CPlayer::Hit(const int nValue, CGameManager::AttackType atkType)
+MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 {
-	MyLib::HitResult_Character hitresult = {};
-
-	CCamera* pCamera = CManager::GetInstance()->GetCamera();
-
-	
-	
-	// 共通のヒット処理
-	hitresult = ProcessHit(nValue, 0.0f);
-
-	// 当たった判定を返す
-	return hitresult;
-}
-
-//==========================================================================
-// ヒット処理
-//==========================================================================
-MyLib::HitResult_Character CPlayer::Hit(const int nValue, CEnemy* pEnemy, CGameManager::AttackType atkType)
-{
-
-	MyLib::HitResult_Character hitresult = {};
-
-
-	// 共通のヒット処理
-	hitresult = ProcessHit(nValue, pEnemy->GetPosition());
-
-	return hitresult;
-}
-
-//==========================================================================
-// 共通のヒット処理
-//==========================================================================
-MyLib::HitResult_Character CPlayer::ProcessHit(const int nValue, const MyLib::Vector3& hitpos)
-{
-
 	MyLib::HitResult_Character hitresult = {};
 
 	// 体力取得
 	int nLife = GetLife();
 
+	// 振動
 	CCamera* pCamera = CManager::GetInstance()->GetCamera();
+	pCamera->SetShake(8, 18.0f, 0.0f);
 
-	if (!m_sDamageInfo.bReceived)
-	{// ダメージ受付中のみ
-		return hitresult;
+	nLife--;
+
+	UtilFunc::Transformation::Clamp(nLife, 0, GetLifeOrigin());
+
+	// 体力設定
+	SetLife(nLife);
+
+	if (nLife <= 0)
+	{// 体力がなくなったら
+
+		// ノックバック状態にする
+		m_state = STATE_KNOCKBACK;
+
 	}
 
-	if (m_state == STATE_COUNTER ||
-		m_state == STATE_AVOID)
-	{// ダメージ受けない状態
-		return hitresult;
-	}
+	// 過去の状態保存
+	m_Oldstate = m_state;
 
-	if (m_state != STATE_DMG &&
-		m_state != STATE_KNOCKBACK &&
-		m_state != STATE_INVINCIBLE &&
-		m_state != STATE_DEAD &&
-		m_state != STATE_DEADWAIT &&
-		m_state != STATE_RESPAWN &&
-		m_state != STATE_FADEOUT)
-	{// ダメージ受付状態の時
+	
 
-		// 当たった
-		hitresult.ishit = true;
-		hitresult.isdamage = true;
-
-		// 体力減らす
-		nLife -= nValue;
-
-		// ダッシュ判定OFF
-		m_bDash = false;
-
-		// ゲームパッド情報取得
-		CInputGamepad* pInputGamepad = CInputGamepad::GetInstance();
-		pInputGamepad->SetVibration(CInputGamepad::VIBRATION_STATE_DMG, 0);
-
-		// ノックバックする時
-		//m_KnokBackMove.y += 18.0f;
-		m_bHitStage = false;
-
-		// 体力設定
-		SetLife(nLife);
-
-		if (nLife <= 0)
-		{// 体力がなくなったら
-
-			// ノックバック判定にする
-			m_sMotionFrag.bKnockBack = true;
-
-			// ノックバック状態にする
-			m_state = STATE_KNOCKBACK;
-
-			DeadSetting(&hitresult);
-
-			// ダメージ音
-			//CManager::GetInstance()->GetSound()->PlaySound(CSound::LABEL::LABEL_SE_PLAYERDMG_STRONG);
-			return hitresult;
-		}
-
-		// 過去の状態保存
-		m_Oldstate = m_state;
-
-		// 色設定
-		m_mMatcol = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);
-
-		// ノックバックの位置更新
-		MyLib::Vector3 pos = GetPosition();
-		m_posKnokBack = pos;
-		
-		float hitAngle = pos.AngleXZ(hitpos);
-
-		// 衝撃波生成
-		CImpactWave::Create
-		(
-			MyLib::Vector3(pos.x, pos.y + 80.0f, pos.z),	// 位置
-			MyLib::Vector3(D3DX_PI * 0.5f, D3DX_PI + hitAngle, D3DX_PI),				// 向き
-			D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.3f),			// 色
-			80.0f,										// 幅
-			80.0f,										// 高さ
-			0.0f,										// 中心からの間隔
-			20,											// 寿命
-			10.0f,										// 幅の移動量
-			CImpactWave::TYPE_GIZAWHITE,				// テクスチャタイプ
-			false										// 加算合成するか
-		);
-
-
-		{
-
-			m_sDamageInfo.reciveTime = TIME_DMG;
-			m_sDamageInfo.bReceived = false;
-
-			MyLib::Vector3 move;
-			move.x = sinf(D3DX_PI + hitAngle) * -60.0f;
-			move.z = cosf(D3DX_PI + hitAngle) * -60.0f;
-			SetMove(move);
-
-			// やられモーション
-			if (!m_sDamageInfo.bActiveSuperArmor)
-			{
-				// ダメージ状態にする
-				m_state = STATE_DMG;
-
-				GetMotion()->Set(MOTION_DMG);
-
-				// ダメージ音
-				CManager::GetInstance()->GetSound()->PlaySound(CSound::LABEL::LABEL_SE_PLAYERDMG_NORMAL);
-				CManager::GetInstance()->GetSound()->StopSound(CSound::LABEL_SE_WINGS);
-				CManager::GetInstance()->GetSound()->StopSound(CSound::LABEL_SE_BOOST);
-			}
-		}
-
-		// 振動
-		pCamera->SetShake(8, 18.0f, 0.0f);
-	}
-
+	// 当たった判定を返す
 	return hitresult;
 }
 
@@ -1967,14 +1641,7 @@ void CPlayer::StateCounter()
 	// 位置取得
 	MyLib::Vector3 pos = GetPosition();
 
-	CEnemy* pEnemy = CEnemy::GetListObj().GetData(m_nIdxRockOn);
-	if (pEnemy == nullptr)
-	{
-		return;
-	}
-
-	MyLib::Vector3 enemypos = pEnemy->GetPosition();
-	SetRotDest(pos.AngleXZ(enemypos));
+	
 
 	
 }

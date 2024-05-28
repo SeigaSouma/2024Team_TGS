@@ -9,7 +9,6 @@
 #include "calculation.h"
 #include "input.h"
 #include "camera.h"
-#include "enemy.h"
 #include "game.h"
 #include "debugproc.h"
 #include "keyconfig_gamepad.h"
@@ -547,11 +546,11 @@ bool CPlayerControlBaggage::CollisionObstacle(CPlayer* player, CBaggage* pBaggag
 		// î•ñŽæ“¾
 		CMap_ObstacleManager::SObstacleInfo info = pObj->GetObstacleInfo();
 
-		if (info.setup.isAir == 0) continue;
+		if (info.setup.isAir == 0) continue;	// ‹ó‹CŠÑ’Ê”»’è
 
 		MyLib::Vector3 ObjPos = pObj->GetPosition();
 
-		if (posBaggage.y <= ObjPos.y) continue;
+		if (posBaggage.y <= ObjPos.y) continue;	// áŠQ•¨‚Æ‰×•¨‚Ì‚‚³”»’è
 
 		for (const auto& collider : info.boxcolliders)
 		{
