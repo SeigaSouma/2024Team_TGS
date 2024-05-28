@@ -19,13 +19,14 @@ class CkeyConfigPad: public CKeyConfig
 public:
 
 	// コンストラクタ
-	CkeyConfigPad(Control type);
+	CkeyConfigPad();
+	~CkeyConfigPad(){}
 
 	// メンバ関数
-	bool GetPress(const int type);
-	bool GetTrigger(const int type);
-	bool GetRelease(const int type);
-	bool GetRepeat(const int type);
+	bool GetPress(const int type) override;
+	bool GetTrigger(const int type) override;
+	bool GetRelease(const int type) override;
+	bool GetRepeat(const int type) override;
 	void Uninit() override;
 
 public:

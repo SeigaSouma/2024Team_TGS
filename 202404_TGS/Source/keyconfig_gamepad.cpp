@@ -9,7 +9,7 @@
 //==========================================================================
 // コンストラクタ
 //==========================================================================
-CkeyConfigPad::CkeyConfigPad(Control type) : CKeyConfig(type)
+CkeyConfigPad::CkeyConfigPad()
 {
 	m_Info.clear();
 }

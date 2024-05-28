@@ -300,14 +300,12 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	// インプット情報取得
 	CInputKeyboard* pInputKeyboard = CInputKeyboard::GetInstance();
 	CInputGamepad* pInputGamepad = CInputGamepad::GetInstance();
-	CkeyConfigPad* pConfigPad = new CkeyConfigPad(CKeyConfig::CONTROL_INPAD);
-	pConfigPad->Join(0, CInputGamepad::BUTTON_A);
 
 	CGameManager* pGameMgr = CGame::GetInstance()->GetGameManager();
 
 	if (pGameMgr->GetType() == CGameManager::SceneType::SCENE_WAIT_AIRPUSH &&
 		(CInputKeyboard::GetInstance()->GetTrigger(DIK_RETURN) ||
-			pConfigPad->GetTrigger(0)))
+			pInputGamepad->GetTrigger(CInputGamepad::BUTTON_A,0)))
 	{// 空気送り待ちで空気発射
 
 		// メインに移行
@@ -410,7 +408,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	}
 	CollisionObstacle(player, pBaggage);
 	if (CInputKeyboard::GetInstance()->GetPress(DIK_RETURN) ||
-		pConfigPad->GetPress(0))
+		pInputGamepad->GetPress(CInputGamepad::BUTTON_A, 0))
 	{
 		if (fall) 
 		{// 落下中
@@ -496,8 +494,6 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 			"移動中のエフェクト 【%d】\n"
 			, *m_BressHandle);
 	}
-
-	CKeyConfig::Release();
 }
 
 //==========================================================================
