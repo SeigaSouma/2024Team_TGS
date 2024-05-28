@@ -14,6 +14,7 @@
 #include "keyconfig_gamepad.h"
 #include "map_obstacle.h"
 #include "collisionLine_Box.h"
+#include "keyconfig.h"
 
 namespace
 {
@@ -300,16 +301,22 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	// インプット情報取得
 	CInputKeyboard* pInputKeyboard = CInputKeyboard::GetInstance();
 	CInputGamepad* pInputGamepad = CInputGamepad::GetInstance();
-
+	CKeyConfigManager* pKeyConfigManager = CKeyConfigManager::GetInstance();
+	CKeyConfig* pKeyConfigPad = pKeyConfigManager->GetConfig(CKeyConfigManager::CONTROL_INPAD);
 	CGameManager* pGameMgr = CGame::GetInstance()->GetGameManager();
 
 	if (pGameMgr->GetType() == CGameManager::SceneType::SCENE_WAIT_AIRPUSH &&
 		(CInputKeyboard::GetInstance()->GetTrigger(DIK_RETURN) ||
-			pInputGamepad->GetTrigger(CInputGamepad::BUTTON_A,0)))
+			pKeyConfigPad->GetTrigger(INGAME::ACTION::ACT_AIR)))
 	{// 空気送り待ちで空気発射
 
 		// メインに移行
 		pGameMgr->SetType(CGameManager::SceneType::SCENE_MAIN);
+	}
+
+	if (pInputKeyboard->GetTrigger(DIK_LSHIFT)) {
+		std::thread th(&CKeyConfig::Setting, pKeyConfigPad, INGAME::ACTION::ACT_AIR);
+		th.detach();
 	}
 
 
@@ -408,7 +415,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	}
 	CollisionObstacle(player, pBaggage);
 	if (CInputKeyboard::GetInstance()->GetPress(DIK_RETURN) ||
-		pInputGamepad->GetPress(CInputGamepad::BUTTON_A, 0))
+		pKeyConfigPad->GetPress(INGAME::ACT_AIR))
 	{
 		if (fall) 
 		{// 落下中
@@ -460,7 +467,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	m_fHeight = UtilFunc::Transformation::Clamp(m_fHeight, MIN_HEIGHT, LENGTH_COLLISIONHEIGHT);
 
 	if (CInputKeyboard::GetInstance()->GetRelease(DIK_RETURN) ||
-		CInputGamepad::GetInstance()->GetRelease(CInputGamepad::BUTTON::BUTTON_A, 0))
+		pKeyConfigPad->GetRelease(INGAME::ACTION::ACT_AIR))
 	{
 		// 降下状態
 		fall = true;
@@ -571,6 +578,8 @@ float CPlayerControlSurfacing::Surfacing(CPlayer* player)
 	// インプット情報取得
 	CInputKeyboard* pInputKeyboard = CInputKeyboard::GetInstance();
 	CInputGamepad* pInputGamepad = CInputGamepad::GetInstance();
+	CKeyConfigManager* pKeyConfigManager = CKeyConfigManager::GetInstance();
+	CKeyConfig* pKeyConfigPad = pKeyConfigManager->GetConfig(CKeyConfigManager::CONTROL_INPAD);
 
 	// 浮上判定
 	bool bUp = false;
@@ -583,7 +592,7 @@ float CPlayerControlSurfacing::Surfacing(CPlayer* player)
 	//}
 
 	if (CInputKeyboard::GetInstance()->GetPress(DIK_W) ||
-		CInputGamepad::GetInstance()->GetPress(CInputGamepad::BUTTON::BUTTON_RB, 0))
+		pKeyConfigPad->GetPress(INGAME::ACTION::ACT_UPDOWN))
 	{// 入力している
 		bUp = true;
 	}
