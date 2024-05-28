@@ -384,7 +384,7 @@ void CObjectX::Update()
 void CObjectX::StateNone()
 {
 	if (m_pCollisionLineBox != nullptr) {
-		m_pCollisionLineBox->SetEnableDisp(true);
+		m_pCollisionLineBox->SetEnableDisp(false);
 	}
 }
 

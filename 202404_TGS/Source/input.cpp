@@ -12,6 +12,7 @@
 #include "input_mouse.h"
 #include "input_keyboard.h"
 #include "input_gamepad.h"
+#include "keyconfig.h"
 
 //==========================================================================
 // 静的メンバ変数宣言
@@ -70,6 +71,12 @@ CInput* CInput::Create(HINSTANCE hInstance, HWND hWnd)
 		return nullptr;
 	}
 
+	// キーコンフィグ
+	m_pThisPtr->m_pKeyConfig = CKeyConfigManager::Create();
+	if (m_pThisPtr->m_pKeyConfig == nullptr) {
+		return nullptr;
+	}
+
 	return m_pThisPtr;
 }
 
@@ -109,6 +116,11 @@ void CInput::Release()
 	if (m_pGamepad != nullptr) {
 		m_pGamepad->Uninit();
 		m_pGamepad = nullptr;
+	}
+
+	if (m_pKeyConfig != nullptr) {
+		m_pKeyConfig->Uninit();
+		m_pKeyConfig = nullptr;
 	}
 
 	// オブジェクトの破棄

@@ -18,13 +18,10 @@ class CPlayer;
 class CScore;
 class CTimer;
 class CPowerGauge;
-class CEditEnemyBase;
 class CStage;
 class CHitScore;
-class CEnemyManager;
 class CLimitArea;
 class CPlayer;
-class CEnemyBase;
 class CEdit;
 class CMap_ObstacleManager;
 
@@ -63,8 +60,6 @@ public:
 	CGameManager *GetGameManager();
 	void SetEnableClear(bool bClear) { m_clear = bClear; }		// クリアのフラグ
 	bool IsClearFrag() { return m_clear; }						// クリアフラグの取得
-	CEnemyManager* GetEnemyManager();							// 敵マネージャ
-	CEnemyBase* GetEnemyBase();									// 敵の拠点
 	bool IsEdit() { return m_bEdit; }							// エディットの判定
 	float GetRockOnDistance() { return m_fMaxRokOnDistance; }	// ロックオンの最大距離取得
 
@@ -89,12 +84,9 @@ protected:
 	CScore *m_pScore;						// スコアのオブジェクト
 	CTimer *m_pTimer;						// タイマーのオブジェクト
 	CLimitArea *m_pLimitArea;				// エリア制限のオブジェクト
-	CEditEnemyBase *m_pEditEnemyBase;		// 敵の拠点エディター
 	CStage *m_pStage;						// ステージのオブジェクト
 	CGameManager *m_pGameManager;			// ゲームマネージャのオブジェクト
 	EditType m_EditType;					// エディットの種類
-	CEnemyManager *m_pEnemyManager;			// 敵マネージャのオブジェクト
-	CEnemyBase *m_pEnemyBase;				// 敵の拠点
 	CEdit* m_pEdit;							// エディター
 	CMap_ObstacleManager* m_pObstacleManager;	// 障害物マネージャ
 	bool m_bEdit;				// エディットの判定

@@ -13,9 +13,7 @@
 #include "camera.h"
 #include "input.h"
 
-#include "enemymanager.h"
 #include "player.h"
-#include "enemybase.h"
 
 //==========================================================================
 // コンストラクタ
@@ -56,23 +54,7 @@ HRESULT CGameTutorial::Init()
 //==========================================================================
 void CGameTutorial::InitByMode()
 {
-	//**********************************
-	// 敵の拠点
-	//**********************************
-	m_pEnemyBase = CEnemyBase::Create("data\\TEXT\\enemydata\\base_tutorial.txt");
-	if (m_pEnemyBase == nullptr)
-	{
-		return;
-	}
-
-	//**********************************
-	// 敵マネージャ
-	//**********************************
-	m_pEnemyManager = CEnemyManager::Create("data\\TEXT\\enemydata\\manager.txt");
-	if (m_pEnemyManager == nullptr)
-	{
-		return;
-	}
+	
 }
 
 //==========================================================================

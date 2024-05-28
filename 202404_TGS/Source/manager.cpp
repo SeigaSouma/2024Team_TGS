@@ -24,7 +24,6 @@
 #include "edit.h"
 #include "resultmanager.h"
 #include "rankingmanager.h"
-#include "MyEffekseer.h"
 #include "loadmanager.h"
 #include "Imguimanager.h"
 #include "fog.h"

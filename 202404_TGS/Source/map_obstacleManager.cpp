@@ -365,6 +365,7 @@ void CMap_ObstacleManager::Load()
 			{
 				CMap_Obstacle* pObj = CMap_Obstacle::Create(m_ObstacleInfo[type]);
 				pObj->SetPosition(pos);
+				pObj->SetRotation(rot);
 			}
 		}
 

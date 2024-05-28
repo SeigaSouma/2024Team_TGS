@@ -12,7 +12,6 @@
 #include "Xload.h"
 
 #include "player.h"
-#include "enemy.h"
 #include "sound.h"
 #include "objectX.h"
 

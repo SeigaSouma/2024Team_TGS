@@ -146,9 +146,7 @@ public:
 	virtual void Update() override;
 	virtual void Draw() override;
 
-	MyLib::HitResult_Character Hit(const int nValue, CGameManager::AttackType atkType = CGameManager::ATTACK_NORMAL);	// ヒット処理
-	MyLib::HitResult_Character Hit(const int nValue, CEnemy* pEnemy, CGameManager::AttackType atkType = CGameManager::ATTACK_NORMAL);	// ヒット処理
-	MyLib::HitResult_Character ProcessHit(const int nValue, const MyLib::Vector3& hitpos);
+	MyLib::HitResult_Character Hit(const int nValue);	// ヒット処理
 
 	STATE GetState();		// 状態取得
 	void SetState(STATE state, int nCntState = 0);	// 状態設定

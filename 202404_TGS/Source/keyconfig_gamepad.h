@@ -16,21 +16,26 @@
 // キーコンフィグ
 class CkeyConfigPad: public CKeyConfig
 {
-protected:
+public:
 
-	// 情報構造体
-	struct KEY
-	{
+	// コンストラクタ
+	CkeyConfigPad();
+	~CkeyConfigPad(){}
 
-	};
+	// メンバ関数
+	bool GetPress(const int type) override;
+	bool GetTrigger(const int type) override;
+	bool GetRelease(const int type) override;
+	bool GetRepeat(const int type) override;
+	void Uninit() override;
 
 public:
-	// コンストラクタ
-	CkeyConfigPad() {}
+	void Join(const int action, const CInputGamepad::BUTTON key);
 
 private:
 
-	
+	// メンバ変数
+	std::map<int, CInputGamepad::BUTTON> m_Info;
 };
 
 #endif
