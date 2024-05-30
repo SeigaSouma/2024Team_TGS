@@ -21,10 +21,10 @@ namespace
 	};
 	const float LIMIT_HEIGHT = 800.0f;	// 高さ上限
 	const float VELOCITY = 1.0f;
-	const float PITCH_RATIO = 0.00025f;	// ピッチ軸回転倍率
-	const float PITCH_INER = 0.075f;	// ピッチ軸回転慣性
-	const float ROLL_FSTSPD = 10.0f;	// ロール軸回転初速
-	const float ROLL_INER = 0.075f;		// ロール軸回転慣性
+	float PITCH_RATIO = 0.00025f;	// ピッチ軸回転倍率
+	float PITCH_INER = 0.075f;	// ピッチ軸回転慣性
+	float ROLL_FSTSPD = 0.25f;	// ロール軸回転初速
+	float ROLL_INER = 0.075f;		// ロール軸回転慣性
 }
 
 //==========================================================================
@@ -144,6 +144,10 @@ void CBaggage::Update()
 	MyLib::Vector3 rot = GetRotation();
 	MyLib::Vector3 move = GetMove();
 	ImGui::DragFloat("weight", &m_fWeight, 0.1f, 0.0f, 0.0f, "%.2f");
+	ImGui::DragFloat("PITCH_RATIO", &PITCH_RATIO, 0.1f, 0.0f, 0.0f, "%.2f");
+	ImGui::DragFloat("PITCH_INER", &PITCH_INER, 0.1f, 0.0f, 0.0f, "%.2f");
+	ImGui::DragFloat("ROLL_FSTSPD", &ROLL_FSTSPD, 0.1f, 0.0f, 0.0f, "%.2f");
+	ImGui::DragFloat("ROLL_INER", &ROLL_INER, 0.1f, 0.0f, 0.0f, "%.2f");
 
 	// 位置更新
 	pos += move;
