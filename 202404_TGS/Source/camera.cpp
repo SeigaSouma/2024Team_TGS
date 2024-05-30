@@ -56,8 +56,8 @@
 
 namespace
 {
-	const MyLib::Vector3 DEFAULT_GAMEROT = MyLib::Vector3(0.0f, 0.0f, -0.10f);	// ゲームのデフォルト向き
-	//const MyLib::Vector3 DEFAULT_GAMEROT = MyLib::Vector3(0.0f, 0.28f, -0.10f);	// ゲームのデフォルト向き
+	//const MyLib::Vector3 DEFAULT_GAMEROT = MyLib::Vector3(0.0f, 0.0f, -0.10f);	// ゲームのデフォルト向き
+	const MyLib::Vector3 DEFAULT_GAMEROT = MyLib::Vector3(0.0f, 0.38f, -0.10f);	// ゲームのデフォルト向き
 	const float MULTIPLY_POSV_CORRECTION = 2.1f;	// (ゲーム時)視点の補正係数倍率
 	const float MULTIPLY_POSR_CORRECTION = 2.1f;	// (ゲーム時)注視点の補正係数倍率
 	const float DISATNCE_POSR_PLAYER = 200.0f;		// (ゲーム時)プレイヤーとの注視点距離
