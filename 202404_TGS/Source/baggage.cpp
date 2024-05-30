@@ -31,7 +31,7 @@ CListManager<CBaggage> CBaggage::m_List = {};	// リスト
 //==========================================================================
 // コンストラクタ
 //==========================================================================
-CBaggage::CBaggage(int nPriority) : CObjectX(nPriority)
+CBaggage::CBaggage(int nPriority) : CObjectQuaternion(nPriority)
 {
 	// 値のクリア
 	m_type = TYPE::TYPE_CLOTH;	// 種類
@@ -80,7 +80,7 @@ HRESULT CBaggage::Init()
 
 	// 初期化処理
 	int typeID = static_cast<int>(m_type);
-	HRESULT hr = CObjectX::Init(MODEL[typeID]);
+	HRESULT hr = CObjectQuaternion::Init(MODEL[typeID]);
 	if (FAILED(hr))
 	{
 		return E_FAIL;
@@ -104,7 +104,7 @@ void CBaggage::Uninit()
 	m_List.Delete(this);
 
 	// 終了処理
-	CObjectX::Uninit();
+	CObjectQuaternion::Uninit();
 }
 
 //==========================================================================
@@ -116,7 +116,7 @@ void CBaggage::Kill()
 	m_List.Delete(this);
 
 	// 終了処理
-	CObjectX::Uninit();
+	CObjectQuaternion::Uninit();
 }
 
 //==========================================================================
@@ -128,7 +128,7 @@ void CBaggage::Update()
 		return;
 	}
 
-	CObjectX::Update();
+	CObjectQuaternion::Update();
 
 	// 障害物との衝突判定
 	Hit();
@@ -203,7 +203,7 @@ void CBaggage::AddForce(const MyLib::Vector3& power, const MyLib::Vector3& ActPo
 void CBaggage::Draw()
 {
 	// 描画
-	CObjectX::Draw();
+	CObjectQuaternion::Draw();
 }
 
 //==========================================================================

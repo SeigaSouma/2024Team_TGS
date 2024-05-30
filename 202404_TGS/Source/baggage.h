@@ -8,14 +8,14 @@
 #ifndef _BAGGAGE_H_
 #define _BAGGAGE_H_		// 二重インクルード防止
 
-#include "objectX.h"
+#include "objectQuaternion.h"
 #include "listmanager.h"
 
 //==========================================================================
 // クラス定義
 //==========================================================================
 // 荷物クラス
-class CBaggage : public CObjectX
+class CBaggage : public CObjectQuaternion
 {
 public:
 	

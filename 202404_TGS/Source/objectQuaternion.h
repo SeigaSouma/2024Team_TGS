@@ -40,8 +40,6 @@ private:
 	void CalWorldMtx();		// ワールドマトリックスの計算処理
 
 	// メンバ変数
-	D3DXMATRIX	m_mtxWorld;		// ワールドマトリックス
-
 	float m_fRotDest;			// 半径
 	D3DXQUATERNION m_quaternion;	// クォータニオン
 	MyLib::Vector3 m_vecAxis;		// 回転軸
