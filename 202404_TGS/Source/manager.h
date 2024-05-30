@@ -17,6 +17,7 @@
 #include "input_mouse.h"
 #include "input_keyboard.h"
 #include "input_gamepad.h"
+#include "keyconfig.h"
 
 // ƒ}ƒNƒ’è‹`
 #define MOVE_LRUP			(0.75f)	// Î‚ßãˆÚ“®
