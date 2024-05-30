@@ -21,6 +21,9 @@ namespace
 	};
 	const float LIMIT_HEIGHT = 800.0f;	// 高さ上限
 	const float VELOCITY = 1.0f;
+	const float PITCH_INER = 0.075f;	// ピッチ軸回転慣性
+	const float ROLL_FSTSPD = 10.0f;	// ロール軸回転初速
+	const float ROLL_INER = 0.075f;		// ロール軸回転慣性
 }
 
 //==========================================================================
@@ -31,12 +34,13 @@ CListManager<CBaggage> CBaggage::m_List = {};	// リスト
 //==========================================================================
 // コンストラクタ
 //==========================================================================
-CBaggage::CBaggage(int nPriority) : CObjectX(nPriority)
+CBaggage::CBaggage(int nPriority) : CObjectQuaternion(nPriority)
 {
 	// 値のクリア
 	m_type = TYPE::TYPE_CLOTH;	// 種類
 	m_fWeight = 0.0f;	// 重さ
 	m_bDrop = false;	// 落下判定
+	m_velorot = MyLib::Vector3(0.0f, 0.0f, 0.0f);
 }
 
 //==========================================================================
@@ -80,7 +84,7 @@ HRESULT CBaggage::Init()
 
 	// 初期化処理
 	int typeID = static_cast<int>(m_type);
-	HRESULT hr = CObjectX::Init(MODEL[typeID]);
+	HRESULT hr = CObjectQuaternion::Init(MODEL[typeID]);
 	if (FAILED(hr))
 	{
 		return E_FAIL;
@@ -104,7 +108,7 @@ void CBaggage::Uninit()
 	m_List.Delete(this);
 
 	// 終了処理
-	CObjectX::Uninit();
+	CObjectQuaternion::Uninit();
 }
 
 //==========================================================================
@@ -116,7 +120,7 @@ void CBaggage::Kill()
 	m_List.Delete(this);
 
 	// 終了処理
-	CObjectX::Uninit();
+	CObjectQuaternion::Uninit();
 }
 
 //==========================================================================
@@ -128,10 +132,10 @@ void CBaggage::Update()
 		return;
 	}
 
-	CObjectX::Update();
+	CObjectQuaternion::Update();
 
 	// 障害物との衝突判定
-	Hit();
+	if(Hit()) m_velorot.x += ROLL_FSTSPD;	// 衝突したらロール軸に回転速度を与える
 
 	// 情報取得
 	MyLib::Vector3 posOrigin = GetOriginPosition();
@@ -144,8 +148,13 @@ void CBaggage::Update()
 	pos += move;
 	pos += m_force;
 
-	rot.x += fabsf(move.x) * 0.01f;
-	rot.y += fabsf(move.y) * 0.01f;
+	// 回転(ピッチ軸
+	if (move.y > 0.0f) {m_velorot.y += fabsf(move.y) * 0.00025f; }
+	else { m_velorot.y += (0.0f - m_velorot.y) * PITCH_INER; }
+
+	m_velorot.x += (0.0f - m_velorot.x) * ROLL_INER;
+	rot.x += m_velorot.x;
+	rot.y += m_velorot.y;
 	UtilFunc::Transformation::RotNormalize(rot);
 
 	// 重力加算
@@ -203,13 +212,13 @@ void CBaggage::AddForce(const MyLib::Vector3& power, const MyLib::Vector3& ActPo
 void CBaggage::Draw()
 {
 	// 描画
-	CObjectX::Draw();
+	CObjectQuaternion::Draw();
 }
 
 //==========================================================================
 // 障害物との判定
 //==========================================================================
-void CBaggage::Hit()
+bool CBaggage::Hit()
 {
 	// 障害物のリスト取得
 	CListManager<CMap_Obstacle> list = CMap_Obstacle::GetListObj();
@@ -232,8 +241,10 @@ void CBaggage::Hit()
 				MyLib::Vector3 move = GetMove();
 				move.y *= -1.0f;
 				SetMove(move);
-				return;
+				return true;
 			}
 		}
 	}
+
+	return false;
 }
