@@ -21,6 +21,7 @@ namespace
 	};
 	const float LIMIT_HEIGHT = 800.0f;	// ‚‚³ãŒÀ
 	const float VELOCITY = 1.0f;
+	const float PITCH_RATIO = 0.00025f;	// ƒsƒbƒ`Ž²‰ñ“]”{—¦
 	const float PITCH_INER = 0.075f;	// ƒsƒbƒ`Ž²‰ñ“]Šµ«
 	const float ROLL_FSTSPD = 10.0f;	// ƒ[ƒ‹Ž²‰ñ“]‰‘¬
 	const float ROLL_INER = 0.075f;		// ƒ[ƒ‹Ž²‰ñ“]Šµ«
@@ -149,8 +150,8 @@ void CBaggage::Update()
 	pos += m_force;
 
 	// ‰ñ“](ƒsƒbƒ`Ž²
-	if (move.y > 0.0f) {m_velorot.y += fabsf(move.y) * 0.00025f; }
-	else { m_velorot.y += (0.0f - m_velorot.y) * PITCH_INER; }
+	if (move.y > 0.0f) m_velorot.y += fabsf(move.y) * 0.00025f;
+	else m_velorot.y += (0.0f - m_velorot.y) * PITCH_INER;
 
 	m_velorot.x += (0.0f - m_velorot.x) * ROLL_INER;
 	rot.x += m_velorot.x;
