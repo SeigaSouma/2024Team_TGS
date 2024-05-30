@@ -7,9 +7,8 @@ Scene {
 	head -3.3600
 	pich 0.0000
 	bank 0.0000
-	ortho 1
+	ortho 0
 	zoom2 8.0000
-	zoom_pers 8.0000
 	amb 0.250 0.250 0.250
 	dirlights 1 {
 		light {
@@ -19,7 +18,7 @@ Scene {
 	}
 }
 Material 1 {
-	"lambert3SG" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\2024 êßçÏ\ëfçﬁ\0ba410b27eb103b872e9fffb12dac776_w.jpeg") proj_type(1) proj_pos(15.189 69.137 3.317) proj_scale(69.403 59.429 36.369) proj_angle(176.280 -23.279 155.039)
+	"lambert3SG" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\2024 êßçÏ\ëfçﬁ\woodtexture.jpeg") proj_type(1) proj_pos(15.189 69.137 3.317) proj_scale(69.403 59.429 36.369) proj_angle(176.280 -23.279 155.039)
 }
 Object "obj1" {
 	visible 15
