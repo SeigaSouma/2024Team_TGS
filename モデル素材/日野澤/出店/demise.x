@@ -809,7 +809,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "wall.jpg";
+    "data\\TEXTURE\\map_object\\wall.jpg";
    }
   }
   Material {
@@ -818,7 +818,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "4218412_s.jpg";
+    "data\\TEXTURE\\map_object\\Wood_demise.jpg";
    }
   }
   Material {
@@ -827,7 +827,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "window.jpg";
+    "data\\TEXTURE\\map_object\\window.jpg";
    }
   }
  }

@@ -3605,7 +3605,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "wood02.png";
+    "data\\TEXTURE\\map_object\\wood02.png";
    }
   }
  }

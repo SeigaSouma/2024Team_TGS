@@ -2535,7 +2535,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "istockphoto-1321023003-612x612.jpg";
+    "data\\TEXTURE\\map_object\\tierchair.jpg";
    }
   }
   Material {
@@ -2544,7 +2544,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Downloads\\istockphoto-1321023003-612x612.jpg";
+    "data\\TEXTURE\\map_object\\tierchair.jpg";
    }
   }
   Material {
@@ -2553,7 +2553,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Downloads\\istockphoto-1321023003-612x612.jpg";
+    "data\\TEXTURE\\map_object\\tierchair.jpg";
    }
   }
  }

@@ -1301,7 +1301,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "grain.jpg";
+    "data\\TEXTURE\\map_object\\grain.jpg";
    }
   }
   Material {
@@ -1310,7 +1310,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "leafe.png";
+    "data\\TEXTURE\\map_object\\leafe.png";
    }
   }
   Material {
@@ -1319,7 +1319,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "leafe2.png";
+    "data\\TEXTURE\\map_object\\leafe2.png";
    }
   }
  }

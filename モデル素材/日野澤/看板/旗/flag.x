@@ -673,7 +673,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "wood.jpg";
+    "data\\TEXTURE\\map_object\\wood.jpg";
    }
   }
   Material {
@@ -682,7 +682,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "images\\Pharmacy.png";
+    "data\\TEXTURE\\map_object\\flags\\Pharmacy.png";
    }
   }
   Material {
