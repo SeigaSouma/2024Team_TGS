@@ -497,6 +497,9 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	}
 	else
 	{
+		// ç~â∫èÛë‘
+		fall = true;
+
 		// çÇÇ≥ÇÃç~â∫éûä‘å∏éZ
 		m_fTimeDownHeight = 0.0f;
 		//m_fTimeDownHeight -= CManager::GetInstance()->GetDeltaTime();
@@ -519,14 +522,6 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 		timeratio = UtilFunc::Transformation::Clamp(timeratio, 0.0f, 1.0f);
 		m_fHeight = (1.0f - timeratio) * LENGTH_COLLISIONHEIGHT;
 		m_fHeight = UtilFunc::Transformation::Clamp(m_fHeight, LENGTH_COLLISIONHEIGHT * ratioMinDownheight, LENGTH_COLLISIONHEIGHT);
-	}
-
-	if (CInputKeyboard::GetInstance()->GetRelease(DIK_RETURN) ||
-		pKeyConfigPad->GetRelease(INGAME::ACTION::ACT_AIR))
-	{
-		// ç~â∫èÛë‘
-		fall = true;
-
 	}
 
 
