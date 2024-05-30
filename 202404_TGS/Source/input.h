@@ -14,7 +14,7 @@
 class CInputMouse;
 class CInputKeyboard;
 class CInputGamepad;
-
+class CKeyConfigManager;
 
 //==========================================================================
 // クラス定義
@@ -52,6 +52,7 @@ private:
 	CInputMouse* m_pMouse;
 	CInputKeyboard* m_pKeyboard;
 	CInputGamepad* m_pGamepad;
+	CKeyConfigManager* m_pKeyConfig;
 	static CInput* m_pThisPtr;	// 自身のポインタ
 };
 

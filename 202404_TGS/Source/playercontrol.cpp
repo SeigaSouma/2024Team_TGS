@@ -14,6 +14,7 @@
 #include "keyconfig_gamepad.h"
 #include "map_obstacle.h"
 #include "collisionLine_Box.h"
+#include "keyconfig.h"
 
 namespace
 {
@@ -304,18 +305,22 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	// インプット情報取得
 	CInputKeyboard* pInputKeyboard = CInputKeyboard::GetInstance();
 	CInputGamepad* pInputGamepad = CInputGamepad::GetInstance();
-	CkeyConfigPad* pConfigPad = new CkeyConfigPad(CKeyConfig::CONTROL_INPAD);
-	pConfigPad->Join(0, CInputGamepad::BUTTON_A);
-
+	CKeyConfigManager* pKeyConfigManager = CKeyConfigManager::GetInstance();
+	CKeyConfig* pKeyConfigPad = pKeyConfigManager->GetConfig(CKeyConfigManager::CONTROL_INPAD);
 	CGameManager* pGameMgr = CGame::GetInstance()->GetGameManager();
 
 	if (pGameMgr->GetType() == CGameManager::SceneType::SCENE_WAIT_AIRPUSH &&
 		(CInputKeyboard::GetInstance()->GetTrigger(DIK_RETURN) ||
-			pConfigPad->GetTrigger(0)))
+			pKeyConfigPad->GetTrigger(INGAME::ACTION::ACT_AIR)))
 	{// 空気送り待ちで空気発射
 
 		// メインに移行
 		pGameMgr->SetType(CGameManager::SceneType::SCENE_MAIN);
+	}
+
+	if (pInputKeyboard->GetTrigger(DIK_LSHIFT)) {
+		std::thread th(&CKeyConfig::Setting, pKeyConfigPad, INGAME::ACTION::ACT_AIR);
+		th.detach();
 	}
 
 
@@ -443,7 +448,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	
 	bool bKantsu = CollisionObstacle(player, pBaggage);
 	if (CInputKeyboard::GetInstance()->GetPress(DIK_RETURN) ||
-		pConfigPad->GetPress(0))
+		pKeyConfigPad->GetPress(INGAME::ACT_AIR))
 	{
 		// 高さの降下時間加算
 		m_fTimeDownHeight += CManager::GetInstance()->GetDeltaTime();
@@ -517,7 +522,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	}
 
 	if (CInputKeyboard::GetInstance()->GetRelease(DIK_RETURN) ||
-		CInputGamepad::GetInstance()->GetRelease(CInputGamepad::BUTTON::BUTTON_A, 0))
+		pKeyConfigPad->GetRelease(INGAME::ACTION::ACT_AIR))
 	{
 		// 降下状態
 		fall = true;
@@ -551,8 +556,6 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 			"移動中のエフェクト 【%d】\n"
 			, *m_BressHandle);
 	}
-
-	CKeyConfig::Release();
 }
 
 //==========================================================================
@@ -632,6 +635,8 @@ float CPlayerControlSurfacing::Surfacing(CPlayer* player)
 	// インプット情報取得
 	CInputKeyboard* pInputKeyboard = CInputKeyboard::GetInstance();
 	CInputGamepad* pInputGamepad = CInputGamepad::GetInstance();
+	CKeyConfigManager* pKeyConfigManager = CKeyConfigManager::GetInstance();
+	CKeyConfig* pKeyConfigPad = pKeyConfigManager->GetConfig(CKeyConfigManager::CONTROL_INPAD);
 
 	// 浮上判定
 	bool bUp = false;
@@ -644,7 +649,7 @@ float CPlayerControlSurfacing::Surfacing(CPlayer* player)
 	//}
 
 	if (CInputKeyboard::GetInstance()->GetPress(DIK_W) ||
-		CInputGamepad::GetInstance()->GetPress(CInputGamepad::BUTTON::BUTTON_RB, 0))
+		pKeyConfigPad->GetPress(INGAME::ACTION::ACT_UPDOWN))
 	{// 入力している
 		bUp = true;
 	}
