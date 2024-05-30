@@ -351,7 +351,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "Wood_YMD_house02.jpg";
+    "data\\TEXTURE\\map_object\\Wood_YMD_house02.jpg";
    }
   }
   Material {
@@ -360,7 +360,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "Wood_YMD_house02.jpg";
+    "data\\TEXTURE\\map_object\\Wood_YMD_house02.jpg";
    }
   }
   Material {
@@ -369,7 +369,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "Wood_YMD_house02.jpg";
+    "data\\TEXTURE\\map_object\\Wood_YMD_house02.jpg";
    }
   }
  }
