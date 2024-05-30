@@ -194,14 +194,12 @@ void CBaggage::Update()
 	{
 		float windowWidth = 100.0f;
 		const float  POS_MOVE = 0.5f;
-
 		//=============================
 		// 位置設定
 		//=============================
 		MyLib::Vector3 pos = GetPosition();
 		ImGui::Text("pos");
 		ImGui::SameLine();
-
 		// X
 		ImGui::PushID(0); // ウィジェットごとに異なるIDを割り当てる
 		{
@@ -210,7 +208,6 @@ void CBaggage::Update()
 			ImGui::SameLine();
 		}
 		ImGui::PopID();
-
 		// Y
 		ImGui::PushID(0); // ウィジェットごとに異なるIDを割り当てる
 		{
@@ -219,6 +216,19 @@ void CBaggage::Update()
 			ImGui::SameLine();
 		}
 		ImGui::PopID();
+		// Z
+		ImGui::PushID(0); // ウィジェットごとに異なるIDを割り当てる
+		{
+			ImGui::SetNextItemWidth(windowWidth);
+			ImGui::DragFloat("z", &pos.z, POS_MOVE, 0.0f, 0.0f, "%.2f");
+		}
+		ImGui::PopID();
+		// 位置設定
+		SetPosition(pos);
+		SetMove(0.0f);
+		ImGui::TreePop();
+	}
+}
 
 		// Z
 		ImGui::PushID(0); // ウィジェットごとに異なるIDを割り当てる

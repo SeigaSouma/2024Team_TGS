@@ -953,14 +953,16 @@ void CCamera::SetCameraRGame()
 		}
 
 		// ñ⁄ïWÇÃçÇÇ≥ÇÃç∑ï™Çë„ì¸
-		m_fDiffHeightDest = m_fDiffHeightSave;
+		//m_fDiffHeightDest = m_fDiffHeightSave;
+		m_fDiffHeightDest = m_TargetPos.y;
 
 		// çÇÇ≥ÇÃç∑ï™Çï‚ê≥Ç∑ÇÈ
 		m_fDiffHeight += (m_fDiffHeightDest - m_fDiffHeight) * 0.01f;
 
 		// íçéãì_ÇÃë„ì¸èàóù
 		m_pStateCameraR->SetCameraR(this);
-		m_posRDest.y = m_TargetPos.y;
+		m_posRDest.y = m_posR.y;
+		//m_posRDest.y = m_TargetPos.y;
 		//m_posRDest.y = fYcamera - m_fDiffHeight;
 
 		// ï‚ê≥Ç∑ÇÈ

@@ -24,6 +24,7 @@
 #include "stagename.h"
 #include "timer.h"
 #include "input.h"
+#include "baggage.h"
 
 //==========================================================================
 // 定数定義
@@ -31,6 +32,9 @@
 namespace
 {
 	const int POINT_WAVECLEAR = 5;		// ウェーブクリアのポイント
+	const float CAMERA_MIN_LENGTH = 2000.0f;	//カメラの最短距離
+	const float CAMERA_MAX_LENGTH = 1600.0f;	//カメラの最長距離
+	const float CAMERA_MAX_ROT = 0.15f;			//カメラ最高角度
 }
 
 //==========================================================================
@@ -46,6 +50,7 @@ CGameManager::CGameManager()
 	m_bGameStart = false;		// ゲーム開始時のフラグ
 	m_nNowStage = 0;			// 現在のステージ
 	m_nNumStage = 0;			// ステージの総数
+	m_fCameraLengthOld = 0;		// 前のカメラの距離
 }
 
 //==========================================================================
@@ -128,6 +133,7 @@ void CGameManager::Update()
 	{
 	case CGameManager::SceneType::SCENE_MAIN:
 		m_bControll = true;
+		ContainPlayerBaggage();
 		break;
 
 	case CGameManager::SceneType::SCENE_MAINCLEAR:
@@ -389,6 +395,112 @@ void CGameManager::SceneWaitAirPush()
 void CGameManager::SceneGoal()
 {
 	CGame::GetInstance()->GetTimer()->SetState(CTimer::eState::STATE_GOAL);
+}
+
+//==========================================================================
+// プレイヤーと荷物を画面内に収める
+//==========================================================================
+void CGameManager::ContainPlayerBaggage()
+{
+	// カメラ取得
+	CCamera* pCamera = CManager::GetInstance()->GetCamera();
+	MyLib::Vector3 posV = pCamera->GetPositionV();
+	MyLib::Vector3 cameraRot = pCamera->GetRotation();
+
+	// プレイヤー取得
+	CListManager<CPlayer> playerList = CPlayer::GetListObj();
+	CPlayer* pPlayer = nullptr;
+	playerList.ListLoop(&pPlayer);
+
+	// 荷物取得
+	CListManager<CBaggage> baggageList = CBaggage::GetListObj();
+	CBaggage* pBaggage = nullptr;
+	baggageList.ListLoop(&pBaggage);
+
+	// 収めるものの座標
+	MyLib::Vector3 posPlayer = pPlayer->GetPosition();
+	MyLib::Vector3 posBaggage = pBaggage->GetPosition();
+	MyLib::Vector3 posBaggageOrigin = pBaggage->GetOriginPosition();
+
+	// カメラ角度調整
+	float lengthVR = CAMERA_MIN_LENGTH; //a
+	float originRot = -pCamera->GetOriginRotation().z; //thetaA
+	float lengthVInterToV = lengthVR * cosf(originRot);	//c
+	float lengthBagOriginToVInter = lengthVR * sinf(originRot);	//d
+	MyLib::Vector3 posVInter = posPlayer + posBaggageOrigin + posBaggageOrigin.Normal() * lengthBagOriginToVInter;
+	MyLib::Vector3 posVDef = posVInter;
+	posVDef.x += lengthVInterToV * sinf(cameraRot.y);
+	posVDef.z += lengthVInterToV * -cosf(cameraRot.y);
+
+	float lengthVInterToBaggage = posBaggage.Distance(posVInter);	//e
+	if ((posBaggage - posVInter).y < 0.0f)
+	{
+		lengthVInterToBaggage *= -1;
+	}
+
+	//↓ここから問題ありそう↓//
+	MyLib::Vector3 rotOrigin = pCamera->GetOriginRotation();
+	//いったん仮
+	//float angle = atan2f(lengthVInterToBaggage, lengthVInterToV);
+	static float angle = -0.1f;
+	static float angleDest = angle;
+	float afsdjfnd = CAMERA_MIN_LENGTH;
+	//lengthVR = CAMERA_MIN_LENGTH;
+	static MyLib::Vector3 posR = MyLib::Vector3(posPlayer.x, posBaggageOrigin.y, posPlayer.z);
+	static float posRYDest = posBaggageOrigin.y;
+	float hoge = lengthVInterToBaggage + lengthBagOriginToVInter;
+	if (hoge >= 300.0f)
+	{
+		angleDest = rotOrigin.z + 0.1f;
+		posRYDest = 300.0f;
+
+		if (hoge >= 500.0f)
+		{
+			angleDest = rotOrigin.z + 0.2f;
+			posRYDest = 500.0f;
+
+			if (hoge >= 700.0f)
+			{
+				angleDest = rotOrigin.z + 0.3f;
+				posRYDest = 700.0f;
+			}
+		}
+	}
+	lengthVR = posR.Distance(posVDef);
+
+	MyLib::Vector3 vec = posR - posVDef;
+	angleDest = atan2f(vec.y, vec.z);
+	angle += (angleDest - angle) * 0.2f;
+
+	posR.x = posPlayer.x;
+	posR.y += (posRYDest - posR.y) * 0.05f;
+
+	CEffect3D::Create(
+		MyLib::Vector3(posPlayer.x, 0.0f, posPlayer.z),
+		MyLib::Vector3(0.0f, 0.0f, 0.0f),
+		D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f),
+		20.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+	CEffect3D::Create(
+		MyLib::Vector3(posPlayer.x, 300.0f, posPlayer.z),
+		MyLib::Vector3(0.0f, 0.0f, 0.0f),
+		D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f),
+		20.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+	CEffect3D::Create(
+		MyLib::Vector3(posPlayer.x, 450.0f, posPlayer.z),
+		MyLib::Vector3(0.0f, 0.0f, 0.0f),
+		D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f),
+		20.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+	CEffect3D::Create(
+		MyLib::Vector3(posPlayer.x, 700.0f, posPlayer.z),
+		MyLib::Vector3(0.0f, 0.0f, 0.0f),
+		D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f),
+		20.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+
+	//↑ここまで問題ありそう↑//
+
+	pCamera->SetLenDest(lengthVR, 60, 1.0f,0.03f);
+	pCamera->SetPositionR(posR);
+	pCamera->SetRotation(MyLib::Vector3(0.0f,0.0f, angle));
 }
 
 //==========================================================================

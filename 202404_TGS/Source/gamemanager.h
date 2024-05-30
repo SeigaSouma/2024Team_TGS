@@ -79,6 +79,7 @@ protected:
 	virtual void SceneEnhance();
 	virtual void SceneWaitAirPush();
 	virtual void SceneGoal();
+	virtual void ContainPlayerBaggage();
 	virtual void SetEnemy();
 	virtual void SetBoss();
 
@@ -90,6 +91,7 @@ protected:
 	bool m_bGameStart;		// ゲーム開始時のフラグ
 	int m_nNowStage;		// 現在のステージ
 	int m_nNumStage;		// ステージの総数
+	float m_fCameraLengthOld;	// 前のカメラの距離
 };
 
 
