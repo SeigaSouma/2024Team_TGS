@@ -175,6 +175,13 @@ HRESULT CGame::Init()
 	// 障害物マネージャ
 	m_pObstacleManager = CMap_ObstacleManager::Create();
 
+
+	CMyEffekseer::GetInstance()->SetEffect(
+		CMyEffekseer::EFKLABEL::EFKLABEL_RIVER_SAMPLE,
+		MyLib::Vector3(300.0f, 0.1f, 0.0f), MyLib::Vector3(0.0f, D3DX_PI, 0.0f), 0.0f, 30.0f, true);
+
+
+
 	// 成功
 	return S_OK;
 }

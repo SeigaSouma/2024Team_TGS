@@ -360,6 +360,9 @@ void CPlayer::Update()
 	else if(pCamera->GetStateCameraR() == CCamera::POSR_STATE_NORMAL)
 	{
 		MyLib::Vector3 camerapos = pos;
+		camerapos.y = (m_pBaggage->GetPosition().y + pos.y) * 0.5f;
+		camerapos.y = UtilFunc::Transformation::Clamp(camerapos.y, 200.0f, 600.0f);
+
 		pCamera->SetTargetPosition(camerapos);
 		pCamera->SetTargetRotation(rot);
 	}

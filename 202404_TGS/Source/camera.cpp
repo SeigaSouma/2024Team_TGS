@@ -60,7 +60,7 @@ namespace
 	const MyLib::Vector3 DEFAULT_GAMEROT = MyLib::Vector3(0.0f, 0.38f, -0.10f);	// ゲームのデフォルト向き
 	const float MULTIPLY_POSV_CORRECTION = 2.1f;	// (ゲーム時)視点の補正係数倍率
 	const float MULTIPLY_POSR_CORRECTION = 2.1f;	// (ゲーム時)注視点の補正係数倍率
-	const float DISATNCE_POSR_PLAYER = 200.0f;		// (ゲーム時)プレイヤーとの注視点距離
+	const float DISATNCE_POSR_PLAYER = 0.0f;		// (ゲーム時)プレイヤーとの注視点距離
 	const float MIN_ROCKONDISTANCE = 1.0f;
 	const float ROTDISTANCE_ROCKON = D3DX_PI * 0.095f;	// ロックオン向きのズレ
 	const MyLib::Vector3 ROTDISTANCE_COUNTER = MyLib::Vector3(0.0f, D3DX_PI * 0.5f, -D3DX_PI * 0.05f);	// 反撃時の向きズレ
@@ -783,6 +783,11 @@ void CCamera::SetCameraVGame()
 	}
 	else if (m_bFollow)
 	{// 追従ON
+		
+
+		m_fAutoRot_Dest = (m_posR.y - 200.0f) / m_fDistance + m_rotOrigin.z;
+		m_rot.z += (m_fAutoRot_Dest - m_rot.z) * 0.2f;
+
 
 		// 視点の代入処理
 		m_posVDest.x = m_posR.x + cosf(m_rot.z) * sinf(m_rot.y) * -m_fDistance;
@@ -800,44 +805,7 @@ void CCamera::SetCameraVGame()
 
 		// 目標の角度を求める
 		float fRotDest = atan2f((m_posVDest.x - m_posR.x), (m_posVDest.z - m_posR.z));
-		while (1)
-		{
-			// 仮想の弾の位置
-			float fPosBulletX = m_TargetPos.x + cosf(m_rot.z) * sinf(m_rot.y) * -fDistance;
-			float fPosBulletZ = m_TargetPos.z + cosf(m_rot.z) * cosf(m_rot.y) * -fDistance;
-
-			// 高さ取得
-			bool bLand = false;
-			CElevation* pElevation = CGame::GetInstance()->GetElevation();
-			if (pElevation == nullptr)
-			{
-				return;
-			}
-
-			float fHeight = pElevation->GetHeight(MyLib::Vector3(fPosBulletX, 0.0f, fPosBulletZ), &bLand);
-
-			if (m_fHeightMaxDest <= fHeight)
-			{// 最大の高さを更新したら
-
-				// 距離の応じた割合保存
-				float fDistanceRatio = fDistance / (m_fDistance);
-
-				// 目標の最大高さ保存
-				m_fHeightMaxDest = fHeight * (fDistanceRatio + 1.0f);
-
-				// Z操作不能
-				m_bRotationZ = false;
-				m_Moverot.z = 0.0f;
-			}
-
-			// 長さ加算
-			fDistance += 10.0f;
-
-			if (fDistance >= m_fDistance)
-			{// 長さを超えたら終わり
-				break;
-			}
-		}
+		
 
 		// 目標の視点更新
 		if (m_fHeightMaxDest > m_posVDest.y)
@@ -850,6 +818,18 @@ void CCamera::SetCameraVGame()
 			// 高さの差分
 			m_fDiffHeightSave += m_fHeightMax - m_posV.y;
 		}
+
+
+		static float MAXHEIGHT = 600.0f;
+
+		// 割合
+		float ratio = m_posR.y / MAXHEIGHT;
+		ratio = UtilFunc::Transformation::Clamp(ratio, 0.2f, 1.0f);
+
+		m_fAutoDistance_Dest = 4000.0f * ratio + 800.0f;
+
+		m_fDistance += (m_fAutoDistance_Dest - m_fDistance) * 0.25f;
+
 
 		// 補正する
 		m_posV += (m_posVDest - m_posV) * (0.12f * MULTIPLY_POSV_CORRECTION);
@@ -980,7 +960,8 @@ void CCamera::SetCameraRGame()
 
 		// 注視点の代入処理
 		m_pStateCameraR->SetCameraR(this);
-		m_posRDest.y = fYcamera - m_fDiffHeight;
+		m_posRDest.y = m_TargetPos.y;
+		//m_posRDest.y = fYcamera - m_fDiffHeight;
 
 		// 補正する
 		m_posR += (m_posRDest - m_posR) * (0.08f * MULTIPLY_POSR_CORRECTION);

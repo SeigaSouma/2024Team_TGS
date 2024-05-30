@@ -39,6 +39,7 @@ public:
 	{
 		EFKLABEL_SAMPLE_LASER = 0,	// サンプルのレーザー
 		EFKLABEL_BRESS,				// 息
+		EFKLABEL_RIVER_SAMPLE,		// 川サンプル
 		EFKLABEL_MAX
 	};
 

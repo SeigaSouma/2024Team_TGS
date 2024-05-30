@@ -244,6 +244,13 @@ private:
 	RockOnDir m_RockOnDir;				// ロックオン時の向き
 	RockOnState m_stateRockOn;			// ロックオン時の状態
 
+
+
+	float m_fAutoDistance_Dest;					// 距離
+	float m_fAutoRot_Dest;					// 距離
+
+
+
 	PosRState m_StateCameraR;		// 注視点の状態
 	CStateCameraR* m_pStateCameraR;	// 注視点の状態ポインタ
 	CStateCameraV* m_pStateCameraV;	// 視点の状態ポインタ
