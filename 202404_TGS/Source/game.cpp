@@ -170,7 +170,7 @@ HRESULT CGame::Init()
 	CCheckpoint::Create(MyLib::Vector3(1300.0f, 0.0f, 0.0f));
 	CCheckpoint::Create(MyLib::Vector3(2300.0f, 0.0f, 0.0f));
 
-	CGoalflagX::Create(MyLib::Vector3(55000.0f,0.0f,0.0f));
+	CGoalflagX::Create(MyLib::Vector3(13000.0f,0.0f,0.0f));
 
 	// 障害物マネージャ
 	m_pObstacleManager = CMap_ObstacleManager::Create();
@@ -229,7 +229,6 @@ void CGame::Uninit()
 	{
 		// 終了処理
 		m_pTimer->Uninit();
-		delete m_pTimer;
 		m_pTimer = nullptr;
 	}
 

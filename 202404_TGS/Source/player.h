@@ -72,16 +72,10 @@ public:
 		STATE_NONE = 0,		// なにもない
 		STATE_INVINCIBLE,	// 無敵
 		STATE_DMG,			// ダメージ
-		STATE_KNOCKBACK,	// ノックバック
-		STATE_DOWN,			// ダウン
 		STATE_DEAD,			// 死
 		STATE_DEADWAIT,		// 死亡待機
 		STATE_FADEOUT,		// フェードアウト
 		STATE_RESPAWN,		// 復活
-		STATE_COUNTER,		// 反撃
-		STATE_AVOID,		// 回避
-		STATE_PRAYER,		// 祈り
-		STATE_CHARGE,		// チャージ
 		STATE_MAX
 	};
 
@@ -159,11 +153,7 @@ public:
 	bool IsDash()					{ return m_bDash; }				// ダッシュ判定
 	void SetEnableJump(bool bJump)	{ m_bJump = bJump; }			// ジャンプ状況設定
 	bool IsJump()					{ return m_bJump; }				// ジャンプ判定
-	bool IsAttacking()				{ return m_bAttacking; }		// 攻撃中フラグ取得
 	float GetDashTime()				{ return m_fDashTime; }			// ダッシュ時間
-	void SetComboStage(int stage)	{ m_nComboStage = stage; }		// コンボの段階設定
-	int GetComboStage()				{ return m_nComboStage; }		// コンボの段階取得
-	bool IsReadyDashAtk()			{ return m_bReadyDashAtk; }		// ダッシュアタックの準備取得
 	void SetMotionFrag(SMotionFrag frag) { m_sMotionFrag = frag; }	// モーションのフラグ設定
 	SMotionFrag GetMotionFrag() { return m_sMotionFrag; }			// モーションのフラグ取得
 	void SetDamageInfo(sDamageInfo info) { m_sDamageInfo = info; }	// ダメージ情報設定
@@ -181,9 +171,6 @@ public:
 	//=============================
 	void SetMyPlayerIdx(int idx) { m_nMyPlayerIdx = idx; }	// 自分のインデックス設定
 	int GetMyPlayerIdx() { return m_nMyPlayerIdx; }			// 自分のインデックス取得
-
-	// ダウン
-	void DownSetting(const MyLib::Vector3& hitpos);
 
 	// ヒット系
 	void DeadSetting(MyLib::HitResult_Character* result);
@@ -222,16 +209,10 @@ private:
 	void StateNone();		// なし
 	void StateInvincible();	// 無敵
 	void StateDamage();		// ダメージ
-	void StateDown();		// ダウン
-	void StateKnockBack();	// ノックバック
 	void StateDead();		// 死亡
 	void StateDeadWait();	// 死亡待機
 	void StateFadeOut();	// フェードアウト
 	void StateRespawn();	// リスポーン
-	void StateCounter();	// カウンター中
-	void StateAvoid();		// 回避
-	void StatePrayer();		// 祈り
-	void StateCharge();		// チャージ
 
 	// その他関数
 	virtual void Controll();		// 操作
@@ -241,8 +222,8 @@ private:
 	void CollisionMapObject();		// マップオブジェクトとの当たり判定
 	void MotionBySetState();		// モーション別の状態設定
 	void ResetFrag();				// フラグリセット
-	void RockOn();					// ロックオン
 	void UpdateDamageReciveTimer();	// ダメージ受付時間更新
+	void ReaspawnSetting();			// リスポーン設定
 	void RetryCheck();				// リトライするか確認
 
 	// モーション系関数
@@ -257,19 +238,9 @@ private:
 	MyLib::Vector3 m_posKnokBack;	// ノックバックの位置
 	MyLib::Vector3 m_KnokBackMove;	// ノックバックの移動量
 	int m_nCntState;				// 状態遷移カウンター
-	int m_nCntPowerEmission;		// パワーアップの発生物カウンター
-	int m_nComboStage;				// コンボの段階
-	int m_nIdxRockOn;				// ロックオン対象のインデックス番号
-	bool m_bLockOnAtStart;			// カウンター開始時にロックオンしていたか
-	bool m_bReadyDashAtk;			// ダッシュアタックのフラグ
-	bool m_bAttacking;				// 攻撃中
-	bool m_bCounterAccepting;		// カウンター受付中
 	bool m_bDash;					// ダッシュ判定
 	float m_fDashTime;				// ダッシュ時間
-	float m_fChargeTime;			// チャージ時間
-	bool m_bChargeCompletion;		// チャージ完了フラグ
-	int m_nRespawnPercent;			// リスポーン確率
-	bool m_bTouchBeacon;			// ビーコンに触れてる判定
+	float m_fRetryPushTime;			// リトライの押下時間
 	bool m_bMotionAutoSet;			// モーションの自動設定
 	Effekseer::Handle m_WeaponHandle;
 
@@ -282,9 +253,6 @@ private:
 	CPlayerControlMove* m_pControlMove;			// 移動操作
 	CPlayerControlBaggage* m_pControlBaggage;	// 荷物操作
 	CPlayerControlSurfacing* m_pControlSurfacing;	// 浮上操作
-
-	//リトライカウンタ
-	int m_nCntRetry;
 
 	static CListManager<CPlayer> m_List;	// リスト
 };

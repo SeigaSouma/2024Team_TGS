@@ -368,18 +368,17 @@ void CGameManager::SceneEnhance()
 void CGameManager::SceneWaitAirPush()
 {
 	CTimer* pTimer = CGame::GetInstance()->GetTimer();
-	if (pTimer != nullptr)
-	{//タイマーオブジェクトある
-		CInputGamepad* pInputGamepad = CInputGamepad::GetInstance();
-		if (pInputGamepad->GetPress(CInputGamepad::BUTTON::BUTTON_A, 0))
-		{//何かしら操作がされた
-			pTimer->SetState(CTimer::eState::STATE_AFTERCONTROLL);
-			m_SceneType = CGameManager::SceneType::SCENE_MAIN;
-		}
-		else
-		{
-			pTimer->SetState(CTimer::eState::STATE_BEFORECONTROLL);
-		}
+	CInputGamepad* pInputGamepad = CInputGamepad::GetInstance();
+
+	if (pTimer != nullptr &&
+		pInputGamepad->GetTrigger(CInputGamepad::BUTTON::BUTTON_A, 0))
+	{
+		pTimer->SetEnableAddTime(true);
+		m_SceneType = CGameManager::SceneType::SCENE_MAIN;
+	}
+	else if (pTimer != nullptr)
+	{
+		pTimer->SetEnableAddTime(false);
 	}
 }
 

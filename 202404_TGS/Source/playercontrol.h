@@ -54,10 +54,16 @@ private:
 
 	// メンバ変数
 	Effekseer::Handle* m_BressHandle = nullptr;
-	CDebugBressRange* m_pBressRange = nullptr;
-	CDebugBressRange* m_pBressHeight = nullptr;
-	float m_fHeight = 0.0f;
-	float m_fHeightVelocity = 10.0f;
+	CDebugBressRange* m_pBressRange = nullptr;		// 息範囲
+	CDebugBressRange* m_pBressHeight = nullptr;		// 息の届く高さ範囲
+	float m_fHeight = 0.0f;				// 現在の息高さ
+	float m_fMaxHeight = 1000.0f;		// 息の届く最大の高さ
+	float m_fTimeDownHeight = 0.0f;		// 高さの降下時間
+	float m_fHeightVelocity = 10.0f;	// 息の加算量
+
+#if _DEBUG
+	CCollisionLine_Box* m_pBox = nullptr;	// デバッグ用当たり判定
+#endif
 };
 
 //=============================

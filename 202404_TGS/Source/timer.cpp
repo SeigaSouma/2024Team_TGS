@@ -34,13 +34,8 @@ CTimer *CTimer::m_pTimer = nullptr;	// 自身のポインタ
 //==========================================================================
 CTimer::STATE_FUNC CTimer::m_StateFuncList[] =
 {
-	&CTimer::StateWait,			// 待機
-	&CTimer::StatAppearance,	// 出現
-	&CTimer::StatAddLittle,		// 少し加算
-	&CTimer::StateAdjustment,	// 調整
-	&CTimer::StateBeforeControll,	// 操作前
-	&CTimer::StateAfterControll,// 操作後
-	&CTimer::StateGoal,			// ゴール
+	&CTimer::StateWait,		// 待機
+	&CTimer::StateGoal,		// ゴール
 };
 
 //==========================================================================
@@ -68,28 +63,20 @@ CTimer::~CTimer()
 //==========================================================================
 // 生成処理
 //==========================================================================
-CTimer *CTimer::Create()
+CTimer* CTimer::Create()
 {
-	// 生成用のオブジェクト
-	CTimer *pScore = nullptr;
+	if (m_pTimer != nullptr) return m_pTimer;
 
-	if (pScore == nullptr)
-	{// nullptrだったら
+	// メモリの確保
+	m_pTimer = DEBUG_NEW CTimer;
 
-		// メモリの確保
-		pScore = DEBUG_NEW CTimer;
-
-		if (pScore != nullptr)
-		{// メモリの確保が出来ていたら
-
-			// 初期化処理
-			pScore->Init();
-		}
-
-		return pScore;
+	if (m_pTimer != nullptr)
+	{
+		// 初期化処理
+		m_pTimer->Init();
 	}
 
-	return nullptr;
+	return m_pTimer;
 }
 
 //==========================================================================
@@ -135,6 +122,7 @@ HRESULT CTimer::Init()
 
 		// 値の設定
 		pNumber->SetValue(time[i]);
+		pNumber->SetType(CObject::TYPE::TYPE_NUMBER);
 	}
 
 	return S_OK;
@@ -145,6 +133,7 @@ HRESULT CTimer::Init()
 //==========================================================================
 void CTimer::Uninit()
 {
+	delete m_pTimer;
 	m_pTimer = nullptr;
 }
 
@@ -195,79 +184,6 @@ void CTimer::StateWait()
 {
 	// 時間リセット
 	m_fStateTime = 0.0f;
-}
-
-//==========================================================================
-// 出現状態
-//==========================================================================
-void CTimer::StatAppearance()
-{
-	// 時間加算
-	m_fStateTime += CManager::GetInstance()->GetDeltaTime();
-
-	//if (m_fStateTime >= TIME_APPEARANCE)
-	//{
-	//	// 状態遷移
-	//	m_state = STATE_ADD_LITTLE;
-	//	m_fStateTime = 0.0f;
-
-	//	// タイマーを進める
-	//	m_bAddTime = true;
-	//}
-}
-
-//==========================================================================
-// 少し加算状態
-//==========================================================================
-void CTimer::StatAddLittle()
-{
-	// 時間加算
-	m_fStateTime += CManager::GetInstance()->GetDeltaTime();
-
-	//if (m_fStateTime >= TIME_ADDLITTLE)
-	//{
-	//	// 状態遷移
-	//	m_state = STATE_ADJ;
-	//	m_fStateTime = 0.0f;
-	//	CGame::GetInstance()->GetGameManager()->SetType(CGameManager::SCENE_MAIN);
-	//}
-}
-
-//==========================================================================
-// 調整状態
-//==========================================================================
-void CTimer::StateAdjustment()
-{
-	// 時間加算
-	m_fStateTime += CManager::GetInstance()->GetDeltaTime();
-
-	/*m_pos.x = UtilFunc::Correction::EasingLinear(m_posOrigin.x, DEST_POSITION.x, m_fStateTime / TIME_ADJUSTMENT);
-	m_pos.y = UtilFunc::Correction::EasingLinear(m_posOrigin.y, DEST_POSITION.y, m_fStateTime / TIME_ADJUSTMENT);*/
-
-	MyLib::Vector3 setpos = m_pos;
-
-	//if (m_fStateTime >= TIME_ADJUSTMENT)
-	//{
-	//	// 状態遷移
-	//	m_state = STATE_WAIT;
-	//	m_fStateTime = 0.0f;
-	//}
-}
-
-//==========================================================================
-// 操作前状態
-//==========================================================================
-void CTimer::StateBeforeControll()
-{
-	m_bAddTime = false;
-}
-
-//==========================================================================
-// 操作後状態
-//==========================================================================
-void CTimer::StateAfterControll()
-{
-	m_bAddTime = true;
 }
 
 //==========================================================================
