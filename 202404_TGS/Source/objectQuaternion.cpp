@@ -211,7 +211,7 @@ void CObjectQuaternion::CalWorldMtx()
 	mtxRot.Identity();
 	D3DXMATRIX D3DmtxRot = mtxRot.ConvertD3DXMATRIX();
 	D3DXMatrixRotationQuaternion(&D3DmtxRot, &m_quaternion);
-
+	mtxRot = D3DmtxRot;
 
 	// Œü‚«‚ð”½‰f‚·‚é
 	mtxWorld.Multiply(mtxWorld, mtxRot);
