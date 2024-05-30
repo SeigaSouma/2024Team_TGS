@@ -26,11 +26,6 @@ public:
 	enum eState
 	{
 		STATE_WAIT = 0,		// 待機
-		STATE_APPEARANCE,	// 出現
-		STATE_ADD_LITTLE,	// 少し加算
-		STATE_ADJ,			// 調整
-		STATE_BEFORECONTROLL,	// 操作前
-		STATE_AFTERCONTROLL,	// 操作後
 		STATE_GOAL,			// ゴール
 		STATE_MAX
 	};
@@ -45,7 +40,9 @@ public:
 	void Uninit();
 	void Update();
 	void Draw();
-	float GetTime() { return m_fTime; }
+
+	float GetTime() { return m_fTime; }	// 時間取得
+	void SetEnableAddTime(bool frag) { m_bAddTime = frag; }	// 時間加算フラグ設定
 
 	CTimer::eState GetState() { return m_state; }
 	void SetState(eState state) { m_state = state; }
@@ -62,11 +59,6 @@ private:
 	// メンバ関数
 	//=============================
 	void StateWait();
-	void StatAppearance();
-	void StatAddLittle();
-	void StateAdjustment();
-	void StateBeforeControll();
-	void StateAfterControll();
 	void StateGoal();
 
 	//=============================
@@ -77,7 +69,7 @@ private:
 	eState m_state;					// 状態
 	float m_fStateTime;				// 状態時間
 	float m_fTime;					// 時間
-	bool m_bAddTime;	// タイマー加算のフラグ
+	bool m_bAddTime;				// タイマー加算のフラグ
 	CMultiNumber* m_pClearTime[3];		// 種類ごとの数字
 	static CTimer *m_pTimer;	// 自身のポインタ
 };

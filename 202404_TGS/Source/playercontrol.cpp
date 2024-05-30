@@ -81,7 +81,6 @@ void CPlayerControlMove::Move(CPlayer* player)
 	CPlayer::STATE state = player->GetState();
 
 	if ((pMotion->IsGetMove(nMotionType) == 1 || pMotion->IsGetCancelable()) &&
-		state != CPlayer::STATE::STATE_KNOCKBACK &&
 		state != CPlayer::STATE::STATE_DEAD &&
 		state != CPlayer::STATE::STATE_DEADWAIT &&
 		state != CPlayer::STATE::STATE_FADEOUT)
@@ -285,8 +284,13 @@ void CPlayerControlMove::Move(CPlayer* player)
 	// ÉÇÅ[ÉVÉáÉìÉtÉâÉOê›íË
 	player->SetMotionFrag(motionFrag);
 
-	// à⁄ìÆó ê›íË
-	player->SetMove(move);
+#if _DEBUG
+	if (!pInputGamepad->GetPress(CInputGamepad::BUTTON::BUTTON_BACK, 0))
+#endif
+	{
+		// à⁄ìÆó ê›íË
+		player->SetMove(move);
+	}
 
 	// äpìxÇÃê≥ãKâª
 	UtilFunc::Transformation::RotNormalize(fRotDest);
@@ -334,7 +338,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	if (m_pBressHeight == nullptr)
 	{
 		m_pBressHeight = CDebugBressRange::Create();
-		m_pBressHeight->SetColor(D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
+		m_pBressHeight->SetColor(D3DXCOLOR(0.0f, 1.0f, 0.0f, 0.3f));
 	}
 
 	static bool fall = true;
@@ -347,13 +351,24 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 
 	ImGui::DragFloat("Add Height", &ADD_HEIGHT, 1.0f, 0.0f, 0.0f, "%.2f");
 
+	static float starttimeDownheight = 2.0f;	// ç~â∫Ç™énÇ‹ÇÈÇ‹Ç≈ÇÃéûä‘
+	static float timeDownheight = 2.0f;			// óéÇøÇ´ÇÈÇ‹Ç≈ÇÃéûä‘
+	static float ratioMinDownheight = 0.2f;		// óéÇøÇ´Ç¡ÇΩéûÇÃçƒâ∫íÍäÑçá
+	ImGui::DragFloat("Start Time DownHeight", &starttimeDownheight, 0.05f, 0.0f, 0.0f, "%.2f");
+	ImGui::DragFloat("Time DownHeight", &timeDownheight, 0.05f, 0.0f, 0.0f, "%.2f");
+	ImGui::DragFloat("Ratio Min DownHeight", &ratioMinDownheight, 0.01f, 0.0f, 0.0f, "%.2f");
 
+	
+
+	// â◊ï®ÇÃçÇÇ≥Ç≈äÑçáê›íË
 	float ratio = (posBaggage.y - posBaggageOrigin.y) / LENGTH_COLLISIONHEIGHT;
 	float ratioHeight = 1.0f - ratio;
 	ratioHeight = UtilFunc::Transformation::Clamp(ratioHeight, 0.5f, 1.0f);
 
+	// äÑçá
 	ratio = UtilFunc::Transformation::Clamp(ratio, 0.3f, 1.0f);
 
+	// ëßÇÃìÕÇ≠â°îÕàÕ
 	float range = ratio * LENGTH_COLLISIONRANGE;
 
 #if _DEBUG
@@ -388,6 +403,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	leftdw.x -= LENGTH_COLLISIONRANGE * 0.3f;
 	rightdw.x += LENGTH_COLLISIONRANGE * 0.3f;
 
+	// ëßÇÃîÕàÕê∂ê¨
 	if (m_pBressRange != nullptr)
 	{
 		m_pBressRange->SetRange(leftup, rightup, leftdw, rightdw);
@@ -396,7 +412,23 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 #endif
 
 #if GEKIMUZU
-	if (posBaggage.y <= posBaggageOrigin.y) posBaggage.y = posBaggageOrigin.y;
+
+#if _DEBUG
+	if (!pInputGamepad->GetPress(CInputGamepad::BUTTON::BUTTON_BACK, 0))
+#endif
+	{
+		// çÇÇ≥êßå¿
+		if (posBaggage.y <= posBaggageOrigin.y)
+		{
+			posBaggage.y = posBaggageOrigin.y;
+			player->Hit(1);
+		}
+		else
+		{
+			player->SetLife(player->GetLifeOrigin());
+		}
+	}
+
 	pBaggage->SetPosition(MyLib::Vector3(pos.x, posBaggage.y, pos.z));
 #endif
 
@@ -413,10 +445,15 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 		m_pBressHeight->SetRange(leftup, rightup, leftdw, rightdw);
 		m_pBressHeight->SetPosition(pos);
 	}
-	CollisionObstacle(player, pBaggage);
+	
+	bool bKantsu = CollisionObstacle(player, pBaggage);
 	if (CInputKeyboard::GetInstance()->GetPress(DIK_RETURN) ||
 		pKeyConfigPad->GetPress(INGAME::ACT_AIR))
 	{
+		// çÇÇ≥ÇÃç~â∫éûä‘â¡éZ
+		m_fTimeDownHeight += CManager::GetInstance()->GetDeltaTime();
+
+
 		if (fall) 
 		{// óéâ∫íÜ
 
@@ -445,7 +482,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 			posBaggage.x >= pos.x - range)
 		{// îÕàÕì‡
 
-			if (CollisionObstacle(player, pBaggage))
+			if (bKantsu)
 			{// è·äQï®ÇÃãÛãCä—í îªíË
 
 #if GEKIMUZU
@@ -460,11 +497,29 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	}
 	else
 	{
+		// çÇÇ≥ÇÃç~â∫éûä‘å∏éZ
+		m_fTimeDownHeight = 0.0f;
+		//m_fTimeDownHeight -= CManager::GetInstance()->GetDeltaTime();
+
 		m_fHeight -= ADD_HEIGHT * 2.0f;
 		m_fHeightVelocity += (m_fHeightVelocity - HEIGHT_VELOCITY) * 0.1f;
 		m_fHeightVelocity = UtilFunc::Transformation::Clamp(m_fHeightVelocity, 0.0f, HEIGHT_VELOCITY);
 	}
+
+	// çÇÇ≥ÇÃç~â∫éûä‘ï‚ê≥
+	m_fTimeDownHeight = UtilFunc::Transformation::Clamp(m_fTimeDownHeight, 0.0f, starttimeDownheight + timeDownheight);
+
+	// ëßÇÃçÇÇ≥ï‚ê≥
 	m_fHeight = UtilFunc::Transformation::Clamp(m_fHeight, MIN_HEIGHT, LENGTH_COLLISIONHEIGHT);
+
+	// ëßÇÃìÕÇ≠ç≈ëÂÇÃçÇÇ≥Ç™ç~â∫ÇµÇƒÇ¢Ç≠
+	if (m_fTimeDownHeight >= starttimeDownheight)
+	{
+		float timeratio = (m_fTimeDownHeight - starttimeDownheight) / timeDownheight;
+		timeratio = UtilFunc::Transformation::Clamp(timeratio, 0.0f, 1.0f);
+		m_fHeight = (1.0f - timeratio) * LENGTH_COLLISIONHEIGHT;
+		m_fHeight = UtilFunc::Transformation::Clamp(m_fHeight, LENGTH_COLLISIONHEIGHT * ratioMinDownheight, LENGTH_COLLISIONHEIGHT);
+	}
 
 	if (CInputKeyboard::GetInstance()->GetRelease(DIK_RETURN) ||
 		pKeyConfigPad->GetRelease(INGAME::ACTION::ACT_AIR))
@@ -524,23 +579,25 @@ bool CPlayerControlBaggage::CollisionObstacle(CPlayer* player, CBaggage* pBaggag
 	float range = LENGTH_COLLISIONRANGE * RATIO_COLLISIONRANGE;
 	MyLib::AABB bressAABB = MyLib::AABB(MyLib::Vector3(-range, 0.0f, -range), MyLib::Vector3(range, LENGTH_COLLISIONHEIGHT, range));
 
-	static CCollisionLine_Box* pBox = nullptr;
-
-	if (pBox == nullptr)
+#if _DEBUG
+	// É{ÉbÉNÉXê∂ê¨
+	if (m_pBox == nullptr)
 	{
-		pBox = CCollisionLine_Box::Create(bressAABB, D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
+		m_pBox = CCollisionLine_Box::Create(bressAABB, D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
 	}
 
+	// à íuê›íË
 	MyLib::Matrix mtx;
 	MyLib::Vector3 trans = posBaggage;
 	trans.y = posBaggageOrigin.y;
 
 	mtx.Translation(trans);
 
-	if (pBox != nullptr)
+	if (m_pBox != nullptr)
 	{
-		pBox->SetPosition(trans);
+		m_pBox->SetPosition(trans);
 	}
+#endif
 
 	while (list.ListLoop(itr))
 	{
@@ -559,13 +616,13 @@ bool CPlayerControlBaggage::CollisionObstacle(CPlayer* player, CBaggage* pBaggag
 		{
 			if (UtilFunc::Collision::IsAABBCollidingWithBox(bressAABB, mtx, MyLib::AABB(collider.vtxMin, collider.vtxMax), collider.worldmtx))
 			{
-				m_pBressRange->SetColor(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
+				m_pBressRange->SetColor(D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.3f));
 				return false;
 			}
 		}
 	}
 
-	m_pBressRange->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+	m_pBressRange->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.3f));
 	return true;
 }
 
