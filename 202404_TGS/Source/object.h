@@ -82,6 +82,8 @@ public:
 	virtual MyLib::Vector3 GetMove() const;						// 移動量取得
 	virtual void SetRotation(const MyLib::Vector3& rot);		// 向き設定
 	virtual MyLib::Vector3 GetRotation() const;					// 向き取得
+	virtual void SetOldRotation(const MyLib::Vector3& rot) { m_rotOld = rot; }		// 前回の向き設定
+	virtual MyLib::Vector3 GetOldRotation() const { return m_rotOld; }				// 前回の向き取得
 	virtual void SetOriginRotation(const MyLib::Vector3& rot);	// 元の向き設定
 	virtual MyLib::Vector3 GetOriginRotation() const;			// 元の向き取得
 
@@ -144,6 +146,7 @@ private:
 	MyLib::Vector3 m_posOld;		// 前回の位置
 	MyLib::Vector3 m_posOrigin;		// 元の位置
 	MyLib::Vector3 m_rot;			// 向き
+	MyLib::Vector3 m_rotOld;		// 前回の向き
 	MyLib::Vector3 m_rotOrigin;		// 元の向き
 	MyLib::Vector3 m_move;			// 移動量
 

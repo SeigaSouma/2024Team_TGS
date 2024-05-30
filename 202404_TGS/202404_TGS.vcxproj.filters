@@ -455,6 +455,9 @@
     <ClCompile Include="Source\keyconfig_gamepad.cpp">
       <Filter>keyconfig</Filter>
     </ClCompile>
+    <ClCompile Include="Source\objectQuaternion.cpp">
+      <Filter>object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ballast.h">
@@ -837,6 +840,9 @@
     </ClInclude>
     <ClInclude Include="Source\keyconfig_gamepad.h">
       <Filter>keyconfig</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\objectQuaternion.h">
+      <Filter>object</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

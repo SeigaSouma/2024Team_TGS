@@ -368,10 +368,11 @@ void CGameManager::SceneEnhance()
 void CGameManager::SceneWaitAirPush()
 {
 	CTimer* pTimer = CGame::GetInstance()->GetTimer();
+	CKeyConfig* pConfigPad = CKeyConfigManager::GetInstance()->GetConfig(CKeyConfigManager::CONTROL_INPAD);
 	CInputGamepad* pInputGamepad = CInputGamepad::GetInstance();
 
 	if (pTimer != nullptr &&
-		pInputGamepad->GetTrigger(CInputGamepad::BUTTON::BUTTON_A, 0))
+		pConfigPad->GetTrigger(INGAME::ACT_AIR))
 	{
 		pTimer->SetEnableAddTime(true);
 		m_SceneType = CGameManager::SceneType::SCENE_MAIN;
