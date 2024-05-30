@@ -366,6 +366,9 @@ void CObjectX::Kill()
 //==========================================================================
 void CObjectX::Update()
 {
+	// 過去の向き設定
+	SetOldRotation(GetRotation());
+
 	// 状態別処理
 	(this->*(m_StateFunc[m_state]))();
 
@@ -533,30 +536,26 @@ void CObjectX::CalWorldMtx()
 }
 
 //==========================================================================
-// 描画処理
+// 描画のみ
 //==========================================================================
-void CObjectX::Draw()
+void CObjectX::DrawOnly()
 {
-	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
 
 	D3DMATERIAL9 matDef;			// 現在のマテリアル保存用
-	D3DXMATERIAL *pMat;				// マテリアルデータへのポインタ
-
-	// ワールドマトリックスの計算処理
-	CalWorldMtx();
+	D3DXMATERIAL* pMat;				// マテリアルデータへのポインタ
 
 	// 現在のマテリアルを取得
 	pDevice->GetMaterial(&matDef);
 
 	// Xファイルのデータ取得
-	CXLoad::SXFile *pXData = CXLoad::GetInstance()->GetMyObject(m_nIdxXFile);
+	CXLoad::SXFile* pXData = CXLoad::GetInstance()->GetMyObject(m_nIdxXFile);
 
 	// マテリアルデータへのポインタを取得
 	pMat = (D3DXMATERIAL*)pXData->pBuffMat->GetBufferPointer();
 
 	// 頂点数分繰り返し
-	CTexture *pTex = CTexture::GetInstance();
+	CTexture* pTex = CTexture::GetInstance();
 	for (int nCntMat = 0; nCntMat < (int)pXData->dwNumMat; nCntMat++)
 	{
 		// マテリアルの設定
@@ -573,7 +572,7 @@ void CObjectX::Draw()
 		}
 
 		// パーツの描画
-		m_pMesh->DrawSubset(nCntMat);
+		pXData->pMesh->DrawSubset(nCntMat);
 
 		if (m_scale != MyLib::Vector3(1.0f, 1.0f, 1.0f))
 		{// 少しでも違う場合
@@ -585,6 +584,19 @@ void CObjectX::Draw()
 
 	// 保存していたマテリアルを戻す
 	pDevice->SetMaterial(&matDef);
+}
+
+//==========================================================================
+// 描画処理
+//==========================================================================
+void CObjectX::Draw()
+{
+
+	// ワールドマトリックスの計算処理
+	CalWorldMtx();
+
+	// 描画のみ
+	DrawOnly();
 }
 
 //==========================================================================
