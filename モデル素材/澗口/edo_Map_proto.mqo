@@ -2,13 +2,13 @@ Metasequoia Document
 Format Text Ver 1.0
 
 Scene {
-	pos -2840.4761 827.6774 62500.0000
+	pos 1741.4177 -8134.8091 100000.0000
 	lookat 0.0000 0.0000 0.0000
-	head 64.4667
-	pich 0.0608
+	head 65.6472
+	pich 0.2908
 	bank -0.0100
 	ortho 0
-	zoom2 0.1200
+	zoom2 0.0750
 	amb 0.250 0.250 0.250
 	dirlights 1 {
 		light {
@@ -38,7 +38,7 @@ Material 18 {
 	"mat5" col(0.576 0.576 0.576 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\Git\2024Team_TGS\ÉÇÉfÉãëfçﬁ\ì˙ñÏ‡V\TEXTURE\map_object\kawara_yane000.jpg")
 }
 Object "mati_Map" {
-	visible 0
+	visible 15
 	locking 0
 	shading 1
 	facet 59.5
@@ -128,7 +128,7 @@ Object "mati_Map" {
 	}
 }
 Object "obj1" {
-	visible 0
+	visible 15
 	locking 0
 	shading 1
 	facet 59.5
@@ -742,7 +742,7 @@ Object "obj1" {
 	}
 }
 Object "shop" {
-	visible 0
+	visible 15
 	locking 0
 	shading 1
 	facet 59.5
