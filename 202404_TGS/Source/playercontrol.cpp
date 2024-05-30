@@ -14,6 +14,7 @@
 #include "keyconfig_gamepad.h"
 #include "map_obstacle.h"
 #include "collisionLine_Box.h"
+#include "keyconfig.h"
 
 namespace
 {
@@ -80,7 +81,6 @@ void CPlayerControlMove::Move(CPlayer* player)
 	CPlayer::STATE state = player->GetState();
 
 	if ((pMotion->IsGetMove(nMotionType) == 1 || pMotion->IsGetCancelable()) &&
-		state != CPlayer::STATE::STATE_KNOCKBACK &&
 		state != CPlayer::STATE::STATE_DEAD &&
 		state != CPlayer::STATE::STATE_DEADWAIT &&
 		state != CPlayer::STATE::STATE_FADEOUT)
@@ -284,8 +284,13 @@ void CPlayerControlMove::Move(CPlayer* player)
 	// モーションフラグ設定
 	player->SetMotionFrag(motionFrag);
 
-	// 移動量設定
-	player->SetMove(move);
+#if _DEBUG
+	if (!pInputGamepad->GetPress(CInputGamepad::BUTTON::BUTTON_BACK, 0))
+#endif
+	{
+		// 移動量設定
+		player->SetMove(move);
+	}
 
 	// 角度の正規化
 	UtilFunc::Transformation::RotNormalize(fRotDest);
@@ -300,16 +305,22 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	// インプット情報取得
 	CInputKeyboard* pInputKeyboard = CInputKeyboard::GetInstance();
 	CInputGamepad* pInputGamepad = CInputGamepad::GetInstance();
-
+	CKeyConfigManager* pKeyConfigManager = CKeyConfigManager::GetInstance();
+	CKeyConfig* pKeyConfigPad = pKeyConfigManager->GetConfig(CKeyConfigManager::CONTROL_INPAD);
 	CGameManager* pGameMgr = CGame::GetInstance()->GetGameManager();
 
 	if (pGameMgr->GetType() == CGameManager::SceneType::SCENE_WAIT_AIRPUSH &&
 		(CInputKeyboard::GetInstance()->GetTrigger(DIK_RETURN) ||
-			pInputGamepad->GetTrigger(CInputGamepad::BUTTON_A,0)))
+			pKeyConfigPad->GetTrigger(INGAME::ACTION::ACT_AIR)))
 	{// 空気送り待ちで空気発射
 
 		// メインに移行
 		pGameMgr->SetType(CGameManager::SceneType::SCENE_MAIN);
+	}
+
+	if (pInputKeyboard->GetTrigger(DIK_LSHIFT)) {
+		std::thread th(&CKeyConfig::Setting, pKeyConfigPad, INGAME::ACTION::ACT_AIR);
+		th.detach();
 	}
 
 
@@ -327,7 +338,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	if (m_pBressHeight == nullptr)
 	{
 		m_pBressHeight = CDebugBressRange::Create();
-		m_pBressHeight->SetColor(D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
+		m_pBressHeight->SetColor(D3DXCOLOR(0.0f, 1.0f, 0.0f, 0.3f));
 	}
 
 	static bool fall = true;
@@ -340,13 +351,24 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 
 	ImGui::DragFloat("Add Height", &ADD_HEIGHT, 1.0f, 0.0f, 0.0f, "%.2f");
 
+	static float starttimeDownheight = 2.0f;	// 降下が始まるまでの時間
+	static float timeDownheight = 2.0f;			// 落ちきるまでの時間
+	static float ratioMinDownheight = 0.2f;		// 落ちきった時の再下底割合
+	ImGui::DragFloat("Start Time DownHeight", &starttimeDownheight, 0.05f, 0.0f, 0.0f, "%.2f");
+	ImGui::DragFloat("Time DownHeight", &timeDownheight, 0.05f, 0.0f, 0.0f, "%.2f");
+	ImGui::DragFloat("Ratio Min DownHeight", &ratioMinDownheight, 0.01f, 0.0f, 0.0f, "%.2f");
 
+	
+
+	// 荷物の高さで割合設定
 	float ratio = (posBaggage.y - posBaggageOrigin.y) / LENGTH_COLLISIONHEIGHT;
 	float ratioHeight = 1.0f - ratio;
 	ratioHeight = UtilFunc::Transformation::Clamp(ratioHeight, 0.5f, 1.0f);
 
+	// 割合
 	ratio = UtilFunc::Transformation::Clamp(ratio, 0.3f, 1.0f);
 
+	// 息の届く横範囲
 	float range = ratio * LENGTH_COLLISIONRANGE;
 
 #if _DEBUG
@@ -381,6 +403,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	leftdw.x -= LENGTH_COLLISIONRANGE * 0.3f;
 	rightdw.x += LENGTH_COLLISIONRANGE * 0.3f;
 
+	// 息の範囲生成
 	if (m_pBressRange != nullptr)
 	{
 		m_pBressRange->SetRange(leftup, rightup, leftdw, rightdw);
@@ -389,7 +412,23 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 #endif
 
 #if GEKIMUZU
-	if (posBaggage.y <= posBaggageOrigin.y) posBaggage.y = posBaggageOrigin.y;
+
+#if _DEBUG
+	if (!pInputGamepad->GetPress(CInputGamepad::BUTTON::BUTTON_BACK, 0))
+#endif
+	{
+		// 高さ制限
+		if (posBaggage.y <= posBaggageOrigin.y)
+		{
+			posBaggage.y = posBaggageOrigin.y;
+			player->Hit(1);
+		}
+		else
+		{
+			player->SetLife(player->GetLifeOrigin());
+		}
+	}
+
 	pBaggage->SetPosition(MyLib::Vector3(pos.x, posBaggage.y, pos.z));
 #endif
 
@@ -406,10 +445,15 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 		m_pBressHeight->SetRange(leftup, rightup, leftdw, rightdw);
 		m_pBressHeight->SetPosition(pos);
 	}
-	CollisionObstacle(player, pBaggage);
+	
+	bool bKantsu = CollisionObstacle(player, pBaggage);
 	if (CInputKeyboard::GetInstance()->GetPress(DIK_RETURN) ||
-		pInputGamepad->GetPress(CInputGamepad::BUTTON_A, 0))
+		pKeyConfigPad->GetPress(INGAME::ACT_AIR))
 	{
+		// 高さの降下時間加算
+		m_fTimeDownHeight += CManager::GetInstance()->GetDeltaTime();
+
+
 		if (fall) 
 		{// 落下中
 
@@ -438,7 +482,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 			posBaggage.x >= pos.x - range)
 		{// 範囲内
 
-			if (CollisionObstacle(player, pBaggage))
+			if (bKantsu)
 			{// 障害物の空気貫通判定
 
 #if GEKIMUZU
@@ -453,18 +497,31 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	}
 	else
 	{
+		// 降下状態
+		fall = true;
+
+		// 高さの降下時間減算
+		m_fTimeDownHeight = 0.0f;
+		//m_fTimeDownHeight -= CManager::GetInstance()->GetDeltaTime();
+
 		m_fHeight -= ADD_HEIGHT * 2.0f;
 		m_fHeightVelocity += (m_fHeightVelocity - HEIGHT_VELOCITY) * 0.1f;
 		m_fHeightVelocity = UtilFunc::Transformation::Clamp(m_fHeightVelocity, 0.0f, HEIGHT_VELOCITY);
 	}
+
+	// 高さの降下時間補正
+	m_fTimeDownHeight = UtilFunc::Transformation::Clamp(m_fTimeDownHeight, 0.0f, starttimeDownheight + timeDownheight);
+
+	// 息の高さ補正
 	m_fHeight = UtilFunc::Transformation::Clamp(m_fHeight, MIN_HEIGHT, LENGTH_COLLISIONHEIGHT);
 
-	if (CInputKeyboard::GetInstance()->GetRelease(DIK_RETURN) ||
-		CInputGamepad::GetInstance()->GetRelease(CInputGamepad::BUTTON::BUTTON_A, 0))
+	// 息の届く最大の高さが降下していく
+	if (m_fTimeDownHeight >= starttimeDownheight)
 	{
-		// 降下状態
-		fall = true;
-
+		float timeratio = (m_fTimeDownHeight - starttimeDownheight) / timeDownheight;
+		timeratio = UtilFunc::Transformation::Clamp(timeratio, 0.0f, 1.0f);
+		m_fHeight = (1.0f - timeratio) * LENGTH_COLLISIONHEIGHT;
+		m_fHeight = UtilFunc::Transformation::Clamp(m_fHeight, LENGTH_COLLISIONHEIGHT * ratioMinDownheight, LENGTH_COLLISIONHEIGHT);
 	}
 
 
@@ -517,23 +574,25 @@ bool CPlayerControlBaggage::CollisionObstacle(CPlayer* player, CBaggage* pBaggag
 	float range = LENGTH_COLLISIONRANGE * RATIO_COLLISIONRANGE;
 	MyLib::AABB bressAABB = MyLib::AABB(MyLib::Vector3(-range, 0.0f, -range), MyLib::Vector3(range, LENGTH_COLLISIONHEIGHT, range));
 
-	static CCollisionLine_Box* pBox = nullptr;
-
-	if (pBox == nullptr)
+#if _DEBUG
+	// ボックス生成
+	if (m_pBox == nullptr)
 	{
-		pBox = CCollisionLine_Box::Create(bressAABB, D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
+		m_pBox = CCollisionLine_Box::Create(bressAABB, D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
 	}
 
+	// 位置設定
 	MyLib::Matrix mtx;
 	MyLib::Vector3 trans = posBaggage;
 	trans.y = posBaggageOrigin.y;
 
 	mtx.Translation(trans);
 
-	if (pBox != nullptr)
+	if (m_pBox != nullptr)
 	{
-		pBox->SetPosition(trans);
+		m_pBox->SetPosition(trans);
 	}
+#endif
 
 	while (list.ListLoop(itr))
 	{
@@ -552,13 +611,13 @@ bool CPlayerControlBaggage::CollisionObstacle(CPlayer* player, CBaggage* pBaggag
 		{
 			if (UtilFunc::Collision::IsAABBCollidingWithBox(bressAABB, mtx, MyLib::AABB(collider.vtxMin, collider.vtxMax), collider.worldmtx))
 			{
-				m_pBressRange->SetColor(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
+				m_pBressRange->SetColor(D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.3f));
 				return false;
 			}
 		}
 	}
 
-	m_pBressRange->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+	m_pBressRange->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.3f));
 	return true;
 }
 
@@ -571,6 +630,8 @@ float CPlayerControlSurfacing::Surfacing(CPlayer* player)
 	// インプット情報取得
 	CInputKeyboard* pInputKeyboard = CInputKeyboard::GetInstance();
 	CInputGamepad* pInputGamepad = CInputGamepad::GetInstance();
+	CKeyConfigManager* pKeyConfigManager = CKeyConfigManager::GetInstance();
+	CKeyConfig* pKeyConfigPad = pKeyConfigManager->GetConfig(CKeyConfigManager::CONTROL_INPAD);
 
 	// 浮上判定
 	bool bUp = false;
@@ -583,7 +644,7 @@ float CPlayerControlSurfacing::Surfacing(CPlayer* player)
 	//}
 
 	if (CInputKeyboard::GetInstance()->GetPress(DIK_W) ||
-		CInputGamepad::GetInstance()->GetPress(CInputGamepad::BUTTON::BUTTON_RB, 0))
+		pKeyConfigPad->GetPress(INGAME::ACTION::ACT_UPDOWN))
 	{// 入力している
 		bUp = true;
 	}

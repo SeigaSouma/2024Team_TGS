@@ -23,11 +23,13 @@ public:
 	~CkeyConfigPad(){}
 
 	// ƒƒ“ƒoŠÖ”
+	void Uninit() override;
 	bool GetPress(const int type) override;
 	bool GetTrigger(const int type) override;
 	bool GetRelease(const int type) override;
 	bool GetRepeat(const int type) override;
-	void Uninit() override;
+	void Load(const std::string& file) override;
+	void Setting(const int type) override;
 
 public:
 	void Join(const int action, const CInputGamepad::BUTTON key);

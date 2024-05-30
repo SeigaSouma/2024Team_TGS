@@ -242,6 +242,7 @@
     <ClCompile Include="Source\objectChara.cpp" />
     <ClCompile Include="Source\objectHierarchy.cpp" />
     <ClCompile Include="Source\ObjectLine.cpp" />
+    <ClCompile Include="Source\objectQuaternion.cpp" />
     <ClCompile Include="Source\objectX.cpp" />
     <ClCompile Include="Source\object_circlegauge2D.cpp" />
     <ClCompile Include="Source\particle.cpp" />
@@ -376,6 +377,7 @@
     <ClInclude Include="Source\objectChara.h" />
     <ClInclude Include="Source\objectHierarchy.h" />
     <ClInclude Include="Source\ObjectLine.h" />
+    <ClInclude Include="Source\objectQuaternion.h" />
     <ClInclude Include="Source\objectX.h" />
     <ClInclude Include="Source\object_circlegauge2D.h" />
     <ClInclude Include="Source\particle.h" />

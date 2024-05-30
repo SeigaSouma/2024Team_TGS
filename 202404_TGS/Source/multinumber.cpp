@@ -196,6 +196,7 @@ void CMultiNumber::Uninit()
 				m_ppMultiNumber[nCntNum] = nullptr;
 			}
 		}
+		delete[] m_ppMultiNumber;
 		m_ppMultiNumber = nullptr;
 	}
 
@@ -219,6 +220,7 @@ void CMultiNumber::Kill()
 				m_ppMultiNumber[nCntNum] = nullptr;
 			}
 		}
+		delete[] m_ppMultiNumber;
 		m_ppMultiNumber = nullptr;
 	}
 

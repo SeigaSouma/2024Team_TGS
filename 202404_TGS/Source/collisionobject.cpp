@@ -230,11 +230,7 @@ void CCollisionObject::CollisionPlayer()
 		CPlayer::STATE PlayerState = pPlayer->GetState();
 
 		// ‹…‚Ì”»’è
-		if (UtilFunc::Collision::SphereRange(pos, PlayerPos, m_fRadius, PlayerRadius).ishit &&
-			PlayerState != CPlayer::STATE_DEAD &&
-			PlayerState != CPlayer::STATE_DMG &&
-			PlayerState != CPlayer::STATE_KNOCKBACK &&
-			PlayerState != CPlayer::STATE_INVINCIBLE)
+		if (UtilFunc::Collision::SphereRange(pos, PlayerPos, m_fRadius, PlayerRadius).ishit)
 		{
 			// ƒqƒbƒgˆ—
 			pPlayer->Hit(m_nDamage);

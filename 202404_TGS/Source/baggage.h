@@ -8,14 +8,14 @@
 #ifndef _BAGGAGE_H_
 #define _BAGGAGE_H_		// 二重インクルード防止
 
-#include "objectX.h"
+#include "objectQuaternion.h"
 #include "listmanager.h"
 
 //==========================================================================
 // クラス定義
 //==========================================================================
 // 荷物クラス
-class CBaggage : public CObjectX
+class CBaggage : public CObjectQuaternion
 {
 public:
 	
@@ -59,7 +59,7 @@ private:
 	//=============================
 	// メンバ関数
 	//=============================
-	void Hit();
+	bool Hit();
 	// その他
 
 	//=============================
@@ -68,6 +68,7 @@ private:
 	TYPE m_type;			// 種類
 	float m_fWeight;		// 重さ
 	MyLib::Vector3 m_force;	// 力
+	MyLib::Vector3 m_velorot;	// 回転速度
 	bool m_bDrop;		// 落下判定
 	static CListManager<CBaggage> m_List;	// リスト
 

@@ -7,6 +7,26 @@
 #ifndef _KEYCONFIG_H_
 #define _KEYCONFIG_H_	// 二重インクルード防止
 
+namespace INGAME
+{
+	enum ACTION
+	{
+		ACT_UPDOWN = 0,	// 浮上
+		ACT_AIR,		// 空気
+		ACT_MAX
+	};
+}
+
+namespace OUTGAME
+{
+	enum ACTION
+	{
+		ACT_UPDOWN = 0,	// 浮上
+		ACT_AIR,		// 空気
+		ACT_MAX
+	};
+}
+
 //==========================================================================
 // クラス定義
 //==========================================================================
@@ -21,12 +41,14 @@ public:
 
 	//=============================
 	// メンバ関数
-	//=============================
+	//============================= 
 	virtual void Uninit() = 0;
 	virtual bool GetPress(const int type) = 0;
 	virtual bool GetTrigger(const int type) = 0;
 	virtual bool GetRelease(const int type) = 0;
 	virtual bool GetRepeat(const int type) = 0;
+	virtual void Load(const std::string& file) = 0;
+	virtual void Setting(const int type) = 0;
 };
 
 //==========================================================================
@@ -60,10 +82,12 @@ public:
 	static CKeyConfigManager* GetInstance() { return m_pInstance; }
 	static CKeyConfigManager* Create();
 	bool Bind(CKeyConfig* pConfig, const int type);
+	CKeyConfig* GetConfig(const Control type) { return m_apKeyConfig[type]; }
 
 private:
 
 	// メンバ関数
+	void ConfigCreate();
 
 	// 静的メンバ変数
 	static CKeyConfigManager* m_pInstance;

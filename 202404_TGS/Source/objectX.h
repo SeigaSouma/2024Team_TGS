@@ -52,6 +52,9 @@ public:
 	void Draw();
 	void Draw(D3DXCOLOR col);
 	void Draw(float fAlpha);
+
+	void DrawOnly();	// •`‰æ‚Ì‚Ý
+
 	void BindTexture(int *nIdx);
 	void BindXData(int nIdxXFile);
 
