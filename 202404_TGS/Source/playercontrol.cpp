@@ -331,6 +331,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	MyLib::Vector3 posBaggageOrigin = pBaggage->GetOriginPosition();
 
 
+#if _DEBUG
 	if (m_pBressRange == nullptr)
 	{
 		m_pBressRange = CDebugBressRange::Create();
@@ -340,6 +341,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 		m_pBressHeight = CDebugBressRange::Create();
 		m_pBressHeight->SetColor(D3DXCOLOR(0.0f, 1.0f, 0.0f, 0.3f));
 	}
+#endif
 
 	static bool fall = true;
 
@@ -356,9 +358,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	static float ratioMinDownheight = 0.2f;		// 落ちきった時の再下底割合
 	ImGui::DragFloat("Start Time DownHeight", &starttimeDownheight, 0.05f, 0.0f, 0.0f, "%.2f");
 	ImGui::DragFloat("Time DownHeight", &timeDownheight, 0.05f, 0.0f, 0.0f, "%.2f");
-	ImGui::DragFloat("Ratio Min DownHeight", &ratioMinDownheight, 0.01f, 0.0f, 0.0f, "%.2f");
-
-	
+	ImGui::DragFloat("Ratio Min DownHeight", &ratioMinDownheight, 0.01f, 0.0f, 0.0f, "%.2f");	
 
 	// 荷物の高さで割合設定
 	float ratio = (posBaggage.y - posBaggageOrigin.y) / LENGTH_COLLISIONHEIGHT;
@@ -444,6 +444,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	pBaggage->SetRotation(MyLib::Vector3(0.0f, setRot.AngleXZ(0.0f), 0.0f));
 #endif
 
+#if _DEBUG
 	if (m_pBressHeight != nullptr)
 	{
 		float ratiooo = m_fHeight / LENGTH_COLLISIONHEIGHT;
@@ -457,6 +458,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 		m_pBressHeight->SetRange(leftup, rightup, leftdw, rightdw);
 		m_pBressHeight->SetPosition(pos);
 	}
+#endif
 	
 	bool bKantsu = CollisionObstacle(player, pBaggage);
 	if (CInputKeyboard::GetInstance()->GetPress(DIK_RETURN) ||
@@ -586,19 +588,19 @@ bool CPlayerControlBaggage::CollisionObstacle(CPlayer* player, CBaggage* pBaggag
 	float range = LENGTH_COLLISIONRANGE * RATIO_COLLISIONRANGE;
 	MyLib::AABB bressAABB = MyLib::AABB(MyLib::Vector3(-range, 0.0f, -range), MyLib::Vector3(range, LENGTH_COLLISIONHEIGHT, range));
 
-#if _DEBUG
-	// ボックス生成
-	if (m_pBox == nullptr)
-	{
-		m_pBox = CCollisionLine_Box::Create(bressAABB, D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
-	}
-
 	// 位置設定
 	MyLib::Matrix mtx;
 	MyLib::Vector3 trans = posBaggage;
 	trans.y = posBaggageOrigin.y;
 
 	mtx.Translation(trans);
+
+#if _DEBUG
+	// ボックス生成
+	if (m_pBox == nullptr)
+	{
+		m_pBox = CCollisionLine_Box::Create(bressAABB, D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
+	}
 
 	if (m_pBox != nullptr)
 	{
@@ -623,13 +625,17 @@ bool CPlayerControlBaggage::CollisionObstacle(CPlayer* player, CBaggage* pBaggag
 		{
 			if (UtilFunc::Collision::IsAABBCollidingWithBox(bressAABB, mtx, MyLib::AABB(collider.vtxMin, collider.vtxMax), collider.worldmtx))
 			{
+#if _DEBUG
 				m_pBressRange->SetColor(D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.3f));
+#endif
 				return false;
 			}
 		}
 	}
 
+#if _DEBUG
 	m_pBressRange->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.3f));
+#endif
 	return true;
 }
 
