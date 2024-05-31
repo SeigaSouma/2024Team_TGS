@@ -891,6 +891,9 @@ void CPlayer::ReaspawnSetting()
 	MyLib::Vector3 pos = GetPosition();
 	m_pBaggage->SetPosition(MyLib::Vector3(pos.x, MAX_HEIGHT, pos.z));
 
+	CCamera* pCamera = CManager::GetInstance()->GetCamera();
+
+	pCamera->SetLenDest(pCamera->GetOriginDistance(), 0, pCamera->GetOriginDistance(), 1.0f);
 }
 
 //==========================================================================
@@ -1083,8 +1086,8 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 	if (nLife % 4 == 0)
 	{
 		float ratio = 1.0f - static_cast<float>(nLife) / GetLifeOrigin();
-		UtilFunc::Transformation::Clamp(ratio, 0.2f, 1.0f);
-		pCamera->SetShake(3, 18.0f * ratio, 0.0f);
+		UtilFunc::Transformation::Clamp(ratio, 0.3f, 1.0f);
+		pCamera->SetShake(3, 25.0f * ratio, 0.0f);	// U“®
 	}
 
 	nLife -= nValue;
@@ -1099,13 +1102,16 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 
 		// €–S‚Ìİ’è
 		DeadSetting(&hitresult);
-
+		pCamera->SetLenDest(1000.0f, 200, 2.0f, 0.35f);	// ‹——£‚ğ‹ß‚Ã‚¯‚é
 	}
+	else if (nLife <= GetLifeOrigin() * 0.3f)
+	{
+		pCamera->SetLenDest(1000.0f, 10, 2.0f, 0.35f);	// ‹——£‚ğ‹ß‚Ã‚¯‚é
+	}
+	
 
 	// ‰ß‹‚Ìó‘Ô•Û‘¶
 	m_Oldstate = m_state;
-
-	
 
 	// “–‚½‚Á‚½”»’è‚ğ•Ô‚·
 	return hitresult;
