@@ -158,7 +158,7 @@ void CBaggage::Update()
 	else m_velorot.y += (0.0f - m_velorot.y) * PITCH_INER;
 
 	m_velorot.x += (0.0f - m_velorot.x) * ROLL_INER;
-	rot.z -= m_velorot.x;
+	rot.z += m_velorot.x;
 	rot.y += m_velorot.y;
 	UtilFunc::Transformation::RotNormalize(rot);
 
