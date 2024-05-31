@@ -40,6 +40,7 @@ public:
 		EFKLABEL_SAMPLE_LASER = 0,	// サンプルのレーザー
 		EFKLABEL_BRESS,				// 息
 		EFKLABEL_RIVER_SAMPLE,		// 川サンプル
+		EFKLABEL_IMPACT,			// 衝撃
 		EFKLABEL_MAX
 	};
 
