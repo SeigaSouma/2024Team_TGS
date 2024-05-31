@@ -10,6 +10,15 @@
 #include "debugproc.h"
 #include "input.h"
 
+
+//==========================================================================
+// 定数定義
+//==========================================================================
+namespace
+{
+	float DEFAULT_MOVEFACTOR = 0.1f;	// デフォルトの移動補正係数
+}
+
 //==========================================================================
 // コンストラクタ
 //==========================================================================
@@ -19,8 +28,9 @@ CObjectQuaternion::CObjectQuaternion(int nPriority) : CObjectX(nPriority)
 	D3DXQuaternionIdentity(&m_quaternion);
 	m_vecAxis = 0.0f;			// 回転軸
 	m_fValueRot = 0.0f;			// 回転角
+	m_fMoveValueRot = 0.0f;		// 回転角の移動量
+	m_fMoveFactor = 0.0f;		// 移動量の補正係数
 	m_RotationMtx.Identity();	// 計算用マトリックス宣言
-	m_fRotDest = 0.0f;
 }
 
 //==========================================================================
@@ -58,6 +68,8 @@ HRESULT CObjectQuaternion::Init()
 {
 	CObjectX::Init("data\\MODEL\\box.x");
 	CObject::SetType(CObject::TYPE::TYPE_OBJECTX);
+
+	m_fMoveFactor = DEFAULT_MOVEFACTOR;		// 移動量の補正係数
 
 	return S_OK;
 }
@@ -121,30 +133,45 @@ void CObjectQuaternion::Update()
 	SetRotation(rot);
 #endif
 
+	//// 回転角加算
+	//m_fValueRot = m_fMoveValueRot;
+	//m_fMoveValueRot += (0.0f - m_fMoveValueRot) * m_fMoveFactor;
+
 }
 
 //==========================================================================
-// ワールドマトリックスの計算処理
+// クォータニオン反映
 //==========================================================================
-void CObjectQuaternion::CalWorldMtx()
+void CObjectQuaternion::BindQuaternion(const MyLib::Vector3& vecAxis, float valueRot)
 {
-#if 1
-	// デバイスの取得
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
+	MyLib::Matrix mtxRot;	// 計算用マトリックス宣言
 
-	MyLib::Matrix mtxRot, mtxTrans;	// 計算用マトリックス宣言
-	MyLib::Matrix mtxWorld = GetWorldMtx();
-
-	// 情報取得
-	MyLib::Vector3 pos = GetPosition();
-
-	// 初期化
-	mtxWorld.Identity();
 	D3DXQuaternionIdentity(&m_quaternion);
 
+	// 任意の回転軸における回転角からクォータニオン計算
+	D3DXQuaternionRotationAxis(&m_quaternion, &vecAxis, valueRot);
 
-	// 差分
-	MyLib::Vector3 rotDiff = GetRotation() - GetOldRotation();
+	// 回転マトリックスを作成
+	mtxRot.Identity();
+	D3DXMATRIX calRotMtx = mtxRot.ConvertD3DXMATRIX();
+	D3DXMatrixRotationQuaternion(&calRotMtx, &m_quaternion);
+	mtxRot = calRotMtx;
+
+	// クォータニオンを正規化
+	D3DXQuaternionNormalize(&m_quaternion, &m_quaternion);
+
+	// 向きを反映する
+	m_RotationMtx.Multiply(m_RotationMtx, mtxRot);
+}
+
+//==========================================================================
+// クォータニオン計算
+//==========================================================================
+void CObjectQuaternion::CalQuaternion()
+{
+	MyLib::Matrix mtxRot;	// 計算用マトリックス宣言
+
+	D3DXQuaternionIdentity(&m_quaternion);
 
 	// 任意の回転軸における回転角からクォータニオン計算
 	D3DXQuaternionRotationAxis(&m_quaternion, &m_vecAxis, m_fValueRot);
@@ -161,6 +188,31 @@ void CObjectQuaternion::CalWorldMtx()
 
 	// 向きを反映する
 	m_RotationMtx.Multiply(m_RotationMtx, mtxRot);
+}
+
+//==========================================================================
+// ワールドマトリックスの計算処理
+//==========================================================================
+void CObjectQuaternion::CalWorldMtx()
+{
+#if 1
+
+	// クォータニオン計算
+	//CalQuaternion();
+
+	// デバイスの取得
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
+
+	MyLib::Matrix mtxTrans;	// 計算用マトリックス宣言
+	MyLib::Matrix mtxWorld = GetWorldMtx();
+
+	// 情報取得
+	MyLib::Vector3 pos = GetPosition();
+
+	// 初期化
+	mtxWorld.Identity();
+
+	// 向きを反映する
 	mtxWorld.Multiply(mtxWorld, m_RotationMtx);
 
 	// 位置を反映する
