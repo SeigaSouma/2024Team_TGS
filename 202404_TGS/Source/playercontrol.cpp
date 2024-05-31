@@ -429,7 +429,19 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 		}
 	}
 
+	// ˆÊ’uÝ’è
 	pBaggage->SetPosition(MyLib::Vector3(pos.x, posBaggage.y, pos.z));
+
+
+	// ƒJƒƒ‰î•ñŽæ“¾
+	CCamera* pCamera = CManager::GetInstance()->GetCamera();
+	MyLib::Vector3 Camerarot = pCamera->GetRotation();
+
+	// Œü‚«Ý’è
+	MyLib::Vector3 setRot;
+	setRot.x += sinf(D3DX_PI * 0.5f + 0.0f) * 1.0f;
+	setRot.z += cosf(D3DX_PI * 0.5f + 0.0f) * 1.0f;
+	pBaggage->SetRotation(MyLib::Vector3(0.0f, setRot.AngleXZ(0.0f), 0.0f));
 #endif
 
 	if (m_pBressHeight != nullptr)
