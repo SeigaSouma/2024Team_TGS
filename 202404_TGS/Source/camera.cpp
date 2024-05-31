@@ -29,7 +29,7 @@
 #define MOVE			(2.5f)				// ˆÚ“®—Ê
 #define MAX_LENGTH		(50000.0f)			// Å‘å‹——£
 #define MIN_LENGTH		(10.0f)				// Å­‹——£
-#define START_CAMERALEN	(4000.0f)			// Œ³‚Ì‹——£
+#define START_CAMERALEN	(1700.0f)			// Œ³‚Ì‹——£
 #define ROT_MOVE_MOUSE	(0.01f)				// ‰ñ“]ˆÚ“®—Ê
 #define ROT_MOVE_STICK_Y	(0.00040f)			// ‰ñ“]ˆÚ“®—Ê
 #define ROT_MOVE_STICK_Z	(0.00020f)			// ‰ñ“]ˆÚ“®—Ê
@@ -581,6 +581,7 @@ void CCamera::MoveCameraDistance()
 			if (m_fDestDistance <= m_fOriginDistance)
 			{// •â³‚µ‚·‚¬‚½‚ç–ß‚·
 				m_fDestDistance = m_fOriginDistance;
+				SetStateCameraV(new CStateCameraV);
 			}
 		}
 		else
@@ -593,6 +594,7 @@ void CCamera::MoveCameraDistance()
 			if (m_fDestDistance >= m_fOriginDistance)
 			{// •â³‚µ‚·‚¬‚½‚ç–ß‚·
 				m_fDestDistance = m_fOriginDistance;
+				SetStateCameraV(new CStateCameraV);
 			}
 		}
 	}
@@ -834,17 +836,7 @@ void CCamera::SetCameraVGame()
 			m_fDiffHeightSave += m_fHeightMax - m_posV.y;
 		}
 
-
-		static float MAXHEIGHT = 600.0f;
-
-		// Š„‡
-		float ratio = (m_posR.y - 200.0f) / MAXHEIGHT;
-		ratio = UtilFunc::Transformation::Clamp(ratio, 0.0f, 1.0f);
-
-		m_fAutoDistance_Dest = 1200.0f * ratio + 1500.0f;
-
-		m_fDistance += (m_fAutoDistance_Dest - m_fDistance) * 0.25f;
-
+		m_pStateCameraV->Distance(this);
 
 		// •â³‚·‚é
 		m_posV += (m_posVDest - m_posV) * (0.12f * MULTIPLY_POSV_CORRECTION);
@@ -1715,6 +1707,21 @@ void CStateCameraV::LimitPos(CCamera* pCamera)
 	}
 
 	pCamera->SetPositionVDest(posVDest);
+}
+
+//==========================================================================
+// ‚‚³‚É‚æ‚é‹——£İ’è
+//==========================================================================
+void CStateCameraV::Distance(CCamera* pCamera)
+{
+	static float MAXHEIGHT = 600.0f;
+
+	// Š„‡
+	float ratio = (pCamera->GetPositionR().y - 200.0f) / MAXHEIGHT;
+	ratio = UtilFunc::Transformation::Clamp(ratio, 0.0f, 1.0f);
+	pCamera->SetAutoDistanceDest(1200.0f * ratio + 1500.0f);
+
+	pCamera->SetDistance(pCamera->GetDistance() + (pCamera->GetAutoDistanceDest() - pCamera->GetDistance()) * 0.25f);
 }
 
 //==========================================================================

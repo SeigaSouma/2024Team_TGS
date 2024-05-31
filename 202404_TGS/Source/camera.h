@@ -141,6 +141,8 @@ public:
 	bool IsOnScreen(const MyLib::Vector3 pos);	// スクリーン内の判定
 	void MoveCameraStick(int nIdx = 0);			// スティック操作
 	void WarpCamera(MyLib::Vector3 pos);		// カメラワープ
+	void SetAutoDistanceDest(float fDistance) { m_fAutoDistance_Dest = fDistance; }
+	void SetDistance(float fDistance) { m_fDistance = fDistance; }
 
 	// 情報取得
 	void SetPositionR(const MyLib::Vector3& pos) { m_posR = pos; }
@@ -149,6 +151,8 @@ public:
 	MyLib::Vector3 GetPositionRDest() { return m_posRDest; }
 	void SetPositionVDest(const MyLib::Vector3& pos) { m_posVDest = pos; }
 	MyLib::Vector3 GetPositionVDest() { return m_posVDest; }
+	float GetAutoDistanceDest() { return m_fAutoDistance_Dest; }
+	float GetDistance() { return m_fDistance; }
 
 	// ステートパターン設定
 	void SetStateCamraR(CStateCameraR* state);	// 注視点の状態設定
@@ -294,6 +298,7 @@ public:
 	CStateCameraV() {}
 
 	virtual void LimitPos(CCamera* pCamera);	// 位置制限
+	virtual void Distance(CCamera* pCamera);	// 距離調整
 };
 
 class CStateCameraV_Main : public CStateCameraV
@@ -310,6 +315,13 @@ public:
 	virtual void LimitPos(CCamera* pCamera) override;	// 位置制限
 };
 
+class CStateCameraV_Distance : public CStateCameraV
+{
+public:
+	CStateCameraV_Distance() {}
+
+	virtual void Distance(CCamera* pCamera) override {}	// 距離調整
+};
 
 //=============================
 // 状態パターン
