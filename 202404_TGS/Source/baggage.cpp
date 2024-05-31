@@ -141,7 +141,6 @@ void CBaggage::Update()
 	// 情報取得
 	MyLib::Vector3 posOrigin = GetOriginPosition();
 	MyLib::Vector3 pos = GetPosition();
-	MyLib::Vector3 rot = GetRotation();
 	MyLib::Vector3 move = GetMove();
 	ImGui::DragFloat("weight", &m_fWeight, 0.1f, 0.0f, 0.0f, "%.2f");
 	ImGui::DragFloat("PITCH_RATIO", &PITCH_RATIO, 0.1f, 0.0f, 0.0f, "%.2f");
@@ -158,9 +157,13 @@ void CBaggage::Update()
 	else m_velorot.y += (0.0f - m_velorot.y) * PITCH_INER;
 
 	m_velorot.x += (0.0f - m_velorot.x) * ROLL_INER;
-	rot.z -= m_velorot.x;
-	rot.y += m_velorot.y;
-	UtilFunc::Transformation::RotNormalize(rot);
+
+	// クォータニオン割り当て
+	BindQuaternion(MyLib::Vector3(0.0f, 1.0f, 0.0f), m_velorot.y);
+
+	MyLib::Vector3 rot = GetRotation();
+	MyLib::Vector3 vec = MyLib::Vector3(sinf(rot.y), 0.0f, cosf(rot.y));
+	BindQuaternion(MyLib::Vector3(vec.z, 0.0f, -vec.x), m_velorot.x);
 
 	// 重力加算
 	move.y -= mylib_const::GRAVITY * m_fWeight;
@@ -181,12 +184,9 @@ void CBaggage::Update()
 	// 慣性補正
 	move.x += (0.0f - move.x) * 0.25f;
 	move.z += (0.0f - move.z) * 0.25f;
-	/*m_force.x += (0.0f - m_force.x) * 0.01f;
-	m_force.z += (0.0f - m_force.z) * 0.01f;*/
 
 	// 情報設定
 	SetPosition(pos);
-	SetRotation(rot);
 	SetMove(move);
 
 	ImGui::Dummy(ImVec2(0.0f, 10.0f));
@@ -232,6 +232,21 @@ void CBaggage::Update()
 		SetPosition(pos);
 		SetMove(0.0f);
 
+
+
+		if (ImGui::TreeNode("Q"))
+		{
+			
+
+			MyLib::Vector3 rot = GetRotation();
+			MyLib::Vector3 vec = MyLib::Vector3(sinf(rot.y), 0.0f, cosf(rot.y));
+			BindQuaternion(MyLib::Vector3(vec.z, 0.0f, -vec.x), 0.1f);
+
+			// クォータニオン割り当て
+			BindQuaternion(MyLib::Vector3(0.0f, 1.0f, 0.0f), 0.1f);
+
+			ImGui::TreePop();
+		}
 		ImGui::TreePop();
 	}
 }
