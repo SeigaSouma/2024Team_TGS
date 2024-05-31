@@ -571,14 +571,29 @@ void CCamera::MoveCameraDistance()
 	{
 		m_nCntDistance = 0;
 
-		if (m_fDestDistance >= m_fOriginDistance)
-		{// ƒJƒƒ‰‚ğ‹ß‚Ã‚¯‚Ä‚¢‚­
-			m_fDestDistance -= m_fDistanceDecrementValue;
-		}
+		if (m_fDistanceDecrementValue >= 0.0f)
+		{
+			if (m_fDestDistance >= m_fOriginDistance)
+			{// ƒJƒƒ‰‚ğ‹ß‚Ã‚¯‚Ä‚¢‚­
+				m_fDestDistance -= m_fDistanceDecrementValue;
+			}
 
-		if (m_fDestDistance <= m_fOriginDistance)
-		{// •â³‚µ‚·‚¬‚½‚ç–ß‚·
-			m_fDestDistance = m_fOriginDistance;
+			if (m_fDestDistance <= m_fOriginDistance)
+			{// •â³‚µ‚·‚¬‚½‚ç–ß‚·
+				m_fDestDistance = m_fOriginDistance;
+			}
+		}
+		else
+		{
+			if (m_fDestDistance <= m_fOriginDistance)
+			{// ƒJƒƒ‰‚ğ‹ß‚Ã‚¯‚Ä‚¢‚­
+				m_fDestDistance -= m_fDistanceDecrementValue;
+			}
+
+			if (m_fDestDistance >= m_fOriginDistance)
+			{// •â³‚µ‚·‚¬‚½‚ç–ß‚·
+				m_fDestDistance = m_fOriginDistance;
+			}
 		}
 	}
 
