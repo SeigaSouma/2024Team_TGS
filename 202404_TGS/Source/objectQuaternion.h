@@ -44,7 +44,7 @@ private:
 	D3DXQUATERNION m_quaternion;	// クォータニオン
 	MyLib::Vector3 m_vecAxis;		// 回転軸
 	float m_fValueRot;				// 回転角
-	D3DXMATRIX m_RotationMtx;	// 計算用マトリックス宣言
+	MyLib::Matrix m_RotationMtx;	// 計算用マトリックス宣言
 
 };
 

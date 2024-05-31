@@ -57,7 +57,7 @@
 namespace
 {
 	//const MyLib::Vector3 DEFAULT_GAMEROT = MyLib::Vector3(0.0f, 0.0f, -0.10f);	// ゲームのデフォルト向き
-	const MyLib::Vector3 DEFAULT_GAMEROT = MyLib::Vector3(0.0f, 0.38f, -0.10f);	// ゲームのデフォルト向き
+	const MyLib::Vector3 DEFAULT_GAMEROT = MyLib::Vector3(0.0f, 0.38f, -0.05f);	// ゲームのデフォルト向き
 	const float MULTIPLY_POSV_CORRECTION = 2.1f;	// (ゲーム時)視点の補正係数倍率
 	const float MULTIPLY_POSR_CORRECTION = 2.1f;	// (ゲーム時)注視点の補正係数倍率
 	const float DISATNCE_POSR_PLAYER = 0.0f;		// (ゲーム時)プレイヤーとの注視点距離
@@ -823,10 +823,10 @@ void CCamera::SetCameraVGame()
 		static float MAXHEIGHT = 600.0f;
 
 		// 割合
-		float ratio = m_posR.y / MAXHEIGHT;
-		ratio = UtilFunc::Transformation::Clamp(ratio, 0.2f, 1.0f);
+		float ratio = (m_posR.y - 200.0f) / MAXHEIGHT;
+		ratio = UtilFunc::Transformation::Clamp(ratio, 0.0f, 1.0f);
 
-		m_fAutoDistance_Dest = 4000.0f * ratio + 800.0f;
+		m_fAutoDistance_Dest = 1200.0f * ratio + 1500.0f;
 
 		m_fDistance += (m_fAutoDistance_Dest - m_fDistance) * 0.25f;
 
