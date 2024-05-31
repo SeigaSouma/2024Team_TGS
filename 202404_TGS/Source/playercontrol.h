@@ -54,8 +54,12 @@ private:
 
 	// ƒƒ“ƒo•Ï”
 	Effekseer::Handle* m_BressHandle = nullptr;
+
+#if _DEBUG
 	CDebugBressRange* m_pBressRange = nullptr;		// ‘§”ÍˆÍ
 	CDebugBressRange* m_pBressHeight = nullptr;		// ‘§‚Ì“Í‚­‚‚³”ÍˆÍ
+#endif
+
 	float m_fHeight = 0.0f;				// Œ»İ‚Ì‘§‚‚³
 	float m_fMaxHeight = 1000.0f;		// ‘§‚Ì“Í‚­Å‘å‚Ì‚‚³
 	float m_fTimeDownHeight = 0.0f;		// ‚‚³‚Ì~‰ºŠÔ
