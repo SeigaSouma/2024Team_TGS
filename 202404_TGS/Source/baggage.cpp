@@ -23,7 +23,7 @@ namespace
 	const float VELOCITY = 1.0f;
 	float PITCH_RATIO = 0.00025f;	// ピッチ軸回転倍率
 	float PITCH_INER = 0.075f;	// ピッチ軸回転慣性
-	float ROLL_FSTSPD = 0.25f;	// ロール軸回転初速
+	float ROLL_FSTSPD = 0.70f;	// ロール軸回転初速
 	float ROLL_INER = 0.075f;		// ロール軸回転慣性
 }
 
@@ -189,7 +189,51 @@ void CBaggage::Update()
 	SetRotation(rot);
 	SetMove(move);
 
+	ImGui::Dummy(ImVec2(0.0f, 10.0f));
+	if (ImGui::TreeNode("Transform"))
+	{
+		float windowWidth = 100.0f;
+		const float  POS_MOVE = 0.5f;
 
+		//=============================
+		// 位置設定
+		//=============================
+		MyLib::Vector3 pos = GetPosition();
+		ImGui::Text("pos");
+		ImGui::SameLine();
+
+		// X
+		ImGui::PushID(0); // ウィジェットごとに異なるIDを割り当てる
+		{
+			ImGui::SetNextItemWidth(windowWidth);
+			ImGui::DragFloat("x", &pos.x, POS_MOVE, 0.0f, 0.0f, "%.2f");
+			ImGui::SameLine();
+		}
+		ImGui::PopID();
+
+		// Y
+		ImGui::PushID(0); // ウィジェットごとに異なるIDを割り当てる
+		{
+			ImGui::SetNextItemWidth(windowWidth);
+			ImGui::DragFloat("y", &pos.y, POS_MOVE, 0.0f, 0.0f, "%.2f");
+			ImGui::SameLine();
+		}
+		ImGui::PopID();
+
+		// Z
+		ImGui::PushID(0); // ウィジェットごとに異なるIDを割り当てる
+		{
+			ImGui::SetNextItemWidth(windowWidth);
+			ImGui::DragFloat("z", &pos.z, POS_MOVE, 0.0f, 0.0f, "%.2f");
+		}
+		ImGui::PopID();
+
+		// 位置設定
+		SetPosition(pos);
+		SetMove(0.0f);
+
+		ImGui::TreePop();
+	}
 }
 
 //==========================================================================

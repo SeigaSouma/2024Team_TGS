@@ -19,6 +19,7 @@ std::string CMyEffekseer::m_EffectName[CMyEffekseer::EFKLABEL_MAX] =	// エフェク
 {
 	"data/Effekseer/Laser01.efkefc",			// サンプルのレーザー
 	"data/Effekseer/bress.efkefc",			// 息
+	"data/Effekseer/sample_river.efkefc",			// 川サンプル
 };
 CMyEffekseer* CMyEffekseer::m_pMyEffekseer = nullptr;	// 自身のポインタ
 
