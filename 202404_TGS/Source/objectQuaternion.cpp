@@ -19,7 +19,7 @@ CObjectQuaternion::CObjectQuaternion(int nPriority) : CObjectX(nPriority)
 	D3DXQuaternionIdentity(&m_quaternion);
 	m_vecAxis = 0.0f;			// 回転軸
 	m_fValueRot = 0.0f;			// 回転角
-	D3DXMatrixIdentity(&m_RotationMtx);	// 計算用マトリックス宣言
+	m_RotationMtx.Identity();	// 計算用マトリックス宣言
 	m_fRotDest = 0.0f;
 }
 
@@ -128,17 +128,18 @@ void CObjectQuaternion::Update()
 //==========================================================================
 void CObjectQuaternion::CalWorldMtx()
 {
-#if 0
+#if 1
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
 
-	D3DXMATRIX mtxRot, mtxTrans;	// 計算用マトリックス宣言
+	MyLib::Matrix mtxRot, mtxTrans;	// 計算用マトリックス宣言
+	MyLib::Matrix mtxWorld = GetWorldMtx();
 
 	// 情報取得
 	MyLib::Vector3 pos = GetPosition();
 
 	// 初期化
-	D3DXMatrixIdentity(&m_mtxWorld);
+	mtxWorld.Identity();
 	D3DXQuaternionIdentity(&m_quaternion);
 
 
@@ -149,23 +150,27 @@ void CObjectQuaternion::CalWorldMtx()
 	D3DXQuaternionRotationAxis(&m_quaternion, &m_vecAxis, m_fValueRot);
 
 	// 回転マトリックスを作成
-	D3DXMatrixIdentity(&mtxRot);
-	D3DXMatrixRotationQuaternion(&mtxRot, &m_quaternion);
+	mtxRot.Identity();
+	D3DXMATRIX calRotMtx = mtxRot.ConvertD3DXMATRIX();
+	D3DXMatrixRotationQuaternion(&calRotMtx, &m_quaternion);
+	mtxRot = calRotMtx;
 
 	// クォータニオンを正規化
 	D3DXQuaternionNormalize(&m_quaternion, &m_quaternion);
 
 
 	// 向きを反映する
-	D3DXMatrixMultiply(&m_RotationMtx, &m_RotationMtx, &mtxRot);
-	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &m_RotationMtx);
+	m_RotationMtx.Multiply(m_RotationMtx, mtxRot);
+	mtxWorld.Multiply(mtxWorld, m_RotationMtx);
 
 	// 位置を反映する
-	D3DXMatrixTranslation(&mtxTrans, pos.x, pos.y, pos.z);
-	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+	mtxTrans.Translation(pos);
+	mtxWorld.Multiply(mtxWorld, mtxTrans);
 
 	// ワールドマトリックスの設定
-	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
+	D3DXMATRIX setMtx = mtxWorld.ConvertD3DXMATRIX();
+	pDevice->SetTransform(D3DTS_WORLD, &setMtx);
+	SetWorldMtx(mtxWorld);
 #else
 
 
@@ -191,13 +196,13 @@ void CObjectQuaternion::CalWorldMtx()
 	vec = { 1.0f, 0.0f, 0.0f };
 	D3DXQuaternionRotationAxis(&quatX, &vec, rotOld.x);
 
-	D3DXQUATERNION quatY;
-	vec = { 0.0f, 1.0f, 0.0f };
-	D3DXQuaternionRotationAxis(&quatY, &vec, rotOld.y);
-
 	D3DXQUATERNION quatZ;
 	vec = { 0.0f, 0.0f, 1.0f };
 	D3DXQuaternionRotationAxis(&quatZ, &vec, rotOld.z);
+
+	D3DXQUATERNION quatY;
+	vec = { 0.0f, 1.0f, 0.0f };
+	D3DXQuaternionRotationAxis(&quatY, &vec, rotOld.y);
 
 	// x軸、y軸、z軸の順で回転を適用
 	m_quaternion = quatY * m_quaternion;
