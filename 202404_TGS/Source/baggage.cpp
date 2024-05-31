@@ -309,6 +309,10 @@ bool CBaggage::Hit()
 				MyLib::Vector3 move = GetMove();
 				move.y *= -1.0f;
 				SetMove(move);
+
+				/*CMyEffekseer::GetInstance()->SetEffect(
+					CMyEffekseer::EFKLABEL::EFKLABEL_IMPACT,
+					GetWorldMtx().GetWorldPosition(), MyLib::Vector3(0.0f, 0.0f, 0.0f), 0.0f, 30.0f, true);*/
 				return true;
 			}
 		}
