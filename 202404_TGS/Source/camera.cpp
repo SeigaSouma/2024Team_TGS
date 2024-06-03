@@ -581,7 +581,6 @@ void CCamera::MoveCameraDistance()
 			if (m_fDestDistance <= m_fOriginDistance)
 			{// •â³‚µ‚·‚¬‚½‚ç–ß‚·
 				m_fDestDistance = m_fOriginDistance;
-				SetStateCameraV(new CStateCameraV);
 			}
 		}
 		else
@@ -594,7 +593,6 @@ void CCamera::MoveCameraDistance()
 			if (m_fDestDistance >= m_fOriginDistance)
 			{// •â³‚µ‚·‚¬‚½‚ç–ß‚·
 				m_fDestDistance = m_fOriginDistance;
-				SetStateCameraV(new CStateCameraV);
 			}
 		}
 	}
@@ -1714,6 +1712,15 @@ void CStateCameraV::LimitPos(CCamera* pCamera)
 //==========================================================================
 void CStateCameraV::Distance(CCamera* pCamera)
 {
+	pCamera->SetDistance(GetDistance(pCamera));
+}
+
+//==========================================================================
+// ‹——£Žæ“¾
+//==========================================================================
+float CStateCameraV::GetDistance(CCamera* pCamera)
+{
+	float Value;
 	static float MAXHEIGHT = 600.0f;
 
 	// Š„‡
@@ -1721,7 +1728,8 @@ void CStateCameraV::Distance(CCamera* pCamera)
 	ratio = UtilFunc::Transformation::Clamp(ratio, 0.0f, 1.0f);
 	pCamera->SetAutoDistanceDest(1200.0f * ratio + 1500.0f);
 
-	pCamera->SetDistance(pCamera->GetDistance() + (pCamera->GetAutoDistanceDest() - pCamera->GetDistance()) * 0.25f);
+	Value = pCamera->GetDistance() + (pCamera->GetAutoDistanceDest() - pCamera->GetDistance()) * 0.25f;
+	return Value;
 }
 
 //==========================================================================
@@ -1750,6 +1758,29 @@ void CStateCameraV_Enhance::LimitPos(CCamera* pCamera)
 	}
 	pCamera->SetPositionVDest(posVDest);
 
+}
+
+//==========================================================================
+// ‚‚³‚É‚æ‚é‹——£Ý’è
+//==========================================================================
+void CStateCameraV_Distance::Distance(CCamera* pCamera)
+{
+	float Distance = GetDistance(pCamera);	// ’²®Œã—\’è‹——£
+	float DistanceDecrementValue = pCamera->GetDistanceDecrementValue();
+	bool flag = false;
+
+	if (DistanceDecrementValue >= 0.0f)
+	{
+		if (pCamera->GetDistance() <= Distance) flag = true;
+	}
+	else
+	{
+		if (pCamera->GetDistance() >= Distance) flag = true;
+	}
+
+	if (flag) {
+		pCamera->SetStateCameraV(new CStateCameraV);
+	}
 }
 
 //==========================================================================
