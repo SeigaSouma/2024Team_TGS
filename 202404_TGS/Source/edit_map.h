@@ -43,7 +43,7 @@ public:
 	void Save();	// セーブ
 	void Load(const std::string& file);	// ロード
 	void Delete(CObjectX* obj);	// 削除
-	void Regist(int idx, MyLib::Vector3 pos, MyLib::Vector3 rot, bool bShadow);	// 割り当て
+	void Regist(int idx, MyLib::Vector3 pos, MyLib::Vector3 rot, float scale, bool bShadow);	// 割り当て
 
 	static CEdit_Map* Create(const std::string& file, CManager::BuildMode mode);	// 生成
 	static CListManager<CObjectX> GetListObj() { return m_List; }		// リスト取得
