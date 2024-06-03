@@ -1109,8 +1109,10 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 	}
 	else if (nLife <= static_cast<float>(GetLifeOrigin()) * 0.65f)
 	{
-		pCamera->SetLenDest(600.0f, 10, -25.0f, 0.07f);	// ‹——£‚ð‹ß‚Ã‚¯‚é
-		pCamera->SetStateCameraV(new CStateCameraV_Distance);
+		pCamera->SetLenDest(600.0f, 10, -20.0f, 0.07f);	// ‹——£‚ð‹ß‚Ã‚¯‚é
+		CStateCameraV_Distance* pstate = new CStateCameraV_Distance;
+		pstate->SetStartDistance(pCamera->GetDistance());
+		pCamera->SetStateCameraV(pstate);
 	}
 	
 

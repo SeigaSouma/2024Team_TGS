@@ -154,6 +154,8 @@ public:
 	float GetAutoDistanceDest() { return m_fAutoDistance_Dest; }
 	float GetDistance() { return m_fDistance; }
 	float GetDistanceDecrementValue() { return m_fDistanceDecrementValue; }
+	float GetDistanceDest() { return m_fDestDistance; }
+	int GetDistanceCnt() { return m_nCntDistance; }
 
 	// ステートパターン設定
 	void SetStateCamraR(CStateCameraR* state);	// 注視点の状態設定
@@ -301,7 +303,7 @@ public:
 	virtual void LimitPos(CCamera* pCamera);	// 位置制限
 	virtual void Distance(CCamera* pCamera);	// 距離調整
 protected:
-	float GetDistance(CCamera* pCamera);
+	float GetDistance(CCamera* pCamera, const float fMultiply);
 };
 
 class CStateCameraV_Main : public CStateCameraV
@@ -321,9 +323,16 @@ public:
 class CStateCameraV_Distance : public CStateCameraV
 {
 public:
-	CStateCameraV_Distance() {}
+	CStateCameraV_Distance() {
+		m_fMultiPly = 0.0f;
+		m_fStartDistance = 0.0f;
+	}
 
 	virtual void Distance(CCamera* pCamera) override;	// 距離調整
+	void SetStartDistance(float fStartDistance) { m_fStartDistance = fStartDistance; }
+
+	float m_fMultiPly;
+	float m_fStartDistance;
 };
 
 //=============================
