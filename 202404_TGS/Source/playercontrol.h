@@ -8,12 +8,15 @@
 #ifndef _PLAYERCONTROL_H_
 #define _PLAYERCONTROL_H_	// 二重インクルード防止
 
+#define BRESSRANGE (1)
+
 #include "player.h"
 #include "baggage.h"
 
-#if _DEBUG
+#if BRESSRANGE
 #include "debug_bressrange.h"
 #endif
+
 
 //==========================================================================
 // プレイヤーコントロールクラス定義
@@ -55,9 +58,10 @@ private:
 	// メンバ変数
 	Effekseer::Handle* m_BressHandle = nullptr;
 
-#if _DEBUG
+#if BRESSRANGE
 	CDebugBressRange* m_pBressRange = nullptr;		// 息範囲
 	CDebugBressRange* m_pBressHeight = nullptr;		// 息の届く高さ範囲
+	CCollisionLine_Box* m_pBox = nullptr;	// デバッグ用当たり判定
 #endif
 
 	float m_fHeight = 0.0f;				// 現在の息高さ
@@ -65,9 +69,6 @@ private:
 	float m_fTimeDownHeight = 0.0f;		// 高さの降下時間
 	float m_fHeightVelocity = 10.0f;	// 息の加算量
 
-#if _DEBUG
-	CCollisionLine_Box* m_pBox = nullptr;	// デバッグ用当たり判定
-#endif
 };
 
 //=============================

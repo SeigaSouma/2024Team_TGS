@@ -72,6 +72,7 @@ public:
 	MyLib::Vector3 GetVtxMin() const;			// 頂点の最小値取得
 	MyLib::AABB GetAABB() const;				// AABB情報取得
 	int GetIdxXFile() const;					// Xファイルのインデックス取得
+	std::string GetFileName() const { return m_fileName; }					// Xファイルのファイル名取得
 	bool GetUseShadow() const;					// 影を使っているかどうか
 
 	void SetState(STATE state) { m_state = state; }		// 状態設定
@@ -130,6 +131,7 @@ private:
 	bool m_bShadow;				// 影を使うかどうか
 	int m_nIdxTexure;			// テクスチャのインデックス番号
 	int m_nIdxXFile;			// Xファイルのインデックス番号
+	std::string m_fileName;
 	static int m_nNumAll;		// 総数
 	CShadow *m_pShadow;			// 影の情報
 	CCollisionLine_Box* m_pCollisionLineBox;	// 当たり判定ボックス
