@@ -1105,10 +1105,12 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 		// Ž€–SŽž‚ÌÝ’è
 		DeadSetting(&hitresult);
 		pCamera->SetLenDest(600.0f, 200, -25.0f, 0.375f);	// ‹——£‚ð‹ß‚Ã‚¯‚é
+		pCamera->SetStateCameraV(new CStateCameraV_Distance);
 	}
 	else if (nLife <= static_cast<float>(GetLifeOrigin()) * 0.65f)
 	{
 		pCamera->SetLenDest(600.0f, 10, -25.0f, 0.07f);	// ‹——£‚ð‹ß‚Ã‚¯‚é
+		pCamera->SetStateCameraV(new CStateCameraV_Distance);
 	}
 	
 
