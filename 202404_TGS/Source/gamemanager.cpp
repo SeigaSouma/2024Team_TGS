@@ -32,8 +32,7 @@
 namespace
 {
 	const int POINT_WAVECLEAR = 5;		// ウェーブクリアのポイント
-	const float CAMERA_MIN_LENGTH = 2000.0f;	//カメラの最短距離
-	const float CAMERA_MAX_LENGTH = 1600.0f;	//カメラの最長距離
+	const float CAMERA_MIN_LENGTH = 1800.0f;	//カメラの最短距離
 	const float CAMERA_MAX_ROT = 0.15f;			//カメラ最高角度
 }
 
@@ -432,75 +431,71 @@ void CGameManager::ContainPlayerBaggage()
 	posVDef.x += lengthVInterToV * sinf(cameraRot.y);
 	posVDef.z += lengthVInterToV * -cosf(cameraRot.y);
 
-	float lengthVInterToBaggage = posBaggage.Distance(posVInter);	//e
-	if ((posBaggage - posVInter).y < 0.0f)
-	{
-		lengthVInterToBaggage *= -1;
-	}
-
 	//↓ここから問題ありそう↓//
 	MyLib::Vector3 rotOrigin = pCamera->GetOriginRotation();
 	//いったん仮
-	//float angle = atan2f(lengthVInterToBaggage, lengthVInterToV);
 	static float angle = -0.1f;
 	static float angleDest = angle;
-	float afsdjfnd = CAMERA_MIN_LENGTH;
-	//lengthVR = CAMERA_MIN_LENGTH;
+	static float posBOld = posBaggage.y;
 	static MyLib::Vector3 posR = MyLib::Vector3(posPlayer.x, posBaggageOrigin.y, posPlayer.z);
-	static float posRYDest = posBaggageOrigin.y;
-	float hoge = lengthVInterToBaggage + lengthBagOriginToVInter;
-	if (hoge >= 300.0f)
+	static float posRYDest = posBaggageOrigin.y + 100.0f;
+	if (posBOld < 500.0f && posBaggage.y >= 500.0f)
 	{
-		angleDest = rotOrigin.z + 0.1f;
-		posRYDest = 300.0f;
-
-		if (hoge >= 500.0f)
-		{
-			angleDest = rotOrigin.z + 0.2f;
-			posRYDest = 500.0f;
-
-			if (hoge >= 700.0f)
-			{
-				angleDest = rotOrigin.z + 0.3f;
-				posRYDest = 700.0f;
-			}
-		}
+		angleDest = rotOrigin.z + 0.08f;
+		posRYDest = 450.0f;
 	}
-	lengthVR = posR.Distance(posVDef);
-
-	MyLib::Vector3 vec = posR - posVDef;
-	angleDest = atan2f(vec.y, vec.z);
-	angle += (angleDest - angle) * 0.2f;
+	else if (posBOld < 900.0f && posBaggage.y >= 900.0f)
+	{
+		angleDest = rotOrigin.z + 0.12f;
+		posRYDest = 680.0f;
+	}
+	else if (posBOld > 560.0f && posBaggage.y <= 560.0f)
+	{
+		angleDest = rotOrigin.z + 0.08f;
+		posRYDest = 450.0f;
+	}
+	else if (posBOld > 200.0f && posBaggage.y <= 200.0f)
+	{
+		angleDest = rotOrigin.z + 0.02f;
+		posRYDest = 200.0f;
+	}
+	posBOld = posBaggage.y;
 
 	posR.x = posPlayer.x;
-	posR.y += (posRYDest - posR.y) * 0.05f;
+	posR.y += (posRYDest - posR.y) * 0.032f;
+	posR.z = posPlayer.z;
+
+	lengthVR = posVDef.Distance(posR);
+
+	MyLib::Vector3 vec = posR - posVDef;
+	angle += (angleDest - angle) * 0.1f;
 
 	CEffect3D::Create(
-		MyLib::Vector3(posPlayer.x, 0.0f, posPlayer.z),
+		MyLib::Vector3(posPlayer.x, 500.0f, posPlayer.z),
 		MyLib::Vector3(0.0f, 0.0f, 0.0f),
 		D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f),
 		20.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
 	CEffect3D::Create(
-		MyLib::Vector3(posPlayer.x, 300.0f, posPlayer.z),
+		MyLib::Vector3(posPlayer.x, 900.0f, posPlayer.z),
 		MyLib::Vector3(0.0f, 0.0f, 0.0f),
 		D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f),
 		20.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
 	CEffect3D::Create(
-		MyLib::Vector3(posPlayer.x, 450.0f, posPlayer.z),
+		MyLib::Vector3(posPlayer.x, 560.0f, posPlayer.z),
 		MyLib::Vector3(0.0f, 0.0f, 0.0f),
-		D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f),
+		D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f),
 		20.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
 	CEffect3D::Create(
-		MyLib::Vector3(posPlayer.x, 700.0f, posPlayer.z),
+		MyLib::Vector3(posPlayer.x, 250.0f, posPlayer.z),
 		MyLib::Vector3(0.0f, 0.0f, 0.0f),
-		D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f),
+		D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f),
 		20.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
 
 	//↑ここまで問題ありそう↑//
 
-	pCamera->SetLenDest(lengthVR, 60, 1.0f,0.03f);
+	pCamera->SetLenDest(lengthVR, 60, 1.0f,0.02f);
 	pCamera->SetPositionR(posR);
-	pCamera->SetRotation(MyLib::Vector3(0.0f,0.0f, angle));
+	pCamera->SetRotation(MyLib::Vector3(0.0f, rotOrigin.y, angle));
 }
 
 //==========================================================================

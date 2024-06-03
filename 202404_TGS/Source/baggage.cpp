@@ -230,41 +230,6 @@ void CBaggage::Update()
 	}
 }
 
-		// Z
-		ImGui::PushID(0); // ウィジェットごとに異なるIDを割り当てる
-		{
-			ImGui::SetNextItemWidth(windowWidth);
-			ImGui::DragFloat("z", &pos.z, POS_MOVE, 0.0f, 0.0f, "%.2f");
-		}
-		ImGui::PopID();
-
-		// 位置設定
-		SetPosition(pos);
-		SetMove(0.0f);
-
-
-
-		if (ImGui::TreeNode("Q"))
-		{
-			
-			static float XRot = 0.0f;
-			static float YRot = 0.0f;
-			ImGui::DragFloat("XRot", &XRot, 0.1f, 0.0f, 0.0f, "%.2f");
-			ImGui::DragFloat("YRot", &YRot, 0.1f, 0.0f, 0.0f, "%.2f");
-
-			MyLib::Vector3 rot = GetRotation();
-			MyLib::Vector3 vec = MyLib::Vector3(sinf(rot.y), 0.0f, cosf(rot.y));
-			BindQuaternion(MyLib::Vector3(vec.z, 0.0f, -vec.x), XRot);
-
-			// クォータニオン割り当て
-			BindQuaternion(MyLib::Vector3(0.0f, 1.0f, 0.0f), YRot);
-
-			ImGui::TreePop();
-		}
-		ImGui::TreePop();
-	}
-}
-
 //==========================================================================
 // 力追加
 //==========================================================================
