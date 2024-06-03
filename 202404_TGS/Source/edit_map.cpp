@@ -166,7 +166,7 @@ void CEdit_Map::Update()
 {
 #if _DEBUG
 	// エディットメニュー
-	ImGui::Begin("MapEdit", NULL, ImGuiWindowFlags_MenuBar);
+	if (ImGui::CollapsingHeader("MapEdit"))
 	{
 		// メニューバー処理
 		MenuBar();
@@ -178,7 +178,6 @@ void CEdit_Map::Update()
 		ImGuiHoveredFlags frag = 128;
 		m_bHoverWindow = ImGui::IsWindowHovered(frag);
 	}
-	ImGui::End();
 
 
 	// ImGuiの操作
@@ -201,16 +200,20 @@ void CEdit_Map::Update()
 //==========================================================================
 void CEdit_Map::MenuBar()
 {
-	// 書き出し
-	ImGui::BeginMenuBar();
-	if (ImGui::BeginMenu("File"))
+
+	if (ImGui::TreeNode("File"))
 	{
-		if (ImGui::MenuItem("Save"))
+		float width = 150.0f;
+
+		ImGui::SetNextItemWidth(width);
+		if (ImGui::Button("Save"))
 		{
 			Save();
 		}
+		ImGui::SameLine();
 
-		if (ImGui::MenuItem("Save_as"))
+		ImGui::SetNextItemWidth(width);
+		if (ImGui::Button("Save_as"))
 		{
 			OPENFILENAMEA filename = {};
 			char sFilePass[1024] = {};
@@ -250,17 +253,16 @@ void CEdit_Map::MenuBar()
 				int n = 0;
 			}
 		}
-		ImGui::EndMenu();
+		ImGui::SameLine();
+
+		ImGui::SetNextItemWidth(width);
+		if (ImGui::Button("Load"))
+		{
+
+		}
+
+		ImGui::TreePop();
 	}
-
-	// ロード
-	if (ImGui::BeginMenu("Load"))
-	{
-
-		ImGui::EndMenu();
-	}
-
-	ImGui::EndMenuBar();
 }
 
 //==========================================================================
@@ -554,7 +556,7 @@ void CEdit_Map::Grab()
 
 			MyLib::Vector3 setpos = mouseWorldPos;
 			setpos.y = 0.0f;
-			Regist(m_DragData.nType, setpos, MyLib::Vector3(0.0f), true);
+			Regist(m_DragData.nType, setpos, 0.0f, 1.0f, true);
 		}
 		m_bGrab = false;
 	}
@@ -588,7 +590,7 @@ void CEdit_Map::SelectObject()
 			std::vector<std::string>::iterator file = std::find(m_ModelFile.begin(), m_ModelFile.end(), m_pCopyObj->GetFileName());
 			int nIdx = file - m_ModelFile.begin();
 
-			Regist(nIdx, 0.0f, 0.0f, true);
+			Regist(nIdx, 0.0f, 0.0f, 1.0f, true);
 		}
 
 		if (m_pHandle->IsHoverHandle() &&
@@ -976,6 +978,7 @@ void CEdit_Map::Save()
 	{
 		MyLib::Vector3 pos = pObj->GetPosition();	// 位置
 		MyLib::Vector3 rot = pObj->GetRotation();	// 向き
+		MyLib::Vector3 scale = pObj->GetScale();	// スケール
 		int nShadow = 0;							// 影使うかどうか
 		int nType = 0;								// 種類
 
@@ -993,10 +996,12 @@ void CEdit_Map::Save()
 			"\tTYPE = %d\n"
 			"\tPOS = %.2f %.2f %.2f\n"
 			"\tROT = %.2f %.2f %.2f\n"
+			"\tSCALE = %.2f\n"
 			"\tSHADOW = %d\n"
 			"END_MODELSET\n\n",
 			nIdx, pos.x, pos.y, pos.z,
-			rot.x, rot.y, rot.z, nShadow);
+			rot.x, rot.y, rot.z,
+			scale.x, nShadow);
 	}
 
 	fprintf(pFile, "\nEND_SCRIPT		# この行は絶対消さないこと！");
@@ -1183,6 +1188,7 @@ void CEdit_Map::Load(const std::string& file)
 		{
 			int nType = 0, nShadow = 0;
 			MyLib::Vector3 pos, rot;
+			float scale = 1.0f;
 
 			while (strcmp(&aComment[0], "END_MODELSET"))
 			{// END_MODELSETが来るまで繰り返し
@@ -1214,6 +1220,13 @@ void CEdit_Map::Load(const std::string& file)
 					fscanf(pFile, "%f", &rot.z);	// Zの向き
 				}
 
+				if (strcmp(&aComment[0], "SCALE") == 0)
+				{// SCALEが来たら拡大率読み込み
+
+					fscanf(pFile, "%s", &aComment[0]);	// =の分
+					fscanf(pFile, "%f", &scale);		// スケール
+				}
+
 				if (strcmp(&aComment[0], "SHADOW") == 0)
 				{// SHADOWが来たら影使用
 
@@ -1225,7 +1238,7 @@ void CEdit_Map::Load(const std::string& file)
 
 			// 追加
 			bool bShadow = (nShadow == 1);
-			Regist(nType, pos, rot, bShadow);
+			Regist(nType, pos, rot, scale, bShadow);
 		}
 
 		if (strcmp(&aComment[0], "END_SCRIPT") == 0)
@@ -1404,7 +1417,7 @@ void CEdit_Map::Delete(CObjectX* obj)
 //==========================================================================
 // 割り当て
 //==========================================================================
-void CEdit_Map::Regist(int idx, MyLib::Vector3 pos, MyLib::Vector3 rot, bool bShadow)
+void CEdit_Map::Regist(int idx, MyLib::Vector3 pos, MyLib::Vector3 rot, float scale, bool bShadow)
 {
 
 	m_pObjX.emplace_back();
@@ -1415,6 +1428,7 @@ void CEdit_Map::Regist(int idx, MyLib::Vector3 pos, MyLib::Vector3 rot, bool bSh
 
 	// タイプの物を生成
 	m_pObjX.back() = CObjectX::Create(m_nModelIdx[idx], pos, rot, bShadow);
+	m_pObjX.back()->SetScale(scale);
 	m_pObjX.back()->SetType(CObject::TYPE_XFILE);
 	m_pObjX.back()->CreateCollisionBox();
 
