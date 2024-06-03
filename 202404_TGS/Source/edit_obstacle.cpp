@@ -827,14 +827,14 @@ void CEdit_Obstacle_Collider::Update()
 	CMap_ObstacleManager* pObstacleMgr = CMap_ObstacleManager::GetInstance();
 	CMap_ObstacleManager::SObstacleInfo info = pObstacleMgr->GetObstacleInfo(m_nEditIdx);
 
-	//for (int i = 0; i < static_cast<int>(info.boxcolliders.size()); i++)
-	//{
-	//	// BOXコライダー
-	//	MyLib::Collider_BOX collider = info.boxcolliders[i];
+	for (int i = 0; i < static_cast<int>(info.boxcolliders.size()); i++)
+	{
+		// BOXコライダー
+		MyLib::Collider_BOX collider = info.boxcolliders[i];
 
-	//	collider.TransformOffset(m_pObjX[m_nEditIdx]->GetWorldMtx());
-	//	m_pCollisionLineBox[i]->SetPosition(collider.GetMtx().GetWorldPosition());
-	//}
+		collider.TransformOffset(m_pObjX[m_nEditIdx]->GetWorldMtx());
+		m_pCollisionLineBox[i]->SetPosition(collider.GetMtx().GetWorldPosition());
+	}
 }
 
 //==========================================================================

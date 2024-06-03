@@ -331,7 +331,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	MyLib::Vector3 posBaggageOrigin = pBaggage->GetOriginPosition();
 
 
-#if _DEBUG
+#if BRESSRANGE
 	if (m_pBressRange == nullptr)
 	{
 		m_pBressRange = CDebugBressRange::Create();
@@ -371,7 +371,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	// 息の届く横範囲
 	float range = ratio * LENGTH_COLLISIONRANGE;
 
-#if _DEBUG
+#if BRESSRANGE
 	MyLib::Vector3 a = pos, b = pos;
 	a.x += range; b.x -= range;
 	a.y = posBaggage.y; b.y = posBaggage.y;
@@ -444,7 +444,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	pBaggage->SetRotation(MyLib::Vector3(0.0f, setRot.AngleXZ(0.0f), 0.0f));
 #endif
 
-#if _DEBUG
+#if BRESSRANGE
 	if (m_pBressHeight != nullptr)
 	{
 		float ratiooo = m_fHeight / LENGTH_COLLISIONHEIGHT;
@@ -559,11 +559,11 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	{
 		CMyEffekseer::GetInstance()->SetPosition(*m_BressHandle, d);
 
-		// デバッグ表示
-		CManager::GetInstance()->GetDebugProc()->Print(
-			"------------------[プレイヤーの操作]------------------\n"
-			"移動中のエフェクト 【%d】\n"
-			, *m_BressHandle);
+		//// デバッグ表示
+		//CManager::GetInstance()->GetDebugProc()->Print(
+		//	"------------------[プレイヤーの操作]------------------\n"
+		//	"移動中のエフェクト 【%d】\n"
+		//	, *m_BressHandle);
 	}
 }
 
@@ -595,7 +595,7 @@ bool CPlayerControlBaggage::CollisionObstacle(CPlayer* player, CBaggage* pBaggag
 
 	mtx.Translation(trans);
 
-#if _DEBUG
+#if BRESSRANGE
 	// ボックス生成
 	if (m_pBox == nullptr)
 	{
@@ -625,7 +625,7 @@ bool CPlayerControlBaggage::CollisionObstacle(CPlayer* player, CBaggage* pBaggag
 		{
 			if (UtilFunc::Collision::IsAABBCollidingWithBox(bressAABB, mtx, MyLib::AABB(collider.vtxMin, collider.vtxMax), collider.worldmtx))
 			{
-#if _DEBUG
+#if BRESSRANGE
 				m_pBressRange->SetColor(D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.3f));
 #endif
 				return false;
@@ -633,7 +633,7 @@ bool CPlayerControlBaggage::CollisionObstacle(CPlayer* player, CBaggage* pBaggag
 		}
 	}
 
-#if _DEBUG
+#if BRESSRANGE
 	m_pBressRange->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.3f));
 #endif
 	return true;
