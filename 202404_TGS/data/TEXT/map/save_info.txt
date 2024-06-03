@@ -1,66 +1,68 @@
 #------------------------------------------------------------------------------
 # テクスチャ数
 #------------------------------------------------------------------------------
-NUM_TEXTURE = 13
+NUM_TEXTURE = 1
 
 #------------------------------------------------------------------------------
 # テクスチャファイル名
 #------------------------------------------------------------------------------
-TEXTURE_FILENAME = data\TEXTURE\FIELD\concreat.png		# [0]
-TEXTURE_FILENAME = data\TEXTURE\FIELD\senter.png		# [1]
-TEXTURE_FILENAME = data\TEXTURE\FIELD\senterlong.png		# [2]
-TEXTURE_FILENAME = data\TEXTURE\FIELD\sideL.png		# [3]
-TEXTURE_FILENAME = data\TEXTURE\FIELD\sideR.png		# [4]
-TEXTURE_FILENAME = data\TEXTURE\FIELD\odan.png		# [5]
-TEXTURE_FILENAME = data\TEXTURE\FIELD\walkroad.jpg		# [6]
-TEXTURE_FILENAME = data\TEXTURE\FIELD\walkroad_01.jpg		# [7]
-TEXTURE_FILENAME = data\TEXTURE\FIELD\tile_04.jpg		# [8]
-TEXTURE_FILENAME = data\TEXTURE\FIELD\tile_03.jpg		# [9]
-TEXTURE_FILENAME = data\TEXTURE\FIELD\water_02.jpg		# [10]
-TEXTURE_FILENAME = data\TEXTURE\sky\sky_02.jpg		# [11]
-TEXTURE_FILENAME = data\TEXTURE\FIELD\hiero.png		# [12]
+TEXTURE_FILENAME = data\TEXTURE\sky\sky_02.jpg		# [0]
 
 #------------------------------------------------------------------------------
 # モデル数
 #------------------------------------------------------------------------------
-NUM_MODEL = 27
+NUM_MODEL = 41
 
 #------------------------------------------------------------------------------
 # モデルファイル名
 #------------------------------------------------------------------------------
-MODEL_FILENAME = data\\MODEL\\mark_01.x		# [0]
-MODEL_FILENAME = data\\MODEL\\map_object\\tree_01_small.x		# [1]
-MODEL_FILENAME = data\\MODEL\\map_object\\tree_01_normal.x		# [2]
-MODEL_FILENAME = data\\MODEL\\map_object\\tree_01_big.x		# [3]
-MODEL_FILENAME = data\\MODEL\\map_object\\tree_02_small.x		# [4]
-MODEL_FILENAME = data\\MODEL\\map_object\\tree_02_normal.x		# [5]
-MODEL_FILENAME = data\\MODEL\\map_object\\tree_02_big.x		# [6]
-MODEL_FILENAME = data\\MODEL\\map_object\\tree_03_big.x		# [7]
-MODEL_FILENAME = data\\MODEL\\map_object\\treegroup_02.x		# [8]
-MODEL_FILENAME = data\\MODEL\\map_object\\treegroup_01.x		# [9]
-MODEL_FILENAME = data\\MODEL\\map_object\\rock_01.x		# [10]
-MODEL_FILENAME = data\\MODEL\\map_object\\rock_02.x		# [11]
-MODEL_FILENAME = data\\MODEL\\map_object\\rock_03.x		# [12]
-MODEL_FILENAME = data\\MODEL\\map_object\\rock_04.x		# [13]
-MODEL_FILENAME = data\\MODEL\\map_object\\rock_05.x		# [14]
-MODEL_FILENAME = data\\MODEL\\map_object\\rock_01_huge.x		# [15]
-MODEL_FILENAME = data\\MODEL\\map_object\\rock_02_huge.x		# [16]
-MODEL_FILENAME = data\\MODEL\\map_object\\rock_03_huge.x		# [17]
-MODEL_FILENAME = data\\MODEL\\map_object\\rock_04_huge.x		# [18]
-MODEL_FILENAME = data\\MODEL\\map_object\\rock_05_huge.x		# [19]
-MODEL_FILENAME = data\\MODEL\\map_object\\rock_06_huge.x		# [20]
-MODEL_FILENAME = data\\MODEL\\map_object\\rock_02_superhuge.x		# [21]
-MODEL_FILENAME = data\\MODEL\\map_object\\rock_03_superhuge.x		# [22]
-MODEL_FILENAME = data\\MODEL\\map_object\\rock_04_superhuge.x		# [23]
-MODEL_FILENAME = data\\MODEL\\map_object\\rock_05_superhuge.x		# [24]
-MODEL_FILENAME = data\\MODEL\\map_object\\tree_03_huge.x		# [25]
-MODEL_FILENAME = data\\MODEL\\box.x		# [26]
+MODEL_FILENAME = data\MODEL\mark_01.x		# [0]
+MODEL_FILENAME = data\MODEL\map_object\tree_01_small.x		# [1]
+MODEL_FILENAME = data\MODEL\map_object\tree_01_normal.x		# [2]
+MODEL_FILENAME = data\MODEL\map_object\tree_01_big.x		# [3]
+MODEL_FILENAME = data\MODEL\map_object\tree_02_small.x		# [4]
+MODEL_FILENAME = data\MODEL\map_object\tree_02_normal.x		# [5]
+MODEL_FILENAME = data\MODEL\map_object\tree_02_big.x		# [6]
+MODEL_FILENAME = data\MODEL\map_object\tree_03_big.x		# [7]
+MODEL_FILENAME = data\MODEL\map_object\treegroup_02.x		# [8]
+MODEL_FILENAME = data\MODEL\map_object\treegroup_01.x		# [9]
+MODEL_FILENAME = data\MODEL\map_object\rock_01.x		# [10]
+MODEL_FILENAME = data\MODEL\map_object\rock_02.x		# [11]
+MODEL_FILENAME = data\MODEL\map_object\rock_03.x		# [12]
+MODEL_FILENAME = data\MODEL\map_object\rock_04.x		# [13]
+MODEL_FILENAME = data\MODEL\map_object\rock_05.x		# [14]
+MODEL_FILENAME = data\MODEL\map_object\rock_01_huge.x		# [15]
+MODEL_FILENAME = data\MODEL\map_object\rock_02_huge.x		# [16]
+MODEL_FILENAME = data\MODEL\map_object\rock_03_huge.x		# [17]
+MODEL_FILENAME = data\MODEL\map_object\rock_04_huge.x		# [18]
+MODEL_FILENAME = data\MODEL\map_object\rock_05_huge.x		# [19]
+MODEL_FILENAME = data\MODEL\map_object\rock_06_huge.x		# [20]
+MODEL_FILENAME = data\MODEL\map_object\rock_02_superhuge.x		# [21]
+MODEL_FILENAME = data\MODEL\map_object\rock_03_superhuge.x		# [22]
+MODEL_FILENAME = data\MODEL\map_object\rock_04_superhuge.x		# [23]
+MODEL_FILENAME = data\MODEL\map_object\rock_05_superhuge.x		# [24]
+MODEL_FILENAME = data\MODEL\map_object\tree_03_huge.x		# [25]
+MODEL_FILENAME = data\MODEL\box.x		# [26]
+MODEL_FILENAME = data\MODEL\map_object\map_mati001.x		# [27]
+MODEL_FILENAME = data\MODEL\map_object\edo_shop000.x		# [28]
+MODEL_FILENAME = data\MODEL\map_object\edo_shop001.x		# [29]
+MODEL_FILENAME = data\MODEL\map_object\post.x		# [30]
+MODEL_FILENAME = data\MODEL\map_object\post_edo.x		# [31]
+MODEL_FILENAME = data\MODEL\map_object\TokyoTower.x		# [32]
+MODEL_FILENAME = data\MODEL\map_object\light.x		# [33]
+MODEL_FILENAME = data\MODEL\map_object\build_00.x		# [34]
+MODEL_FILENAME = data\MODEL\map_object\YMD_house.x		# [35]
+MODEL_FILENAME = data\MODEL\map_object\YMD_House_00.x		# [36]
+MODEL_FILENAME = data\MODEL\map_object\angry_bird.x		# [37]
+MODEL_FILENAME = data\MODEL\map_object\turibashi.x		# [38]
+MODEL_FILENAME = data\MODEL\map_object\fallen_tree.x		# [39]
+MODEL_FILENAME = data\MODEL\map_object\hasu.x		# [40]
 
 #==============================================================================
 # 空情報
 #==============================================================================
 SKYSET
-	TEXTYPE = 11
+	TEXTYPE = 0
 	MOVE = 0.000200
 END_SKYSET
 
@@ -114,6 +116,62 @@ END_MODELSET
 MODELSET
 	TYPE = 1
 	POS = -1349.74 0.00 2613.66
+	ROT = 0.00 0.00 0.00
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 37
+	POS = 832.12 0.00 2157.38
+	ROT = 0.00 0.00 0.00
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 39
+	POS = 1900.14 0.00 2049.49
+	ROT = 0.00 0.00 0.00
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 40
+	POS = 828.33 0.00 1712.20
+	ROT = 0.00 0.00 0.00
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 32
+	POS = 157.34 0.00 4918.63
+	ROT = 0.00 0.00 0.00
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 28
+	POS = 2597.34 0.00 4260.73
+	ROT = 0.00 0.00 0.00
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 33
+	POS = 1947.41 0.00 1518.50
+	ROT = 0.00 0.00 0.00
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 29
+	POS = 546.74 0.00 1739.79
+	ROT = 0.00 0.00 0.00
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 38
+	POS = 2976.59 0.00 2115.90
 	ROT = 0.00 0.00 0.00
 	SHADOW = 1
 END_MODELSET

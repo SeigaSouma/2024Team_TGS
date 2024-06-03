@@ -584,11 +584,11 @@ void CEdit_Map::SelectObject()
 			pKeyboard->GetTrigger(DIK_V))
 		{// ペースト
 
-			// インデックス検索
-			int pasteIdx = m_pCopyObj->GetIdxXFile();
-			std::vector<int>::iterator idx = std::find(m_nModelIdx.begin(), m_nModelIdx.end(), pasteIdx);
+			// モデルインデックス検索
+			std::vector<std::string>::iterator file = std::find(m_ModelFile.begin(), m_ModelFile.end(), m_pCopyObj->GetFileName());
+			int nIdx = file - m_ModelFile.begin();
 
-			Regist((*idx), 0.0f, 0.0f, true);
+			Regist(nIdx, 0.0f, 0.0f, true);
 		}
 
 		if (m_pHandle->IsHoverHandle() &&
@@ -985,8 +985,8 @@ void CEdit_Map::Save()
 		}
 		
 		// モデルインデックス検索
-		std::vector<int>::iterator nIdx = std::find(m_nModelIdx.begin(), m_nModelIdx.end(), pObj->GetIdxXFile());
-
+		std::vector<std::string>::iterator file = std::find(m_ModelFile.begin(), m_ModelFile.end(), pObj->GetFileName());
+		int nIdx = file - m_ModelFile.begin();
 		// 出力
 		fprintf(pFile,
 			"MODELSET\n"
@@ -995,7 +995,7 @@ void CEdit_Map::Save()
 			"\tROT = %.2f %.2f %.2f\n"
 			"\tSHADOW = %d\n"
 			"END_MODELSET\n\n",
-			(*nIdx), pos.x, pos.y, pos.z,
+			nIdx, pos.x, pos.y, pos.z,
 			rot.x, rot.y, rot.z, nShadow);
 	}
 
@@ -1243,7 +1243,7 @@ void CEdit_Map::Load(const std::string& file)
 
 
 //==========================================================================
-// モデル読み込み処理
+// テクスチャ読み込み処理
 //==========================================================================
 HRESULT CEdit_Map::ReadTexture(const std::string& file)
 {

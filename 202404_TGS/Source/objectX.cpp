@@ -272,6 +272,7 @@ HRESULT CObjectX::Init(const std::string& file)
 
 	// Xファイルのロード
 	m_nIdxXFile = pXLoad->XLoad(file);
+	m_fileName = file;
 
 	// Xファイルのデータ割り当て
 	BindXData(m_nIdxXFile);
@@ -306,6 +307,10 @@ HRESULT CObjectX::Init(int nIdxXFile)
 
 	// Xファイルのデータ取得
 	CXLoad::SXFile *pXData = CXLoad::GetInstance()->GetMyObject(m_nIdxXFile);
+
+	// Xファイルのデータ取得
+	CXLoad* pXLoad = CXLoad::GetInstance();
+	m_fileName = pXLoad->GetMyObject(nIdxXFile)->filename;
 
 	// 全頂点チェック
 	UtilFunc::Calculation::CalModelVtx(GetRotation().y, &pXData->vtxMax, &pXData->vtxMin, pXData->pMesh, pXData->pVtxBuff);
