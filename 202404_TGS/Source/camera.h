@@ -153,6 +153,7 @@ public:
 	MyLib::Vector3 GetPositionVDest() { return m_posVDest; }
 	float GetAutoDistanceDest() { return m_fAutoDistance_Dest; }
 	float GetDistance() { return m_fDistance; }
+	float GetDistanceDecrementValue() { return m_fDistanceDecrementValue; }
 
 	// ステートパターン設定
 	void SetStateCamraR(CStateCameraR* state);	// 注視点の状態設定
@@ -299,6 +300,8 @@ public:
 
 	virtual void LimitPos(CCamera* pCamera);	// 位置制限
 	virtual void Distance(CCamera* pCamera);	// 距離調整
+protected:
+	float GetDistance(CCamera* pCamera);
 };
 
 class CStateCameraV_Main : public CStateCameraV
@@ -320,7 +323,7 @@ class CStateCameraV_Distance : public CStateCameraV
 public:
 	CStateCameraV_Distance() {}
 
-	virtual void Distance(CCamera* pCamera) override {}	// 距離調整
+	virtual void Distance(CCamera* pCamera) override;	// 距離調整
 };
 
 //=============================
