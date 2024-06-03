@@ -1085,9 +1085,11 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 
 	if (nLife % 4 == 0)
 	{
-		float ratio = 1.0f - static_cast<float>(nLife) / GetLifeOrigin();
-		UtilFunc::Transformation::Clamp(ratio, 0.3f, 1.0f);
-		pCamera->SetShake(3, 25.0f * ratio, 0.0f);	// êUìÆ
+		float ratioDest = 1.0f - static_cast<float>(nLife) / GetLifeOrigin();
+		float ratio = ratioDest;
+		UtilFunc::Transformation::Clamp(ratioDest, 0.0f, 0.7f);
+		UtilFunc::Transformation::Clamp(ratio, 0.1f, 1.0f);
+		pCamera->SetShake(3,  50.0f * ratio, 0.0f);	// êUìÆ
 	}
 
 	nLife -= nValue;
@@ -1102,11 +1104,13 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 
 		// éÄñSéûÇÃê›íË
 		DeadSetting(&hitresult);
-		pCamera->SetLenDest(1000.0f, 200, 2.0f, 0.35f);	// ãóó£ÇãﬂÇ√ÇØÇÈ
+		pCamera->SetLenDest(600.0f, 200, -25.0f, 0.375f);	// ãóó£ÇãﬂÇ√ÇØÇÈ
+		pCamera->SetStateCameraV(new CStateCameraV_Distance);
 	}
-	else if (nLife <= GetLifeOrigin() * 0.3f)
+	else if (nLife <= static_cast<float>(GetLifeOrigin()) * 0.65f)
 	{
-		pCamera->SetLenDest(1000.0f, 10, 2.0f, 0.35f);	// ãóó£ÇãﬂÇ√ÇØÇÈ
+		pCamera->SetLenDest(600.0f, 10, -25.0f, 0.07f);	// ãóó£ÇãﬂÇ√ÇØÇÈ
+		pCamera->SetStateCameraV(new CStateCameraV_Distance);
 	}
 	
 

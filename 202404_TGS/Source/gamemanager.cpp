@@ -107,7 +107,7 @@ HRESULT CGameManager::Init()
 	m_SceneType = SceneType::SCENE_WAIT_AIRPUSH;	// シーンの種類 
 #else
 	m_nNowStage = 0;			// 現在のステージ
-	m_SceneType = SceneType::SCENE_TRANSITION;	// シーンの種類 
+	m_SceneType = SceneType::SCENE_WAIT_AIRPUSH;	// シーンの種類 
 #endif
 
 
