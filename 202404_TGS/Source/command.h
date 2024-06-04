@@ -26,13 +26,14 @@ protected:
 
 	// メンバ関数
 	void SetCommand(int nKey);	// コマンドキー設定
+	void Reset();
 
 	// 取得系メンバ関数
 	int GetNowFlame() { return m_nNowFlame; }	// 現在のフレーム取得
 	int GetMaxFlame() { return m_nMaxFlame; }	// 最大フレーム取得
 
 	// 設定系メンバ関数
-	void SetNowFlame(int nFlame) { m_nNowFlame = nFlame; }	// 現在のフレーム設定	
+	void SetNowFlame(int nFlame);	// 現在のフレーム設定	
 	void SetMaxFlame(int nFlame) { m_nMaxFlame = nFlame; }	// 最大フレーム設定
 
 	// メンバ変数

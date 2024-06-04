@@ -35,6 +35,29 @@ void CCommand::SetCommand(int nKey)
 }
 
 //=============================================================================
+// 現在のフレーム数を設定
+//=============================================================================
+void CCommand::SetNowFlame(int nFlame)
+{
+	m_nNowFlame = nFlame;
+
+	if (m_nNowFlame < 0 || m_nNowFlame >= m_nMaxFlame) Reset();	// 最大フレームを超えた
+}
+
+//=============================================================================
+// 入力状況初期化
+//=============================================================================
+void CCommand::Reset()
+{
+	// フラグをリセット
+	for (auto it = m_Info.begin(); it != m_Info.end(); it++) {
+		it->second = false;
+	}
+
+	m_nNowFlame = 0;
+}
+
+//=============================================================================
 // 
 // パッド設定
 // 
@@ -44,15 +67,20 @@ void CCommand::SetCommand(int nKey)
 bool CCommandPad::GetCommand()
 {
 	bool bValue = false;
+	DIRECTION direction = GetDirection();
 	auto it = m_Info.begin();
 
 	if (it->second) SetNowFlame(GetNowFlame() + 1);	// 一つ目が入力されていたらカウント増加
 
 	for (it; it != m_Info.end(); it++) {
-
+		if (it->second) continue;	// 既に入力済み
+		else if (it->first == direction) it->second = true;	// 入力方向が一致
+		else	Reset();	// 入力キーが一致しない
 	}
 
-	return bValue;
+	if (it == m_Info.end() && it->second) bValue = true;	// 最後のコマンドまで入力できた
+
+	return bValue;	// コマンド成功失敗を返す
 }
 
 //=============================================================================
