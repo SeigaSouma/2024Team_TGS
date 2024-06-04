@@ -81,6 +81,9 @@
     <Filter Include="keyconfig">
       <UniqueIdentifier>{798ed9c4-d084-4216-885c-c23d994aee58}</UniqueIdentifier>
     </Filter>
+    <Filter Include="command">
+      <UniqueIdentifier>{f9df59bd-df30-4c9f-be88-fe4191d03760}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\ballast.cpp">
@@ -457,6 +460,12 @@
     </ClCompile>
     <ClCompile Include="Source\objectQuaternion.cpp">
       <Filter>object</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\command.cpp">
+      <Filter>command</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\command_manager.cpp">
+      <Filter>command</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -843,6 +852,12 @@
     </ClInclude>
     <ClInclude Include="Source\objectQuaternion.h">
       <Filter>object</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\command.h">
+      <Filter>command</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\command_manager.h">
+      <Filter>command</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
