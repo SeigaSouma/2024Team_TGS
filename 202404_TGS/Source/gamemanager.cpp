@@ -442,8 +442,7 @@ void CGameManager::ContainPlayerBaggage()
 		m_fPosRY = UtilFunc::Transformation::Clamp(m_fPosRY, 200.0f, FLT_MAX);
 	}
 
-	pCamera->SetPositionR(MyLib::Vector3(posBaggage.x, m_fPosRY, posBaggage.z));
-	pCamera->SetRotation(MyLib::Vector3(0.0f, pCamera->GetRotation().y, -0.01f));
+	pCamera->SetAutoMovingPosR(MyLib::Vector3(posBaggage.x, m_fPosRY, posBaggage.z));
 }
 
 //==========================================================================
