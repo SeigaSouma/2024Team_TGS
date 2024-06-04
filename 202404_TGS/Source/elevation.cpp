@@ -49,7 +49,7 @@ bool CElevation::m_bLoadInfo = false;		// 情報読み込み判定
 //==========================================================================
 // コンストラクタ
 //==========================================================================
-CElevation::CElevation(int nPriority) : CObject3DMesh(nPriority)
+CElevation::CElevation(int nPriority, const LAYER layer) : CObject3DMesh(nPriority, layer)
 {
 	m_fBrushStrength = 0.0f;					// ブラシ強さ
 	m_fBrushRange = 0.0f;						// 範囲

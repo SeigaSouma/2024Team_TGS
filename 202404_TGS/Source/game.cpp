@@ -36,6 +36,7 @@
 #include "map_obstacleManager.h"
 
 #include "sample_obj3D.h"
+#include "course.h"
 
 //==========================================================================
 // 静的メンバ変数宣言
@@ -59,6 +60,7 @@ CGame::CGame()
 	m_fMaxRokOnDistance = 0.0f;		// ロックオンの最大距離
 	m_pEdit = nullptr;				// エディター
 	m_pObstacleManager = nullptr;	// 障害物マネージャ
+	m_pCourse = nullptr;			// コースのオブジェクト
 }
 
 //==========================================================================
@@ -180,8 +182,8 @@ HRESULT CGame::Init()
 		CMyEffekseer::EFKLABEL::EFKLABEL_RIVER_SAMPLE,
 		MyLib::Vector3(300.0f, 0.1f, 0.0f), MyLib::Vector3(0.0f, D3DX_PI, 0.0f), 0.0f, 30.0f, true);
 
-
-
+	// コース作成
+	m_pCourse = CCourse::Create("");
 	// 成功
 	return S_OK;
 }
@@ -265,6 +267,8 @@ void CGame::Uninit()
 		m_pObstacleManager = nullptr;
 	}
 
+	// コース
+	m_pCourse = nullptr;
 
 	// 終了処理
 	CScene::Uninit();
@@ -379,7 +383,7 @@ void CGame::ChangeEdit()
 	static bool no_scrollbar = true;
 	static bool no_menu = true;
 	static bool no_move = true;
-	static bool no_resize = true;
+	static bool no_resize = false;
 	static bool no_collapse = false;
 	static bool no_close = false;
 	static bool no_nav = false;
@@ -422,7 +426,7 @@ void CGame::ChangeEdit()
 		}
 
 		// テキスト
-		static const char* items[] = { "OFF", "EnemyBase", "Map", "Obstacle"};
+		static const char* items[] = { "OFF", "Map", "Obstacle", "Course"};
 		int selectedItem = m_EditType;
 
 		// [グループ]エディット切り替え

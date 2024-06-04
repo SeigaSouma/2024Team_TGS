@@ -18,7 +18,7 @@
 class CMeshDome : public CObject3DMesh
 {
 public:
-	CMeshDome(int nPriority = 2);
+	CMeshDome(int nPriority = 2, const LAYER layer = LAYER::LAYER_MAP);
 	~CMeshDome();
 
 	// オーバーライドされた関数

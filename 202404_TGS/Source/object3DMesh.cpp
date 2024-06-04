@@ -24,7 +24,7 @@ namespace
 //==========================================================================
 // コンストラクタ
 //==========================================================================
-CObject3DMesh::CObject3DMesh(int nPriority) : CObject3D(nPriority)
+CObject3DMesh::CObject3DMesh(int nPriority, const LAYER layer) : CObject3D(nPriority, layer)
 {
 	m_pVtxPos = nullptr;	// 頂点座標
 	m_pVtxNor = nullptr;	// 頂点法線

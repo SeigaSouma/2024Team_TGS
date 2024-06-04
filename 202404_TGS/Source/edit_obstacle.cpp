@@ -26,6 +26,7 @@ CEdit_Obstacle::CEdit_Obstacle()
 	// ’l‚ÌƒNƒŠƒA
 	m_editType = EditType::TYPE_ARRANGMENT;
 	m_pEditControl = nullptr;	// í—Ş‘€ì
+
 }
 
 //==========================================================================

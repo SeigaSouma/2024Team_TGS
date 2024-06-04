@@ -11,6 +11,7 @@
 // 派生クラス
 #include "edit_map.h"
 #include "edit_obstacle.h"
+#include "edit_course.h"
 
 //==========================================================================
 // コンストラクタ
@@ -40,9 +41,7 @@ CEdit* CEdit::Create(CGame::EditType type)
 	switch (type)
 	{
 	case CGame::EDITTYPE_OFF:
-		break;
-
-	case CGame::EDITTYPE_ENEMYBASE:
+		return nullptr;
 		break;
 
 	case CGame::EDITTYPE_MAP:
@@ -51,6 +50,10 @@ CEdit* CEdit::Create(CGame::EditType type)
 
 	case CGame::EditType::EDITTYPE_OBSTACLE:
 		pMarker = DEBUG_NEW CEdit_Obstacle;
+		break;
+
+	case CGame::EditType::EDITTYPE_COURSE:
+		pMarker = DEBUG_NEW CEdit_Course;
 		break;
 
 	default:

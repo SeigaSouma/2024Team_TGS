@@ -24,7 +24,7 @@
 //==========================================================================
 // コンストラクタ
 //==========================================================================
-CMeshDome::CMeshDome(int nPriority) : CObject3DMesh(nPriority)
+CMeshDome::CMeshDome(int nPriority, const LAYER layer) : CObject3DMesh(nPriority, layer)
 {
 	m_fMove = 0.0f;	// 回転移動量
 	m_nTexIdx = 0;	// テクスチャのインデックス番号

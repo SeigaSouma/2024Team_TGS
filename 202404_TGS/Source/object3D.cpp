@@ -19,7 +19,7 @@ namespace
 //==========================================================================
 // コンストラクタ
 //==========================================================================
-CObject3D::CObject3D(int nPriority) : CObject(nPriority)
+CObject3D::CObject3D(int nPriority, const LAYER layer) : CObject(nPriority, layer)
 {
 	m_mtxWorld.Identity();				// ワールドマトリックス
 	m_col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);		// 色

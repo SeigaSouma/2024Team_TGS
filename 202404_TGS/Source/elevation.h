@@ -35,7 +35,7 @@ private:
 
 public:
 
-	CElevation(int nPriority = 1);
+	CElevation(int nPriority = 1, const LAYER layer = LAYER::LAYER_MAP);
 	~CElevation();
 
 	// オーバーライドされた関数
