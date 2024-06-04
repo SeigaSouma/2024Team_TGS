@@ -92,6 +92,7 @@ protected:
 	int m_nNowStage;		// 現在のステージ
 	int m_nNumStage;		// ステージの総数
 	float m_fCameraLengthOld;	// 前のカメラの距離
+	float m_fPosRY;			// プレイヤーと荷物を画面内に収めるときに使うposRのY座標
 };
 
 

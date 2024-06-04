@@ -1342,6 +1342,36 @@ bool CCamera::IsOnScreen(const MyLib::Vector3 pos)
 }
 
 //==========================================================================
+//  スクリーン座標取得
+//==========================================================================
+MyLib::Vector3 CCamera::GetScreenPos(const MyLib::Vector3 pos)
+{
+	//ビューポートの設定
+	D3DVIEWPORT9 vp = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f, 1.0f };
+
+	//計算用変数宣言
+	D3DXMATRIX mtxWorld; //ワールドマトリックス
+
+	//ワールドマトリックスの初期化
+	D3DXMatrixIdentity(&mtxWorld);
+
+	//スクリーン座標を算出
+	MyLib::Vector3 screenPos;
+	D3DXVec3Project
+	(
+		&screenPos,
+		&pos,
+		&vp,
+		&m_mtxProjection,
+		&m_mtxView,
+		&mtxWorld
+	);
+
+	// 返す
+	return screenPos;
+}
+
+//==========================================================================
 // タイトルのリセット
 //==========================================================================
 void CCamera::ResetTitle()

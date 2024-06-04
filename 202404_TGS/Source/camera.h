@@ -139,6 +139,7 @@ public:
 	void Reset(CScene::MODE mode);				// リセット
 	void ResetBoss();						// リセット
 	bool IsOnScreen(const MyLib::Vector3 pos);	// スクリーン内の判定
+	MyLib::Vector3 GetScreenPos(const MyLib::Vector3 pos);	// スクリーン座標取得
 	void MoveCameraStick(int nIdx = 0);			// スティック操作
 	void WarpCamera(MyLib::Vector3 pos);		// カメラワープ
 	void SetAutoDistanceDest(float fDistance) { m_fAutoDistance_Dest = fDistance; }
