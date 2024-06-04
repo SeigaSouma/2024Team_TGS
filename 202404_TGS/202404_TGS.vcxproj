@@ -177,12 +177,9 @@
     <ClCompile Include="Source\checkpoint.cpp" />
     <ClCompile Include="Source\collisionLine_Box.cpp" />
     <ClCompile Include="Source\collisionobject.cpp" />
-<<<<<<< HEAD
     <ClCompile Include="Source\course.cpp" />
-=======
     <ClCompile Include="Source\command.cpp" />
     <ClCompile Include="Source\command_manager.cpp" />
->>>>>>> 5659c4b928dc9ecf4d7a852416239e61ff6a6430
     <ClCompile Include="Source\damagepoint.cpp" />
     <ClCompile Include="Source\debugproc.cpp" />
     <ClCompile Include="Source\debug_bressrange.cpp" />
