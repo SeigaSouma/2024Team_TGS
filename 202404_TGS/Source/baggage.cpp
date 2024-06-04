@@ -194,14 +194,12 @@ void CBaggage::Update()
 	{
 		float windowWidth = 100.0f;
 		const float  POS_MOVE = 0.5f;
-
 		//=============================
 		// 位置設定
 		//=============================
 		MyLib::Vector3 pos = GetPosition();
 		ImGui::Text("pos");
 		ImGui::SameLine();
-
 		// X
 		ImGui::PushID(0); // ウィジェットごとに異なるIDを割り当てる
 		{
@@ -210,7 +208,6 @@ void CBaggage::Update()
 			ImGui::SameLine();
 		}
 		ImGui::PopID();
-
 		// Y
 		ImGui::PushID(0); // ウィジェットごとに異なるIDを割り当てる
 		{
@@ -219,7 +216,6 @@ void CBaggage::Update()
 			ImGui::SameLine();
 		}
 		ImGui::PopID();
-
 		// Z
 		ImGui::PushID(0); // ウィジェットごとに異なるIDを割り当てる
 		{
@@ -227,30 +223,9 @@ void CBaggage::Update()
 			ImGui::DragFloat("z", &pos.z, POS_MOVE, 0.0f, 0.0f, "%.2f");
 		}
 		ImGui::PopID();
-
 		// 位置設定
 		SetPosition(pos);
 		SetMove(0.0f);
-
-
-
-		if (ImGui::TreeNode("Q"))
-		{
-			
-			static float XRot = 0.0f;
-			static float YRot = 0.0f;
-			ImGui::DragFloat("XRot", &XRot, 0.1f, 0.0f, 0.0f, "%.2f");
-			ImGui::DragFloat("YRot", &YRot, 0.1f, 0.0f, 0.0f, "%.2f");
-
-			MyLib::Vector3 rot = GetRotation();
-			MyLib::Vector3 vec = MyLib::Vector3(sinf(rot.y), 0.0f, cosf(rot.y));
-			BindQuaternion(MyLib::Vector3(vec.z, 0.0f, -vec.x), XRot);
-
-			// クォータニオン割り当て
-			BindQuaternion(MyLib::Vector3(0.0f, 1.0f, 0.0f), YRot);
-
-			ImGui::TreePop();
-		}
 		ImGui::TreePop();
 	}
 }

@@ -24,6 +24,7 @@
 #include "stagename.h"
 #include "timer.h"
 #include "input.h"
+#include "baggage.h"
 
 //==========================================================================
 // 定数定義
@@ -31,6 +32,10 @@
 namespace
 {
 	const int POINT_WAVECLEAR = 5;		// ウェーブクリアのポイント
+	const float POSR_Y_APPROACH_COEF = 0.3f;	//カメラが近づく際の慣性
+	const float POSR_Y_PULL_SCREEN_POS = 210.0f;	// カメラが引き始めるスクリーン座標
+	const float POSR_Y_APPROACH_SCREEN_POS = SCREEN_HEIGHT * 0.5f;	// カメラが近づき始めるスクリーン座標
+	const float POSR_YDEST_BAGGTOPLAYER_RATIO = 0.4f;	// 荷物とプレイヤー距離の割合（posRYDest）
 }
 
 //==========================================================================
@@ -46,6 +51,8 @@ CGameManager::CGameManager()
 	m_bGameStart = false;		// ゲーム開始時のフラグ
 	m_nNowStage = 0;			// 現在のステージ
 	m_nNumStage = 0;			// ステージの総数
+	m_fCameraLengthOld = 0;		// 前のカメラの距離
+	m_fPosRY = 0.0f;
 }
 
 //==========================================================================
@@ -128,6 +135,7 @@ void CGameManager::Update()
 	{
 	case CGameManager::SceneType::SCENE_MAIN:
 		m_bControll = true;
+		ContainPlayerBaggage();
 		break;
 
 	case CGameManager::SceneType::SCENE_MAINCLEAR:
@@ -389,6 +397,53 @@ void CGameManager::SceneWaitAirPush()
 void CGameManager::SceneGoal()
 {
 	CGame::GetInstance()->GetTimer()->SetState(CTimer::eState::STATE_GOAL);
+}
+
+//==========================================================================
+// プレイヤーと荷物を画面内に収める
+//==========================================================================
+void CGameManager::ContainPlayerBaggage()
+{
+	// カメラ取得
+	CCamera* pCamera = CManager::GetInstance()->GetCamera();
+
+	// プレイヤー取得
+	CListManager<CPlayer> playerList = CPlayer::GetListObj();
+	CPlayer* pPlayer = nullptr;
+	playerList.ListLoop(&pPlayer);
+
+	// 荷物取得
+	CListManager<CBaggage> baggageList = CBaggage::GetListObj();
+	CBaggage* pBaggage = nullptr;
+	baggageList.ListLoop(&pBaggage);
+
+	// 収めるものの座標
+	MyLib::Vector3 posPlayer = pPlayer->GetPosition();
+	MyLib::Vector3 posBaggage = pBaggage->GetPosition();
+	
+	// posR現在のY座標取得
+	m_fPosRY = pCamera->GetPositionR().y;
+
+	// 範囲内に収める
+	MyLib::Vector3 screenPos = pCamera->GetScreenPos(posBaggage);
+
+	if (screenPos.y <= POSR_Y_PULL_SCREEN_POS)
+	{// 上画面外（引く）
+		float posRYDest = (posBaggage.y - posPlayer.y) * POSR_YDEST_BAGGTOPLAYER_RATIO;
+		if (m_fPosRY <= posRYDest)
+		{
+			m_fPosRY = posRYDest;
+		}
+	}
+	else if (screenPos.y >= POSR_Y_APPROACH_SCREEN_POS)
+	{// 下画面外（押す）
+		float posRYDest = posBaggage.y;
+		m_fPosRY += (posRYDest - m_fPosRY) * POSR_Y_APPROACH_COEF;
+		m_fPosRY = UtilFunc::Transformation::Clamp(m_fPosRY, 200.0f, FLT_MAX);
+	}
+
+	pCamera->SetPositionR(MyLib::Vector3(posBaggage.x, m_fPosRY, posBaggage.z));
+	pCamera->SetRotation(MyLib::Vector3(0.0f, pCamera->GetRotation().y, -0.01f));
 }
 
 //==========================================================================

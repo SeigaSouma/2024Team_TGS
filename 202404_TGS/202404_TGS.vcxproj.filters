@@ -84,6 +84,9 @@
     <Filter Include="course">
       <UniqueIdentifier>{2eb08385-ae14-4060-b707-e8d0fa121325}</UniqueIdentifier>
     </Filter>
+    <Filter Include="command">
+      <UniqueIdentifier>{f9df59bd-df30-4c9f-be88-fe4191d03760}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\ballast.cpp">
@@ -466,6 +469,12 @@
     </ClCompile>
     <ClCompile Include="Source\elevation.cpp">
       <Filter>mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\command.cpp">
+      <Filter>command</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\command_manager.cpp">
+      <Filter>command</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -858,6 +867,12 @@
     </ClInclude>
     <ClInclude Include="Source\elevation.h">
       <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\command.h">
+      <Filter>command</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\command_manager.h">
+      <Filter>command</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

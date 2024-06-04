@@ -66,6 +66,10 @@ namespace
 	const MyLib::Vector3 ROTDISTANCE_COUNTER = MyLib::Vector3(0.0f, D3DX_PI * 0.5f, -D3DX_PI * 0.05f);	// 反撃時の向きズレ
 	const float LENGTH_COUNTER = 400.0f;					// カウンター時のカメラ長さ
 	const MyLib::Vector3 ROTATION_PRAYER = MyLib::Vector3(0.0f, -0.89f, 0.06f);	// 祈り時の向き
+	const float UPDISTANCE_MULTIPLY = (0.25f);
+	const float NOTUPDISTANCE_MULTIPLY = (0.05f);
+	const float MIN_DISNTANCE = (1500.0f);
+	const float DISTANCE_TIMER = (1.0f / 120.0f);
 }
 
 //==========================================================================
@@ -577,22 +581,12 @@ void CCamera::MoveCameraDistance()
 			{// カメラを近づけていく
 				m_fDestDistance -= m_fDistanceDecrementValue;
 			}
-
-			if (m_fDestDistance <= m_fOriginDistance)
-			{// 補正しすぎたら戻す
-				m_fDestDistance = m_fOriginDistance;
-			}
 		}
 		else
 		{
 			if (m_fDestDistance <= m_fOriginDistance)
 			{// カメラを近づけていく
 				m_fDestDistance -= m_fDistanceDecrementValue;
-			}
-
-			if (m_fDestDistance >= m_fOriginDistance)
-			{// 補正しすぎたら戻す
-				m_fDestDistance = m_fOriginDistance;
 			}
 		}
 	}
@@ -958,14 +952,16 @@ void CCamera::SetCameraRGame()
 		}
 
 		// 目標の高さの差分を代入
-		m_fDiffHeightDest = m_fDiffHeightSave;
+		//m_fDiffHeightDest = m_fDiffHeightSave;
+		m_fDiffHeightDest = m_TargetPos.y;
 
 		// 高さの差分を補正する
 		m_fDiffHeight += (m_fDiffHeightDest - m_fDiffHeight) * 0.01f;
 
 		// 注視点の代入処理
 		m_pStateCameraR->SetCameraR(this);
-		m_posRDest.y = m_TargetPos.y;
+		m_posRDest.y = m_posR.y;
+		//m_posRDest.y = m_TargetPos.y;
 		//m_posRDest.y = fYcamera - m_fDiffHeight;
 
 		// 補正する
@@ -1337,6 +1333,36 @@ bool CCamera::IsOnScreen(const MyLib::Vector3 pos)
 
 	// 返す
 	return bIn;
+}
+
+//==========================================================================
+//  スクリーン座標取得
+//==========================================================================
+MyLib::Vector3 CCamera::GetScreenPos(const MyLib::Vector3 pos)
+{
+	//ビューポートの設定
+	D3DVIEWPORT9 vp = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f, 1.0f };
+
+	//計算用変数宣言
+	D3DXMATRIX mtxWorld; //ワールドマトリックス
+
+	//ワールドマトリックスの初期化
+	D3DXMatrixIdentity(&mtxWorld);
+
+	//スクリーン座標を算出
+	MyLib::Vector3 screenPos;
+	D3DXVec3Project
+	(
+		&screenPos,
+		&pos,
+		&vp,
+		&m_mtxProjection,
+		&m_mtxView,
+		&mtxWorld
+	);
+
+	// 返す
+	return screenPos;
 }
 
 //==========================================================================
@@ -1712,13 +1738,14 @@ void CStateCameraV::LimitPos(CCamera* pCamera)
 //==========================================================================
 void CStateCameraV::Distance(CCamera* pCamera)
 {
-	pCamera->SetDistance(GetDistance(pCamera));
+	CManager::GetInstance()->GetDebugProc()->Print("距離調整するよ\n");
+	pCamera->SetDistance(GetDistance(pCamera, UPDISTANCE_MULTIPLY));
 }
 
 //==========================================================================
 // 距離取得
 //==========================================================================
-float CStateCameraV::GetDistance(CCamera* pCamera)
+float CStateCameraV::GetDistance(CCamera* pCamera, const float fMultiply)
 {
 	float Value;
 	static float MAXHEIGHT = 600.0f;
@@ -1726,9 +1753,9 @@ float CStateCameraV::GetDistance(CCamera* pCamera)
 	// 割合
 	float ratio = (pCamera->GetPositionR().y - 200.0f) / MAXHEIGHT;
 	ratio = UtilFunc::Transformation::Clamp(ratio, 0.0f, 1.0f);
-	pCamera->SetAutoDistanceDest(1200.0f * ratio + 1500.0f);
+	pCamera->SetAutoDistanceDest(1200.0f * ratio + MIN_DISNTANCE);
 
-	Value = pCamera->GetDistance() + (pCamera->GetAutoDistanceDest() - pCamera->GetDistance()) * 0.25f;
+	Value = pCamera->GetDistance() + (pCamera->GetAutoDistanceDest() - pCamera->GetDistance()) * fMultiply;
 	return Value;
 }
 
@@ -1765,22 +1792,17 @@ void CStateCameraV_Enhance::LimitPos(CCamera* pCamera)
 //==========================================================================
 void CStateCameraV_Distance::Distance(CCamera* pCamera)
 {
-	float Distance = GetDistance(pCamera);	// 調整後予定距離
-	float DistanceDecrementValue = pCamera->GetDistanceDecrementValue();
-	bool flag = false;
+	if (pCamera->GetDistanceCnt() > 0) { return; }
+	float defdistance = GetDistance(pCamera, UPDISTANCE_MULTIPLY);
+	float distanceDecrementValue = pCamera->GetDistanceDecrementValue();
 
-	if (DistanceDecrementValue >= 0.0f)
-	{
-		if (pCamera->GetDistance() <= Distance) flag = true;
-	}
-	else
-	{
-		if (pCamera->GetDistance() >= Distance) flag = true;
-	}
+	float distance = UtilFunc::Correction::EasingLinear(pCamera->GetDistance(), defdistance, m_fMultiPly);
 
-	if (flag) {
-		pCamera->SetStateCameraV(new CStateCameraV);
-	}
+	pCamera->SetDistance(distance);
+
+	// 差分確認
+	if (m_fMultiPly >= 1.0f) pCamera->SetStateCameraV(new CStateCameraV);
+	else m_fMultiPly += DISTANCE_TIMER;
 }
 
 //==========================================================================
