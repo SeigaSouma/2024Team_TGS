@@ -3,6 +3,9 @@
 #------------------------------------------------------------------------------
 TEXT_FILENAME = data\\TEXT\\mapobstacle\\stone\\setup.txt		# [0]
 TEXT_FILENAME = data\\TEXT\\mapobstacle\\bridge\\setup.txt		# [1]
+TEXT_FILENAME = data\\TEXT\\mapobstacle\\turibashi\\setup.txt		# [2]
+TEXT_FILENAME = data\\TEXT\\mapobstacle\\angry_bird\\setup.txt		# [3]
+TEXT_FILENAME = data\\TEXT\\mapobstacle\\fallen_tree\\setup.txt		# [4]
 
 #------------------------------------------------------------------------------
  ƒ‚ƒfƒ‹‚Ì”z’u
