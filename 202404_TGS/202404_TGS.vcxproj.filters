@@ -81,6 +81,9 @@
     <Filter Include="keyconfig">
       <UniqueIdentifier>{798ed9c4-d084-4216-885c-c23d994aee58}</UniqueIdentifier>
     </Filter>
+    <Filter Include="course">
+      <UniqueIdentifier>{2eb08385-ae14-4060-b707-e8d0fa121325}</UniqueIdentifier>
+    </Filter>
     <Filter Include="command">
       <UniqueIdentifier>{f9df59bd-df30-4c9f-be88-fe4191d03760}</UniqueIdentifier>
     </Filter>
@@ -105,9 +108,6 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\collisionobject.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\elevation.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\fade.cpp">
@@ -461,6 +461,15 @@
     <ClCompile Include="Source\objectQuaternion.cpp">
       <Filter>object</Filter>
     </ClCompile>
+    <ClCompile Include="Source\edit_course.cpp">
+      <Filter>edit</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\course.cpp">
+      <Filter>course</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\elevation.cpp">
+      <Filter>mesh</Filter>
+    </ClCompile>
     <ClCompile Include="Source\command.cpp">
       <Filter>command</Filter>
     </ClCompile>
@@ -491,9 +500,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\constans.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\elevation.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\fade.h">
@@ -852,6 +858,15 @@
     </ClInclude>
     <ClInclude Include="Source\objectQuaternion.h">
       <Filter>object</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\edit_course.h">
+      <Filter>edit</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\course.h">
+      <Filter>course</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\elevation.h">
+      <Filter>mesh</Filter>
     </ClInclude>
     <ClInclude Include="Source\command.h">
       <Filter>command</Filter>

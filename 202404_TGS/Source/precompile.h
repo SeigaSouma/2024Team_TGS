@@ -15,6 +15,7 @@
 #include <string.h>
 #include <DirectXMath.h>
 #include <D3DX9Math.h>
+#include <assert.h>
 
 // C++‚Ìstd—p
 #include <vector>

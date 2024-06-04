@@ -24,6 +24,7 @@ class CLimitArea;
 class CPlayer;
 class CEdit;
 class CMap_ObstacleManager;
+class CCourse;
 
 //==========================================================================
 // クラス定義
@@ -37,9 +38,9 @@ public:
 	enum EditType
 	{
 		EDITTYPE_OFF = 0,		// オフ
-		EDITTYPE_ENEMYBASE,		// 敵拠点
 		EDITTYPE_MAP,			// マップ
 		EDITTYPE_OBSTACLE,		// 障害物
+		EDITTYPE_COURSE,		// コース
 		EDITTYPE_MAX
 	};
 
@@ -58,6 +59,7 @@ public:
 	CTimer *GetTimer() { return m_pTimer; }	// タイマー取得
 	CStage *GetStage();
 	CGameManager *GetGameManager();
+	CCourse* GetCourse() { return m_pCourse; }					// コースのオブジェクト取得
 	void SetEnableClear(bool bClear) { m_clear = bClear; }		// クリアのフラグ
 	bool IsClearFrag() { return m_clear; }						// クリアフラグの取得
 	bool IsEdit() { return m_bEdit; }							// エディットの判定
@@ -89,6 +91,7 @@ protected:
 	EditType m_EditType;					// エディットの種類
 	CEdit* m_pEdit;							// エディター
 	CMap_ObstacleManager* m_pObstacleManager;	// 障害物マネージャ
+	CCourse* m_pCourse;						// コースのオブジェクト
 	bool m_bEdit;				// エディットの判定
 	bool m_clear; // クリア判定
 	float m_fMaxRokOnDistance;			// ロックオンの最大距離

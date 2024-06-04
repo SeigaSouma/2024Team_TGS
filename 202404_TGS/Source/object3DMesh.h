@@ -30,7 +30,7 @@ public:
 		TYPE_MAX
 	}TYPE;
 
-	CObject3DMesh(int nPriority = mylib_const::PRIORITY_DEFAULT);
+	CObject3DMesh(int nPriority = mylib_const::PRIORITY_DEFAULT, const LAYER layer = LAYER::LAYER_DEFAULT);
 	~CObject3DMesh();
 
 	// オーバーライドされた関数

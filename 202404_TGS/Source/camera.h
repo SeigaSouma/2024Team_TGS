@@ -139,6 +139,7 @@ public:
 	void Reset(CScene::MODE mode);				// リセット
 	void ResetBoss();						// リセット
 	bool IsOnScreen(const MyLib::Vector3 pos);	// スクリーン内の判定
+	MyLib::Vector3 GetScreenPos(const MyLib::Vector3 pos);	// スクリーン座標取得
 	void MoveCameraStick(int nIdx = 0);			// スティック操作
 	void WarpCamera(MyLib::Vector3 pos);		// カメラワープ
 	void SetAutoDistanceDest(float fDistance) { m_fAutoDistance_Dest = fDistance; }
@@ -156,6 +157,8 @@ public:
 	float GetDistanceDecrementValue() { return m_fDistanceDecrementValue; }
 	float GetDistanceDest() { return m_fDestDistance; }
 	int GetDistanceCnt() { return m_nCntDistance; }
+	void SetAutoMovingPosR(const MyLib::Vector3& pos) { m_AutoMovingPosR = pos; }	// 自動カメラ移動時の注視点
+	MyLib::Vector3 GetAutoMovingPosR() { return m_AutoMovingPosR; }					// 自動カメラ移動時の注視点取得
 
 	// ステートパターン設定
 	void SetStateCamraR(CStateCameraR* state);	// 注視点の状態設定
@@ -218,6 +221,7 @@ private:
 	MyLib::Vector3 m_TargetPosDest;		// 目標の追従目標の位置
 	MyLib::Vector3 m_TargetRot;			// 追従目標の向き
 	MyLib::Vector3 m_RockOnPos;			// ロックオン対象の位置
+	MyLib::Vector3 m_AutoMovingPosR;	// 自動カメラ移動時の注視点
 	float m_fRockOnDistance;
 	float m_fDistance;					// 距離
 	float m_fDestDistance;				// 目標の距離

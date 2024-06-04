@@ -18,7 +18,7 @@ class CObject3D : public CObject
 {
 public:
 
-	CObject3D(int nPriority = 5);
+	CObject3D(int nPriority = 5, const LAYER layer = LAYER::LAYER_DEFAULT);
 	virtual ~CObject3D();
 
 	// オーバーライドされた関数

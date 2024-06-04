@@ -115,6 +115,7 @@ public:
 	static const int GetNumPriorityAll(int nPriority) { return m_nNumPriorityAll[nPriority]; }
 	static std::map<LAYER, std::map<int, std::vector<CObject*>>> GetTop() { return m_pObj; }	// æ“ªæ“¾
 
+	void SetEnableDeath(bool bDeath) { m_bDeath = bDeath; }
 	bool IsDeath();						// €–S‚Ì”»’è
 	void SetType(const TYPE type);		// í—Şİ’è
 	TYPE GetType() const;				// í—Şæ“¾

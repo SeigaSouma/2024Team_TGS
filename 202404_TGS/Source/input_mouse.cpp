@@ -140,7 +140,16 @@ void CInputMouse::Update()
 	// 入力デバイスからデータを取得
 	if (SUCCEEDED(m_pDevice->GetDeviceState(sizeof(mouse), &mouse)))
 	{
-		// 入力情報の保存
+		for (int i = 0; i < 8; i++)
+		{
+			// トリガー情報を保存
+			m_MouseStateTrigger.rgbButtons[i] = (m_MouseState.rgbButtons[i] ^ mouse.rgbButtons[i]) & mouse.rgbButtons[i];
+
+			// リリース情報を保存
+			m_MouseStateRerease.rgbButtons[i] = (m_MouseState.rgbButtons[i] ^ mouse.rgbButtons[i]) & m_MouseState.rgbButtons[i];
+		}
+
+		// プレス情報の保存
 		m_MouseState = mouse;
 	}
 	else
@@ -195,6 +204,22 @@ void CInputMouse::Update()
 bool CInputMouse::GetPress(BUTTON nKey)
 {
 	return (m_MouseState.rgbButtons[nKey] & 0x80) ? true : false;
+}
+
+//==========================================================================
+// トリガー情報取得
+//==========================================================================
+bool CInputMouse::GetTrigger(BUTTON nKey)
+{
+	return (m_MouseStateTrigger.rgbButtons[nKey] & 0x80) ? true : false;
+}
+
+//==========================================================================
+// リリース情報取得
+//==========================================================================
+bool CInputMouse::GetRelease(BUTTON nKey)
+{
+	return (m_MouseStateRerease.rgbButtons[nKey] & 0x80) ? true : false;
 }
 
 //==========================================================================

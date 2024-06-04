@@ -35,7 +35,9 @@ public:
 	HRESULT Init(HINSTANCE hInstance, HWND hWnd);
 	void Uninit();
 	void Update();
-	bool GetPress(BUTTON nKey);
+	bool GetPress(BUTTON nKey);		// プレス情報取得
+	bool GetTrigger(BUTTON nKey);	// トリガー情報取得
+	bool GetRelease(BUTTON nKey);	// リリース情報取得
 	MyLib::Vector3 GetMouseMove();
 	D3DXVECTOR2 GetPosition();				// スクリーン位置取得
 	MyLib::Vector3 GetOldWorldPosition();	// 前回のスクリーン位置取得

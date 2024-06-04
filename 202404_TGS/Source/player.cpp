@@ -893,7 +893,7 @@ void CPlayer::ReaspawnSetting()
 
 	CCamera* pCamera = CManager::GetInstance()->GetCamera();
 
-	pCamera->SetLenDest(pCamera->GetOriginDistance(), 0, pCamera->GetOriginDistance(), 1.0f);
+	pCamera->SetLenDest(pCamera->GetOriginDistance(), 0, 1.0f, 1.0f);
 }
 
 //==========================================================================

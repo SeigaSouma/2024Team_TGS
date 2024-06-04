@@ -70,6 +70,7 @@ namespace
 	const float NOTUPDISTANCE_MULTIPLY = (0.05f);
 	const float MIN_DISNTANCE = (1500.0f);
 	const float DISTANCE_TIMER = (1.0f / 120.0f);
+	const float MAX_AUTODISTANCEHEIGHT = 600.0f;	// 自動高さ制御の最大値
 }
 
 //==========================================================================
@@ -793,10 +794,9 @@ void CCamera::SetCameraVGame()
 	else if (m_bFollow)
 	{// 追従ON
 		
-
+		// 自動傾きの計算処理
 		m_fAutoRot_Dest = (m_posR.y - 200.0f) / m_fDistance + m_rotOrigin.z;
 		m_rot.z += (m_fAutoRot_Dest - m_rot.z) * 0.2f;
-
 
 		// 視点の代入処理
 		m_posVDest.x = m_posR.x + cosf(m_rot.z) * sinf(m_rot.y) * -m_fDistance;
@@ -952,14 +952,16 @@ void CCamera::SetCameraRGame()
 		}
 
 		// 目標の高さの差分を代入
-		m_fDiffHeightDest = m_fDiffHeightSave;
+		//m_fDiffHeightDest = m_fDiffHeightSave;
+		m_fDiffHeightDest = m_TargetPos.y;
 
 		// 高さの差分を補正する
 		m_fDiffHeight += (m_fDiffHeightDest - m_fDiffHeight) * 0.01f;
 
 		// 注視点の代入処理
 		m_pStateCameraR->SetCameraR(this);
-		m_posRDest.y = m_TargetPos.y;
+		m_posRDest.y = m_AutoMovingPosR.y;
+		//m_posRDest.y = m_TargetPos.y;
 		//m_posRDest.y = fYcamera - m_fDiffHeight;
 
 		// 補正する
@@ -1206,6 +1208,7 @@ void CCamera::Reset(CScene::MODE mode)
 	m_bFollow = true;	// 追従するかどうか
 	m_bRockON = false;	// ロックオンするか
 
+
 	switch (mode)
 	{
 	case CScene::MODE_NONE:
@@ -1238,7 +1241,9 @@ void CCamera::Reset(CScene::MODE mode)
 	default:
 		break;
 	}
-	
+	m_AutoMovingPosR = m_posR;
+
+
 	// プロジェクションマトリックスの初期化
 	D3DXMatrixPerspectiveFovLH(&m_mtxProjection, D3DXToRadian(45.0f),
 								(float)m_viewport.Width / (float)m_viewport.Height,
@@ -1331,6 +1336,36 @@ bool CCamera::IsOnScreen(const MyLib::Vector3 pos)
 
 	// 返す
 	return bIn;
+}
+
+//==========================================================================
+//  スクリーン座標取得
+//==========================================================================
+MyLib::Vector3 CCamera::GetScreenPos(const MyLib::Vector3 pos)
+{
+	//ビューポートの設定
+	D3DVIEWPORT9 vp = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f, 1.0f };
+
+	//計算用変数宣言
+	D3DXMATRIX mtxWorld; //ワールドマトリックス
+
+	//ワールドマトリックスの初期化
+	D3DXMatrixIdentity(&mtxWorld);
+
+	//スクリーン座標を算出
+	MyLib::Vector3 screenPos;
+	D3DXVec3Project
+	(
+		&screenPos,
+		&pos,
+		&vp,
+		&m_mtxProjection,
+		&m_mtxView,
+		&mtxWorld
+	);
+
+	// 返す
+	return screenPos;
 }
 
 //==========================================================================
@@ -1715,15 +1750,12 @@ void CStateCameraV::Distance(CCamera* pCamera)
 //==========================================================================
 float CStateCameraV::GetDistance(CCamera* pCamera, const float fMultiply)
 {
-	float Value;
-	static float MAXHEIGHT = 600.0f;
-
 	// 割合
-	float ratio = (pCamera->GetPositionR().y - 200.0f) / MAXHEIGHT;
+	float ratio = (pCamera->GetPositionR().y - 200.0f) / MAX_AUTODISTANCEHEIGHT;
 	ratio = UtilFunc::Transformation::Clamp(ratio, 0.0f, 1.0f);
 	pCamera->SetAutoDistanceDest(1200.0f * ratio + MIN_DISNTANCE);
 
-	Value = pCamera->GetDistance() + (pCamera->GetAutoDistanceDest() - pCamera->GetDistance()) * fMultiply;
+	float Value = pCamera->GetDistance() + (pCamera->GetAutoDistanceDest() - pCamera->GetDistance()) * fMultiply;
 	return Value;
 }
 
