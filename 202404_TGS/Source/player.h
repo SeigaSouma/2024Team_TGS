@@ -23,6 +23,7 @@ class CBaggage;
 class CPlayerControlMove;		// 移動
 class CPlayerControlBaggage;	// 荷物操作
 class CPlayerControlSurfacing;	// 浮上操作
+class CPlayerControlTrick;		// トリック操作
 
 //==========================================================================
 // クラス定義
@@ -165,6 +166,7 @@ public:
 	void ChangeMoveControl(CPlayerControlMove* control);		// 移動の操作変更
 	void ChangeBaggageControl(CPlayerControlBaggage* control);	// 荷物の操作変更
 	void ChangeSurfacingControl(CPlayerControlSurfacing* control);	// 浮上の操作変更
+	void ChangeTrickControl(CPlayerControlTrick* control);	// 浮上の操作変更
 
 	//=============================
 	// その他
@@ -253,6 +255,7 @@ private:
 	CPlayerControlMove* m_pControlMove;			// 移動操作
 	CPlayerControlBaggage* m_pControlBaggage;	// 荷物操作
 	CPlayerControlSurfacing* m_pControlSurfacing;	// 浮上操作
+	CPlayerControlTrick* m_pControlTrick;		// トリック操作
 
 	static CListManager<CPlayer> m_List;	// リスト
 };

@@ -473,7 +473,7 @@
     <ClCompile Include="Source\command.cpp">
       <Filter>command</Filter>
     </ClCompile>
-    <ClCompile Include="Source\command_manager.cpp">
+    <ClCompile Include="Source\command_group.cpp">
       <Filter>command</Filter>
     </ClCompile>
     <ClCompile Include="Source\retryui.cpp">
@@ -874,7 +874,7 @@
     <ClInclude Include="Source\command.h">
       <Filter>command</Filter>
     </ClInclude>
-    <ClInclude Include="Source\command_manager.h">
+    <ClInclude Include="Source\command_group.h">
       <Filter>command</Filter>
     </ClInclude>
     <ClInclude Include="Source\retryui.h">

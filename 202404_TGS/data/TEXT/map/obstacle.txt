@@ -6,32 +6,33 @@ TEXT_FILENAME = data\\TEXT\\mapobstacle\\bridge\\setup.txt		# [1]
 TEXT_FILENAME = data\\TEXT\\mapobstacle\\turibashi\\setup.txt		# [2]
 TEXT_FILENAME = data\\TEXT\\mapobstacle\\angry_bird\\setup.txt		# [3]
 TEXT_FILENAME = data\\TEXT\\mapobstacle\\fallen_tree\\setup.txt		# [4]
+TEXT_FILENAME = data\\TEXT\\mapobstacle\\hasu\\setup.txt		# [5]
 
 #------------------------------------------------------------------------------
  ƒ‚ƒfƒ‹‚Ì”z’u
 #------------------------------------------------------------------------------
 MODELSET
-	TYPE = 0
-	POS = 640.59 600.00 -58.73
-	ROT = 0.00 0.00 0.00
+	TYPE = 1
+	POS = 640.59 260.37 118.87
+	ROT = 0.00 1.57 0.00
 END_MODELSET
 
 MODELSET
-	TYPE = 0
-	POS = 1600.00 1500.00 0.00
-	ROT = 0.00 0.00 0.00
+	TYPE = 2
+	POS = 1600.00 411.26 113.37
+	ROT = 0.00 1.57 0.00
 END_MODELSET
 
 MODELSET
-	TYPE = 0
-	POS = 2483.14 886.28 0.00
-	ROT = 0.00 0.00 0.00
+	TYPE = 3
+	POS = 2483.14 199.61 0.00
+	ROT = 0.00 3.14 0.00
 END_MODELSET
 
 MODELSET
-	TYPE = 0
-	POS = 3612.94 1000.00 -1.74
-	ROT = 0.00 0.00 0.00
+	TYPE = 4
+	POS = 3612.94 159.34 168.37
+	ROT = -0.25 0.00 0.00
 END_MODELSET
 
 MODELSET
@@ -127,6 +128,18 @@ END_MODELSET
 MODELSET
 	TYPE = 0
 	POS = 18160.53 582.87 3.13
+	ROT = 0.00 0.00 0.00
+END_MODELSET
+
+MODELSET
+	TYPE = 5
+	POS = -136.92 117.77 -563.60
+	ROT = 0.00 0.00 0.00
+END_MODELSET
+
+MODELSET
+	TYPE = 0
+	POS = 12635.18 0.00 -2066.65
 	ROT = 0.00 0.00 0.00
 END_MODELSET
 

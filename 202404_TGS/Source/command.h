@@ -13,6 +13,22 @@
 // キーコンフィグ
 class CCommand
 {
+protected:
+
+	// 入力情報
+	struct Info
+	{
+		int nButton;	// 入力№
+		bool bActive;	// 入力されたかどうか
+
+		// コンストラクタ
+		Info() 
+		{ 
+			nButton = 1; 
+			bActive = false; 
+		}
+	};
+
 public:
 
 	CCommand();
@@ -37,11 +53,12 @@ protected:
 	void SetMaxFlame(int nFlame) { m_nMaxFlame = nFlame; }	// 最大フレーム設定
 
 	// メンバ変数
-	std::map<int, bool> m_Info;	// 情報
+	std::vector<Info> m_Info;	// 情報
 
 private:
 
 	// メンバ変数
+	int m_nId;			// 番号
 	int m_nNowFlame;	// 現在のフレーム
 	int m_nMaxFlame;	// 入力受付最大フレーム
 };
@@ -71,7 +88,13 @@ private:
 
 public:
 
-	CCommandPad() {}	// コンストラクタ
+	// コンストラクタ
+	CCommandPad() {
+		SetCommand(STICK_DOWN);
+		SetCommand(STICK_RIGHTDOWN);
+		SetCommand(STICK_RIGHT);
+		SetMaxFlame(60);
+	}
 	~CCommandPad() override {}	// デストラクタ
 
 	// メンバ関数

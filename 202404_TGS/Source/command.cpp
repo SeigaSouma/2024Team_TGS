@@ -6,6 +6,8 @@
 //=============================================================================
 #include "command.h"
 #include "input_gamepad.h"
+#include "debugproc.h"
+#include "manager.h"
 
 //=============================================================================
 // コンストラクタ
@@ -31,7 +33,10 @@ void CCommand::Uninit()
 //=============================================================================
 void CCommand::SetCommand(int nKey)
 {
-	m_Info[nKey] = false;	// 登録
+	Info info;
+	info.nButton = nKey;
+	info.bActive = false;
+	m_Info.push_back(info);
 }
 
 //=============================================================================
@@ -51,7 +56,7 @@ void CCommand::Reset()
 {
 	// フラグをリセット
 	for (auto it = m_Info.begin(); it != m_Info.end(); it++) {
-		it->second = false;
+		it->bActive = false;
 	}
 
 	m_nNowFlame = 0;
@@ -69,16 +74,39 @@ bool CCommandPad::GetCommand()
 	bool bValue = false;
 	DIRECTION direction = GetDirection();
 	auto it = m_Info.begin();
+	auto old = it;
 
-	if (it->second) SetNowFlame(GetNowFlame() + 1);	// 一つ目が入力されていたらカウント増加
+	if (it->bActive) SetNowFlame(GetNowFlame() + 1);	// 一つ目が入力されていたらカウント増加
 
-	for (it; it != m_Info.end(); it++) {
-		if (it->second) continue;	// 既に入力済み
-		else if (it->first == direction) it->second = true;	// 入力方向が一致
-		else	Reset();	// 入力キーが一致しない
+	for (it = m_Info.begin(); it != m_Info.end(); it++) 
+	{
+		if (it->bActive) 
+		{ // 既に入力済み
+			CManager::GetInstance()->GetDebugProc()->Print("入力されたよ^^\n"); 
+			old = it; 
+			continue; 
+		}
+		else if (it->nButton == direction)
+		{ // 入力方向が一致
+			it->bActive = true;
+			break;
+		}
+		else { // 入力キーが一致しない
+			if (it != m_Info.begin()) {	// 最初以外
+				if (old->nButton == direction) { // 前回と入力情報が一致
+					old = it;
+					return bValue;
+				}
+			}
+
+			Reset();
+			break;
+		}
+
+		old = it;
 	}
 
-	if (it == m_Info.end() && it->second) bValue = true;	// 最後のコマンドまで入力できた
+	if (it == m_Info.end()) bValue = true;	// 最後のコマンドまで入力できた
 
 	return bValue;	// コマンド成功失敗を返す
 }
@@ -94,7 +122,8 @@ CCommandPad::DIRECTION CCommandPad::GetDirection()
 
 	// 向きから割り出す
 	if		(rot <= 0.0f + size				&& rot >= 0.0f - size)				return DIRECTION::STICK_UP;
-	else if (rot <= -D3DX_PI + size			&& rot >= D3DX_PI - size)			return DIRECTION::STICK_DOWN;
+	else if ((rot <= -D3DX_PI + size && rot >= -D3DX_PI) || 
+		(rot >= D3DX_PI - size && rot <= D3DX_PI))			return DIRECTION::STICK_DOWN;
 	else if (rot <= -D3DX_PI * 0.5f + size	&& rot >= -D3DX_PI * 0.5f - size)	return DIRECTION::STICK_LEFT;
 	else if (rot <= D3DX_PI * 0.5f + size	&& rot >= D3DX_PI * 0.5f - size)	return DIRECTION::STICK_RIGHT;
 	else if (rot <= -D3DX_PI * 0.25f + size && rot >= -D3DX_PI * 0.25f - size)	return DIRECTION::STICK_LEFTUP;
