@@ -12,7 +12,8 @@
 
 #include "player.h"
 #include "baggage.h"
-#include "command.h"
+
+#include "command_group.h"
 
 #if BRESSRANGE
 #include "debug_bressrange.h"
@@ -97,8 +98,8 @@ public:
 
 	// コンストラクタ
 	CPlayerControlTrick() {
-		m_pCommand = nullptr;
-		m_pCommand = new CCommandPad;
+		m_pCommandPad = nullptr;
+		m_pCommandPad = CCommandGroup::Create("data\\TEXT\\command\\gamepad.txt");
 	}
 
 	virtual void Uninit();
@@ -106,7 +107,7 @@ public:
 
 private:
 
-	CCommand* m_pCommand;	// コマンド情報
+	CCommandGroup* m_pCommandPad;
 };
 
 #endif

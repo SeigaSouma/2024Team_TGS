@@ -37,6 +37,9 @@ public:
 	// 基本処理
 	void Uninit();	// 終了処理
 	virtual bool GetCommand() = 0;	// 入力確認
+	void Load(std::string& string);
+	void SetId(const int nId) { m_nId = nId; }
+	int GetId() { return m_nId; }
 
 protected:
 
@@ -69,7 +72,7 @@ private:
 // ゲームパッド
 class CCommandPad : public CCommand
 {
-private:
+public:
 
 	// 入力方向列挙
 	enum DIRECTION
@@ -89,12 +92,7 @@ private:
 public:
 
 	// コンストラクタ
-	CCommandPad() {
-		SetCommand(STICK_DOWN);
-		SetCommand(STICK_RIGHTDOWN);
-		SetCommand(STICK_RIGHT);
-		SetMaxFlame(60);
-	}
+	CCommandPad() {}
 	~CCommandPad() override {}	// デストラクタ
 
 	// メンバ関数
