@@ -1801,7 +1801,13 @@ void CStateCameraV_Distance::Distance(CCamera* pCamera)
 	pCamera->SetDistance(distance);
 
 	// 差分確認
-	if (m_fMultiPly >= 1.0f) pCamera->SetStateCameraV(new CStateCameraV);
+	if (m_fMultiPly >= 1.0f)
+	{
+		pCamera->SetStateCameraV(new CStateCameraV);
+
+		// フィードバックエフェクトOFF
+		CManager::GetInstance()->GetRenderer()->SetEnableDrawMultiScreen(false);
+	}
 	else m_fMultiPly += DISTANCE_TIMER;
 }
 

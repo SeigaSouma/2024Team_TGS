@@ -1113,6 +1113,9 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 		CStateCameraV_Distance* pstate = new CStateCameraV_Distance;
 		pstate->SetStartDistance(pCamera->GetDistance());
 		pCamera->SetStateCameraV(pstate);
+
+		// フィードバックエフェクトON
+		CManager::GetInstance()->GetRenderer()->SetEnableDrawMultiScreen(true);
 	}
 	
 
