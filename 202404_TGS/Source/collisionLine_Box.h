@@ -28,6 +28,8 @@ public:
 	void Draw() override;
 	void SetPosition(const MyLib::Vector3& pos) override;	// ˆÊ’uİ’è
 
+	void SetColor(const D3DXCOLOR& col);			// Fİ’è
+
 	void SetAABB(MyLib::AABB aabb);	// AAbBî•ñİ’è
 	void Kill();
 

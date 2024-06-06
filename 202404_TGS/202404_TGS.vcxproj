@@ -269,6 +269,7 @@
     <ClCompile Include="Source\result.cpp" />
     <ClCompile Include="Source\resultmanager.cpp" />
     <ClCompile Include="Source\resultscore.cpp" />
+    <ClCompile Include="Source\retryui.cpp" />
     <ClCompile Include="Source\rockon_marker.cpp" />
     <ClCompile Include="Source\sample_character.cpp" />
     <ClCompile Include="Source\sample_obj2D.cpp" />
@@ -403,6 +404,7 @@
     <ClInclude Include="Source\result.h" />
     <ClInclude Include="Source\resultmanager.h" />
     <ClInclude Include="Source\resultscore.h" />
+    <ClInclude Include="Source\retryui.h" />
     <ClInclude Include="Source\rockon_marker.h" />
     <ClInclude Include="Source\sample_character.h" />
     <ClInclude Include="Source\sample_obj2D.h" />
