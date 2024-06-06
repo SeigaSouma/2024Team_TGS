@@ -688,3 +688,23 @@ float CPlayerControlSurfacing::Surfacing(CPlayer* player)
 
 	return m_fHeight;
 }
+
+//==========================================================================
+// トリック
+//==========================================================================
+void CPlayerControlTrick::Trick(CPlayer* player, int& nIdx, bool& bValue)
+{
+	nIdx = m_pCommandPad->GetSuccess();
+	if (nIdx >= 0) bValue = true;
+}
+
+//==========================================================================
+// 終了処理
+//==========================================================================
+void CPlayerControlTrick::Uninit()
+{
+	if (m_pCommandPad == nullptr) return;
+	m_pCommandPad->Uninit();
+	delete m_pCommandPad;
+	m_pCommandPad = nullptr;
+}

@@ -134,6 +134,7 @@ CPlayer::CPlayer(int nPriority) : CObjectChara(nPriority)
 	m_pControlMove = nullptr;						// 移動操作
 	m_pControlBaggage = nullptr;					// 荷物操作
 	m_pControlSurfacing = nullptr;					// 浮上操作
+	m_pControlTrick = nullptr;
 }
 
 //==========================================================================
@@ -195,6 +196,7 @@ HRESULT CPlayer::Init()
 	ChangeMoveControl(DEBUG_NEW CPlayerControlMove());
 	ChangeBaggageControl(DEBUG_NEW CPlayerControlBaggage);
 	ChangeSurfacingControl(DEBUG_NEW CPlayerControlSurfacing);
+	ChangeTrickControl(DEBUG_NEW CPlayerControlTrick);
 
 	// 荷物生成
 	m_pBaggage = CBaggage::Create(CBaggage::TYPE::TYPE_CLOTH);
@@ -225,12 +227,21 @@ void CPlayer::ChangeBaggageControl(CPlayerControlBaggage* control)
 }
 
 //==========================================================================
-// 荷物の操作変更
+// 浮上の操作変更
 //==========================================================================
 void CPlayer::ChangeSurfacingControl(CPlayerControlSurfacing* control)
 {
 	delete m_pControlSurfacing;
 	m_pControlSurfacing = control;
+}
+
+//==========================================================================
+// 浮上の操作変更
+//==========================================================================
+void CPlayer::ChangeTrickControl(CPlayerControlTrick* control)
+{
+	delete m_pControlTrick;
+	m_pControlTrick = control;
 }
 
 //==========================================================================
@@ -434,6 +445,13 @@ void CPlayer::Controll()
 				m_pBaggage->SetOriginPosition(MyLib::Vector3(0.0f, MAX_HEIGHT + fHeight, 0.0f));
 			}
 			m_pControlBaggage->Action(this, m_pBaggage);		// 荷物操作
+
+			{// トリック操作
+				int idx = -1; bool value = false;
+				m_pControlTrick->Trick(this, idx, value);
+
+				if (value) SetMotion(MOTION_ATK3);
+			}
 		}
 
 	}
@@ -606,6 +624,12 @@ void CPlayer::DeleteControl()
 	if (m_pControlSurfacing != nullptr) {
 		delete m_pControlSurfacing;
 		m_pControlSurfacing = nullptr;
+	}
+
+	if (m_pControlTrick != nullptr) {
+		m_pControlTrick->Uninit();
+		delete m_pControlTrick;
+		m_pControlTrick = nullptr;
 	}
 }
 
@@ -1113,6 +1137,9 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 		CStateCameraV_Distance* pstate = new CStateCameraV_Distance;
 		pstate->SetStartDistance(pCamera->GetDistance());
 		pCamera->SetStateCameraV(pstate);
+
+		// フィードバックエフェクトON
+		CManager::GetInstance()->GetRenderer()->SetEnableDrawMultiScreen(true);
 	}
 	
 
@@ -1443,8 +1470,32 @@ void CPlayer::StateRespawn()
 //==========================================================================
 void CPlayer::Draw()
 {
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
 
-	// 描画処理
+	// ステンシルバッファ有効
+	pDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);
+
+	// 参照値設定
+	pDevice->SetRenderState(D3DRS_STENCILREF, 0x01);
+
+	// バッファへの値に対してのマスク設定
+	pDevice->SetRenderState(D3DRS_STENCILMASK, 0xff);
+
+	// ステンシルテストの比較方法設定
+	pDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_ALWAYS);
+
+	// テスト結果に対しての反映設定
+	pDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_REPLACE);	// Z+ステンシル成功
+	pDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);		// Z+ステンシル失敗
+	pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP);		// Zテストのみ失敗
+
+	// ステンシル描画
+	CObjectChara::Draw();
+
+	// ステンシルバッファ無効
+	pDevice->SetRenderState(D3DRS_STENCILENABLE, FALSE);
+
+	// 普通の描画
 	if (m_state == STATE_DMG)
 	{
 		CObjectChara::Draw(m_mMatcol);

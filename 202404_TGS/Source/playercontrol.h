@@ -13,10 +13,11 @@
 #include "player.h"
 #include "baggage.h"
 
+#include "command_group.h"
+
 #if BRESSRANGE
 #include "debug_bressrange.h"
 #endif
-
 
 //==========================================================================
 // プレイヤーコントロールクラス定義
@@ -86,6 +87,27 @@ public:
 private:
 
 	float m_fHeight = 0.0f;	// 浮上高さ
+};
+
+//=============================
+// トリック入力
+//=============================
+class CPlayerControlTrick
+{
+public:
+
+	// コンストラクタ
+	CPlayerControlTrick() {
+		m_pCommandPad = nullptr;
+		m_pCommandPad = CCommandGroup::Create("data\\TEXT\\command\\gamepad.txt");
+	}
+
+	virtual void Uninit();
+	virtual void Trick(CPlayer* player, int& nIdx, bool& bValue);	// トリック
+
+private:
+
+	CCommandGroup* m_pCommandPad;
 };
 
 #endif
