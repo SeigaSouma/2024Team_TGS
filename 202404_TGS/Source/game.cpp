@@ -34,6 +34,7 @@
 #include "goalflag.h"
 #include "checkpoint.h"
 #include "map_obstacleManager.h"
+#include "stencilshadow.h"
 
 #include "sample_obj3D.h"
 #include "course.h"
@@ -184,6 +185,10 @@ HRESULT CGame::Init()
 
 	// コース作成
 	m_pCourse = CCourse::Create("");
+
+	// ステンシル影生成
+	CStencilShadow::Create();
+
 	// 成功
 	return S_OK;
 }
