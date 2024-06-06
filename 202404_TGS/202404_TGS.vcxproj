@@ -179,7 +179,7 @@
     <ClCompile Include="Source\collisionobject.cpp" />
     <ClCompile Include="Source\course.cpp" />
     <ClCompile Include="Source\command.cpp" />
-    <ClCompile Include="Source\command_manager.cpp" />
+    <ClCompile Include="Source\command_group.cpp" />
     <ClCompile Include="Source\damagepoint.cpp" />
     <ClCompile Include="Source\debugproc.cpp" />
     <ClCompile Include="Source\debug_bressrange.cpp" />
@@ -316,7 +316,7 @@
     <ClInclude Include="Source\collisionLine_Box.h" />
     <ClInclude Include="Source\collisionobject.h" />
     <ClInclude Include="Source\command.h" />
-    <ClInclude Include="Source\command_manager.h" />
+    <ClInclude Include="Source\command_group.h" />
     <ClInclude Include="Source\constans.h" />
     <ClInclude Include="Source\course.h" />
     <ClInclude Include="Source\damagepoint.h" />

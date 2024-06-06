@@ -1,10 +1,10 @@
 //=============================================================================
 //
-// コマンドマネージャ処理 [keyconfig.cpp]
+// コマンドグループ処理 [command_group.cpp]
 // Author : Ibuki Okusada
 //
 //=============================================================================
-#include "command_manager.h"
+#include "command_group.h"
 
 //==========================================================================
 // 定数定義
@@ -15,50 +15,56 @@ namespace
 }
 
 //==========================================================================
-// 静的メンバ変数宣言
-//==========================================================================
-CCommandManager* CCommandManager::m_pInstance = nullptr;
-
-//==========================================================================
 // コンストラクタ
 //==========================================================================
-CCommandManager::CCommandManager()
+CCommandGroup::CCommandGroup()
 {
 	m_CommandList.clear();
 }
 
 //==========================================================================
-// インスタンス生成
+// 初期化処理
 //==========================================================================
-CCommandManager* CCommandManager::Create()
+HRESULT CCommandGroup::Init()
 {
-	if (m_pInstance != nullptr) { return m_pInstance; }	// インスタンスが存在
-	m_pInstance = new CCommandManager;
-	return m_pInstance;
+	m_CommandList.clear();
+
+	return S_OK;
 }
 
 //==========================================================================
 // 終了処理
 //==========================================================================
-void CCommandManager::Uninit()
+void CCommandGroup::Uninit()
 {
-	// 廃棄
-	for (auto it = m_CommandList.begin(); it < m_CommandList.end(); it++)
-	{
-		//it.
+	for (auto it = m_CommandList.begin(); it != m_CommandList.end(); it++) {
+		if ((*it) == nullptr) continue;
+		(*it)->Uninit();
+		delete (*it);
+		(*it) = nullptr;
 	}
 
-	if (m_pInstance == nullptr) { return; }	// インスタンスが存在しない
-
-	// 終了処理
-	delete m_pInstance;
-	m_pInstance = nullptr;
+	m_CommandList.clear();
 }
 
 //==========================================================================
 // 内部に登録
 //==========================================================================
+void CCommandGroup::ListIn(CCommand* command)
+{
+	m_CommandList.push_back(command);
+}
 
 //==========================================================================
 // コンフィグ生成
 //==========================================================================
+CCommandGroup* CCommandGroup::Create(std::string& string)
+{
+	CCommandGroup* pGroup = DEBUG_NEW CCommandGroup;
+
+	if (pGroup != nullptr) {
+
+	}
+
+	return pGroup;
+}
