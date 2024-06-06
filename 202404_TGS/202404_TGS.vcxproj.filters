@@ -476,6 +476,9 @@
     <ClCompile Include="Source\command_manager.cpp">
       <Filter>command</Filter>
     </ClCompile>
+    <ClCompile Include="Source\retryui.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ballast.h">
@@ -873,6 +876,9 @@
     </ClInclude>
     <ClInclude Include="Source\command_manager.h">
       <Filter>command</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\retryui.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
