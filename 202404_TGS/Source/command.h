@@ -13,6 +13,22 @@
 // キーコンフィグ
 class CCommand
 {
+protected:
+
+	// 入力情報
+	struct Info
+	{
+		int nButton;	// 入力№
+		bool bActive;	// 入力されたかどうか
+
+		// コンストラクタ
+		Info() 
+		{ 
+			nButton = 1; 
+			bActive = false; 
+		}
+	};
+
 public:
 
 	CCommand();
@@ -21,6 +37,9 @@ public:
 	// 基本処理
 	void Uninit();	// 終了処理
 	virtual bool GetCommand() = 0;	// 入力確認
+	void Load(std::string& string);
+	void SetId(const int nId) { m_nId = nId; }
+	int GetId() { return m_nId; }
 
 protected:
 
@@ -37,11 +56,12 @@ protected:
 	void SetMaxFlame(int nFlame) { m_nMaxFlame = nFlame; }	// 最大フレーム設定
 
 	// メンバ変数
-	std::map<int, bool> m_Info;	// 情報
+	std::vector<Info> m_Info;	// 情報
 
 private:
 
 	// メンバ変数
+	int m_nId;			// 番号
 	int m_nNowFlame;	// 現在のフレーム
 	int m_nMaxFlame;	// 入力受付最大フレーム
 };
@@ -52,7 +72,7 @@ private:
 // ゲームパッド
 class CCommandPad : public CCommand
 {
-private:
+public:
 
 	// 入力方向列挙
 	enum DIRECTION
@@ -71,7 +91,8 @@ private:
 
 public:
 
-	CCommandPad() {}	// コンストラクタ
+	// コンストラクタ
+	CCommandPad() {}
 	~CCommandPad() override {}	// デストラクタ
 
 	// メンバ関数

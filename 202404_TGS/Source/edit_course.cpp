@@ -28,6 +28,7 @@ CEdit_Course::CEdit_Course()
 	// 値のクリア
 	m_nEditIdx = 0;			// 操作するインデックス番号
 	m_bEdit = false;		// 操作中判定
+	m_bDrag = false;		// 掴み判定
 	m_bHoverWindow = false;	// マウスのウィンドウホバー判定
 }
 
@@ -66,11 +67,99 @@ void CEdit_Course::Update()
 	ImGuiHoveredFlags frag = 128;
 	m_bHoverWindow = ImGui::IsWindowHovered(frag);
 
+	// ファイル操作
+	FileControl();
+
+	// 辺の総数変更
+	ChangeLineNum();
+
 	// ライン選択
 	SelectLine();
 
+	// 掴み中
+	DragLine();
+
 	// トランスフォーム
 	Transform();
+}
+
+//==========================================================================
+// ファイル操作
+//==========================================================================
+void CEdit_Course::FileControl()
+{
+	CCourse* pCourse = CGame::GetInstance()->GetCourse();
+	if (pCourse == nullptr) return;
+
+	ImGui::Dummy(ImVec2(0.0f, 10.0f));
+
+	float width = 150.0f;
+	ImGui::SetNextItemWidth(width);
+	if (ImGui::Button("Save"))
+	{
+		pCourse->Save();
+	}
+	ImGui::SameLine();
+
+	ImGui::SetNextItemWidth(width);
+	if (ImGui::Button("Save_as"))
+	{
+		pCourse->Save();
+	}
+	ImGui::SameLine();
+
+	ImGui::SetNextItemWidth(width);
+	if (ImGui::Button("Load"))
+	{
+
+	}
+}
+
+//==========================================================================
+// 辺の数変更
+//==========================================================================
+void CEdit_Course::ChangeLineNum()
+{
+	ImGui::Dummy(ImVec2(0.0f, 10.0f));
+
+	CCourse* pCourse = CGame::GetInstance()->GetCourse();
+	if (pCourse == nullptr) return;
+
+	// 総数変更
+	ImGui::AlignTextToFramePadding();
+	ImGui::Text("Change Line Num:");
+	ImGui::SameLine();
+	if (ImGui::ArrowButton("##left", ImGuiDir_Left))
+	{
+		pCourse->PopLineInfo();
+		pCourse->Reset();
+	}
+	ImGui::SameLine(0.0f);
+	if (ImGui::ArrowButton("##right", ImGuiDir_Right))
+	{
+		pCourse->PushLineInfo();
+		pCourse->Reset();
+
+		CCamera* pCamera = CManager::GetInstance()->GetCamera();
+		if (pCamera == nullptr) return;
+
+		MyLib::Vector3 pos = UtilFunc::Transformation::CalcScreenToXZ(
+			D3DXVECTOR2(640.0f, 360.0f),
+			D3DXVECTOR2(SCREEN_WIDTH, SCREEN_HEIGHT),
+			pCamera->GetMtxView(),
+			pCamera->GetMtxProjection());
+
+		// 辺情報取得
+		std::vector<CCourse::LineInfo> vecInfo = pCourse->GetLineInfo();
+		int idx = vecInfo.size() - 1;
+
+		vecInfo[idx].pos = pos;
+		vecInfo[idx].pos.y = 0.0f;
+
+		pCourse->SetLineInfo(vecInfo);
+	}
+	ImGui::SameLine();
+	ImGui::Text("%d", pCourse->GetLineInfo().size());
 }
 
 //==========================================================================
@@ -96,6 +185,7 @@ void CEdit_Course::SelectLine()
 
 
 	if (!m_bHoverWindow &&
+		!m_bDrag &&
 		pMouse->GetTrigger(CInputMouse::BUTTON::BUTTON_LEFT))
 	{// 左クリック時
 
@@ -127,7 +217,90 @@ void CEdit_Course::SelectLine()
 			}
 			i++;
 		}
+
+		// 色リセット
+		for (int i = 0; i < vecInfo.size(); i++)
+		{
+			CCollisionLine_Box* pBox = pCourse->GetCollisionLineBox(i);
+			if (pBox == nullptr) continue;
+
+			pBox->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+		}
 	}
+}
+
+//==========================================================================
+// ライン掴み
+//==========================================================================
+void CEdit_Course::DragLine()
+{
+	CCourse* pCourse = CGame::GetInstance()->GetCourse();
+	if (pCourse == nullptr) return;
+
+	if (!m_bEdit) return;
+
+	// 辺情報取得
+	std::vector<CCourse::LineInfo> vecInfo = pCourse->GetLineInfo();
+	CCourse::LineInfo info = vecInfo[m_nEditIdx];
+	MyLib::Vector3 coursepos = pCourse->GetPosition();
+
+	// マウス情報
+	CInputMouse* pMouse = CInputMouse::GetInstance();
+	MyLib::Vector3 mouseRay = pMouse->GetRay();
+	MyLib::Vector3 mousePos = pMouse->GetNearPosition();
+
+	MyLib::AABB aabb = MyLib::AABB(-25.0f, 25.0f);
+	float time = 0.0f;
+	MyLib::Matrix mtx, mtxTrans;
+
+
+	// 設定する位置
+	MyLib::Vector3 setPosition = info.pos;
+
+
+	if (!m_bHoverWindow &&
+		pMouse->GetPress(CInputMouse::BUTTON::BUTTON_LEFT))
+	{// 左押し込み時
+
+		// マトリックス初期化
+		mtx.Identity();
+		mtxTrans.Identity();
+
+		// 位置情報反映
+		MyLib::Vector3 transpos = info.pos + coursepos;
+		mtxTrans.Translation(transpos);
+		mtx.Multiply(mtx, mtxTrans);
+
+		MyLib::Vector3 OBpos;
+
+		if (UtilFunc::Collision::CollisionRayAABB(&mousePos, &mouseRay, &aabb, &mtx, time, &OBpos))
+		{// 重なり
+			m_bDrag = true;
+		}
+
+	}
+
+	if (pMouse->GetRelease(CInputMouse::BUTTON::BUTTON_LEFT))
+	{
+		m_bDrag = false;
+	}
+
+	if (m_bDrag)
+	{
+		CCamera* pCamera = CManager::GetInstance()->GetCamera();
+		if (pCamera == nullptr) return;
+
+		// 再移動中
+		MyLib::Vector3 diffpos = pMouse->GetWorldDiffPosition();
+		setPosition.x += diffpos.x;
+		setPosition.z += diffpos.z;
+	}
+
+	// 位置更新
+	info.pos = setPosition;
+
+	// ライン情報設定
+	pCourse->SetLineInfo(m_nEditIdx, info);
 }
 
 //==========================================================================
@@ -140,6 +313,17 @@ void CEdit_Course::Transform()
 
 	// 辺情報取得
 	std::vector<CCourse::LineInfo> vecInfo = pCourse->GetLineInfo();
+	if (m_bEdit)
+	{
+		for (int i = 0; i < vecInfo.size(); i++)
+		{
+			CCollisionLine_Box* pBox = pCourse->GetCollisionLineBox(i);
+			if (pBox == nullptr) continue;
+
+			D3DXCOLOR col = (i == m_nEditIdx) ? D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f) : D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+			pBox->SetColor(col);
+		}
+	}
 
 	// 操作する辺の情報
 	CCourse::LineInfo editInfo = vecInfo[m_nEditIdx];
@@ -157,6 +341,9 @@ void CEdit_Course::Transform()
 			ImGui::TreePop();
 			return;
 		}
+
+		ImGui::Text("NowEdit : [ %d ]", m_nEditIdx);
+		ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
 		// リセット
 		if (ImGui::Button("ALL RESET")) {
@@ -263,3 +450,5 @@ void CEdit_Course::Transform()
 	// ライン情報設定
 	pCourse->SetLineInfo(m_nEditIdx, editInfo);
 }
+
+

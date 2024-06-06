@@ -476,8 +476,11 @@
     <ClCompile Include="Source\command.cpp">
       <Filter>command</Filter>
     </ClCompile>
-    <ClCompile Include="Source\command_manager.cpp">
+    <ClCompile Include="Source\command_group.cpp">
       <Filter>command</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\retryui.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\stencilshadow.cpp">
       <Filter>stencilshadow</Filter>
@@ -877,8 +880,11 @@
     <ClInclude Include="Source\command.h">
       <Filter>command</Filter>
     </ClInclude>
-    <ClInclude Include="Source\command_manager.h">
+    <ClInclude Include="Source\command_group.h">
       <Filter>command</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\retryui.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\stencilshadow.h">
       <Filter>stencilshadow</Filter>

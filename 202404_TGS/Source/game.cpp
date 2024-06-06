@@ -184,7 +184,7 @@ HRESULT CGame::Init()
 		MyLib::Vector3(300.0f, 0.1f, 0.0f), MyLib::Vector3(0.0f, D3DX_PI, 0.0f), 0.0f, 30.0f, true);
 
 	// コース作成
-	m_pCourse = CCourse::Create("");
+	m_pCourse = CCourse::Create("data\\TEXT\\map\\course.bin");
 
 	// ステンシル影生成
 	CStencilShadow::Create();
