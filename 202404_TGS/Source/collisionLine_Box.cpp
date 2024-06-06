@@ -191,6 +191,20 @@ void CCollisionLine_Box::SetPosition(const MyLib::Vector3& pos)
 }
 
 //==========================================================================
+// êFê›íË
+//==========================================================================
+void CCollisionLine_Box::SetColor(const D3DXCOLOR& col)
+{
+	for (int i = 0; i < 12; ++i)
+	{
+		if (m_pLine[i] == nullptr) {
+			continue;
+		}
+		m_pLine[i]->SetColor(col);
+	}
+}
+
+//==========================================================================
 // AAbBèÓïÒê›íË
 //==========================================================================
 void CCollisionLine_Box::SetAABB(MyLib::AABB aabb)

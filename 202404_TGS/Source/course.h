@@ -31,6 +31,7 @@ public:
 		float width;		// 幅
 
 		LineInfo() : pos(0.0f), rot(0.0f), width(0.0f) {}
+		LineInfo(const MyLib::Vector3& _pos, const MyLib::Vector3& _rot, float _width) : pos(_pos), rot(_rot), width(_width) {}
 	};
 
 	// 辺情報
@@ -58,6 +59,7 @@ public:
 	void SetLineInfo(int idx, const LineInfo& info);								// 辺情報設定
 	void PushLineInfo();															// 辺情報追加
 	void PopLineInfo();																// 辺情報削除
+	CCollisionLine_Box* GetCollisionLineBox(int idx);								// 当たり判定ボックス取得
 
 	// ファイル操作
 	void Save();	// セーブ

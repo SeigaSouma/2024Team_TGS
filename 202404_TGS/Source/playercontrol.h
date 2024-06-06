@@ -12,11 +12,11 @@
 
 #include "player.h"
 #include "baggage.h"
+#include "command.h"
 
 #if BRESSRANGE
 #include "debug_bressrange.h"
 #endif
-
 
 //==========================================================================
 // プレイヤーコントロールクラス定義
@@ -86,6 +86,27 @@ public:
 private:
 
 	float m_fHeight = 0.0f;	// 浮上高さ
+};
+
+//=============================
+// トリック入力
+//=============================
+class CPlayerControlTrick
+{
+public:
+
+	// コンストラクタ
+	CPlayerControlTrick() {
+		m_pCommand = nullptr;
+		m_pCommand = new CCommandPad;
+	}
+
+	virtual void Uninit();
+	virtual void Trick(CPlayer* player, int& nIdx, bool& bValue);	// トリック
+
+private:
+
+	CCommand* m_pCommand;	// コマンド情報
 };
 
 #endif
