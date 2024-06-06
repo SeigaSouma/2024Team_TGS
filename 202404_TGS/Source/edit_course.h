@@ -42,12 +42,16 @@ private:
 	};
 
 	// メンバ関数
+	void FileControl();	// ファイル操作
 	void SelectLine();	// ライン選択
+	void DragLine();	// ライン掴み
 	void Transform();	// トランスフォーム
+	void ChangeLineNum();	// 辺の数変更
 
 	LineData m_lineData;	// 辺情報
 	int m_nEditIdx;			// 操作するインデックス番号
 	bool m_bEdit;			// 操作中判定
+	bool m_bDrag;			// 掴み判定
 	bool m_bHoverWindow;	// マウスのウィンドウホバー判定
 };
 

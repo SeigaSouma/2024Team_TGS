@@ -91,6 +91,8 @@ HRESULT CCourse::Init()
 	// 頂点情報設定
 	SetVtx();
 
+	Reset();
+
 	return S_OK;
 }
 
@@ -99,6 +101,7 @@ HRESULT CCourse::Init()
 //==========================================================================
 void CCourse::Uninit()
 {
+	m_pCollisionLineBox.clear();
 
 	// 終了処理
 	CObject3DMesh::Uninit();
@@ -137,6 +140,19 @@ void CCourse::Reset()
 
 	// 頂点情報設定
 	SetVtx();
+
+
+	for (const auto& box : m_pCollisionLineBox)
+	{
+		box->Kill();
+	}
+	m_pCollisionLineBox.clear();
+
+	MyLib::AABB aabb(-25.0f, 25.0f);
+	for (const auto& line : m_LineInfo)
+	{
+		m_pCollisionLineBox.push_back(CCollisionLine_Box::Create(aabb, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f)));
+	}
 }
 
 //==========================================================================
@@ -199,7 +215,7 @@ void CCourse::SetVtxPosition()
 		pVtxPos[nextidx] = mtxRight.GetWorldPosition();
 
 		MyLib::Vector3 setpos = (pVtxPos[idx] + pVtxPos[nextidx]) * 0.5f;
-		setpos.y = GetPosition().y;
+		setpos.y += GetPosition().y;
 
 		m_pCollisionLineBox[y]->SetPosition(setpos);
 
@@ -354,8 +370,8 @@ HRESULT CCourse::Load(const std::string& file)
 		m_LineInfo.push_back(info);
 
 		MyLib::AABB aabb(-25.0f, 25.0f);
-		m_pCollisionLineBox.push_back(CCollisionLine_Box::Create(aabb, D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f)));
-		m_pCollisionLineBox.push_back(CCollisionLine_Box::Create(aabb, D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f)));
+		m_pCollisionLineBox.push_back(CCollisionLine_Box::Create(aabb, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f)));
+		m_pCollisionLineBox.push_back(CCollisionLine_Box::Create(aabb, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f)));
 
 		Save();
 		return E_FAIL;
@@ -423,11 +439,21 @@ void CCourse::SetLineInfo(int idx, const LineInfo& info)
 }
 
 //==========================================================================
+// 当たり判定ボックス取得
+//==========================================================================
+CCollisionLine_Box* CCourse::GetCollisionLineBox(int idx)
+{
+	if (static_cast<int>(m_pCollisionLineBox.size()) <= idx) return nullptr;
+
+	return m_pCollisionLineBox[idx];
+}
+
+//==========================================================================
 // 辺情報追加
 //==========================================================================
 void CCourse::PushLineInfo()
 {
-	m_LineInfo.push_back(LineInfo());
+	m_LineInfo.push_back(LineInfo(0.0f, 0.0f, 200.0f));
 }
 
 //==========================================================================
