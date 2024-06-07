@@ -28,7 +28,7 @@ public:
 		TYPE_MAX
 	};
 
-	CBaggage(int nPriority = 6);
+	CBaggage(int nPriority = 4);
 	~CBaggage();
 
 	//=============================
