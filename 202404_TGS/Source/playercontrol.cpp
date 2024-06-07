@@ -168,6 +168,9 @@ void CPlayerControlMove::Move(CPlayer* player)
 			motionFrag.bMove = false;
 		}
 
+		// 移動中にする
+		motionFrag.bMove = true;
+
 		if (pInputGamepad->IsTipStick())
 		{// 左スティックが倒れてる場合
 
