@@ -15,9 +15,9 @@ namespace
 	const std::string CONFIGFILE[CKeyConfigManager::Control::CONTROL_MAX] =	// ƒtƒ@ƒCƒ‹–¼
 	{
 		"data\\TEXT\\keyconfig\\gamepad_in.txt",
-		"data\\TEXT\\keyconfig\\gamepad_in.txt",
-		"data\\TEXT\\keyconfig\\gamepad_in.txt",
-		"data\\TEXT\\keyconfig\\gamepad_in.txt",
+		"data\\TEXT\\keyconfig\\gamepad_out.txt",
+		"data\\TEXT\\keyconfig\\keyboard_in.txt",
+		"data\\TEXT\\keyconfig\\keyboard_out.txt",
 	};
 }
 
@@ -100,8 +100,8 @@ void CKeyConfigManager::ConfigCreate()
 			p = new CkeyConfigPad;
 			break;
 
-		/*case Control::CONTROL_OUTPAD:
-
+		case Control::CONTROL_OUTPAD:
+			p = new CkeyConfigPad;
 			break;
 
 		case Control::CONTROL_INKEY:
@@ -110,7 +110,7 @@ void CKeyConfigManager::ConfigCreate()
 
 		case Control::CONTROL_OUTKEY:
 
-			break;*/
+			break;
 
 		default:
 
