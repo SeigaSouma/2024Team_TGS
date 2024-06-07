@@ -450,7 +450,7 @@ void CPlayer::Controll()
 				int idx = -1; bool value = false;
 				m_pControlTrick->Trick(this, idx, value);
 
-				if (value) SetMotion(MOTION_ATK3);
+				if (value) SetMotion(MOTION_ATK3 + idx);
 			}
 		}
 
