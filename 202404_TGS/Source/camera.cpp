@@ -1806,7 +1806,7 @@ void CStateCameraV_Distance::Distance(CCamera* pCamera)
 		pCamera->SetStateCameraV(new CStateCameraV);
 
 		// フィードバックエフェクトOFF
-		CManager::GetInstance()->GetRenderer()->SetEnableDrawMultiScreen(false);
+		CManager::GetInstance()->GetRenderer()->SetEnableDrawMultiScreen(false, 0.0f, 1.0f, 60);
 	}
 	else m_fMultiPly += DISTANCE_TIMER;
 }

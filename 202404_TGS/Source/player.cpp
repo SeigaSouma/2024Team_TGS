@@ -1139,7 +1139,7 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 		pCamera->SetStateCameraV(pstate);
 
 		// フィードバックエフェクトON
-		CManager::GetInstance()->GetRenderer()->SetEnableDrawMultiScreen(true);
+		CManager::GetInstance()->GetRenderer()->SetEnableDrawMultiScreen(true, 0.6f, 1.02f, 120.0f);
 	}
 	
 
