@@ -450,7 +450,7 @@ void CPlayer::Controll()
 				int idx = -1; bool value = false;
 				m_pControlTrick->Trick(this, idx, value);
 
-				if (value) SetMotion(MOTION_ATK3);
+				if (value) SetMotion(MOTION_ATK3 + idx);
 			}
 		}
 
@@ -1470,8 +1470,32 @@ void CPlayer::StateRespawn()
 //==========================================================================
 void CPlayer::Draw()
 {
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
 
-	// 描画処理
+	// ステンシルバッファ有効
+	pDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);
+
+	// 参照値設定
+	pDevice->SetRenderState(D3DRS_STENCILREF, 0x01);
+
+	// バッファへの値に対してのマスク設定
+	pDevice->SetRenderState(D3DRS_STENCILMASK, 0xff);
+
+	// ステンシルテストの比較方法設定
+	pDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_ALWAYS);
+
+	// テスト結果に対しての反映設定
+	pDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_REPLACE);	// Z+ステンシル成功
+	pDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);		// Z+ステンシル失敗
+	pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP);		// Zテストのみ失敗
+
+	// ステンシル描画
+	CObjectChara::Draw();
+
+	// ステンシルバッファ無効
+	pDevice->SetRenderState(D3DRS_STENCILENABLE, FALSE);
+
+	// 普通の描画
 	if (m_state == STATE_DMG)
 	{
 		CObjectChara::Draw(m_mMatcol);

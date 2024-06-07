@@ -26,11 +26,14 @@ public:
 	HRESULT Init();
 	void Uninit();
 	void ListIn(CCommand* command);
-	static CCommandGroup* Create(std::string& string);
+	static CCommandGroup* Create(const std::string& string);
+	int GetSuccess();
 
 	// 静的メンバ関数
 
 private:
+
+	void Load(const std::string& string);
 
 	std::vector<CCommand*> m_CommandList;	// コマンドリスト
 };

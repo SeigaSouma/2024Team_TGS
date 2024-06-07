@@ -17,6 +17,7 @@ CCommand::CCommand()
 	// 値のクリア
 	m_nNowFlame = 0;
 	m_nMaxFlame = 0;
+	m_nId = 0;
 	m_Info.clear();
 }
 
@@ -26,6 +27,87 @@ CCommand::CCommand()
 void CCommand::Uninit()
 {
 	m_Info.clear();
+}
+
+//=============================================================================
+// 読み込み
+//=============================================================================
+void CCommand::Load(std::string& string)
+{
+	// ファイルを開く
+	std::ifstream File(string);
+	if (!File.is_open()) {
+		return;
+	}
+
+	// コメント用
+	std::string hoge;
+
+	// データ読み込み
+	std::string line;
+	while (std::getline(File, line))
+	{
+		// コメントはスキップ
+		if (line.empty() ||
+			line[0] == '#')
+		{
+			continue;
+		}
+
+		// ストリーム作成
+		std::istringstream lineStream(line);
+
+		if (line.find("MAX_FRAME") != std::string::npos)
+		{// MODELSETで配置情報読み込み
+			int frame = -1;
+
+			// 情報渡す
+			lineStream >>
+				hoge >>
+				hoge >>
+				frame;	// 配置物の種類
+
+			SetMaxFlame(frame);
+		}
+
+		if (line.find("COMMANDSET") != std::string::npos)
+		{// COMMANDSETで配置情報読み込み
+			int process = -1;
+
+			// 読み込み情報
+			while (line.find("END_COMMANDSET") == std::string::npos)
+			{
+				std::getline(File, line);
+				if (line.find("KEY") != std::string::npos)
+				{// TYPEで配置物の種類
+
+					// ストリーム作成
+					std::istringstream lineStream(line);
+
+					// 情報渡す
+					lineStream >>
+						hoge >>
+						hoge >>
+						process;	// 配置物の種類
+					continue;
+				}
+			}
+
+			// コマンド設定
+			if (process >= 0)
+			{
+				SetCommand(process);
+			}
+		}
+
+		if (line.find("END_SCRIPT") != std::string::npos)
+		{
+			break;
+		}
+	}
+
+	// ファイルを閉じる
+	File.close();
 }
 
 //=============================================================================
@@ -82,7 +164,7 @@ bool CCommandPad::GetCommand()
 	{
 		if (it->bActive) 
 		{ // 既に入力済み
-			CManager::GetInstance()->GetDebugProc()->Print("入力されたよ^^\n"); 
+			CManager::GetInstance()->GetDebugProc()->Print("入力されたよ^^ [ %d ]\n", GetId()); 
 			old = it; 
 			continue; 
 		}

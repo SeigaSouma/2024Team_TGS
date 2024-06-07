@@ -168,6 +168,9 @@ void CPlayerControlMove::Move(CPlayer* player)
 			motionFrag.bMove = false;
 		}
 
+		// 移動中にする
+		motionFrag.bMove = true;
+
 		if (pInputGamepad->IsTipStick())
 		{// 左スティックが倒れてる場合
 
@@ -694,14 +697,8 @@ float CPlayerControlSurfacing::Surfacing(CPlayer* player)
 //==========================================================================
 void CPlayerControlTrick::Trick(CPlayer* player, int& nIdx, bool& bValue)
 {
-	bValue = false;
-	nIdx = -1;
-	if (player == nullptr) return;	//プレイヤー無し！
-
-	bool value = false;
-	value = m_pCommand->GetCommand();
-	if (value) nIdx = 1;
-	bValue = value;
+	nIdx = m_pCommandPad->GetSuccess();
+	if (nIdx >= 0) bValue = true;
 }
 
 //==========================================================================
@@ -709,8 +706,8 @@ void CPlayerControlTrick::Trick(CPlayer* player, int& nIdx, bool& bValue)
 //==========================================================================
 void CPlayerControlTrick::Uninit()
 {
-	if (m_pCommand == nullptr) return;
-	m_pCommand->Uninit();
-	delete m_pCommand;
-	m_pCommand = nullptr;
+	if (m_pCommandPad == nullptr) return;
+	m_pCommandPad->Uninit();
+	delete m_pCommandPad;
+	m_pCommandPad = nullptr;
 }

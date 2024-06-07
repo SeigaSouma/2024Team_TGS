@@ -73,7 +73,7 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindow)
 	m_d3dpp.BackBufferCount = 1;									// バックバッファの数
 	m_d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;					// ダブルバッファの切り替え(映像信号に同期)
 	m_d3dpp.EnableAutoDepthStencil = TRUE;						// デプスバッファとステンシルバッファを作成
-	m_d3dpp.AutoDepthStencilFormat = D3DFMT_D16;					// デバイスバッファとして16bitを使う
+	m_d3dpp.AutoDepthStencilFormat = D3DFMT_D24S8;					// デバイスバッファとして16bitを使う
 	m_d3dpp.Windowed = bWindow;									// ウィンドウモード
 	m_d3dpp.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;	// リフレッシュレート
 	m_d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;	// インターバル
@@ -174,7 +174,7 @@ void CRenderer::InitMTRender()
 	// テクスチャレンダリング用Zバッファの生成
 	m_pD3DDevice->CreateDepthStencilSurface(
 		SCREEN_WIDTH, SCREEN_HEIGHT,
-		D3DFMT_D16,
+		D3DFMT_D24S8,
 		D3DMULTISAMPLE_NONE,
 		0,
 		TRUE,
@@ -196,7 +196,7 @@ void CRenderer::InitMTRender()
 	// レンダリングターゲット用のテクスチャのクリア
 	m_pD3DDevice->Clear(
 		0, nullptr,
-		(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
+		(D3DCLEAR_STENCIL | D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
 		D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f),
 		1.0f,
 		0);
@@ -324,7 +324,7 @@ void CRenderer::Draw()
 	// 画面クリア(バックバッファとZバッファのクリア)
 	m_pD3DDevice->Clear
 	(	0, nullptr,
-		(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
+		(D3DCLEAR_STENCIL | D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
 		D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f),
 		1.0f,
 		0
@@ -373,7 +373,7 @@ void CRenderer::Draw()
 				// テクスチャ[0]のクリア
 				m_pD3DDevice->Clear(
 					0, nullptr,
-					(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
+					(D3DCLEAR_STENCIL | D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
 					D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f),
 					1.0f,
 					0);
@@ -386,7 +386,7 @@ void CRenderer::Draw()
 				// テクスチャ[0]のクリア
 				m_pD3DDevice->Clear(
 					0, nullptr,
-					(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
+					(D3DCLEAR_STENCIL | D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
 					D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f),
 					1.0f,
 					0);
@@ -400,7 +400,7 @@ void CRenderer::Draw()
 				// テクスチャ[0]のクリア
 				m_pD3DDevice->Clear(
 					0, nullptr,
-					(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
+					(D3DCLEAR_STENCIL | D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
 					D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f),
 					1.0f,
 					0);

@@ -1,0 +1,13 @@
+#==============================================================================
+#
+# ゲームパッドコマンド情報ファイル [gamepad.txt]
+# Author : 奥定 伊吹
+#
+#==============================================================================
+
+SCRIPT
+
+	COMMAND_FILENAME = data/TEXT/command/gamepad/00_hadouken.txt
+	COMMAND_FILENAME = data/TEXT/command/gamepad/01_suiton.txt
+
+END_SCRIPT
