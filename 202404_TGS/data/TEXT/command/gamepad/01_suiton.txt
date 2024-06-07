@@ -1,13 +1,24 @@
 #==============================================================================
 #
-# ゲームパッドコマンド情報ファイル [gamepad.txt]
+# 水団コマンド情報ファイル [suiton.txt]
 # Author : 奥定 伊吹
 #
 #==============================================================================
 
 SCRIPT
 
-	COMMAND_FILENAME = data/TEXT/command/gamepad/00_hadouken.txt
-	COMMAND_FILENAME = data/TEXT/command/gamepad/01_suiton.txt
+	MAX_FRAME = 60
+
+	COMMANDSET
+		KEY = 1
+	END_COMMANDSET
+	
+	COMMANDSET
+		KEY = 5
+	END_COMMANDSET
+	
+	COMMANDSET
+		KEY = 3
+	END_COMMANDSET
 
 END_SCRIPT

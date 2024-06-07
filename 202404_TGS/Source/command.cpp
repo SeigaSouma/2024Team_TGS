@@ -164,7 +164,7 @@ bool CCommandPad::GetCommand()
 	{
 		if (it->bActive) 
 		{ // Šù‚É“ü—ÍÏ‚Ý
-			CManager::GetInstance()->GetDebugProc()->Print("“ü—Í‚³‚ê‚½‚æ^^\n"); 
+			CManager::GetInstance()->GetDebugProc()->Print("“ü—Í‚³‚ê‚½‚æ^^ [ %d ]\n", GetId()); 
 			old = it; 
 			continue; 
 		}

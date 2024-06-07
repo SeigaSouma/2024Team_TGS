@@ -48,7 +48,7 @@ CStencilShadow* CStencilShadow::Create()
 		pObj->SetPosition(MyLib::Vector3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f));
 		pObj->SetSize(D3DXVECTOR2(640.0f, 360.0f));
 		pObj->SetPosition(MyLib::Vector3(640.0f, 360.0f, 0.0f));
-		pObj->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
+		pObj->SetColor(D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
 		pObj->SetVtx();
 
 	}
