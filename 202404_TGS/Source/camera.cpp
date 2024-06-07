@@ -323,7 +323,7 @@ void CCamera::MoveCameraInput()
 //==========================================================================
 void CCamera::MoveCameraStick(int nIdx)
 {
-#if 1
+#if 0
 	if (CManager::GetInstance()->GetMode() == CScene::MODE::MODE_GAME ||
 		CManager::GetInstance()->GetMode() == CScene::MODE::MODE_GAMETUTORIAL)
 	{
@@ -1806,7 +1806,7 @@ void CStateCameraV_Distance::Distance(CCamera* pCamera)
 		pCamera->SetStateCameraV(new CStateCameraV);
 
 		// フィードバックエフェクトOFF
-		CManager::GetInstance()->GetRenderer()->SetEnableDrawMultiScreen(false);
+		CManager::GetInstance()->GetRenderer()->SetEnableDrawMultiScreen(false, 0.0f, 1.0f, 60);
 	}
 	else m_fMultiPly += DISTANCE_TIMER;
 }
