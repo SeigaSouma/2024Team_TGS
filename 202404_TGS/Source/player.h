@@ -173,6 +173,7 @@ public:
 	//=============================
 	void SetMyPlayerIdx(int idx) { m_nMyPlayerIdx = idx; }	// 自分のインデックス設定
 	int GetMyPlayerIdx() { return m_nMyPlayerIdx; }			// 自分のインデックス取得
+	MyLib::Vector3 GetCylinderPosition() { return m_posCylinder; };		// 筒の位置取得
 
 	// ヒット系
 	void DeadSetting(MyLib::HitResult_Character* result);
@@ -239,6 +240,7 @@ private:
 	D3DXCOLOR m_mMatcol;			// マテリアルの色
 	MyLib::Vector3 m_posKnokBack;	// ノックバックの位置
 	MyLib::Vector3 m_KnokBackMove;	// ノックバックの移動量
+	MyLib::Vector3 m_posCylinder;	// 筒の位置
 	int m_nCntState;				// 状態遷移カウンター
 	bool m_bDash;					// ダッシュ判定
 	float m_fDashTime;				// ダッシュ時間
