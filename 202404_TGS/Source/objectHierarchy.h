@@ -88,7 +88,8 @@ public:
 	void SetNumModel(int nNumModel);		// モデル数設定
 	int GetIdxFile();					// ファイルのインデックス番号取得
 	Load GetLoadData(int nIdx);				// 読み込み情報取得
-	CModel **GetModel();				// モデル取得
+	CModel** GetModel();				// モデル取得
+	CModel* GetModel(int idx);			// モデル取得
 	CObjectHierarchy* GetObjectHierarchy();	// 階層オブジェクト取得
 	static CObjectHierarchy *Create(const std::string& pTextFile);
 

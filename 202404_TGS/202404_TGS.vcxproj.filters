@@ -485,6 +485,9 @@
     <ClCompile Include="Source\stencilshadow.cpp">
       <Filter>stencilshadow</Filter>
     </ClCompile>
+    <ClCompile Include="Source\waterfield.cpp">
+      <Filter>mesh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ballast.h">
@@ -888,6 +891,9 @@
     </ClInclude>
     <ClInclude Include="Source\stencilshadow.h">
       <Filter>stencilshadow</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\waterfield.h">
+      <Filter>mesh</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -228,6 +228,7 @@ private:
 	void UpdateDamageReciveTimer();	// ダメージ受付時間更新
 	void ReaspawnSetting();			// リスポーン設定
 	void RetryCheck();				// リトライするか確認
+	void Bobbing();					// ぷかぷか
 
 	// モーション系関数
 	void AttackAction(CMotion::AttackInfo ATKInfo, int nCntATK) override;		// 攻撃時処理

@@ -443,6 +443,8 @@ void CPlayer::Controll()
 			m_state != STATE_FADEOUT &&
 			m_state != STATE::STATE_RESPAWN)
 		{
+			Bobbing();
+
 			// 移動操作
 			m_pControlMove->Move(this);
 
@@ -1255,6 +1257,28 @@ void CPlayer::RetryCheck()
 	{// 押されてないのでカウントリセット
 		m_fRetryPushTime = 0.0f;
 	}
+}
+
+//==========================================================================
+// ぷかぷか
+//==========================================================================
+void CPlayer::Bobbing()
+{
+	CModel* pModel = GetModel(0);
+	MyLib::Vector3 pos = pModel->GetPosition();
+
+	static float fff = 0.0f;
+	static float cycle = 0.9f;
+	static float power = 12.5f;
+
+	fff += CManager::GetInstance()->GetDeltaTime();
+
+	ImGui::DragFloat("Bobbing Cycle", &cycle, 0.1f, 0.0f, 0.0f, "%.2f");
+	ImGui::DragFloat("Bobbing", &power, 0.1f, 0.0f, 0.0f, "%.2f");
+
+	pos.y += sinf(D3DX_PI * (fff / cycle)) * power;
+
+	pModel->SetPosition(pos);
 }
 
 //==========================================================================

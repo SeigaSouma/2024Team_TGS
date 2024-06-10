@@ -280,6 +280,13 @@ void CCamera::Update()
 		"yŒð·“_z[XF%f YF%f ZF%f]\n",
 		pos.x, pos.y, pos.z);
 
+	if (pMouse->GetTrigger(CInputMouse::BUTTON::BUTTON_LEFT))
+	{
+		CMyEffekseer::GetInstance()->SetEffect(
+			CMyEffekseer::EFKLABEL::EFKLABEL_SPRAYWATER,
+			pos, MyLib::Vector3(0.0f, 0.0f, 0.0f), 0.0f, 40.0f, true);
+	}
+
 	/*CEffect3D::Create(
 		pos,
 		MyLib::Vector3(0.0f, 0.0f, 0.0f),
