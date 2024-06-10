@@ -280,6 +280,13 @@ void CCamera::Update()
 		"【交差点】[X：%f Y：%f Z：%f]\n",
 		pos.x, pos.y, pos.z);
 
+	if (pMouse->GetTrigger(CInputMouse::BUTTON::BUTTON_LEFT))
+	{
+		CMyEffekseer::GetInstance()->SetEffect(
+			CMyEffekseer::EFKLABEL::EFKLABEL_SPRAYWATER,
+			pos, MyLib::Vector3(0.0f, 0.0f, 0.0f), 0.0f, 40.0f, true);
+	}
+
 	/*CEffect3D::Create(
 		pos,
 		MyLib::Vector3(0.0f, 0.0f, 0.0f),
@@ -1806,7 +1813,7 @@ void CStateCameraV_Distance::Distance(CCamera* pCamera)
 		pCamera->SetStateCameraV(new CStateCameraV);
 
 		// フィードバックエフェクトOFF
-		CManager::GetInstance()->GetRenderer()->SetEnableDrawMultiScreen(false);
+		CManager::GetInstance()->GetRenderer()->SetEnableDrawMultiScreen(false, 0.0f, 1.0f, 60);
 	}
 	else m_fMultiPly += DISTANCE_TIMER;
 }

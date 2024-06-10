@@ -41,6 +41,7 @@ public:
 		EFKLABEL_BRESS,				// ‘§
 		EFKLABEL_RIVER_SAMPLE,		// ìƒTƒ“ƒvƒ‹
 		EFKLABEL_IMPACT,			// ÕŒ‚
+		EFKLABEL_SPRAYWATER,		// …‚µ‚Ô‚«
 		EFKLABEL_MAX
 	};
 

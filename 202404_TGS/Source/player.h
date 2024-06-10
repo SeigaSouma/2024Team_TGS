@@ -19,6 +19,7 @@ class CShadow;
 class CHP_GaugePlayer;
 class CEnemy;
 class CBaggage;
+class CRetry_Ui;
 
 class CPlayerControlMove;		// 移動
 class CPlayerControlBaggage;	// 荷物操作
@@ -75,7 +76,8 @@ public:
 		STATE_DMG,			// ダメージ
 		STATE_DEAD,			// 死
 		STATE_DEADWAIT,		// 死亡待機
-		STATE_FADEOUT,		// フェードアウト
+		STATE_RETURN,		// チェックポイントに戻る
+		STATE_RESTART,		// スタートに戻る
 		STATE_RESPAWN,		// 復活
 		STATE_MAX
 	};
@@ -173,6 +175,7 @@ public:
 	//=============================
 	void SetMyPlayerIdx(int idx) { m_nMyPlayerIdx = idx; }	// 自分のインデックス設定
 	int GetMyPlayerIdx() { return m_nMyPlayerIdx; }			// 自分のインデックス取得
+	MyLib::Vector3 GetCylinderPosition() { return m_posCylinder; };		// 筒の位置取得
 
 	// ヒット系
 	void DeadSetting(MyLib::HitResult_Character* result);
@@ -213,7 +216,8 @@ private:
 	void StateDamage();		// ダメージ
 	void StateDead();		// 死亡
 	void StateDeadWait();	// 死亡待機
-	void StateFadeOut();	// フェードアウト
+	void StateReturn();		// フェードアウト
+	void StateRestart();	// リスタート
 	void StateRespawn();	// リスポーン
 
 	// その他関数
@@ -221,12 +225,13 @@ private:
 	virtual void DeleteControl();	// 操作削除
 	void LimitPos();				// 位置制限
 	void ReaspawnCheckPoint();		// チェックポイント復活
+	void RespawnStart();			// スタート復活
 	void CollisionMapObject();		// マップオブジェクトとの当たり判定
 	void MotionBySetState();		// モーション別の状態設定
 	void ResetFrag();				// フラグリセット
 	void UpdateDamageReciveTimer();	// ダメージ受付時間更新
 	void ReaspawnSetting();			// リスポーン設定
-	void RetryCheck();				// リトライするか確認
+	void Bobbing();					// ぷかぷか
 
 	// モーション系関数
 	void AttackAction(CMotion::AttackInfo ATKInfo, int nCntATK) override;		// 攻撃時処理
@@ -239,10 +244,10 @@ private:
 	D3DXCOLOR m_mMatcol;			// マテリアルの色
 	MyLib::Vector3 m_posKnokBack;	// ノックバックの位置
 	MyLib::Vector3 m_KnokBackMove;	// ノックバックの移動量
+	MyLib::Vector3 m_posCylinder;	// 筒の位置
 	int m_nCntState;				// 状態遷移カウンター
 	bool m_bDash;					// ダッシュ判定
 	float m_fDashTime;				// ダッシュ時間
-	float m_fRetryPushTime;			// リトライの押下時間
 	bool m_bMotionAutoSet;			// モーションの自動設定
 	Effekseer::Handle m_WeaponHandle;
 
@@ -250,6 +255,7 @@ private:
 	sDamageInfo m_sDamageInfo;		// ダメージ情報
 	CHP_GaugePlayer* m_pHPGauge;	// HPゲージのポインタ
 	CBaggage* m_pBaggage;			// 荷物のポインタ
+	CRetry_Ui* m_pRetryUI;			// リトライUIのポインタ
 	
 	// パターン用インスタンス
 	CPlayerControlMove* m_pControlMove;			// 移動操作

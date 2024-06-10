@@ -61,6 +61,7 @@ private:
 
 	// その他変数
 	CObject2D* m_Button[3];	// 2Dオブジェクト
+	float m_fRetryPushTime;			// リトライの押下時間
 };
 
 

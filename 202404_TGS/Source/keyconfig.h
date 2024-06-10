@@ -7,22 +7,29 @@
 #ifndef _KEYCONFIG_H_
 #define _KEYCONFIG_H_	// 二重インクルード防止
 
+// インゲーム
 namespace INGAME
 {
 	enum ACTION
 	{
-		ACT_UPDOWN = 0,	// 浮上
+		ACT_OK = 0,		// 決定
+		ACT_BACK,		// 戻る
+		ACT_UPDOWN,		// 浮上
 		ACT_AIR,		// 空気
+		ACT_CHECKPOINT,	// チェックポイント
+		ACT_RETRY,		// リトライ
+		ACT_PAUSE,		// ポーズ
 		ACT_MAX
 	};
 }
 
+// アウトゲーム
 namespace OUTGAME
 {
 	enum ACTION
 	{
-		ACT_UPDOWN = 0,	// 浮上
-		ACT_AIR,		// 空気
+		ACT_OK = 0,		// 決定
+		ACT_BACK,		// 戻る
 		ACT_MAX
 	};
 }

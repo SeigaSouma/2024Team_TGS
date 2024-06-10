@@ -83,7 +83,8 @@ void CPlayerControlMove::Move(CPlayer* player)
 	if ((pMotion->IsGetMove(nMotionType) == 1 || pMotion->IsGetCancelable()) &&
 		state != CPlayer::STATE::STATE_DEAD &&
 		state != CPlayer::STATE::STATE_DEADWAIT &&
-		state != CPlayer::STATE::STATE_FADEOUT)
+		state != CPlayer::STATE::STATE_RETURN &&
+		state != CPlayer::STATE::STATE_RESTART)
 	{// 移動可能モーションの時
 
 		move.x += sinf(D3DX_PI * 0.5f + Camerarot.y) * (fMove * 0.5f);
@@ -240,7 +241,8 @@ void CPlayerControlMove::Move(CPlayer* player)
 	else if (
 		pMotion->IsGetMove(nMotionType) == 0 &&	// 移動可能なモーションか取得
 		state != CPlayer::STATE::STATE_DEAD &&
-		state != CPlayer::STATE::STATE_FADEOUT)
+		state != CPlayer::STATE::STATE_RETURN &&
+		state != CPlayer::STATE::STATE_RESTART)
 	{
 		if (pInputKeyboard->GetPress(DIK_A))
 		{//←キーが押された,左移動
@@ -426,9 +428,15 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 			posBaggage.y = posBaggageOrigin.y;
 			player->Hit(1);
 		}
-		else
+		else if(!pBaggage->IsLand())
 		{
 			player->SetLife(player->GetLifeOrigin());
+		}
+		else
+		{
+			// 位置設定
+			posBaggage.y = posBaggageOrigin.y;
+			player->Hit(1);
 		}
 	}
 
@@ -490,6 +498,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 				d, 0.0f, 0.0f, 90.0f, true);
 		}
 
+		// 息の加算計算
 		m_fHeightVelocity += (0.0f - m_fHeightVelocity) * 0.2f;
 		m_fHeight += ADD_HEIGHT + m_fHeightVelocity;
 		m_fHeight = UtilFunc::Transformation::Clamp(m_fHeight, MIN_HEIGHT, LENGTH_COLLISIONHEIGHT);
@@ -519,7 +528,6 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 
 		// 高さの降下時間減算
 		m_fTimeDownHeight = 0.0f;
-		//m_fTimeDownHeight -= CManager::GetInstance()->GetDeltaTime();
 
 		m_fHeight -= ADD_HEIGHT * 2.0f;
 		m_fHeightVelocity += (m_fHeightVelocity - HEIGHT_VELOCITY) * 0.1f;
