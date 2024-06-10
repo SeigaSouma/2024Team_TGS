@@ -34,9 +34,11 @@
 #include "goalflag.h"
 #include "checkpoint.h"
 #include "map_obstacleManager.h"
+#include "stencilshadow.h"
 
 #include "sample_obj3D.h"
 #include "course.h"
+#include "waterfield.h"
 
 //==========================================================================
 // 静的メンバ変数宣言
@@ -184,6 +186,12 @@ HRESULT CGame::Init()
 
 	// コース作成
 	m_pCourse = CCourse::Create("data\\TEXT\\map\\course.bin");
+
+	// ステンシル影生成
+	CStencilShadow::Create();
+
+	CWaterField::Create();
+
 	// 成功
 	return S_OK;
 }

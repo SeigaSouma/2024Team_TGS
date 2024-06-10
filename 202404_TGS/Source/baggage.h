@@ -28,7 +28,7 @@ public:
 		TYPE_MAX
 	};
 
-	CBaggage(int nPriority = 6);
+	CBaggage(int nPriority = 4);
 	~CBaggage();
 
 	//=============================
@@ -45,7 +45,9 @@ public:
 	void Kill();		// 削除
 	void SetForce(const MyLib::Vector3& power) { m_force = power; }				// 力設定
 	void AddForce(const MyLib::Vector3& power, const MyLib::Vector3& ActPos);	// 力追加
-	bool IsDrop() { return m_bDrop; }	// 落下判定取得
+	bool IsLand() { return m_bLand; }	// 着地判定
+	void SetAddDeviation(const float& deviation) { m_fAddDeviation = deviation; }
+	void SetDeviationWidth(const float& deviWidth) { m_fDeviationWidth = deviWidth; }
 
 	//=============================
 	// 静的関数
@@ -69,8 +71,11 @@ private:
 	float m_fWeight;		// 重さ
 	MyLib::Vector3 m_force;	// 力
 	MyLib::Vector3 m_velorot;	// 回転速度
-	bool m_bDrop;		// 落下判定
+	bool m_bLand;			// 着地判定
 	static CListManager<CBaggage> m_List;	// リスト
+	float m_fDeviation;		// 現在のぶれ
+	float m_fAddDeviation;	// 加算するぶれ
+	float m_fDeviationWidth;// ぶれ幅
 
 };
 

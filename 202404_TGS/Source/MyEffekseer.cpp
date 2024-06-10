@@ -21,6 +21,7 @@ std::string CMyEffekseer::m_EffectName[CMyEffekseer::EFKLABEL_MAX] =	// エフェク
 	"data/Effekseer/bress.efkefc",			// 息
 	"data/Effekseer/sample_river.efkefc",			// 川サンプル
 	"data/Effekseer/impact.efkefc",			// 衝撃
+	"data/Effekseer/spraywater.efkefc",			// 衝撃
 };
 CMyEffekseer* CMyEffekseer::m_pMyEffekseer = nullptr;	// 自身のポインタ
 

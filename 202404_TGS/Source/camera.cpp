@@ -280,6 +280,13 @@ void CCamera::Update()
 		"【交差点】[X：%f Y：%f Z：%f]\n",
 		pos.x, pos.y, pos.z);
 
+	if (pMouse->GetTrigger(CInputMouse::BUTTON::BUTTON_LEFT))
+	{
+		CMyEffekseer::GetInstance()->SetEffect(
+			CMyEffekseer::EFKLABEL::EFKLABEL_SPRAYWATER,
+			pos, MyLib::Vector3(0.0f, 0.0f, 0.0f), 0.0f, 40.0f, true);
+	}
+
 	/*CEffect3D::Create(
 		pos,
 		MyLib::Vector3(0.0f, 0.0f, 0.0f),
@@ -323,7 +330,7 @@ void CCamera::MoveCameraInput()
 //==========================================================================
 void CCamera::MoveCameraStick(int nIdx)
 {
-#if 1
+#if 0
 	if (CManager::GetInstance()->GetMode() == CScene::MODE::MODE_GAME ||
 		CManager::GetInstance()->GetMode() == CScene::MODE::MODE_GAMETUTORIAL)
 	{
@@ -1801,7 +1808,13 @@ void CStateCameraV_Distance::Distance(CCamera* pCamera)
 	pCamera->SetDistance(distance);
 
 	// 差分確認
-	if (m_fMultiPly >= 1.0f) pCamera->SetStateCameraV(new CStateCameraV);
+	if (m_fMultiPly >= 1.0f)
+	{
+		pCamera->SetStateCameraV(new CStateCameraV);
+
+		// フィードバックエフェクトOFF
+		CManager::GetInstance()->GetRenderer()->SetEnableDrawMultiScreen(false, 0.0f, 1.0f, 60);
+	}
 	else m_fMultiPly += DISTANCE_TIMER;
 }
 

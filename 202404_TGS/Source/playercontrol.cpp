@@ -83,7 +83,8 @@ void CPlayerControlMove::Move(CPlayer* player)
 	if ((pMotion->IsGetMove(nMotionType) == 1 || pMotion->IsGetCancelable()) &&
 		state != CPlayer::STATE::STATE_DEAD &&
 		state != CPlayer::STATE::STATE_DEADWAIT &&
-		state != CPlayer::STATE::STATE_FADEOUT)
+		state != CPlayer::STATE::STATE_RETURN &&
+		state != CPlayer::STATE::STATE_RESTART)
 	{// 移動可能モーションの時
 
 		move.x += sinf(D3DX_PI * 0.5f + Camerarot.y) * (fMove * 0.5f);
@@ -168,6 +169,9 @@ void CPlayerControlMove::Move(CPlayer* player)
 			motionFrag.bMove = false;
 		}
 
+		// 移動中にする
+		motionFrag.bMove = true;
+
 		if (pInputGamepad->IsTipStick())
 		{// 左スティックが倒れてる場合
 
@@ -237,7 +241,8 @@ void CPlayerControlMove::Move(CPlayer* player)
 	else if (
 		pMotion->IsGetMove(nMotionType) == 0 &&	// 移動可能なモーションか取得
 		state != CPlayer::STATE::STATE_DEAD &&
-		state != CPlayer::STATE::STATE_FADEOUT)
+		state != CPlayer::STATE::STATE_RETURN &&
+		state != CPlayer::STATE::STATE_RESTART)
 	{
 		if (pInputKeyboard->GetPress(DIK_A))
 		{//←キーが押された,左移動
@@ -423,9 +428,15 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 			posBaggage.y = posBaggageOrigin.y;
 			player->Hit(1);
 		}
-		else
+		else if(!pBaggage->IsLand())
 		{
 			player->SetLife(player->GetLifeOrigin());
+		}
+		else
+		{
+			// 位置設定
+			posBaggage.y = posBaggageOrigin.y;
+			player->Hit(1);
 		}
 	}
 
@@ -487,6 +498,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 				d, 0.0f, 0.0f, 90.0f, true);
 		}
 
+		// 息の加算計算
 		m_fHeightVelocity += (0.0f - m_fHeightVelocity) * 0.2f;
 		m_fHeight += ADD_HEIGHT + m_fHeightVelocity;
 		m_fHeight = UtilFunc::Transformation::Clamp(m_fHeight, MIN_HEIGHT, LENGTH_COLLISIONHEIGHT);
@@ -516,7 +528,6 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 
 		// 高さの降下時間減算
 		m_fTimeDownHeight = 0.0f;
-		//m_fTimeDownHeight -= CManager::GetInstance()->GetDeltaTime();
 
 		m_fHeight -= ADD_HEIGHT * 2.0f;
 		m_fHeightVelocity += (m_fHeightVelocity - HEIGHT_VELOCITY) * 0.1f;
@@ -694,14 +705,8 @@ float CPlayerControlSurfacing::Surfacing(CPlayer* player)
 //==========================================================================
 void CPlayerControlTrick::Trick(CPlayer* player, int& nIdx, bool& bValue)
 {
-	bValue = false;
-	nIdx = -1;
-	if (player == nullptr) return;	//プレイヤー無し！
-
-	bool value = false;
-	value = m_pCommand->GetCommand();
-	if (value) nIdx = 1;
-	bValue = value;
+	nIdx = m_pCommandPad->GetSuccess();
+	if (nIdx >= 0) bValue = true;
 }
 
 //==========================================================================
@@ -709,8 +714,8 @@ void CPlayerControlTrick::Trick(CPlayer* player, int& nIdx, bool& bValue)
 //==========================================================================
 void CPlayerControlTrick::Uninit()
 {
-	if (m_pCommand == nullptr) return;
-	m_pCommand->Uninit();
-	delete m_pCommand;
-	m_pCommand = nullptr;
+	if (m_pCommandPad == nullptr) return;
+	m_pCommandPad->Uninit();
+	delete m_pCommandPad;
+	m_pCommandPad = nullptr;
 }

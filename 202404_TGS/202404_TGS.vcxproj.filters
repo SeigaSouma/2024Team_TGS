@@ -87,6 +87,9 @@
     <Filter Include="command">
       <UniqueIdentifier>{f9df59bd-df30-4c9f-be88-fe4191d03760}</UniqueIdentifier>
     </Filter>
+    <Filter Include="stencilshadow">
+      <UniqueIdentifier>{d49e048e-3507-4b91-8671-e64951f03076}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\ballast.cpp">
@@ -478,6 +481,12 @@
     </ClCompile>
     <ClCompile Include="Source\retryui.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\stencilshadow.cpp">
+      <Filter>stencilshadow</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\waterfield.cpp">
+      <Filter>mesh</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -879,6 +888,12 @@
     </ClInclude>
     <ClInclude Include="Source\retryui.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\stencilshadow.h">
+      <Filter>stencilshadow</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\waterfield.h">
+      <Filter>mesh</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
