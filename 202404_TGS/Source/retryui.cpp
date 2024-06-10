@@ -9,6 +9,8 @@
 #include "calculation.h"
 #include "input.h"
 #include "player.h"
+#include "keyconfig.h"
+#include "keyconfig_gamepad.h"
 
 //==========================================================================
 // 定数定義
@@ -28,6 +30,8 @@ namespace
 		MyLib::Vector3(1415.0f, 685.0f, 0.0f) };	// 開始の位置
 
 	const float UI_HEIGHT[3] = { 50.0f,100.0f,50.0f };// Uiの幅
+	const float TIME_RETRY = 0.8f;		// リトライでボタンを押し続ける時間
+	const float UI_MOVE_COEF = 0.04f;
 }
 
 //==========================================================================
@@ -40,6 +44,7 @@ CRetry_Ui::CRetry_Ui(int nPriority) : CObject2D(nPriority)
 	{
 		m_Button[cnt] = nullptr;
 	}
+	m_fRetryPushTime = 0.0f;	// リトライの押下時間
 }
 
 //==========================================================================
@@ -139,34 +144,40 @@ void CRetry_Ui::Uninit()
 void CRetry_Ui::Update()
 {
 	// インプット情報取得
-	CInputKeyboard* pInputKeyboard = CInputKeyboard::GetInstance();
-	CInputGamepad* pInputGamepad = CInputGamepad::GetInstance();
-
-	// プレイヤー取得
-	CListManager<CPlayer> playerList = CPlayer::GetListObj();
-	CPlayer* pPlayer = nullptr;
+	CKeyConfigManager* pKeyConfig = CKeyConfigManager::GetInstance();
+	CKeyConfig* pPad = pKeyConfig->GetConfig(CKeyConfigManager::Control::CONTROL_INPAD);
 
 	// フェード情報取得
 	CInstantFade* pFade = CManager::GetInstance()->GetInstantFade();
 	CInstantFade::STATE fadestate = pFade->GetState();
 
-	// リストループ
-	while (playerList.ListLoop(&pPlayer))
-	{
-		if (pPlayer->GetState() == CPlayer::STATE_DEAD
-			|| pPlayer->GetState() == CPlayer::STATE_RESPAWN
-			|| pPlayer->GetState() == CPlayer::STATE_FADEOUT)
+	// プレイヤー取得
+	CListManager<CPlayer> playerList = CPlayer::GetListObj();
+	CPlayer* pPlayer = nullptr;
+	playerList.ListLoop(&pPlayer);
+
+	Moveui();
+	if (pPad->GetPress(INGAME::ACT_CHECKPOINT))
+	{// Yを入力している
+		m_fRetryPushTime += CManager::GetInstance()->GetDeltaTime();
+		if (m_fRetryPushTime >= TIME_RETRY)
 		{
-			Moveui();
-			if (pInputGamepad->GetTrigger(CInputGamepad::BUTTON::BUTTON_Y, 0))
-			{// Yを入力している
-
-			}
-			if (pInputGamepad->GetTrigger(CInputGamepad::BUTTON::BUTTON_X, 0))
-			{// Xを入力している
-
-			}
+			m_fRetryPushTime = 0.0f;
+			pPlayer->SetState(CPlayer::STATE::STATE_RETURN);
 		}
+	}
+	else if (pPad->GetPress(INGAME::ACT_RETRY))
+	{// Xを入力している
+		m_fRetryPushTime += CManager::GetInstance()->GetDeltaTime();
+		if (m_fRetryPushTime >= TIME_RETRY)
+		{
+			m_fRetryPushTime = 0.0f;
+			pPlayer->SetState(CPlayer::STATE::STATE_RESTART);
+		}
+	}
+	else
+	{// 押されてないのでカウントリセット
+		m_fRetryPushTime = 0.0f;
 	}
 
 
@@ -191,7 +202,8 @@ void CRetry_Ui::Draw()
 	{
 		if (pPlayer->GetState() == CPlayer::STATE_DEAD
 			|| pPlayer->GetState() == CPlayer::STATE_RESPAWN
-			|| pPlayer->GetState() == CPlayer::STATE_FADEOUT)
+			|| pPlayer->GetState() == CPlayer::STATE_RETURN
+			|| pPlayer->GetState() == CPlayer::STATE_RESTART)
 		{
 			// 描画処理
 			for (int cnt = 0; cnt < BUTTON_MAX; cnt++)
@@ -212,8 +224,8 @@ void CRetry_Ui::Moveui()
 	for (int cnt = 0; cnt < BUTTON_MAX; cnt++)
 	{
 		// 目標位置までの差を計算
-		deffpos.x = (DEST_POS[cnt].x - m_Button[cnt]->GetPosition().x) * 0.01f;
-		deffpos.y = (DEST_POS[cnt].y - m_Button[cnt]->GetPosition().y) * 0.01f;
+		deffpos.x = (DEST_POS[cnt].x - m_Button[cnt]->GetPosition().x) * UI_MOVE_COEF;
+		deffpos.y = (DEST_POS[cnt].y - m_Button[cnt]->GetPosition().y) * UI_MOVE_COEF;
 
 		// 徐々に目標位置に移動
 		MyLib::Vector3 changepos =
