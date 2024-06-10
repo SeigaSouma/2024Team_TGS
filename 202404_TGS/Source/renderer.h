@@ -16,6 +16,36 @@
 // レンダラークラス定義
 class CRenderer
 {
+private:
+
+	// マルチターゲットレンダリング用情報
+	struct MultiTargetInfo
+	{
+		float fStartColAlpha;	// 開始透明度
+		float fStartMulti;		// 開始サイズ倍率
+		float fAddTimer;		// タイマー増加数
+		float fColAlpha;		// 透明度
+		float fTimer;			// 遷移タイマー
+		float fMulti;			// サイズ倍率
+		bool bDraw;				// マルチターゲット画面の描画判定
+		bool bActive;			// 稼働中
+		bool bNext;				// 次
+
+		MultiTargetInfo()	// コンストラクタ
+		{
+			// 値のクリア
+			fStartColAlpha = 0.0f;
+			fStartMulti = 0.0f;
+			fAddTimer = 0.0f;
+			fColAlpha = 0.0f;
+			fMulti = 0.0f;
+			fTimer = 0.0f;
+			bDraw = false;
+			bActive = false;
+			bNext = false;
+		}
+	};
+
 public:
 
 	struct MultiTarget
@@ -44,22 +74,22 @@ public:
 	void ChangeRendertarget(LPDIRECT3DSURFACE9 pRender, LPDIRECT3DSURFACE9 pZBuff, D3DXMATRIX viewport, D3DXMATRIX projection);	// ターゲット切明
 	void ChangeTarget(MyLib::Vector3 posV, MyLib::Vector3 posR, MyLib::Vector3 vecU);
 	LPDIRECT3DTEXTURE9 GetTextureMT(int idx) { return m_Multitarget.pTextureMT[idx]; }	// レンダリングターゲット用テクスチャ取得
-	bool IsDrawMultiScreen() { return m_bDrawMultiScreen; };					// マルチターゲット画面の描画判定
-	void SetEnableDrawMultiScreen(bool bDraw) { m_bDrawMultiScreen = bDraw; }	// マルチターゲット画面の描画判定
+	bool IsDrawMultiScreen() { return m_MultitargetInfo.bDraw; };					// マルチターゲット画面の描画判定
+	void SetEnableDrawMultiScreen(bool bDraw, float fGoalAlpha, float fGoalMulti, float fTimer);// マルチターゲット画面の描画判定
 
 private:
 
 	void ResetRendererState();
 	void InitMTRender();	// マルチターゲットレンダラーの初期化
+	void SetMultiTarget();
 
 	void DrawMultiTargetScreen(int texIdx, const D3DXCOLOR& col, const D3DXVECTOR2& size);	// マルチターゲット画面の描画
 
 	LPDIRECT3D9 m_pD3D;					// Direct3Dオブジェクトへのポインタ
 	LPDIRECT3DDEVICE9 m_pD3DDevice;		// Direct3Dデバイスへのポインタ
 	D3DPRESENT_PARAMETERS m_d3dpp;	// プレゼンテーションモード
-
+	MultiTargetInfo m_MultitargetInfo;
 	MultiTarget m_Multitarget;	// マルチターゲット用
-	bool m_bDrawMultiScreen;	// マルチターゲット画面の描画判定
 };
 
 

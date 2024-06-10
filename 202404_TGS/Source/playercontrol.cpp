@@ -83,7 +83,8 @@ void CPlayerControlMove::Move(CPlayer* player)
 	if ((pMotion->IsGetMove(nMotionType) == 1 || pMotion->IsGetCancelable()) &&
 		state != CPlayer::STATE::STATE_DEAD &&
 		state != CPlayer::STATE::STATE_DEADWAIT &&
-		state != CPlayer::STATE::STATE_FADEOUT)
+		state != CPlayer::STATE::STATE_RETURN &&
+		state != CPlayer::STATE::STATE_RESTART)
 	{// 移動可能モーションの時
 
 		move.x += sinf(D3DX_PI * 0.5f + Camerarot.y) * (fMove * 0.5f);
@@ -240,7 +241,8 @@ void CPlayerControlMove::Move(CPlayer* player)
 	else if (
 		pMotion->IsGetMove(nMotionType) == 0 &&	// 移動可能なモーションか取得
 		state != CPlayer::STATE::STATE_DEAD &&
-		state != CPlayer::STATE::STATE_FADEOUT)
+		state != CPlayer::STATE::STATE_RETURN &&
+		state != CPlayer::STATE::STATE_RESTART)
 	{
 		if (pInputKeyboard->GetPress(DIK_A))
 		{//←キーが押された,左移動

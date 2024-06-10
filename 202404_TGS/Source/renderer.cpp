@@ -17,13 +17,14 @@
 #include "loadmanager.h"
 #include "Imguimanager.h"
 #include "fog.h"
+#include "calculation.h"
 
 namespace
 {
-	const D3DXCOLOR ALPHACOLOR = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.95f);
+	const D3DXCOLOR ALPHACOLOR = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.6f);
 	const D3DXCOLOR NONE_ALPHACOLOR = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 	const D3DXVECTOR2 NORMALSIZE = D3DXVECTOR2(640.0f, 360.0f);
-	const D3DXVECTOR2 MINISIZE = D3DXVECTOR2(640.0f, 360.0f) * 1.01f;
+	const D3DXVECTOR2 MINISIZE = D3DXVECTOR2(640.0f, 360.0f) * 1.0f;
 }
 
 //==========================================================================
@@ -150,7 +151,7 @@ void CRenderer::ResetRendererState()
 void CRenderer::InitMTRender()
 {
 	// マルチターゲット画面の描画判定
-	m_bDrawMultiScreen = false;
+	m_MultitargetInfo.bDraw = false;
 
 	// 保存用バッファ
 	LPDIRECT3DSURFACE9 pRenderDef, pZBuffDef;
@@ -161,7 +162,7 @@ void CRenderer::InitMTRender()
 		m_pD3DDevice->CreateTexture(SCREEN_WIDTH, SCREEN_HEIGHT,
 			1,
 			D3DUSAGE_RENDERTARGET,
-			D3DFMT_A8R8G8B8,
+			D3DFMT_X8R8G8B8,
 			D3DPOOL_DEFAULT,
 			&m_Multitarget.pTextureMT[i],
 			NULL);
@@ -366,8 +367,6 @@ void CRenderer::Draw()
 
 
 			// ターゲット切替
-			if (m_bDrawMultiScreen)
-			{
 				CManager::GetInstance()->GetRenderer()->ChangeTarget(pCamerea->GetPositionV(), pCamerea->GetPositionR(), MyLib::Vector3(0.0f, 1.0f, 0.0f));
 
 				// テクスチャ[0]のクリア
@@ -377,60 +376,21 @@ void CRenderer::Draw()
 					D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f),
 					1.0f,
 					0);
-			}
-
-			if (!m_bDrawMultiScreen)
-			{
-				CManager::GetInstance()->GetRenderer()->ChangeTarget(pCamerea->GetPositionV(), pCamerea->GetPositionR(), MyLib::Vector3(0.0f, 1.0f, 0.0f));
-
-				// テクスチャ[0]のクリア
-				m_pD3DDevice->Clear(
-					0, nullptr,
-					(D3DCLEAR_STENCIL | D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
-					D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f),
-					1.0f,
-					0);
-
-				// レンダリングターゲットを生成したテクスチャに設定
-				m_pD3DDevice->SetRenderTarget(0, m_Multitarget.pRenderMT[1]);
-
-				// Zバッファを生成したZバッファに設定
-				m_pD3DDevice->SetDepthStencilSurface(m_Multitarget.pZBuffMT);
-
-				// テクスチャ[0]のクリア
-				m_pD3DDevice->Clear(
-					0, nullptr,
-					(D3DCLEAR_STENCIL | D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
-					D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f),
-					1.0f,
-					0);
-
-				CManager::GetInstance()->GetRenderer()->ChangeRendertarget(pRenderDef, pZBuffDef, mtxView, mtxProjection);
-			}
 
 			// 全ての描画
 			CObject::DrawAll();
 
 			// フィードバックエフェクトにテクスチャ[1]を貼り付けて描画
-			if (m_bDrawMultiScreen)
-			{
-				DrawMultiTargetScreen(1, ALPHACOLOR, MINISIZE);
-			}
+			float multi = UtilFunc::Correction::EasingLinear(m_MultitargetInfo.fMulti, m_MultitargetInfo.fStartMulti, m_MultitargetInfo.fTimer);
+			float alpha = UtilFunc::Correction::EasingLinear(m_MultitargetInfo.fStartColAlpha, m_MultitargetInfo.fColAlpha, m_MultitargetInfo.fTimer);
+			DrawMultiTargetScreen(1, D3DXCOLOR(ALPHACOLOR.r, ALPHACOLOR.g, ALPHACOLOR.b, alpha), MINISIZE * multi);
 
 			// カメラの設定
 			CManager::GetInstance()->GetCamera()->SetCamera();
-
-			if (m_bDrawMultiScreen)
-			{
-				// レンダーターゲットをもとに戻す
-				CManager::GetInstance()->GetRenderer()->ChangeRendertarget(pRenderDef, pZBuffDef, mtxView, mtxProjection);
-			}
-
-			// フィードバックエフェクトにテクスチャ[0]を貼り付けて描画
-			if (m_bDrawMultiScreen)
-			{
-				DrawMultiTargetScreen(0, NONE_ALPHACOLOR, NORMALSIZE);
-			}
+			// レンダーターゲットをもとに戻す
+			CManager::GetInstance()->GetRenderer()->ChangeRendertarget(pRenderDef, pZBuffDef, mtxView, mtxProjection);
+			
+			DrawMultiTargetScreen(0, NONE_ALPHACOLOR, NORMALSIZE);
 			
 
 			// テクスチャ0と1の切替
@@ -491,6 +451,11 @@ void CRenderer::Draw()
 
 	// バックバッファとフロントバッファの入れ替え
 	m_pD3DDevice->Present(nullptr, nullptr, nullptr, nullptr);
+
+	// マルチターゲット調整
+	if (m_MultitargetInfo.bActive) {
+		SetMultiTarget();
+	}
 }
 
 //==========================================================================
@@ -676,7 +641,6 @@ void CRenderer::ChangeTarget(MyLib::Vector3 posV, MyLib::Vector3 posR, MyLib::Ve
 {
 	D3DXMATRIX mtxview, mtxProjection;
 
-
 	// レンダリングターゲットを生成したテクスチャに設定
 	m_pD3DDevice->SetRenderTarget(0, m_Multitarget.pRenderMT[0]);
 
@@ -713,4 +677,70 @@ void CRenderer::ChangeTarget(MyLib::Vector3 posV, MyLib::Vector3 posR, MyLib::Ve
 
 	// ビューマトリックスの設定
 	m_pD3DDevice->SetTransform(D3DTS_VIEW, &mtxview);
+}
+
+//==========================================================================
+// マルチターゲット画面の描画判定
+//==========================================================================
+void CRenderer::SetEnableDrawMultiScreen(bool bDraw, float fGoalAlpha, float fGoalMulti, float fTimer)
+{ 
+	// パラメーターの設定
+	m_MultitargetInfo.bDraw = true;
+	m_MultitargetInfo.fTimer = 0.0f;
+	m_MultitargetInfo.fAddTimer = 1.0f / fTimer;
+	m_MultitargetInfo.fStartColAlpha = m_MultitargetInfo.fColAlpha;
+	m_MultitargetInfo.fColAlpha = fGoalAlpha;
+	m_MultitargetInfo.fStartMulti = m_MultitargetInfo.fMulti;
+	m_MultitargetInfo.fMulti = fGoalMulti;
+	m_MultitargetInfo.bActive = true;
+	m_MultitargetInfo.bNext = bDraw;
+
+	return;
+	//if (m_MultitargetInfo.bDraw && !bDraw) // 前回通常描画、今回multiターゲットレンダリング
+	//{
+
+	//	LPDIRECT3DSURFACE9 pRenderDef = nullptr, pZBuffDef = nullptr;
+
+	//	// 現在のレンダリングターゲットを取得(保存)
+	//	m_pD3DDevice->GetRenderTarget(0, &pRenderDef);
+
+	//	// 現在のZバッファを取得(保存)
+	//	m_pD3DDevice->GetDepthStencilSurface(&pZBuffDef);
+
+	//	// レンダリングターゲットを生成したテクスチャに設定
+	//	m_pD3DDevice->SetRenderTarget(0, m_Multitarget.pRenderMT[1]);
+
+	//	// Zバッファを生成したZバッファに設定
+	//	m_pD3DDevice->SetDepthStencilSurface(m_Multitarget.pZBuffMT);
+
+	//	// レンダリングターゲット用のテクスチャのクリア
+	//	m_pD3DDevice->Clear(
+	//		0, nullptr,
+	//		(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
+	//		D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f),
+	//		1.0f,
+	//		0);
+
+
+	//	// レンダリングターゲットを元に戻す
+	//	m_pD3DDevice->SetRenderTarget(0, pRenderDef);
+
+	//	// Zバッファを元に戻す
+	//	m_pD3DDevice->SetDepthStencilSurface(pZBuffDef);
+	//}
+
+	//m_MultitargetInfo.bDraw = bDraw;
+}
+
+//==========================================================================
+// マルチターゲット画面の描画調整
+//==========================================================================
+void CRenderer::SetMultiTarget()
+{
+	m_MultitargetInfo.fTimer += m_MultitargetInfo.fAddTimer;
+
+	if (m_MultitargetInfo.fTimer >= 1.0f) { 
+		m_MultitargetInfo.bActive = false; 
+		m_MultitargetInfo.bDraw = m_MultitargetInfo.bNext;
+	}
 }
