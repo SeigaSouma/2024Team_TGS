@@ -447,13 +447,14 @@ void CPlayer::Controll()
 			// 移動操作
 			m_pControlMove->Move(this);
 
-			{ // 浮上操作
-				float fHeight = m_pControlSurfacing->Surfacing(this);
+			 // 浮上操作
+			float fHeight = m_pControlSurfacing->Surfacing(this);
 
-				MyLib::Vector3 pos = m_pBaggage->GetPosition();
-				m_pBaggage->SetOriginPosition(MyLib::Vector3(0.0f, m_posCylinder.y + fHeight, 0.0f));
-			}
+			MyLib::Vector3 pos = m_pBaggage->GetPosition();
+			m_pBaggage->SetOriginPosition(MyLib::Vector3(0.0f, m_posCylinder.y + fHeight, 0.0f));
+			
 			m_pControlBaggage->Action(this, m_pBaggage);		// 荷物操作
+			m_pBaggage->SetOriginPosition(MyLib::Vector3(0.0f, m_posCylinder.y + fHeight, 0.0f));
 
 			{// トリック操作
 				int idx = -1; bool value = false;
@@ -1164,7 +1165,7 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 		pCamera->SetStateCameraV(new CStateCameraV_Distance);
 
 		// フィードバックエフェクトOFF
-		CManager::GetInstance()->GetRenderer()->SetEnableDrawMultiScreen(false);
+		CManager::GetInstance()->GetRenderer()->SetEnableDrawMultiScreen(false, 0.6f, 1.02f, 120.0f);
 	}
 	else if (nLife <= static_cast<float>(GetLifeOrigin()) * 0.65f)
 	{

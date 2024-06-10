@@ -428,9 +428,15 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 			posBaggage.y = posBaggageOrigin.y;
 			player->Hit(1);
 		}
-		else
+		else if(!pBaggage->IsLand())
 		{
 			player->SetLife(player->GetLifeOrigin());
+		}
+		else
+		{
+			// ˆÊ’uÝ’è
+			posBaggage.y = posBaggageOrigin.y;
+			player->Hit(1);
 		}
 	}
 
@@ -492,6 +498,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 				d, 0.0f, 0.0f, 90.0f, true);
 		}
 
+		// ‘§‚Ì‰ÁŽZŒvŽZ
 		m_fHeightVelocity += (0.0f - m_fHeightVelocity) * 0.2f;
 		m_fHeight += ADD_HEIGHT + m_fHeightVelocity;
 		m_fHeight = UtilFunc::Transformation::Clamp(m_fHeight, MIN_HEIGHT, LENGTH_COLLISIONHEIGHT);
@@ -521,7 +528,6 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 
 		// ‚‚³‚Ì~‰ºŽžŠÔŒ¸ŽZ
 		m_fTimeDownHeight = 0.0f;
-		//m_fTimeDownHeight -= CManager::GetInstance()->GetDeltaTime();
 
 		m_fHeight -= ADD_HEIGHT * 2.0f;
 		m_fHeightVelocity += (m_fHeightVelocity - HEIGHT_VELOCITY) * 0.1f;

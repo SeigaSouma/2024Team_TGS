@@ -40,7 +40,7 @@ CBaggage::CBaggage(int nPriority) : CObjectQuaternion(nPriority)
 	// 値のクリア
 	m_type = TYPE::TYPE_CLOTH;	// 種類
 	m_fWeight = 0.0f;	// 重さ
-	m_bDrop = false;	// 落下判定
+	m_bLand = false;	// 着地判定
 	m_velorot = MyLib::Vector3(0.0f, 0.0f, 0.0f);
 }
 
@@ -176,10 +176,17 @@ void CBaggage::Update()
 		move.y = limitMoveY;
 	}
 
-	if (pos.y <= GetOriginPosition().y) pos.y = GetOriginPosition().y, move.y = 0.0f;
-
-	// 落下判定
-	m_bDrop = pos.y <= 0.0f;
+	// 筒の位置判定
+	if (pos.y <= GetOriginPosition().y)
+	{
+		pos.y = GetOriginPosition().y;
+		move.y = 0.0f;
+		m_bLand = true;
+	}
+	else
+	{
+		m_bLand = false;
+	}
 
 	// 慣性補正
 	move.x += (0.0f - move.x) * 0.25f;
