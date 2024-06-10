@@ -178,7 +178,7 @@ CHARACTERSET
 	PARTSSET						# [16]ïêäÌ
 		INDEX = 16
 		PARENT = 9					# (êe)âEéË
-		POS = 13.0 0.0 0.0
+		POS = 13.0 0.0 15.0
 		ROT = 1.57 -3.14 0.0
 		START = 1
 	END_PARTSSET

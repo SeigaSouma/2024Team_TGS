@@ -70,7 +70,7 @@ namespace
 	const float  DEFAULT_MULTIPLY_GUARD = 0.4f;			// カードの軽減
 	const float DEFAULT_TIME_ADDDOWN = 3.0f;			// ダウン時間付与
 	const bool DEFAULT_IS_CHARGEFLINCH = true;			// チャージ時怯みフラグ
-	const int DEFAULT_RESPAWN_PERCENT = 20;			// 復活確率
+	const int DEFAULT_RESPAWN_PERCENT = 20;				// 復活確率
 	const float MULTIPLY_CHARGEATK = 2.0f;				// チャージ攻撃の倍率
 	const float MAX_HEIGHT = 200.0f;					// 最大高さ
 }
@@ -202,8 +202,12 @@ HRESULT CPlayer::Init()
 	// 荷物生成
 	m_pBaggage = CBaggage::Create(CBaggage::TYPE::TYPE_CLOTH);
 
+	// 武器の位置
+	CMotion* pMotion = GetMotion();
+	m_posCylinder = GetMotion()->GetAttackPosition(GetModel(), *pMotion->GetInfo(MOTION::MOTION_WALK).AttackInfo[0]);
+
 	MyLib::Vector3 pos = GetPosition();
-	m_pBaggage->SetPosition(MyLib::Vector3(pos.x, MAX_HEIGHT, pos.z));
+	m_pBaggage->SetPosition(m_posCylinder);
 	m_pBaggage->SetOriginPosition(m_pBaggage->GetPosition());
 
 	return S_OK;
@@ -385,12 +389,15 @@ void CPlayer::Update()
 	// 位置の制限
 	LimitPos();
 
+
+	// 武器の位置
+	CMotion* pMotion = GetMotion();
+	m_posCylinder = pMotion->GetAttackPosition(GetModel(), *pMotion->GetInfo(MOTION::MOTION_WALK).AttackInfo[0]);
+
 #if 1
 
 	// 移動量取得
 	MyLib::Vector3 move = GetMove();
-
-	CMotion* pMotion = GetMotion();
 
 	if (pMotion == nullptr)return;
 
@@ -440,8 +447,9 @@ void CPlayer::Controll()
 
 			{ // 浮上操作
 				float fHeight = m_pControlSurfacing->Surfacing(this);
+
 				MyLib::Vector3 pos = m_pBaggage->GetPosition();
-				m_pBaggage->SetOriginPosition(MyLib::Vector3(0.0f, MAX_HEIGHT + fHeight, 0.0f));
+				m_pBaggage->SetOriginPosition(MyLib::Vector3(0.0f, m_posCylinder.y + fHeight, 0.0f));
 			}
 			m_pControlBaggage->Action(this, m_pBaggage);		// 荷物操作
 
@@ -1164,7 +1172,7 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 		pCamera->SetStateCameraV(pstate);
 
 		// フィードバックエフェクトON
-		CManager::GetInstance()->GetRenderer()->SetEnableDrawMultiScreen(true);
+		CManager::GetInstance()->GetRenderer()->SetEnableDrawMultiScreen(true, 0.6f, 1.02f, 120.0f);
 	}
 	
 
