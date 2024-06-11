@@ -34,6 +34,7 @@
 #include "goalflag.h"
 #include "checkpoint.h"
 #include "map_obstacleManager.h"
+#include "baggageManager.h"
 #include "stencilshadow.h"
 
 #include "sample_obj3D.h"
@@ -64,6 +65,7 @@ CGame::CGame()
 	m_fMaxRokOnDistance = 0.0f;		// ロックオンの最大距離
 	m_pEdit = nullptr;				// エディター
 	m_pObstacleManager = nullptr;	// 障害物マネージャ
+	m_pBaggageManager = nullptr;	// 荷物マネージャ
 	m_pCourse = nullptr;			// コースのオブジェクト
 }
 
@@ -135,6 +137,8 @@ HRESULT CGame::Init()
 	// モード別初期化処理
 	InitByMode();
 
+	// 荷物マネージャ
+	m_pBaggageManager = CBaggageManager::Create();
 
 	//**********************************
 	// プレイヤー
@@ -180,7 +184,6 @@ HRESULT CGame::Init()
 
 	// 障害物マネージャ
 	m_pObstacleManager = CMap_ObstacleManager::Create();
-
 
 	CMyEffekseer::GetInstance()->SetEffect(
 		CMyEffekseer::EFKLABEL::EFKLABEL_RIVER_SAMPLE,

@@ -37,6 +37,7 @@
 
 #include "checkpoint.h"
 #include "baggage.h"
+#include "baggageManager.h"
 
 // 使用クラス
 #include "playercontrol.h"
@@ -200,7 +201,7 @@ HRESULT CPlayer::Init()
 	ChangeTrickControl(DEBUG_NEW CPlayerControlTrick);
 
 	// 荷物生成
-	m_pBaggage = CBaggage::Create(CBaggage::TYPE::TYPE_CLOTH);
+	m_pBaggage = CBaggageManager::GetInstance()->CreateBaggage(CBaggage::TYPE::TYPE_CLOTH);
 
 	// 武器の位置
 	CMotion* pMotion = GetMotion();
