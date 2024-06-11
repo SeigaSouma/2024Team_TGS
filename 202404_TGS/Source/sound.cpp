@@ -395,13 +395,13 @@ void CSound::StopSound(LABEL label)
 		m_apSourceVoice[label]->SetFrequencyRatio(1.0f);
 	}
 
-	if (m_apSourceVoice[label] != nullptr)
+	/*if (m_apSourceVoice[label] != nullptr)
 	{
 		m_apSourceVoice[label]->Stop(0);
 		m_apSourceVoice[label]->FlushSourceBuffers();
 		m_apSourceVoice[label]->DestroyVoice();
 		m_apSourceVoice[label] = nullptr;
-	}
+	}*/
 }
 
 //==========================================================================
@@ -421,13 +421,13 @@ void CSound::StopSound()
 			m_apSourceVoice[nCntSound]->SetFrequencyRatio(1.0f);
 		}
 
-		if (m_apSourceVoice[nCntSound] != nullptr)
+		/*if (m_apSourceVoice[nCntSound] != nullptr)
 		{
 			m_apSourceVoice[nCntSound]->Stop(0);
 			m_apSourceVoice[nCntSound]->FlushSourceBuffers();
 			m_apSourceVoice[nCntSound]->DestroyVoice();
 			m_apSourceVoice[nCntSound] = nullptr;
-		}
+		}*/
 	}
 }
 

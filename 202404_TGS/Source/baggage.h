@@ -25,7 +25,22 @@ public:
 	enum TYPE
 	{
 		TYPE_CLOTH = 0,	// 布
+		TYPE_TMP_YMDHOUSE,
+		TYPE_TMP_FLOWER,
 		TYPE_MAX
+	};
+
+	//=============================
+	// 荷物情報
+	//=============================
+	struct SBaggageInfo
+	{
+		std::string path;	// モデルファイルパス
+		float weight;		// 重さ
+		float width;		// ぶれ幅
+		float cycle;		// 周期
+
+		SBaggageInfo() : path(""), weight(0.0f), width(0.0f), cycle(0.0f) {}
 	};
 
 	CBaggage(int nPriority = 4);
@@ -46,13 +61,15 @@ public:
 	void SetForce(const MyLib::Vector3& power) { m_force = power; }				// 力設定
 	void AddForce(const MyLib::Vector3& power, const MyLib::Vector3& ActPos);	// 力追加
 	bool IsLand() { return m_bLand; }	// 着地判定
-	void SetAddDeviation(const float& deviation) { m_fAddDeviation = deviation; }
-	void SetDeviationWidth(const float& deviWidth) { m_fDeviationWidth = deviWidth; }
+	void SetModelPath(const std::string path) { m_baggageInfo.path = path; }
+	void SetCycle(const float& deviation) { m_baggageInfo.cycle = deviation; }
+	void SetWidth(const float& deviWidth) { m_baggageInfo.width = deviWidth; }
+	void SetWeight(const float& weight) { m_baggageInfo.weight = weight; }
 
 	//=============================
 	// 静的関数
 	//=============================
-	static CBaggage *Create(TYPE type);
+	static CBaggage* Create(TYPE type, SBaggageInfo info);
 	static CListManager<CBaggage> GetListObj() { return m_List; }	// リスト取得
 
 private:
@@ -73,10 +90,8 @@ private:
 	MyLib::Vector3 m_velorot;	// 回転速度
 	bool m_bLand;			// 着地判定
 	static CListManager<CBaggage> m_List;	// リスト
-	float m_fDeviation;		// 現在のぶれ
-	float m_fAddDeviation;	// 加算するぶれ
-	float m_fDeviationWidth;// ぶれ幅
-
+	SBaggageInfo m_baggageInfo;
+	float m_fDeviation;
 };
 
 

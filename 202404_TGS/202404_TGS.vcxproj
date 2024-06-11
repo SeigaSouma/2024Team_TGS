@@ -168,6 +168,7 @@
     <ClCompile Include="Source\2D_effect.cpp" />
     <ClCompile Include="Source\3D_effect.cpp" />
     <ClCompile Include="Source\baggage.cpp" />
+    <ClCompile Include="Source\baggageManager.cpp" />
     <ClCompile Include="Source\ballast.cpp" />
     <ClCompile Include="Source\battlestart.cpp" />
     <ClCompile Include="Source\battlestart_effect.cpp" />
@@ -309,6 +310,7 @@
     <ClInclude Include="Source\2D_effect.h" />
     <ClInclude Include="Source\3D_effect.h" />
     <ClInclude Include="Source\baggage.h" />
+    <ClInclude Include="Source\baggageManager.h" />
     <ClInclude Include="Source\ballast.h" />
     <ClInclude Include="Source\battlestart.h" />
     <ClInclude Include="Source\battlestart_effect.h" />

@@ -24,6 +24,7 @@ class CLimitArea;
 class CPlayer;
 class CEdit;
 class CMap_ObstacleManager;
+class CBaggageManager;
 class CCourse;
 
 //==========================================================================
@@ -90,6 +91,7 @@ protected:
 	EditType m_EditType;					// エディットの種類
 	CEdit* m_pEdit;							// エディター
 	CMap_ObstacleManager* m_pObstacleManager;	// 障害物マネージャ
+	CBaggageManager* m_pBaggageManager;		// 荷物マネージャ
 	CCourse* m_pCourse;						// コースのオブジェクト
 	bool m_bEdit;				// エディットの判定
 	bool m_clear; // クリア判定

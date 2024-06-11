@@ -11,7 +11,7 @@ TEXTURE_FILENAME = data\TEXTURE\sky\sky_02.jpg		# [0]
 #------------------------------------------------------------------------------
 # モデル数
 #------------------------------------------------------------------------------
-NUM_MODEL = 41
+NUM_MODEL = 42
 
 #------------------------------------------------------------------------------
 # モデルファイル名
@@ -57,6 +57,7 @@ MODEL_FILENAME = data\MODEL\map_object\angry_bird.x		# [37]
 MODEL_FILENAME = data\MODEL\map_object\turibashi.x		# [38]
 MODEL_FILENAME = data\MODEL\map_object\fallen_tree.x		# [39]
 MODEL_FILENAME = data\MODEL\map_object\hasu.x		# [40]
+MODEL_FILENAME = data\MODEL\map_object\fivetower.x		# [41]
 
 #==============================================================================
 # 空情報
