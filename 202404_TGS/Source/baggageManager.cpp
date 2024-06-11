@@ -95,9 +95,9 @@ void CBaggageManager::Update()
 //==========================================================================
 // í—Şw’è‚µ‚Ä¶¬
 //==========================================================================
-CBaggage* CBaggageManager::CreateBaggage(int idx)
+CBaggage* CBaggageManager::CreateBaggage(CBaggage::TYPE idx)
 {
-	return CBaggage::Create((CBaggage::TYPE)idx, m_BaggageInfo[idx]);
+	return CBaggage::Create(idx, m_BaggageInfo[idx]);
 }
 
 //==========================================================================
