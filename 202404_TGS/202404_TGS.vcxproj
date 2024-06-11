@@ -279,6 +279,7 @@
     <ClCompile Include="Source\score.cpp" />
     <ClCompile Include="Source\shadow.cpp" />
     <ClCompile Include="Source\sound.cpp" />
+    <ClCompile Include="Source\spline.cpp" />
     <ClCompile Include="Source\stage.cpp" />
     <ClCompile Include="Source\stagecleartext.cpp" />
     <ClCompile Include="Source\stagename.cpp" />
@@ -416,6 +417,7 @@
     <ClInclude Include="Source\score.h" />
     <ClInclude Include="Source\shadow.h" />
     <ClInclude Include="Source\sound.h" />
+    <ClInclude Include="Source\spline.h" />
     <ClInclude Include="Source\stage.h" />
     <ClInclude Include="Source\stagecleartext.h" />
     <ClInclude Include="Source\stagename.h" />

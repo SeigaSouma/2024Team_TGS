@@ -634,6 +634,32 @@ namespace UtilFunc	// 便利関数
 				}
 			}
 		}
+
+
+		/**
+		@brief	スプライント曲線補間
+		@param	PointMili1		[in]	地点 -1
+		@param	Point0			[in]	地点 0
+		@param	Point1			[in]	地点 1
+		@param	Point2			[in]	地点 2
+		@param	ratio			[in]	割合
+		@return	void
+		*/
+		inline MyLib::Vector3 CatmullRomSplineInterp(
+			const MyLib::Vector3& PointMili1,
+			const MyLib::Vector3& Point0,
+			const MyLib::Vector3& Point1,
+			const MyLib::Vector3& Point2,
+			float ratio)
+		{
+			// 4点で補正
+			MyLib::Vector3 a4 = Point0;
+			MyLib::Vector3 a3 = (Point1 - PointMili1) / 2.0f;
+			MyLib::Vector3 a1 = (Point2 - Point0) / 2.0f - 2.0f * Point1 + a3 + 2.0f * a4;
+			MyLib::Vector3 a2 = 3.0f * Point1 - (Point2 - Point0) / 2.0f - 2.0f * a3 - 3.0f * a4;
+
+			return (a1 * ratio * ratio * ratio + a2 * ratio * ratio + a3 * ratio + a4);
+		}
 	}
 
 	/**
