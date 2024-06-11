@@ -16,7 +16,7 @@ SCRIPT			# この行は絶対消さないこと！
 BAGGAGESET
 	MODEL = data\\MODEL\\map_object\\rock_02.x
 	WEIGHT = 1.0
-	WIDTH = 20.0
+	WIDTH = 40.0
 	CYCLE = 0.06
 END_BAGGAGESET
 

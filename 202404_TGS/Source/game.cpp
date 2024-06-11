@@ -280,6 +280,13 @@ void CGame::Uninit()
 		m_pObstacleManager = nullptr;
 	}
 
+	// 荷物マネージャ
+	if (m_pBaggageManager != nullptr)
+	{
+		m_pBaggageManager->Uninit();
+		m_pBaggageManager = nullptr;
+	}
+
 	// コース
 	m_pCourse = nullptr;
 
