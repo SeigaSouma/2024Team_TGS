@@ -38,6 +38,7 @@
 
 #include "sample_obj3D.h"
 #include "course.h"
+#include "waterfield.h"
 
 //==========================================================================
 // 静的メンバ変数宣言
@@ -188,6 +189,8 @@ HRESULT CGame::Init()
 
 	// ステンシル影生成
 	CStencilShadow::Create();
+
+	CWaterField::Create();
 
 	// 成功
 	return S_OK;

@@ -25,6 +25,8 @@ namespace
 	float PITCH_INER = 0.075f;	// ピッチ軸回転慣性
 	float ROLL_FSTSPD = 0.70f;	// ロール軸回転初速
 	float ROLL_INER = 0.075f;		// ロール軸回転慣性
+	float DEVIATION_WIDTH = 300.0f;	// ぶれ幅
+	float DEVIATION_SPEED = 0.02f * D3DX_PI;	// ぶれ速度
 }
 
 //==========================================================================
@@ -40,8 +42,11 @@ CBaggage::CBaggage(int nPriority) : CObjectQuaternion(nPriority)
 	// 値のクリア
 	m_type = TYPE::TYPE_CLOTH;	// 種類
 	m_fWeight = 0.0f;	// 重さ
-	m_bDrop = false;	// 落下判定
+	m_bLand = false;	// 着地判定
 	m_velorot = MyLib::Vector3(0.0f, 0.0f, 0.0f);
+	m_fDeviation = 0.0f;
+	m_fAddDeviation = 0.0f;
+	m_fDeviationWidth = 0.0f;
 }
 
 //==========================================================================
@@ -64,6 +69,8 @@ CBaggage *CBaggage::Create(TYPE type)
 	{
 		// 引数情報
 		pObj->m_type = type;
+		pObj->m_fAddDeviation = DEVIATION_SPEED;
+		pObj->m_fDeviationWidth = DEVIATION_WIDTH;
 
 		// 初期化処理
 		pObj->Init();
@@ -176,14 +183,26 @@ void CBaggage::Update()
 		move.y = limitMoveY;
 	}
 
-	if (pos.y <= GetOriginPosition().y) pos.y = GetOriginPosition().y, move.y = 0.0f;
-
-	// 落下判定
-	m_bDrop = pos.y <= 0.0f;
+	// 筒の位置判定
+	if (pos.y <= GetOriginPosition().y)
+	{
+		pos.y = GetOriginPosition().y;
+		move.y = 0.0f;
+		m_bLand = true;
+	}
+	else
+	{
+		m_bLand = false;
+	}
 
 	// 慣性補正
 	move.x += (0.0f - move.x) * 0.25f;
 	move.z += (0.0f - move.z) * 0.25f;
+
+	// ぶれ設定
+	m_fDeviation += m_fAddDeviation;
+	UtilFunc::Transformation::RotNormalize(m_fDeviation);
+	pos.x += sinf(m_fDeviation) * m_fDeviationWidth * ((pos.y - GetOriginPosition().y) / 1000.0f);
 
 	// 情報設定
 	SetPosition(pos);

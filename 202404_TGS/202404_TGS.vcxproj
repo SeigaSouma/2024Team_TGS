@@ -291,6 +291,7 @@
     <ClCompile Include="Source\title_pressenter.cpp" />
     <ClCompile Include="Source\tutorial.cpp" />
     <ClCompile Include="Source\tutoriallogo.cpp" />
+    <ClCompile Include="Source\waterfield.cpp" />
     <ClCompile Include="Source\Xload.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -427,6 +428,7 @@
     <ClInclude Include="Source\title_pressenter.h" />
     <ClInclude Include="Source\tutorial.h" />
     <ClInclude Include="Source\tutoriallogo.h" />
+    <ClInclude Include="Source\waterfield.h" />
     <ClInclude Include="Source\Xload.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

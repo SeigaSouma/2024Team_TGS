@@ -33,6 +33,7 @@
 #include "rankingmanager.h"
 #include "edit_map.h"
 #include "damagepoint.h"
+#include "retryui.h"
 
 #include "checkpoint.h"
 #include "baggage.h"
@@ -57,7 +58,6 @@ namespace
 	const int DEFAULT_STAMINA = 200;			// スタミナのデフォルト値
 	const float SUBVALUE_DASH = 0.1f;			// ダッシュの減算量
 	const float SUBVALUE_AVOID = 25.0f;			// 回避の減算量
-	const float TIME_RETRY = 0.8f;				// リトライでボタンを押し続ける時間
 
 	// ステータス
 	const float DEFAULT_RESPAWNHEAL = 0.45f;			// リスポーン時の回復割合
@@ -85,7 +85,8 @@ CPlayer::STATE_FUNC CPlayer::m_StateFunc[] =
 	&CPlayer::StateDamage,		// ダメージ
 	&CPlayer::StateDead,		// 死亡
 	&CPlayer::StateDeadWait,	// 死亡待機
-	&CPlayer::StateFadeOut,		// フェードアウト
+	&CPlayer::StateReturn,		// チェックポイントに戻る
+	&CPlayer::StateRestart,		// スタートに戻る
 	&CPlayer::StateRespawn,		// リスポーン
 };
 
@@ -120,7 +121,6 @@ CPlayer::CPlayer(int nPriority) : CObjectChara(nPriority)
 	m_nCntState = 0;								// 状態遷移カウンター
 	m_bDash = false;								// ダッシュ判定
 	m_fDashTime = 0.0f;								// ダッシュ時間
-	m_fRetryPushTime = 0.0f;						// リトライの押下時間
 	m_bMotionAutoSet = false;						// モーションの自動設定
 
 	m_PlayerStatus = sPlayerStatus();				// プレイヤーステータス
@@ -130,6 +130,7 @@ CPlayer::CPlayer(int nPriority) : CObjectChara(nPriority)
 	m_pShadow = nullptr;							// 影の情報
 	m_pHPGauge = nullptr;							// HPゲージのポインタ
 	m_pBaggage = nullptr;							// 荷物のポインタ
+	m_pRetryUI = nullptr;							// リトライUIのポインタ
 
 	m_pControlMove = nullptr;						// 移動操作
 	m_pControlBaggage = nullptr;					// 荷物操作
@@ -356,9 +357,6 @@ void CPlayer::Update()
 	// 状態更新
 	UpdateState();
 
-	// リトライ確認
-	RetryCheck();
-
 	// 位置取得
 	MyLib::Vector3 pos = GetPosition();
 
@@ -440,19 +438,23 @@ void CPlayer::Controll()
 		// 操作関数
 		if (m_state != STATE_DEAD &&
 			m_state != STATE_DEADWAIT &&
-			m_state != STATE_FADEOUT &&
+			m_state != STATE_RETURN &&
+			m_state != STATE_RESTART &&
 			m_state != STATE::STATE_RESPAWN)
 		{
+			Bobbing();
+
 			// 移動操作
 			m_pControlMove->Move(this);
 
-			{ // 浮上操作
-				float fHeight = m_pControlSurfacing->Surfacing(this);
+			 // 浮上操作
+			float fHeight = m_pControlSurfacing->Surfacing(this);
 
-				MyLib::Vector3 pos = m_pBaggage->GetPosition();
-				m_pBaggage->SetOriginPosition(MyLib::Vector3(0.0f, m_posCylinder.y + fHeight, 0.0f));
-			}
+			MyLib::Vector3 pos = m_pBaggage->GetPosition();
+			m_pBaggage->SetOriginPosition(MyLib::Vector3(0.0f, m_posCylinder.y + fHeight, 0.0f));
+			
 			m_pControlBaggage->Action(this, m_pBaggage);		// 荷物操作
+			m_pBaggage->SetOriginPosition(MyLib::Vector3(0.0f, m_posCylinder.y + fHeight, 0.0f));
 
 			{// トリック操作
 				int idx = -1; bool value = false;
@@ -499,7 +501,7 @@ void CPlayer::Controll()
 
 
 	// 重力処理
-	if (m_state != STATE_DEAD && m_state != STATE_FADEOUT && m_state != STATE_DEADWAIT)
+	if (m_state != STATE_DEAD && m_state != STATE_RETURN && m_state != STATE_RESTART && m_state != STATE_DEADWAIT)
 	{
 		move.y -= mylib_const::GRAVITY;
 
@@ -558,7 +560,7 @@ void CPlayer::Controll()
 		move.x += (0.0f - move.x) * 0.1f;
 		move.z += (0.0f - move.z) * 0.1f;
 	}
-	else if (m_state != STATE_DEAD && m_state != STATE_FADEOUT)
+	else if (m_state != STATE_DEAD && m_state != STATE_RETURN && m_state != STATE_RESTART)
 	{
 		move.x += (0.0f - move.x) * 0.25f;
 		move.z += (0.0f - move.z) * 0.25f;
@@ -675,7 +677,8 @@ void CPlayer::MotionSet()
 
 	if (m_state == STATE_DEAD ||
 		m_state == STATE_DEADWAIT ||
-		m_state == STATE_FADEOUT)
+		m_state == STATE_RETURN ||
+		m_state == STATE_RESTART)
 	{
 		return;
 	}
@@ -902,9 +905,30 @@ void CPlayer::ReaspawnCheckPoint()
 	MyLib::Vector3 pos = pCheckPoint->GetPosition();
 	SetPosition(pos);
 
-	//カメラ瞬間移動
+	// カメラ瞬間移動
 	CCamera* pCamera = CManager::GetInstance()->GetCamera();
 	pCamera->WarpCamera(pos + MyLib::Vector3(0.0f, 150.0f, 0.0f));
+
+	//タイマーストップ
+	CGame::GetInstance()->GetGameManager()->SetType(CGameManager::SceneType::SCENE_WAIT_AIRPUSH);
+
+	// リスポーン設定
+	ReaspawnSetting();
+}
+
+//==========================================================================
+// スタート復活（いったん決め打ちなのでいじれるようにして）
+//==========================================================================
+void CPlayer::RespawnStart()
+{
+	MyLib::Vector3 pos = MyLib::Vector3(0.0f, 10.0f, 0.0f);
+
+	// カメラ瞬間移動
+	CCamera* pCamera = CManager::GetInstance()->GetCamera();
+	pCamera->WarpCamera(pos + MyLib::Vector3(0.0f, 150.0f, 0.0f));
+
+	// 位置設定
+	SetPosition(pos);
 
 	//タイマーストップ
 	CGame::GetInstance()->GetGameManager()->SetType(CGameManager::SceneType::SCENE_WAIT_AIRPUSH);
@@ -943,7 +967,7 @@ bool CPlayer::Collision(MyLib::Vector3 &pos, MyLib::Vector3 &move)
 	m_bHitWall = false;			// 壁の当たり判定
 
 	// 高さ取得
-	if (m_state != STATE_DEAD && m_state != STATE_FADEOUT)
+	if (m_state != STATE_DEAD && m_state != STATE_RETURN && m_state != STATE_RESTART)
 	{
 		fHeight = CManager::GetInstance()->GetScene()->GetElevation()->GetHeight(pos, &bLand);
 	}
@@ -1102,7 +1126,8 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 
 	if (m_state == STATE::STATE_DEAD ||
 		m_state == STATE::STATE_DEADWAIT ||
-		m_state == STATE::STATE_FADEOUT ||
+		m_state == STATE::STATE_RETURN ||
+		m_state == STATE::STATE_RESTART ||
 		m_state == STATE::STATE_RESPAWN)
 	{
 		hitresult.isdeath = true;
@@ -1138,6 +1163,9 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 		DeadSetting(&hitresult);
 		pCamera->SetLenDest(600.0f, 200, -25.0f, 0.375f);	// 距離を近づける
 		pCamera->SetStateCameraV(new CStateCameraV_Distance);
+
+		// フィードバックエフェクトOFF
+		CManager::GetInstance()->GetRenderer()->SetEnableDrawMultiScreen(false, 0.6f, 1.02f, 120.0f);
 	}
 	else if (nLife <= static_cast<float>(GetLifeOrigin()) * 0.65f)
 	{
@@ -1236,25 +1264,25 @@ void CPlayer::UpdateDamageReciveTimer()
 }
 
 //==========================================================================
-// リトライするか確認
+// ぷかぷか
 //==========================================================================
-void CPlayer::RetryCheck()
+void CPlayer::Bobbing()
 {
-	CInputGamepad* pInputGamePad = CInputGamepad::GetInstance();
-	if (pInputGamePad->GetPress(CInputGamepad::BUTTON::BUTTON_Y, 0))
-	{// リトライボタンが押されている
+	CModel* pModel = GetModel(0);
+	MyLib::Vector3 pos = pModel->GetPosition();
 
-		m_fRetryPushTime += CManager::GetInstance()->GetDeltaTime();
-		if (m_fRetryPushTime >= TIME_RETRY)
-		{
-			m_fRetryPushTime = 0.0f;
-			ReaspawnCheckPoint();
-		}
-	}
-	else
-	{// 押されてないのでカウントリセット
-		m_fRetryPushTime = 0.0f;
-	}
+	static float fff = 0.0f;
+	static float cycle = 0.9f;
+	static float power = 12.5f;
+
+	fff += CManager::GetInstance()->GetDeltaTime();
+
+	ImGui::DragFloat("Bobbing Cycle", &cycle, 0.1f, 0.0f, 0.0f, "%.2f");
+	ImGui::DragFloat("Bobbing", &power, 0.1f, 0.0f, 0.0f, "%.2f");
+
+	pos.y += sinf(D3DX_PI * (fff / cycle)) * power;
+
+	pModel->SetPosition(pos);
 }
 
 //==========================================================================
@@ -1353,7 +1381,7 @@ void CPlayer::StateDead()
 	if ((CManager::GetInstance()->GetScene()->GetElevation()->IsHit(pos) || m_bHitStage) && m_nCntState >= 10)
 	{// 地面と当たっていたら
 
-		m_state = STATE::STATE_FADEOUT;	// 死亡待機状態
+		//m_state = STATE::STATE_FADEOUT;	// 死亡待機状態
 		m_nCntState = FADEOUTTIME;
 		m_KnokBackMove.y = 0.0f;	// 移動量ゼロ
 		m_bLandOld = true;
@@ -1368,7 +1396,7 @@ void CPlayer::StateDead()
 		//pMotion->ToggleFinish(true);
 
 		// ぶっ倒れモーション
-		//pMotion->Set(MOTION_DEAD);
+		GetMotion()->Set(MOTION_DEAD);
 
 		// Xファイルとの判定
 		CStage *pStage = CGame::GetInstance()->GetStage();
@@ -1392,6 +1420,12 @@ void CPlayer::StateDead()
 			bool bLand = false;
 			pos.y = pObjX->GetHeight(pos, bLand);
 		}
+
+		// リトライUIなければ生成
+		if (m_pRetryUI == nullptr)
+		{
+			m_pRetryUI = CRetry_Ui::Create();
+		}
 	}
 
 	// 位置設定
@@ -1411,9 +1445,9 @@ void CPlayer::StateDeadWait()
 }
 
 //==========================================================================
-// フェードアウト状態
+// チェックポイントに戻る状態
 //==========================================================================
-void CPlayer::StateFadeOut()
+void CPlayer::StateReturn()
 {
 	// 状態遷移カウンター減算
 	m_nCntState--;
@@ -1422,7 +1456,7 @@ void CPlayer::StateFadeOut()
 	//m_mMatcol.a = (float)m_nCntState / (float)FADEOUTTIME;
 
 	// ぶっ倒れモーション
-	GetMotion()->Set(MOTION_DEAD);
+	//GetMotion()->Set(MOTION_DEAD);
 
 	CInstantFade* pFade = CManager::GetInstance()->GetInstantFade();
 	CInstantFade::STATE fadestate = pFade->GetState();
@@ -1444,6 +1478,13 @@ void CPlayer::StateFadeOut()
 		ReaspawnCheckPoint();
 		m_state = STATE::STATE_RESPAWN;
 		SetLife(GetLifeOrigin());
+
+		// リトライUIを消す
+		if (m_pRetryUI != nullptr)
+		{
+			m_pRetryUI->Uninit();
+			m_pRetryUI = nullptr;
+		}
 #endif
 	}
 
@@ -1457,6 +1498,51 @@ void CPlayer::StateFadeOut()
 	//	Uninit();
 	//	return;
 	//}
+}
+
+//==========================================================================
+//スタートに戻る状態
+//==========================================================================
+void CPlayer::StateRestart()
+{
+	// 状態遷移カウンター減算
+	m_nCntState--;
+
+	// 色設定
+	//m_mMatcol.a = (float)m_nCntState / (float)FADEOUTTIME;
+
+	// ぶっ倒れモーション
+	//GetMotion()->Set(MOTION_DEAD);
+
+	CInstantFade* pFade = CManager::GetInstance()->GetInstantFade();
+	CInstantFade::STATE fadestate = pFade->GetState();
+
+	if (fadestate == CInstantFade::STATE::STATE_NONE)
+	{
+		pFade->SetFade(D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f), 40);
+	}
+	else if (fadestate == CInstantFade::STATE::STATE_FADECOMPLETION)
+	{
+#if 0
+		// 死亡処理
+		Kill();
+
+		// 終了処理
+		Uninit();
+#else
+		// チェックポイントに復活
+		RespawnStart();
+		m_state = STATE::STATE_RESPAWN;
+		SetLife(GetLifeOrigin());
+
+		// リトライUIを消す
+		if (m_pRetryUI != nullptr)
+		{
+			m_pRetryUI->Uninit();
+			m_pRetryUI = nullptr;
+		}
+#endif
+	}
 }
 
 //==========================================================================
@@ -1508,7 +1594,7 @@ void CPlayer::Draw()
 	{
 		CObjectChara::Draw(m_mMatcol);
 	}
-	else if (m_state == STATE_INVINCIBLE || m_state == STATE_FADEOUT)
+	else if (m_state == STATE_INVINCIBLE)
 	{
 		CObjectChara::Draw(m_mMatcol.a);
 	}
