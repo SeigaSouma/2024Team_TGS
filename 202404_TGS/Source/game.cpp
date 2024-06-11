@@ -40,6 +40,8 @@
 #include "course.h"
 #include "waterfield.h"
 
+#include "2D_Effect.h"
+
 //==========================================================================
 // 静的メンバ変数宣言
 //==========================================================================
@@ -366,17 +368,16 @@ void CGame::Update()
 #endif
 
 
-	if (pInputKeyboard->GetTrigger(DIK_I))
+	static std::vector<MyLib::Vector3> posvec =
 	{
-		//**********************************
-		// プレイヤー
-		//**********************************
-		// キャラ生成
-		CPlayer* pPlayer = CPlayer::Create(0);
-		pPlayer->SetPosition(MyLib::Vector3(UtilFunc::Transformation::Random(-10, 10) * 100.0f, 10.0f, UtilFunc::Transformation::Random(-10, 10) * 100.0f));
-
-	}
-
+		{0.0f, 500.0f, 0.0f},
+		{400.0f, 500.0f, 500.0f},
+		{800.0f, 500.0f, -200.0f},
+		{1200.0f, 500.0f, 800.0f},
+		{1646.67651f, 500.000000f, -537.398621f },
+		{470.633606f, 500.000000f, -1170.61670f },
+		{-1103.68640f, 500.000000f, -572.269836f },
+	};
 
 	// シーンの更新
 	CScene::Update();

@@ -22,6 +22,7 @@
 #include "pause.h"
 
 #include "objectX.h"
+#include "spline.h"
 
 //==========================================================================
 // マクロ定義
@@ -280,7 +281,12 @@ void CCamera::Update()
 		"【交差点】[X：%f Y：%f Z：%f]\n",
 		pos.x, pos.y, pos.z);
 
-	if (pMouse->GetTrigger(CInputMouse::BUTTON::BUTTON_LEFT))
+
+
+
+
+	if (!pInputKeyboard->GetPress(DIK_LALT) && 
+		pMouse->GetTrigger(CInputMouse::BUTTON::BUTTON_LEFT))
 	{
 		CMyEffekseer::GetInstance()->SetEffect(
 			CMyEffekseer::EFKLABEL::EFKLABEL_SPRAYWATER,

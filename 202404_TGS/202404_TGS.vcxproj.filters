@@ -90,6 +90,9 @@
     <Filter Include="stencilshadow">
       <UniqueIdentifier>{d49e048e-3507-4b91-8671-e64951f03076}</UniqueIdentifier>
     </Filter>
+    <Filter Include="spline">
+      <UniqueIdentifier>{73b62fcf-2ec5-4f75-8e8d-02b969ec04f7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\ballast.cpp">
@@ -487,6 +490,9 @@
     </ClCompile>
     <ClCompile Include="Source\waterfield.cpp">
       <Filter>mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\spline.cpp">
+      <Filter>spline</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -894,6 +900,9 @@
     </ClInclude>
     <ClInclude Include="Source\waterfield.h">
       <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\spline.h">
+      <Filter>spline</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
