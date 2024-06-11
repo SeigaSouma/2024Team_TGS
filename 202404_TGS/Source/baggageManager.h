@@ -41,7 +41,7 @@ public:
 	CBaggage::SBaggageInfo GetBaggageInfo(int idx) { return m_BaggageInfo[idx]; }						// 荷物情報取得
 
 	// 生成
-	CBaggage* CreateBaggage(int idx);
+	CBaggage* CreateBaggage(CBaggage::TYPE idx);
 
 	// 入出力
 	void Save();	// セーブ

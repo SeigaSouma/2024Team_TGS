@@ -25,6 +25,8 @@ public:
 	enum TYPE
 	{
 		TYPE_CLOTH = 0,	// •z
+		TYPE_TMP_YMDHOUSE,
+		TYPE_TMP_FLOWER,
 		TYPE_MAX
 	};
 

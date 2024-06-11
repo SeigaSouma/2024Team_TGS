@@ -201,7 +201,7 @@ HRESULT CPlayer::Init()
 	ChangeTrickControl(DEBUG_NEW CPlayerControlTrick);
 
 	// ‰×•¨¶¬
-	m_pBaggage = CBaggageManager::GetInstance()->CreateBaggage(CBaggage::TYPE::TYPE_CLOTH);
+	m_pBaggage = CBaggageManager::GetInstance()->CreateBaggage(CBaggage::TYPE::TYPE_TMP_FLOWER);
 
 	// •Ší‚ÌˆÊ’u
 	CMotion* pMotion = GetMotion();
