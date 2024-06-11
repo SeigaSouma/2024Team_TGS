@@ -1692,7 +1692,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "data\\TEXTURE\\map_object\\1955473.jpg";
+    "TEXTURE\\map_object\\1955473.jpg";
    }
   }
   Material {
@@ -1701,7 +1701,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "data\\TEXTURE\\map_object\\583532.jpg";
+    "TEXTURE\\map_object\\583532.jpg";
    }
   }
   Material {
@@ -1719,7 +1719,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "TEXTURE\\map_object\\25164701.jpg";
+    "data\\TEXTURE\\map_object\\25164701.jpg";
    }
   }
   Material {
@@ -1728,7 +1728,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "TEXTURE\\map_object\\20220822a.png";
+    "data\\TEXTURE\\map_object\\20220822a.png";
    }
   }
  }

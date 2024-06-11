@@ -168,6 +168,7 @@
     <ClCompile Include="Source\2D_effect.cpp" />
     <ClCompile Include="Source\3D_effect.cpp" />
     <ClCompile Include="Source\baggage.cpp" />
+    <ClCompile Include="Source\baggageManager.cpp" />
     <ClCompile Include="Source\ballast.cpp" />
     <ClCompile Include="Source\battlestart.cpp" />
     <ClCompile Include="Source\battlestart_effect.cpp" />
@@ -279,6 +280,7 @@
     <ClCompile Include="Source\score.cpp" />
     <ClCompile Include="Source\shadow.cpp" />
     <ClCompile Include="Source\sound.cpp" />
+    <ClCompile Include="Source\spline.cpp" />
     <ClCompile Include="Source\stage.cpp" />
     <ClCompile Include="Source\stagecleartext.cpp" />
     <ClCompile Include="Source\stagename.cpp" />
@@ -308,6 +310,7 @@
     <ClInclude Include="Source\2D_effect.h" />
     <ClInclude Include="Source\3D_effect.h" />
     <ClInclude Include="Source\baggage.h" />
+    <ClInclude Include="Source\baggageManager.h" />
     <ClInclude Include="Source\ballast.h" />
     <ClInclude Include="Source\battlestart.h" />
     <ClInclude Include="Source\battlestart_effect.h" />
@@ -416,6 +419,7 @@
     <ClInclude Include="Source\score.h" />
     <ClInclude Include="Source\shadow.h" />
     <ClInclude Include="Source\sound.h" />
+    <ClInclude Include="Source\spline.h" />
     <ClInclude Include="Source\stage.h" />
     <ClInclude Include="Source\stagecleartext.h" />
     <ClInclude Include="Source\stagename.h" />

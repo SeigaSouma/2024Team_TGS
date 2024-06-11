@@ -44,9 +44,8 @@ CBaggage::CBaggage(int nPriority) : CObjectQuaternion(nPriority)
 	m_fWeight = 0.0f;	// èdÇ≥
 	m_bLand = false;	// íÖínîªíË
 	m_velorot = MyLib::Vector3(0.0f, 0.0f, 0.0f);
+	m_baggageInfo = {};
 	m_fDeviation = 0.0f;
-	m_fAddDeviation = 0.0f;
-	m_fDeviationWidth = 0.0f;
 }
 
 //==========================================================================
@@ -60,7 +59,7 @@ CBaggage::~CBaggage()
 //==========================================================================
 // ê∂ê¨èàóù
 //==========================================================================
-CBaggage *CBaggage::Create(TYPE type)
+CBaggage *CBaggage::Create(TYPE type, SBaggageInfo info)
 {
 	// ÉÅÉÇÉäÇÃämï€
 	CBaggage* pObj = DEBUG_NEW CBaggage;
@@ -69,8 +68,7 @@ CBaggage *CBaggage::Create(TYPE type)
 	{
 		// à¯êîèÓïÒ
 		pObj->m_type = type;
-		pObj->m_fAddDeviation = DEVIATION_SPEED;
-		pObj->m_fDeviationWidth = DEVIATION_WIDTH;
+		pObj->m_baggageInfo = info;
 
 		// èâä˙âªèàóù
 		pObj->Init();
@@ -91,8 +89,7 @@ HRESULT CBaggage::Init()
 	CObject::SetType(TYPE_OBJECTX);
 
 	// èâä˙âªèàóù
-	int typeID = static_cast<int>(m_type);
-	HRESULT hr = CObjectQuaternion::Init(MODEL[typeID]);
+	HRESULT hr = CObjectQuaternion::Init(m_baggageInfo.path);
 	if (FAILED(hr))
 	{
 		return E_FAIL;
@@ -200,9 +197,9 @@ void CBaggage::Update()
 	move.z += (0.0f - move.z) * 0.25f;
 
 	// Ç‘ÇÍê›íË
-	m_fDeviation += m_fAddDeviation;
+	m_fDeviation += m_baggageInfo.cycle;
 	UtilFunc::Transformation::RotNormalize(m_fDeviation);
-	pos.x += sinf(m_fDeviation) * m_fDeviationWidth * ((pos.y - GetOriginPosition().y) / 1000.0f);
+	pos.x += sinf(m_fDeviation) * m_baggageInfo.width * ((pos.y - GetOriginPosition().y) / 1000.0f);
 
 	// èÓïÒê›íË
 	SetPosition(pos);

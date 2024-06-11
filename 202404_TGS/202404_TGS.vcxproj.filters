@@ -12,9 +12,6 @@
     <Filter Include="Imgui">
       <UniqueIdentifier>{d130ff42-1fb1-4aa7-ab20-cdd97731dbbb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="mesh">
-      <UniqueIdentifier>{1f7adde7-2f38-4f5d-814f-5faf4199524b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="mode">
       <UniqueIdentifier>{8ed78e68-f3e7-41dc-9cc0-7b63cd77b384}</UniqueIdentifier>
     </Filter>
@@ -89,6 +86,12 @@
     </Filter>
     <Filter Include="stencilshadow">
       <UniqueIdentifier>{d49e048e-3507-4b91-8671-e64951f03076}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mesh">
+      <UniqueIdentifier>{1f7adde7-2f38-4f5d-814f-5faf4199524b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="spline">
+      <UniqueIdentifier>{73b62fcf-2ec5-4f75-8e8d-02b969ec04f7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -487,6 +490,12 @@
     </ClCompile>
     <ClCompile Include="Source\waterfield.cpp">
       <Filter>mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\baggageManager.cpp">
+      <Filter>baggage</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\spline.cpp">
+      <Filter>spline</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -894,6 +903,12 @@
     </ClInclude>
     <ClInclude Include="Source\waterfield.h">
       <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\baggageManager.h">
+      <Filter>baggage</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\spline.h">
+      <Filter>spline</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

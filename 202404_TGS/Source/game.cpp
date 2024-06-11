@@ -34,11 +34,14 @@
 #include "goalflag.h"
 #include "checkpoint.h"
 #include "map_obstacleManager.h"
+#include "baggageManager.h"
 #include "stencilshadow.h"
 
 #include "sample_obj3D.h"
 #include "course.h"
 #include "waterfield.h"
+
+#include "2D_Effect.h"
 
 //==========================================================================
 // 静的メンバ変数宣言
@@ -62,6 +65,7 @@ CGame::CGame()
 	m_fMaxRokOnDistance = 0.0f;		// ロックオンの最大距離
 	m_pEdit = nullptr;				// エディター
 	m_pObstacleManager = nullptr;	// 障害物マネージャ
+	m_pBaggageManager = nullptr;	// 荷物マネージャ
 	m_pCourse = nullptr;			// コースのオブジェクト
 }
 
@@ -133,6 +137,8 @@ HRESULT CGame::Init()
 	// モード別初期化処理
 	InitByMode();
 
+	// 荷物マネージャ
+	m_pBaggageManager = CBaggageManager::Create();
 
 	//**********************************
 	// プレイヤー
@@ -178,7 +184,6 @@ HRESULT CGame::Init()
 
 	// 障害物マネージャ
 	m_pObstacleManager = CMap_ObstacleManager::Create();
-
 
 	CMyEffekseer::GetInstance()->SetEffect(
 		CMyEffekseer::EFKLABEL::EFKLABEL_RIVER_SAMPLE,
@@ -275,6 +280,13 @@ void CGame::Uninit()
 		m_pObstacleManager = nullptr;
 	}
 
+	// 荷物マネージャ
+	if (m_pBaggageManager != nullptr)
+	{
+		m_pBaggageManager->Uninit();
+		m_pBaggageManager = nullptr;
+	}
+
 	// コース
 	m_pCourse = nullptr;
 
@@ -366,17 +378,16 @@ void CGame::Update()
 #endif
 
 
-	if (pInputKeyboard->GetTrigger(DIK_I))
+	static std::vector<MyLib::Vector3> posvec =
 	{
-		//**********************************
-		// プレイヤー
-		//**********************************
-		// キャラ生成
-		CPlayer* pPlayer = CPlayer::Create(0);
-		pPlayer->SetPosition(MyLib::Vector3(UtilFunc::Transformation::Random(-10, 10) * 100.0f, 10.0f, UtilFunc::Transformation::Random(-10, 10) * 100.0f));
-
-	}
-
+		{0.0f, 500.0f, 0.0f},
+		{400.0f, 500.0f, 500.0f},
+		{800.0f, 500.0f, -200.0f},
+		{1200.0f, 500.0f, 800.0f},
+		{1646.67651f, 500.000000f, -537.398621f },
+		{470.633606f, 500.000000f, -1170.61670f },
+		{-1103.68640f, 500.000000f, -572.269836f },
+	};
 
 	// シーンの更新
 	CScene::Update();
