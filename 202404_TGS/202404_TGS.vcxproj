@@ -209,6 +209,8 @@
     <ClCompile Include="Source\input_keyboard.cpp" />
     <ClCompile Include="Source\input_mouse.cpp" />
     <ClCompile Include="Source\instantfade.cpp" />
+    <ClCompile Include="Source\judgezone.cpp" />
+    <ClCompile Include="Source\judgezoneManager.cpp" />
     <ClCompile Include="Source\keyconfig.cpp" />
     <ClCompile Include="Source\keyconfig_gamepad.cpp" />
     <ClCompile Include="Source\light.cpp" />
@@ -229,6 +231,7 @@
     <ClCompile Include="Source\model.cpp" />
     <ClCompile Include="Source\motion.cpp" />
     <ClCompile Include="Source\multinumber.cpp" />
+    <ClCompile Include="Source\myassert.cpp" />
     <ClCompile Include="Source\MyEffekseer.cpp" />
     <ClCompile Include="Source\mylib.cpp" />
     <ClCompile Include="Source\number.cpp" />
@@ -353,6 +356,8 @@
     <ClInclude Include="Source\input_keyboard.h" />
     <ClInclude Include="Source\input_mouse.h" />
     <ClInclude Include="Source\instantfade.h" />
+    <ClInclude Include="Source\judgezone.h" />
+    <ClInclude Include="Source\judgezoneManager.h" />
     <ClInclude Include="Source\keyconfig.h" />
     <ClInclude Include="Source\keyconfig_gamepad.h" />
     <ClInclude Include="Source\light.h" />
@@ -373,6 +378,7 @@
     <ClInclude Include="Source\model.h" />
     <ClInclude Include="Source\motion.h" />
     <ClInclude Include="Source\multinumber.h" />
+    <ClInclude Include="Source\myassert.h" />
     <ClInclude Include="Source\MyEffekseer.h" />
     <ClInclude Include="Source\mylib.h" />
     <ClInclude Include="Source\number.h" />

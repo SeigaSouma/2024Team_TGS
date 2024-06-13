@@ -185,9 +185,9 @@ HRESULT CGame::Init()
 	// 障害物マネージャ
 	m_pObstacleManager = CMap_ObstacleManager::Create();
 
-	CMyEffekseer::GetInstance()->SetEffect(
+	/*CMyEffekseer::GetInstance()->SetEffect(
 		CMyEffekseer::EFKLABEL::EFKLABEL_RIVER_SAMPLE,
-		MyLib::Vector3(300.0f, 0.1f, 0.0f), MyLib::Vector3(0.0f, D3DX_PI, 0.0f), 0.0f, 30.0f, true);
+		MyLib::Vector3(300.0f, 0.1f, 0.0f), MyLib::Vector3(0.0f, D3DX_PI, 0.0f), 0.0f, 30.0f, true);*/
 
 	// コース作成
 	m_pCourse = CCourse::Create("data\\TEXT\\map\\course.bin");
@@ -376,18 +376,6 @@ void CGame::Update()
 	}
 
 #endif
-
-
-	static std::vector<MyLib::Vector3> posvec =
-	{
-		{0.0f, 500.0f, 0.0f},
-		{400.0f, 500.0f, 500.0f},
-		{800.0f, 500.0f, -200.0f},
-		{1200.0f, 500.0f, 800.0f},
-		{1646.67651f, 500.000000f, -537.398621f },
-		{470.633606f, 500.000000f, -1170.61670f },
-		{-1103.68640f, 500.000000f, -572.269836f },
-	};
 
 	// シーンの更新
 	CScene::Update();

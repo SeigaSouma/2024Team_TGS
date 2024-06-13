@@ -283,6 +283,9 @@ HRESULT CXLoad::Load(std::string file)
 	{
 		// —v‘fíœ
 		m_XFileInfo.erase(m_XFileInfo.end() - 1);
+
+		std::string error = "ƒ‚ƒfƒ‹“Ç‚İ‚İ¸”sI" + file;
+		MyAssert::CustomAssert(false, error);
 		return E_FAIL;
 	}
 
