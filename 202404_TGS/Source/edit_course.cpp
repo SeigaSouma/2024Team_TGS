@@ -10,6 +10,7 @@
 #include "calculation.h"
 #include "map_obstacle.h"
 #include "camera.h"
+#include "spline.h"
 
 //==========================================================================
 // 定数定義
@@ -81,6 +82,9 @@ void CEdit_Course::Update()
 
 	// トランスフォーム
 	Transform();
+
+
+
 }
 
 //==========================================================================
@@ -131,13 +135,11 @@ void CEdit_Course::ChangeLineNum()
 	ImGui::SameLine();
 	if (ImGui::ArrowButton("##left", ImGuiDir_Left))
 	{
-		pCourse->PopLineInfo();
 		pCourse->Reset();
 	}
 	ImGui::SameLine(0.0f);
 	if (ImGui::ArrowButton("##right", ImGuiDir_Right))
 	{
-		pCourse->PushLineInfo();
 		pCourse->Reset();
 
 		CCamera* pCamera = CManager::GetInstance()->GetCamera();
@@ -149,17 +151,17 @@ void CEdit_Course::ChangeLineNum()
 			pCamera->GetMtxView(),
 			pCamera->GetMtxProjection());
 
-		// 辺情報取得
-		std::vector<CCourse::LineInfo> vecInfo = pCourse->GetLineInfo();
-		int idx = vecInfo.size() - 1;
+		//// 辺情報取得
+		//std::vector<CCourse::LineInfo> vecInfo = pCourse->GetLineInfo();
+		//int idx = vecInfo.size() - 1;
 
-		vecInfo[idx].pos = pos;
-		vecInfo[idx].pos.y = 0.0f;
+		//vecInfo[idx].pos = pos;
+		//vecInfo[idx].pos.y = 0.0f;
 
-		pCourse->SetLineInfo(vecInfo);
+		//pCourse->SetLineInfo(vecInfo);
 	}
 	ImGui::SameLine();
-	ImGui::Text("%d", pCourse->GetLineInfo().size());
+	ImGui::Text("%d", pCourse->GetVecPosition().size());
 }
 
 //==========================================================================
@@ -171,7 +173,7 @@ void CEdit_Course::SelectLine()
 	if (pCourse == nullptr) return;
 
 	// 辺情報取得
-	std::vector<CCourse::LineInfo> vecInfo = pCourse->GetLineInfo();
+	std::vector<MyLib::Vector3> vecSegmentPos = pCourse->GetVecPosition();
 	MyLib::Vector3 coursepos = pCourse->GetPosition();
 
 	// マウス情報
@@ -193,14 +195,14 @@ void CEdit_Course::SelectLine()
 		m_bEdit = false;
 
 		int i = 0;
-		for (const auto& info : vecInfo)
+		for (const auto& vtxpos : vecSegmentPos)
 		{
 			// マトリックス初期化
 			mtx.Identity();
 			mtxTrans.Identity();
 
 			// 位置情報反映
-			MyLib::Vector3 transpos = info.pos + coursepos;
+			MyLib::Vector3 transpos = vtxpos + coursepos;
 			mtxTrans.Translation(transpos);
 			mtx.Multiply(mtx, mtxTrans);
 
@@ -219,7 +221,7 @@ void CEdit_Course::SelectLine()
 		}
 
 		// 色リセット
-		for (int i = 0; i < vecInfo.size(); i++)
+		for (int i = 0; i < vecSegmentPos.size(); i++)
 		{
 			CCollisionLine_Box* pBox = pCourse->GetCollisionLineBox(i);
 			if (pBox == nullptr) continue;
@@ -240,8 +242,7 @@ void CEdit_Course::DragLine()
 	if (!m_bEdit) return;
 
 	// 辺情報取得
-	std::vector<CCourse::LineInfo> vecInfo = pCourse->GetLineInfo();
-	CCourse::LineInfo info = vecInfo[m_nEditIdx];
+	MyLib::Vector3 segmentPos = pCourse->GetVecPosition(m_nEditIdx);
 	MyLib::Vector3 coursepos = pCourse->GetPosition();
 
 	// マウス情報
@@ -249,13 +250,9 @@ void CEdit_Course::DragLine()
 	MyLib::Vector3 mouseRay = pMouse->GetRay();
 	MyLib::Vector3 mousePos = pMouse->GetNearPosition();
 
-	MyLib::AABB aabb = MyLib::AABB(-25.0f, 25.0f);
+	MyLib::AABB aabb = MyLib::AABB(-50.0f, 50.0f);
 	float time = 0.0f;
 	MyLib::Matrix mtx, mtxTrans;
-
-
-	// 設定する位置
-	MyLib::Vector3 setPosition = info.pos;
 
 
 	if (!m_bHoverWindow &&
@@ -267,7 +264,7 @@ void CEdit_Course::DragLine()
 		mtxTrans.Identity();
 
 		// 位置情報反映
-		MyLib::Vector3 transpos = info.pos + coursepos;
+		MyLib::Vector3 transpos = segmentPos + coursepos;
 		mtxTrans.Translation(transpos);
 		mtx.Multiply(mtx, mtxTrans);
 
@@ -285,6 +282,7 @@ void CEdit_Course::DragLine()
 		m_bDrag = false;
 	}
 
+	// ドラッグ中
 	if (m_bDrag)
 	{
 		CCamera* pCamera = CManager::GetInstance()->GetCamera();
@@ -292,15 +290,12 @@ void CEdit_Course::DragLine()
 
 		// 再移動中
 		MyLib::Vector3 diffpos = pMouse->GetWorldDiffPosition();
-		setPosition.x += diffpos.x;
-		setPosition.z += diffpos.z;
+		segmentPos.x += diffpos.x;
+		segmentPos.z += diffpos.z;
 	}
 
-	// 位置更新
-	info.pos = setPosition;
-
-	// ライン情報設定
-	pCourse->SetLineInfo(m_nEditIdx, info);
+	// 頂点データ設定
+	pCourse->SetVecPosition(m_nEditIdx, segmentPos);
 }
 
 //==========================================================================
@@ -312,10 +307,10 @@ void CEdit_Course::Transform()
 	if (pCourse == nullptr) return;
 
 	// 辺情報取得
-	std::vector<CCourse::LineInfo> vecInfo = pCourse->GetLineInfo();
+	std::vector<MyLib::Vector3> vecSegmentPos = pCourse->GetVecPosition();
 	if (m_bEdit)
 	{
-		for (int i = 0; i < vecInfo.size(); i++)
+		for (int i = 0; i < vecSegmentPos.size(); i++)
 		{
 			CCollisionLine_Box* pBox = pCourse->GetCollisionLineBox(i);
 			if (pBox == nullptr) continue;
@@ -326,7 +321,7 @@ void CEdit_Course::Transform()
 	}
 
 	// 操作する辺の情報
-	CCourse::LineInfo editInfo = vecInfo[m_nEditIdx];
+	MyLib::Vector3 editpos = pCourse->GetVecPosition(m_nEditIdx);
 
 	ImGui::Dummy(ImVec2(0.0f, 10.0f));
 	if (ImGui::TreeNode("Transform"))
@@ -346,18 +341,10 @@ void CEdit_Course::Transform()
 		ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
 		// リセット
-		if (ImGui::Button("ALL RESET")) {
-			editInfo.pos = 0.0f;
-			editInfo.rot = 0.0f;
+		if (ImGui::Button("RESET")) {
+			editpos = 0.0f;
 		}
-		ImGui::SameLine();
-		if (ImGui::Button("POS RESET")) {
-			editInfo.pos = 0.0f;
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("ROT RESET")) {
-			editInfo.rot = 0.0f;
-		}
+		
 
 		ImGui::Dummy(ImVec2(0.0f, 10.0f));
 		//=============================
@@ -370,7 +357,7 @@ void CEdit_Course::Transform()
 		ImGui::PushID(0); // ウィジェットごとに異なるIDを割り当てる
 		{
 			ImGui::SetNextItemWidth(windowWidth);
-			ImGui::DragFloat("x", &editInfo.pos.x, POS_MOVE, 0.0f, 0.0f, "%.2f");
+			ImGui::DragFloat("x", &editpos.x, POS_MOVE, 0.0f, 0.0f, "%.2f");
 			ImGui::SameLine();
 		}
 		ImGui::PopID();
@@ -379,7 +366,7 @@ void CEdit_Course::Transform()
 		ImGui::PushID(0); // ウィジェットごとに異なるIDを割り当てる
 		{
 			ImGui::SetNextItemWidth(windowWidth);
-			ImGui::DragFloat("y", &editInfo.pos.y, POS_MOVE, 0.0f, 0.0f, "%.2f");
+			ImGui::DragFloat("y", &editpos.y, POS_MOVE, 0.0f, 0.0f, "%.2f");
 			ImGui::SameLine();
 		}
 		ImGui::PopID();
@@ -388,67 +375,67 @@ void CEdit_Course::Transform()
 		ImGui::PushID(0); // ウィジェットごとに異なるIDを割り当てる
 		{
 			ImGui::SetNextItemWidth(windowWidth);
-			ImGui::DragFloat("z", &editInfo.pos.z, POS_MOVE, 0.0f, 0.0f, "%.2f");
+			ImGui::DragFloat("z", &editpos.z, POS_MOVE, 0.0f, 0.0f, "%.2f");
 		}
 		ImGui::PopID();
 
 
-		//=============================
-		// 向き設定
-		//=============================
-		ImGui::Text("rot");
-		ImGui::SameLine();
+		////=============================
+		//// 向き設定
+		////=============================
+		//ImGui::Text("rot");
+		//ImGui::SameLine();
 
-		// X
-		ImGui::PushID(1); // ウィジェットごとに異なるIDを割り当てる
-		{
-			ImGui::SetNextItemWidth(windowWidth);
-			ImGui::DragFloat("x", &editInfo.rot.x, ROT_MOVE, 0.0f, 0.0f, "%.2f");
-			ImGui::SameLine();
-		}
-		ImGui::PopID();
+		//// X
+		//ImGui::PushID(1); // ウィジェットごとに異なるIDを割り当てる
+		//{
+		//	ImGui::SetNextItemWidth(windowWidth);
+		//	ImGui::DragFloat("x", &editInfo.rot.x, ROT_MOVE, 0.0f, 0.0f, "%.2f");
+		//	ImGui::SameLine();
+		//}
+		//ImGui::PopID();
 
-		// Y
-		ImGui::PushID(1); // ウィジェットごとに異なるIDを割り当てる
-		{
-			ImGui::SetNextItemWidth(windowWidth);
-			ImGui::DragFloat("y", &editInfo.rot.y, ROT_MOVE, 0.0f, 0.0f, "%.2f");
-			ImGui::SameLine();
-		}
-		ImGui::PopID();
+		//// Y
+		//ImGui::PushID(1); // ウィジェットごとに異なるIDを割り当てる
+		//{
+		//	ImGui::SetNextItemWidth(windowWidth);
+		//	ImGui::DragFloat("y", &editInfo.rot.y, ROT_MOVE, 0.0f, 0.0f, "%.2f");
+		//	ImGui::SameLine();
+		//}
+		//ImGui::PopID();
 
-		// Z
-		ImGui::PushID(1); // ウィジェットごとに異なるIDを割り当てる
-		{
-			ImGui::SetNextItemWidth(windowWidth);
-			ImGui::DragFloat("z", &editInfo.rot.z, ROT_MOVE, 0.0f, 0.0f, "%.2f");
-		}
-		ImGui::PopID();
-
-
+		//// Z
+		//ImGui::PushID(1); // ウィジェットごとに異なるIDを割り当てる
+		//{
+		//	ImGui::SetNextItemWidth(windowWidth);
+		//	ImGui::DragFloat("z", &editInfo.rot.z, ROT_MOVE, 0.0f, 0.0f, "%.2f");
+		//}
+		//ImGui::PopID();
 
 
-		//=============================
-		// 幅設定
-		//=============================
-		ImGui::Text("width");
-		ImGui::SameLine();
 
-		// X
-		ImGui::PushID(2); // ウィジェットごとに異なるIDを割り当てる
-		{
-			ImGui::SetNextItemWidth(windowWidth);
-			ImGui::DragFloat("width", &editInfo.width, POS_MOVE, 0.0f, 0.0f, "%.2f");
-			ImGui::SameLine();
-		}
-		ImGui::PopID();
+
+		////=============================
+		//// 幅設定
+		////=============================
+		//ImGui::Text("width");
+		//ImGui::SameLine();
+
+		//// X
+		//ImGui::PushID(2); // ウィジェットごとに異なるIDを割り当てる
+		//{
+		//	ImGui::SetNextItemWidth(windowWidth);
+		//	ImGui::DragFloat("width", &editInfo.width, POS_MOVE, 0.0f, 0.0f, "%.2f");
+		//	ImGui::SameLine();
+		//}
+		//ImGui::PopID();
 
 
 		ImGui::TreePop();
 	}
 
 	// ライン情報設定
-	pCourse->SetLineInfo(m_nEditIdx, editInfo);
+	pCourse->SetVecPosition(m_nEditIdx, editpos);
 }
 
 

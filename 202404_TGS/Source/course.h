@@ -51,15 +51,19 @@ public:
 	virtual void SetVtx();
 
 	void Reset();	// リセット
+	void CalVtxPosition();	// 各頂点計算
 
 	// 情報取得・設定
-	std::vector<LineInfo> GetLineInfo() { return m_LineInfo; };						// 辺情報取得
-	LineInfo GetLineInfo(int idx);													// 辺情報取得
-	void SetLineInfo(const std::vector<LineInfo>& vecinfo) { m_LineInfo = vecinfo; }// 辺情報設定
-	void SetLineInfo(int idx, const LineInfo& info);								// 辺情報設定
-	void PushLineInfo();															// 辺情報追加
-	void PopLineInfo();																// 辺情報削除
 	CCollisionLine_Box* GetCollisionLineBox(int idx);								// 当たり判定ボックス取得
+	std::vector<MyLib::Vector3> GetVecPosition() { return m_vecSegmentPosition; }	// 基点の位置取得
+	MyLib::Vector3 GetVecPosition(int idx);											// 基点の位置取得
+	void SetVecPosition(const std::vector<MyLib::Vector3>& vecpos) { m_vecSegmentPosition = vecpos; }
+	void SetVecPosition(int idx, const MyLib::Vector3& pos);						// 基点の位置設定
+
+	std::vector<MyLib::Vector3> GetVecVtxPosition() { return m_vecVtxPosition; }	// 各頂点の位置取得
+	MyLib::Vector3 GetVecVtxPosition(int idx);										// 各頂点の位置取得
+	void SetVecVtxPosition(const std::vector<MyLib::Vector3>& vecpos) { m_vecVtxPosition = vecpos; }
+	void SetVecVtxPosition(int idx, const MyLib::Vector3& pos);						// 各頂点の位置設定
 
 	// ファイル操作
 	void Save();	// セーブ
@@ -74,7 +78,8 @@ private:
 
 	// メンバ変数
 	std::string m_FileName;	// ファイル名
-	std::vector<LineInfo> m_LineInfo;	// 辺情報
+	std::vector<MyLib::Vector3> m_vecSegmentPosition;	// 基点の位置
+	std::vector<MyLib::Vector3> m_vecVtxPosition;		// 各頂点の位置
 	std::vector<CCollisionLine_Box*> m_pCollisionLineBox;	// 当たり判定ボックス
 
 };

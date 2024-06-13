@@ -11,6 +11,7 @@
 #include "particle.h"
 #include "3D_effect.h"
 #include "camera.h"
+#include "spline.h"
 
 //==========================================================================
 // 定数定義
@@ -18,6 +19,8 @@
 namespace
 {
 	const int WIDTH_BLOCK = 2;
+	const float WIDTH = 200.0f;
+	const float CREATEDISTANCE = 50.0f;	// 生成間隔
 }
 
 //==========================================================================
@@ -26,7 +29,8 @@ namespace
 CCourse::CCourse(int nPriority, const LAYER layer) : CObject3DMesh(nPriority, layer)
 {
 	m_pCollisionLineBox.clear();	// 当たり判定ボックス
-
+	m_vecSegmentPosition.clear();	// 基点の位置
+	m_vecVtxPosition.clear();		// 各頂点の位置
 }
 
 //==========================================================================
@@ -73,25 +77,11 @@ HRESULT CCourse::Init()
 	// 種類設定
 	SetType(CObject::TYPE::TYPE_OBJECT3D);
 
-	// 各種変数初期化
-	SetPosition(MyLib::Vector3(0.0f, 100.0f, 0.0f));				// 位置
-	SetWidthBlock(1);		// 幅分割
-	SetHeightBlock(static_cast<int>(m_LineInfo.size()) - 1);	// 縦分割
-	SetWidthLen(0.0f);		// 縦長さ
-	SetHeightLen(0.0f);		// 横長さ
-
 	// オブジェクト3Dメッシュの初期化処理
-	hr = CObject3DMesh::Init(CObject3DMesh::TYPE_FIELD);
-
-	if (FAILED(hr))
-	{// 失敗していたら
-		return E_FAIL;
-	}
+	Reset();
 
 	// 頂点情報設定
 	SetVtx();
-
-	Reset();
 
 	return S_OK;
 }
@@ -105,6 +95,64 @@ void CCourse::Uninit()
 
 	// 終了処理
 	CObject3DMesh::Uninit();
+}
+
+//==========================================================================
+// 各頂点計算
+//==========================================================================
+void CCourse::CalVtxPosition()
+{
+	
+	// 最初と最後、逆方向に少し出す
+
+
+	// セグメントの長さを計算
+	int segmentSize = m_vecSegmentPosition.size();
+	std::vector<float> vecLength(segmentSize);
+
+	for (int i = 0; i < segmentSize; ++i)
+	{
+		// 次回のインデックス(ループ)
+		int next = (i + 1) % segmentSize;
+
+		if (next == 0)
+		{
+			vecLength[i] = 10.0f;
+			break;
+		}
+
+		// 点同士の距離
+		vecLength[i] = m_vecSegmentPosition[i].Distance(m_vecSegmentPosition[next]);
+	}
+
+
+	// 頂点情報クリア
+	m_vecVtxPosition.clear();
+
+	// 各頂点格納
+	float toataldistance = 0.0f;
+	for (int i = 0; i < segmentSize; i++)
+	{
+		float distance = 0.0f;
+
+		while (1)
+		{
+			distance += CREATEDISTANCE;
+
+			if (distance >= vecLength[i])
+			{
+				toataldistance += CREATEDISTANCE - (distance - vecLength[i]);
+
+				distance = vecLength[i];
+
+				m_vecVtxPosition.push_back(MySpline::GetSplinePosition_NonLoop(m_vecSegmentPosition, toataldistance, 20.0f));
+				break;
+			}
+
+			toataldistance += CREATEDISTANCE;
+			m_vecVtxPosition.push_back(MySpline::GetSplinePosition_NonLoop(m_vecSegmentPosition, toataldistance));
+		}
+	}
 }
 
 //==========================================================================
@@ -128,10 +176,14 @@ void CCourse::Reset()
 	// 種類設定
 	SetType(CObject::TYPE::TYPE_OBJECT3D);
 
+
+	// 各頂点計算
+	CalVtxPosition();
+
 	// 各種変数初期化
 	SetPosition(MyLib::Vector3(0.0f, 100.0f, 0.0f));				// 位置
 	SetWidthBlock(1);		// 幅分割
-	SetHeightBlock(static_cast<int>(m_LineInfo.size()) - 1);	// 縦分割
+	SetHeightBlock(static_cast<int>(m_vecVtxPosition.size()) - 1);	// 縦分割
 	SetWidthLen(0.0f);		// 縦長さ
 	SetHeightLen(0.0f);		// 横長さ
 
@@ -149,7 +201,7 @@ void CCourse::Reset()
 	m_pCollisionLineBox.clear();
 
 	MyLib::AABB aabb(-25.0f, 25.0f);
-	for (const auto& line : m_LineInfo)
+	for (const auto& vtx : m_vecSegmentPosition)
 	{
 		m_pCollisionLineBox.push_back(CCollisionLine_Box::Create(aabb, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f)));
 	}
@@ -176,62 +228,82 @@ void CCourse::SetVtxPosition()
 	MyLib::Matrix mtxParent, mtxTrans, mtxRotate;
 	MyLib::Matrix mtxLeft, mtxRight;
 
-
 	MyLib::Vector3* pVtxPos = GetVtxPos();
+	MyLib::Vector3 rot;
 
-	for (int y = 0; y < static_cast<int>(m_LineInfo.size()); y++)
+	for (int y = 0; y < static_cast<int>(m_vecVtxPosition.size()); y++)
 	{
 		int idx = (WIDTH_BLOCK * y);
 		int nextidx = (WIDTH_BLOCK * y) + 1;
-
-		// 今回の情報
-		LineInfo info = m_LineInfo[y];
 
 		mtxParent.Identity();
 		mtxLeft.Identity();
 		mtxRight.Identity();
 
-		// 位置反映
-		mtxTrans.Translation(info.pos);
-		mtxParent.Multiply(mtxParent, mtxTrans);
-
 		// 向き反映
-		mtxRotate.RotationYawPitchRoll(info.rot.y, info.rot.x, info.rot.z);
+		int next = (y + 1) % static_cast<int>(m_vecVtxPosition.size());
+
+		rot.y = m_vecVtxPosition[next].AngleXZ(m_vecVtxPosition[y]);
+		UtilFunc::Transformation::RotNormalize(rot.y);
+
+		ImGui::Text("x:%f y:%f z:%f, rot.y:%f", m_vecVtxPosition[y].x, m_vecVtxPosition[y].y, m_vecVtxPosition[y].z, rot.y);
+
+		mtxRotate.RotationYawPitchRoll(rot.y, rot.x, rot.z);
 		mtxParent.Multiply(mtxParent, mtxRotate);
 
+		// 位置反映
+		mtxTrans.Translation(m_vecVtxPosition[y]);
+		mtxParent.Multiply(mtxParent, mtxTrans);
+
+
+		
+
 		// オフセット反映
-		offset = MyLib::Vector3(info.width, 0.0f, 0.0f);
+		offset = MyLib::Vector3(WIDTH, 0.0f, 0.0f);
 		mtxLeft.Translation(offset);
 
-		offset = MyLib::Vector3(-info.width, 0.0f, 0.0f);
+		offset = MyLib::Vector3(-WIDTH, 0.0f, 0.0f);
 		mtxRight.Translation(offset);
 
 		mtxLeft.Multiply(mtxLeft, mtxParent);
 		mtxRight.Multiply(mtxRight, mtxParent);
+
+		//mtxLeft.Multiply(mtxLeft, mtxRotate);
 
 
 		// 頂点座標代入
 		pVtxPos[idx] = mtxLeft.GetWorldPosition();
 		pVtxPos[nextidx] = mtxRight.GetWorldPosition();
 
-		MyLib::Vector3 setpos = (pVtxPos[idx] + pVtxPos[nextidx]) * 0.5f;
-		setpos.y += GetPosition().y;
+		CEffect3D::Create(
+			m_vecVtxPosition[y] + GetPosition(),
+			MyLib::Vector3(0.0f, 0.0f, 0.0f),
+			D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f),
+			20.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
 
-		m_pCollisionLineBox[y]->SetPosition(setpos);
-
-
-		/*CEffect3D::Create(
-			pVtxPos[idx] + MyLib::Vector3(0.0f, setpos.y, 0.0f),
+		CEffect3D::Create(
+			pVtxPos[idx] + GetPosition(),
 			MyLib::Vector3(0.0f, 0.0f, 0.0f),
 			D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f),
 			20.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
 
 		CEffect3D::Create(
-			pVtxPos[nextidx] + MyLib::Vector3(0.0f, setpos.y, 0.0f),
+			pVtxPos[nextidx] + GetPosition(),
 			MyLib::Vector3(0.0f, 0.0f, 0.0f),
 			D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f),
-			20.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);*/
+			20.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+
 	}
+
+	int i = 0;
+	MyLib::Vector3 fieldpos = GetPosition();
+	for (const auto& vtx : m_vecSegmentPosition)
+	{
+		MyLib::Vector3 setpos = vtx + fieldpos;
+		m_pCollisionLineBox[i]->SetPosition(setpos);
+		i++;
+	}
+
 }
 
 //==========================================================================
@@ -269,7 +341,7 @@ void CCourse::SetVtx()
 	float fHeightLen = GetHeightLen();
 	int vtxNum = GetNumVertex();
 
-	int heightBlock = static_cast<int>(m_LineInfo.size());
+	int heightBlock = static_cast<int>(m_vecVtxPosition.size());
 
 	for (int nCntHeight = 0; nCntHeight < nHeight + 1; nCntHeight++)
 	{// 縦の分割分繰り返す
@@ -359,26 +431,28 @@ HRESULT CCourse::Load(const std::string& file)
 	std::ifstream File(file, std::ios::binary);
 	if (!File.is_open()) {
 
-		LineInfo info;
-		info.pos = MyLib::Vector3(0.0f, 0.0f, 0.0f);
-		info.rot = 0.0f;
-		info.width = 200.0f;
+		// 例外処理
 
-		m_LineInfo.push_back(info);
-
-		info.pos = MyLib::Vector3(0.0f, 0.0f, 200.0f);
-		m_LineInfo.push_back(info);
+		m_vecSegmentPosition.push_back({ 0.0f, 0.0f, -10.0f });
+		m_vecSegmentPosition.push_back({ 0.0f, 0.0f, 0.0f });
+		m_vecSegmentPosition.push_back({ 0.0f, 0.0f, 500.0f });
+		m_vecSegmentPosition.push_back({ 0.0f, 0.0f, 1000.0f });
+		m_vecSegmentPosition.push_back({ 0.0f, 0.0f, 1800.0f });
+		m_vecSegmentPosition.push_back({ 0.0f, 0.0f, 1810.0f });
 
 		MyLib::AABB aabb(-25.0f, 25.0f);
-		m_pCollisionLineBox.push_back(CCollisionLine_Box::Create(aabb, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f)));
-		m_pCollisionLineBox.push_back(CCollisionLine_Box::Create(aabb, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f)));
+
+		for (int i = 0; i < static_cast<int>(m_vecSegmentPosition.size()); i++)
+		{
+			m_pCollisionLineBox.push_back(CCollisionLine_Box::Create(aabb, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f)));
+		}
 
 		Save();
 		return E_FAIL;
 	}
 
 	// 構造体のサイズを取得
-	std::streamsize structSize = sizeof(LineInfo);
+	std::streamsize structSize = sizeof(MyLib::Vector3);
 	
 	// ファイルの末尾までデータを読み込む
 	File.seekg(0, std::ios::end);
@@ -389,10 +463,10 @@ HRESULT CCourse::Load(const std::string& file)
 	size_t numVectors = fileSize / structSize;
 	
 	// ベクトルの配列を用意
-	m_LineInfo.resize(numVectors);
+	m_vecSegmentPosition.resize(numVectors);
 	
 	// ファイルからデータを読み込む
-	File.read(reinterpret_cast<char*>(m_LineInfo.data()), fileSize);
+	File.read(reinterpret_cast<char*>(m_vecSegmentPosition.data()), fileSize);
 
 	// ファイルを閉じる
 	File.close();
@@ -412,30 +486,10 @@ void CCourse::Save()
 	}
 
 	// データをバイナリファイルに書き出す
-	File.write(reinterpret_cast<char*>(m_LineInfo.data()), m_LineInfo.size() * sizeof(LineInfo));
+	File.write(reinterpret_cast<char*>(m_vecSegmentPosition.data()), m_vecSegmentPosition.size() * sizeof(MyLib::Vector3));
 		
 	// ファイルを閉じる
 	File.close();
-}
-
-//==========================================================================
-// 辺情報取得
-//==========================================================================
-CCourse::LineInfo CCourse::GetLineInfo(int idx)
-{
-	if (static_cast<int>(m_LineInfo.size()) <= idx) return LineInfo();
-
-	return m_LineInfo[idx];
-}
-
-//==========================================================================
-// 辺情報設定
-//==========================================================================
-void CCourse::SetLineInfo(int idx, const LineInfo& info)
-{
-	if (static_cast<int>(m_LineInfo.size()) <= idx) return;
-
-	m_LineInfo[idx] = info;
 }
 
 //==========================================================================
@@ -449,20 +503,41 @@ CCollisionLine_Box* CCourse::GetCollisionLineBox(int idx)
 }
 
 //==========================================================================
-// 辺情報追加
+// 基点の位置取得
 //==========================================================================
-void CCourse::PushLineInfo()
+MyLib::Vector3 CCourse::GetVecPosition(int idx)
 {
-	m_LineInfo.push_back(LineInfo(0.0f, 0.0f, 200.0f));
+	if (static_cast<int>(m_vecSegmentPosition.size()) <= idx) return MyLib::Vector3();
+
+	return m_vecSegmentPosition[idx];
 }
 
 //==========================================================================
-// 辺情報削除
+// 基点の位置設定
 //==========================================================================
-void CCourse::PopLineInfo()
+void CCourse::SetVecPosition(int idx, const MyLib::Vector3& pos)
 {
-	if (static_cast<int>(m_LineInfo.size()) >= 1)
-	{
-		m_LineInfo.pop_back();
-	}
+	if (static_cast<int>(m_vecSegmentPosition.size()) <= idx) return;
+
+	m_vecSegmentPosition[idx] = pos;
+}
+
+//==========================================================================
+// 各頂点の位置取得
+//==========================================================================
+MyLib::Vector3 CCourse::GetVecVtxPosition(int idx)
+{
+	if (static_cast<int>(m_vecVtxPosition.size()) <= idx) return MyLib::Vector3();
+
+	return m_vecVtxPosition[idx];
+}
+
+//==========================================================================
+// 各頂点の位置設定
+//==========================================================================
+void CCourse::SetVecVtxPosition(int idx, const MyLib::Vector3& pos)
+{
+	if (static_cast<int>(m_vecVtxPosition.size()) <= idx) return;
+
+	m_vecVtxPosition[idx] = pos;
 }
