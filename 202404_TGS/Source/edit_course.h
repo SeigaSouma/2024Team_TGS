@@ -42,11 +42,12 @@ private:
 	};
 
 	// メンバ関数
-	void FileControl();	// ファイル操作
-	void SelectLine();	// ライン選択
-	void DragLine();	// ライン掴み
-	void Transform();	// トランスフォーム
+	void FileControl();		// ファイル操作
+	void SelectLine();		// ライン選択
+	void DragLine();		// ライン掴み
+	void Transform();		// トランスフォーム
 	void ChangeLineNum();	// 辺の数変更
+	void TransformBeginEnd();	// 最初と最後変形
 
 	LineData m_lineData;	// 辺情報
 	int m_nEditIdx;			// 操作するインデックス番号

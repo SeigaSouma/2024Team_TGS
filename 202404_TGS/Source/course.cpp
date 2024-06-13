@@ -104,7 +104,26 @@ void CCourse::CalVtxPosition()
 {
 	
 	// 最初と最後、逆方向に少し出す
+	MyLib::Vector3 begin, end;
+	float angle = 0.0f;
 
+	// 最初
+	angle = m_vecSegmentPosition[1].AngleXZ(m_vecSegmentPosition[0]);
+	begin = MyLib::Vector3(
+		m_vecSegmentPosition[0].x + sinf(angle) * -10.0f,
+		m_vecSegmentPosition[0].y,
+		m_vecSegmentPosition[0].z + cosf(angle) * -10.0f);
+
+	// 最後
+	int endIdx = m_vecSegmentPosition.size() - 1;
+	angle = m_vecSegmentPosition[endIdx].AngleXZ(m_vecSegmentPosition[endIdx - 1]);
+	end = MyLib::Vector3(
+		m_vecSegmentPosition[endIdx].x + sinf(angle) * 10.0f,
+		m_vecSegmentPosition[endIdx].y,
+		m_vecSegmentPosition[endIdx].z + cosf(angle) * 10.0f);
+
+	m_vecSegmentPosition.insert(m_vecSegmentPosition.begin(), begin);
+	m_vecSegmentPosition.push_back(end);
 
 	// セグメントの長さを計算
 	int segmentSize = m_vecSegmentPosition.size();
@@ -432,13 +451,10 @@ HRESULT CCourse::Load(const std::string& file)
 	if (!File.is_open()) {
 
 		// 例外処理
-
-		m_vecSegmentPosition.push_back({ 0.0f, 0.0f, -10.0f });
 		m_vecSegmentPosition.push_back({ 0.0f, 0.0f, 0.0f });
 		m_vecSegmentPosition.push_back({ 0.0f, 0.0f, 500.0f });
 		m_vecSegmentPosition.push_back({ 0.0f, 0.0f, 1000.0f });
 		m_vecSegmentPosition.push_back({ 0.0f, 0.0f, 1800.0f });
-		m_vecSegmentPosition.push_back({ 0.0f, 0.0f, 1810.0f });
 
 		MyLib::AABB aabb(-25.0f, 25.0f);
 

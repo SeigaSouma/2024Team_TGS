@@ -83,7 +83,8 @@ void CEdit_Course::Update()
 	// トランスフォーム
 	Transform();
 
-
+	// 最初と最後変形
+	TransformBeginEnd();
 
 }
 
@@ -197,6 +198,11 @@ void CEdit_Course::SelectLine()
 		int i = 0;
 		for (const auto& vtxpos : vecSegmentPos)
 		{
+			if (i == 0 || i == vecSegmentPos.size() - 1)
+			{
+				i++;
+				continue;
+			}
 			// マトリックス初期化
 			mtx.Identity();
 			mtxTrans.Identity();
@@ -438,4 +444,39 @@ void CEdit_Course::Transform()
 	pCourse->SetVecPosition(m_nEditIdx, editpos);
 }
 
+//==========================================================================
+// 最初と最後変形
+//==========================================================================
+void CEdit_Course::TransformBeginEnd()
+{
+	CCourse* pCourse = CGame::GetInstance()->GetCourse();
+	if (pCourse == nullptr) return;
+
+	// 辺情報取得
+	std::vector<MyLib::Vector3> segmentPos = pCourse->GetVecPosition();
+
+	// 最初と最後、逆方向に少し出す
+	MyLib::Vector3 begin, end;
+	float angle = 0.0f;
+
+	// 最初
+	angle = segmentPos[1].AngleXZ(segmentPos[0]);
+	begin = MyLib::Vector3(
+		segmentPos[1].x + sinf(angle) * -10.0f,
+		segmentPos[1].y,
+		segmentPos[1].z + cosf(angle) * -10.0f);
+
+	// 最後
+	int endIdx = (segmentPos.size() - 1) - 1;
+	angle = segmentPos[endIdx].AngleXZ(segmentPos[endIdx - 1]);
+	end = MyLib::Vector3(
+		segmentPos[endIdx].x + sinf(angle) * 10.0f,
+		segmentPos[endIdx].y,
+		segmentPos[endIdx].z + cosf(angle) * 10.0f);
+
+	segmentPos[0] = begin;
+	segmentPos[(segmentPos.size() - 1)] = end;
+
+	pCourse->SetVecPosition(segmentPos);
+}
 
