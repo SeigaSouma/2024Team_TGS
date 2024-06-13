@@ -51,6 +51,7 @@ public:
 	virtual void SetVtx();
 
 	void Reset();	// リセット
+	void ReCreateVtx();	// リセット
 	void CalVtxPosition();	// 各頂点計算
 
 	// 情報取得・設定
