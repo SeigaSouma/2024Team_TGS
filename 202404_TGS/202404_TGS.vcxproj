@@ -231,6 +231,7 @@
     <ClCompile Include="Source\model.cpp" />
     <ClCompile Include="Source\motion.cpp" />
     <ClCompile Include="Source\multinumber.cpp" />
+    <ClCompile Include="Source\myassert.cpp" />
     <ClCompile Include="Source\MyEffekseer.cpp" />
     <ClCompile Include="Source\mylib.cpp" />
     <ClCompile Include="Source\number.cpp" />
@@ -377,6 +378,7 @@
     <ClInclude Include="Source\model.h" />
     <ClInclude Include="Source\motion.h" />
     <ClInclude Include="Source\multinumber.h" />
+    <ClInclude Include="Source\myassert.h" />
     <ClInclude Include="Source\MyEffekseer.h" />
     <ClInclude Include="Source\mylib.h" />
     <ClInclude Include="Source\number.h" />

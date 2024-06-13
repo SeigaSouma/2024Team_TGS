@@ -16,10 +16,10 @@
 namespace MyAssert
 {
 	/**
-	@brief	セグメントの長さ計算（ループ）
-	@param	posvec		[in]	全ての地点(vector)
-	@param	pVecLength	[inout]	各セグメントの長さ
-	@return	セグメントの長さ
+	@brief	エラー表示
+	@param	frag	[in]	フラグ
+	@param	message	[in]	エラーメッセージ
+	@return	void
 	*/
 	inline void CustomAssert(bool frag, const std::string message) 
 	{

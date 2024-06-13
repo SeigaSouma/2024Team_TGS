@@ -102,7 +102,7 @@ void CCourse::Uninit()
 //==========================================================================
 void CCourse::CalVtxPosition()
 {
-	
+
 	// Å‰‚ÆÅŒãA‹t•ûŒü‚É­‚µo‚·
 	MyLib::Vector3 begin, end;
 	float angle = 0.0f;

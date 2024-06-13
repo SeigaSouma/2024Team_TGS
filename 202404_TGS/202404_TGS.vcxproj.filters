@@ -506,6 +506,9 @@
     <ClCompile Include="Source\judgezoneManager.cpp">
       <Filter>judgezone</Filter>
     </ClCompile>
+    <ClCompile Include="Source\myassert.cpp">
+      <Filter>system</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ballast.h">
@@ -924,6 +927,9 @@
     </ClInclude>
     <ClInclude Include="Source\judgezoneManager.h">
       <Filter>judgezone</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\myassert.h">
+      <Filter>system</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
