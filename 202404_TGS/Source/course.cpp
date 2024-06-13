@@ -20,7 +20,7 @@ namespace
 {
 	const int WIDTH_BLOCK = 2;
 	const float WIDTH = 200.0f;
-	const float CREATEDISTANCE = 50.0f;	// 生成間隔
+	const float CREATEDISTANCE = 100.0f;	// 生成間隔
 }
 
 //==========================================================================
@@ -186,8 +186,6 @@ void CCourse::Reset()
 	SetEnableDeath(false);
 
 
-
-
 	// テクスチャの割り当て
 	int texIdx = CTexture::GetInstance()->Regist("");
 	BindTexture(texIdx);
@@ -200,7 +198,60 @@ void CCourse::Reset()
 	CalVtxPosition();
 
 	// 各種変数初期化
-	SetPosition(MyLib::Vector3(0.0f, 100.0f, 0.0f));				// 位置
+	SetPosition(MyLib::Vector3(0.0f, 10.0f, 0.0f));				// 位置
+	SetWidthBlock(1);		// 幅分割
+	SetHeightBlock(static_cast<int>(m_vecVtxPosition.size()) - 1);	// 縦分割
+	SetWidthLen(0.0f);		// 縦長さ
+	SetHeightLen(0.0f);		// 横長さ
+
+	// オブジェクト3Dメッシュの初期化処理
+	CObject3DMesh::Init(CObject3DMesh::TYPE_FIELD);
+
+	// 頂点情報設定
+	SetVtx();
+
+
+	for (const auto& box : m_pCollisionLineBox)
+	{
+		box->Kill();
+	}
+	m_pCollisionLineBox.clear();
+
+	MyLib::AABB aabb(-25.0f, 25.0f);
+	for (const auto& vtx : m_vecSegmentPosition)
+	{
+		m_pCollisionLineBox.push_back(CCollisionLine_Box::Create(aabb, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f)));
+	}
+}
+
+//==========================================================================
+// リセット
+//==========================================================================
+void CCourse::ReCreateVtx()
+{
+
+	// 終了処理
+	CObject3DMesh::Uninit();
+
+	// 死亡フラグ強制リセット
+	SetEnableDeath(false);
+
+
+	// テクスチャの割り当て
+	int texIdx = CTexture::GetInstance()->Regist("");
+	BindTexture(texIdx);
+
+	// 種類設定
+	SetType(CObject::TYPE::TYPE_OBJECT3D);
+
+	m_vecSegmentPosition.erase(m_vecSegmentPosition.begin());
+	m_vecSegmentPosition.pop_back();
+
+	// 各頂点計算
+	CalVtxPosition();
+
+	// 各種変数初期化
+	SetPosition(MyLib::Vector3(0.0f, 10.0f, 0.0f));				// 位置
 	SetWidthBlock(1);		// 幅分割
 	SetHeightBlock(static_cast<int>(m_vecVtxPosition.size()) - 1);	// 縦分割
 	SetWidthLen(0.0f);		// 縦長さ
@@ -452,8 +503,10 @@ HRESULT CCourse::Load(const std::string& file)
 
 		// 例外処理
 		m_vecSegmentPosition.push_back({ 0.0f, 0.0f, 0.0f });
+		m_vecSegmentPosition.push_back({ 0.0f, 0.0f, 0.0f });
 		m_vecSegmentPosition.push_back({ 0.0f, 0.0f, 500.0f });
 		m_vecSegmentPosition.push_back({ 0.0f, 0.0f, 1000.0f });
+		m_vecSegmentPosition.push_back({ 0.0f, 0.0f, 1800.0f });
 		m_vecSegmentPosition.push_back({ 0.0f, 0.0f, 1800.0f });
 
 		MyLib::AABB aabb(-25.0f, 25.0f);
@@ -462,6 +515,9 @@ HRESULT CCourse::Load(const std::string& file)
 		{
 			m_pCollisionLineBox.push_back(CCollisionLine_Box::Create(aabb, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f)));
 		}
+
+		// オブジェクト3Dメッシュの初期化処理
+		Reset();
 
 		Save();
 		return E_FAIL;
@@ -501,8 +557,13 @@ void CCourse::Save()
 		return;
 	}
 
+	std::vector<MyLib::Vector3> savedata = m_vecSegmentPosition;
+	savedata.erase(savedata.begin());
+	savedata.pop_back();
+
+
 	// データをバイナリファイルに書き出す
-	File.write(reinterpret_cast<char*>(m_vecSegmentPosition.data()), m_vecSegmentPosition.size() * sizeof(MyLib::Vector3));
+	File.write(reinterpret_cast<char*>(savedata.data()), savedata.size() * sizeof(MyLib::Vector3));
 		
 	// ファイルを閉じる
 	File.close();

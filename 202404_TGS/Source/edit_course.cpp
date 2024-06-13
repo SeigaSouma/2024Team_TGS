@@ -31,6 +31,7 @@ CEdit_Course::CEdit_Course()
 	m_bEdit = false;		// 操作中判定
 	m_bDrag = false;		// 掴み判定
 	m_bHoverWindow = false;	// マウスのウィンドウホバー判定
+	m_bSetMode = false;		// 設定モード判定
 }
 
 //==========================================================================
@@ -73,6 +74,12 @@ void CEdit_Course::Update()
 
 	// 辺の総数変更
 	ChangeLineNum();
+
+	// モード変更
+	ChangeMode();
+
+	// 基点追加
+	AddPoint();
 
 	// ライン選択
 	SelectLine();
@@ -130,39 +137,29 @@ void CEdit_Course::ChangeLineNum()
 	CCourse* pCourse = CGame::GetInstance()->GetCourse();
 	if (pCourse == nullptr) return;
 
-	// 総数変更
-	ImGui::AlignTextToFramePadding();
-	ImGui::Text("Change Line Num:");
-	ImGui::SameLine();
-	if (ImGui::ArrowButton("##left", ImGuiDir_Left))
+	ImVec2 imageSize = ImVec2(150, 50);
+	if (ImGui::Button("Re : Create", imageSize))
 	{
-		pCourse->Reset();
+		pCourse->ReCreateVtx();
 	}
-	ImGui::SameLine(0.0f);
-	if (ImGui::ArrowButton("##right", ImGuiDir_Right))
+
+}
+
+//==========================================================================
+// モード変更
+//==========================================================================
+void CEdit_Course::ChangeMode()
+{
+	ImGui::Dummy(ImVec2(0.0f, 10.0f));
+
+	CCourse* pCourse = CGame::GetInstance()->GetCourse();
+	if (pCourse == nullptr) return;
+
+	if (ImGui::Checkbox("Enable SetMode!!!", &m_bSetMode))
 	{
-		pCourse->Reset();
-
-		CCamera* pCamera = CManager::GetInstance()->GetCamera();
-		if (pCamera == nullptr) return;
-
-		MyLib::Vector3 pos = UtilFunc::Transformation::CalcScreenToXZ(
-			D3DXVECTOR2(640.0f, 360.0f),
-			D3DXVECTOR2(SCREEN_WIDTH, SCREEN_HEIGHT),
-			pCamera->GetMtxView(),
-			pCamera->GetMtxProjection());
-
-		//// 辺情報取得
-		//std::vector<CCourse::LineInfo> vecInfo = pCourse->GetLineInfo();
-		//int idx = vecInfo.size() - 1;
-
-		//vecInfo[idx].pos = pos;
-		//vecInfo[idx].pos.y = 0.0f;
-
-		//pCourse->SetLineInfo(vecInfo);
+		// 操作判定リセット
+		m_bEdit = false;
 	}
-	ImGui::SameLine();
-	ImGui::Text("%d", pCourse->GetVecPosition().size());
 }
 
 //==========================================================================
@@ -170,6 +167,8 @@ void CEdit_Course::ChangeLineNum()
 //==========================================================================
 void CEdit_Course::SelectLine()
 {
+	if (m_bSetMode) return;	// セットモードは終わり
+
 	CCourse* pCourse = CGame::GetInstance()->GetCourse();
 	if (pCourse == nullptr) return;
 
@@ -246,6 +245,7 @@ void CEdit_Course::DragLine()
 	if (pCourse == nullptr) return;
 
 	if (!m_bEdit) return;
+	if (m_bSetMode) return;	// セットモードは終わり
 
 	// 辺情報取得
 	MyLib::Vector3 segmentPos = pCourse->GetVecPosition(m_nEditIdx);
@@ -445,6 +445,49 @@ void CEdit_Course::Transform()
 }
 
 //==========================================================================
+// 地点追加
+//==========================================================================
+void CEdit_Course::AddPoint()
+{
+	if (!m_bSetMode) return;	// セットモード以外は終わり
+
+	ImGui::Text("Push Mouse Button!!!");
+
+	// マウス情報
+	CInputMouse* pMouse = CInputMouse::GetInstance();
+	MyLib::Vector3 mouseRay = pMouse->GetRay();
+	MyLib::Vector3 mousePos = pMouse->GetNearPosition();
+
+	// カメラ情報
+	CCamera* pCamera = CManager::GetInstance()->GetCamera();
+
+	MyLib::Vector3 pos = UtilFunc::Transformation::CalcScreenToXZ(
+		pMouse->GetPosition(),
+		D3DXVECTOR2(SCREEN_WIDTH, SCREEN_HEIGHT),
+		pCamera->GetMtxView(),
+		pCamera->GetMtxProjection());
+
+	CCourse* pCourse = CGame::GetInstance()->GetCourse();
+	if (pCourse == nullptr) return;
+
+	// 基点情報取得
+	std::vector<MyLib::Vector3> vecSegmentPos = pCourse->GetVecPosition();
+
+	if (!m_bHoverWindow &&
+		!CInputKeyboard::GetInstance()->GetPress(DIK_LALT) &&
+		pMouse->GetTrigger(CInputMouse::BUTTON::BUTTON_LEFT))
+	{
+
+		int endIdx = (vecSegmentPos.size() - 1);
+		vecSegmentPos.insert(vecSegmentPos.begin() + endIdx, pos);
+
+		// 基点情報設定
+		pCourse->SetVecPosition(vecSegmentPos);
+		pCourse->ReCreateVtx();
+	}
+}
+
+//==========================================================================
 // 最初と最後変形
 //==========================================================================
 void CEdit_Course::TransformBeginEnd()
@@ -460,7 +503,7 @@ void CEdit_Course::TransformBeginEnd()
 	float angle = 0.0f;
 
 	// 最初
-	angle = segmentPos[1].AngleXZ(segmentPos[0]);
+	angle = segmentPos[2].AngleXZ(segmentPos[1]);
 	begin = MyLib::Vector3(
 		segmentPos[1].x + sinf(angle) * -10.0f,
 		segmentPos[1].y,
