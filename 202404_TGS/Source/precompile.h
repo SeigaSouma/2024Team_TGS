@@ -45,6 +45,7 @@
 
 // マイライブラリ
 #include "mylib.h"
+#include "myassert.h"
 
 // エフェクシア
 #ifndef _DEBUG
