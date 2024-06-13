@@ -93,6 +93,9 @@
     <Filter Include="spline">
       <UniqueIdentifier>{73b62fcf-2ec5-4f75-8e8d-02b969ec04f7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="judgezone">
+      <UniqueIdentifier>{ae95b690-57e5-4285-938f-297e3c57799b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\ballast.cpp">
@@ -496,6 +499,12 @@
     </ClCompile>
     <ClCompile Include="Source\spline.cpp">
       <Filter>spline</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\judgezone.cpp">
+      <Filter>judgezone</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\judgezoneManager.cpp">
+      <Filter>judgezone</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -909,6 +918,12 @@
     </ClInclude>
     <ClInclude Include="Source\spline.h">
       <Filter>spline</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\judgezone.h">
+      <Filter>judgezone</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\judgezoneManager.h">
+      <Filter>judgezone</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
