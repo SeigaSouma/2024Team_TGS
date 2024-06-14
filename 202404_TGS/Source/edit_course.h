@@ -47,13 +47,16 @@ private:
 	void DragLine();		// ライン掴み
 	void Transform();		// トランスフォーム
 	void ChangeLineNum();	// 辺の数変更
+	void ChangeMode();		// モード変更
 	void TransformBeginEnd();	// 最初と最後変形
+	void AddPoint();		// 地点追加
 
 	LineData m_lineData;	// 辺情報
 	int m_nEditIdx;			// 操作するインデックス番号
 	bool m_bEdit;			// 操作中判定
 	bool m_bDrag;			// 掴み判定
 	bool m_bHoverWindow;	// マウスのウィンドウホバー判定
+	bool m_bSetMode;		// 設定モード判定
 };
 
 

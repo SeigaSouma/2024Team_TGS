@@ -4,8 +4,8 @@ Format Text Ver 1.0
 Scene {
 	pos -93.5885 -363.4478 25165.8262
 	lookat 0.0000 0.0000 0.0000
-	head -0.0837
-	pich 0.0208
+	head 0.2263
+	pich 0.3108
 	bank 0.0000
 	ortho 0
 	zoom2 0.2980
@@ -19,8 +19,8 @@ Scene {
 }
 Material 3 {
 	"mat1" col(0.000 0.000 0.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\red_00132.jpg")
-	"mat2" col(1.000 0.000 0.055 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("23251535_s.jpg")
-	"mat3" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("hengaku.png")
+	"mat2" col(1.000 0.000 0.055 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\Git\2024Team_TGS\202404_TGS\data\TEXTURE\map_object\torie_red.jpg")
+	"mat3" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\Git\2024Team_TGS\202404_TGS\data\TEXTURE\map_object\hengaku.png")
 }
 Object "obj1" {
 	visible 15

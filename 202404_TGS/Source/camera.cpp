@@ -288,9 +288,9 @@ void CCamera::Update()
 	if (!pInputKeyboard->GetPress(DIK_LALT) && 
 		pMouse->GetTrigger(CInputMouse::BUTTON::BUTTON_LEFT))
 	{
-		CMyEffekseer::GetInstance()->SetEffect(
+	/*	CMyEffekseer::GetInstance()->SetEffect(
 			CMyEffekseer::EFKLABEL::EFKLABEL_SPRAYWATER,
-			pos, MyLib::Vector3(0.0f, 0.0f, 0.0f), 0.0f, 40.0f, true);
+			pos, MyLib::Vector3(0.0f, 0.0f, 0.0f), 0.0f, 40.0f, true);*/
 	}
 
 	/*CEffect3D::Create(
