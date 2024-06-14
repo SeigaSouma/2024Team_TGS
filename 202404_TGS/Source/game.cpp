@@ -42,6 +42,7 @@
 #include "waterfield.h"
 
 #include "2D_Effect.h"
+#include "waterripple.h"
 
 //==========================================================================
 // 静的メンバ変数宣言
@@ -322,6 +323,26 @@ void CGame::Update()
 	{
 		// スコアの更新処理
 		m_pScore->Update();
+	}
+
+
+
+	static float height = 50.0f, velocity = 2.0f, thickness = 20.0f;
+	static int life = 60;
+	static int block = 64;
+	static float blocksize = 10.0f;
+
+
+	ImGui::DragInt("BLOCK", &block, 1);
+	ImGui::DragFloat("BLOCK SIZE", &blocksize, 0.1f, 0.0f, 0.0f, "%.2f");
+	ImGui::DragFloat("height", &height, 0.1f, 0.0f, 0.0f, "%.2f");
+	ImGui::DragFloat("velocity", &velocity, 0.1f, 0.0f, 0.0f, "%.2f");
+	ImGui::DragFloat("thickness", &thickness, 1.0f, 0.0f, 0.0f, "%.2f");
+	ImGui::DragInt("life", &life, 1);
+
+	if (pInputKeyboard->GetTrigger(DIK_2))
+	{
+		CWaterRipple::Create(block, blocksize, MyLib::Vector3(0.0f, -5.0f, -800.0f), height, velocity, thickness, life);
 	}
 
 #if _DEBUG
