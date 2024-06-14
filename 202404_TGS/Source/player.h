@@ -176,6 +176,8 @@ public:
 	void SetMyPlayerIdx(int idx) { m_nMyPlayerIdx = idx; }	// 自分のインデックス設定
 	int GetMyPlayerIdx() { return m_nMyPlayerIdx; }			// 自分のインデックス取得
 	MyLib::Vector3 GetCylinderPosition() { return m_posCylinder; };		// 筒の位置取得
+	void SetMoveLength(float len) { m_fMoveLength = len; }				// 移動距離設定
+	float GetMoveLength(float len) { return m_fMoveLength; }			// 移動距離取得
 
 	// ヒット系
 	void DeadSetting(MyLib::HitResult_Character* result);
@@ -248,6 +250,7 @@ private:
 	int m_nCntState;				// 状態遷移カウンター
 	bool m_bDash;					// ダッシュ判定
 	float m_fDashTime;				// ダッシュ時間
+	float m_fMoveLength;			// 移動距離
 	bool m_bMotionAutoSet;			// モーションの自動設定
 	Effekseer::Handle m_WeaponHandle;
 
