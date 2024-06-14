@@ -9,6 +9,7 @@
 #include "calculation.h"
 #include "player.h"
 #include "game.h"
+#include "stagecleartext.h"
 
 //==========================================================================
 // 定数定義
@@ -141,11 +142,13 @@ void CGoalflagX::Update()
 		Playerpos = pObj->GetPosition();
 	}
 
-	if (Playerpos.x >= pos.x)
+	if (CGame::GetInstance()->GetGameManager()->GetType() != CGameManager::SceneType::SCENE_MAINCLEAR &&
+		Playerpos.x >= pos.x)
 	{// ゴールしたっぺ
 
 		// 必要なゲームの状態設定してね
 		CGame::GetInstance()->GetGameManager()->SetType(CGameManager::SceneType::SCENE_MAINCLEAR);
+		CStageClearText::Create(MyLib::Vector3(640.0f, 400.0f, 0.0f));
 	}
 }
 

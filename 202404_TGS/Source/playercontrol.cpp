@@ -48,7 +48,7 @@ void CPlayerControlMove::Move(CPlayer* player)
 	if (pInputGamepad->GetPress(CInputGamepad::BUTTON_LB, player->GetMyPlayerIdx()) &&
 		pInputGamepad->IsTipStick())
 	{// 左スティックが倒れてる場合
-		bDash = true;
+		//bDash = true;
 	}
 	player->SetEnableDash(bDash);
 

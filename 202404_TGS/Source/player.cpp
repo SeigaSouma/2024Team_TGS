@@ -38,6 +38,8 @@
 #include "checkpoint.h"
 #include "baggage.h"
 #include "baggageManager.h"
+#include "spline.h"
+#include "course.h"
 
 // 使用クラス
 #include "playercontrol.h"
@@ -122,6 +124,7 @@ CPlayer::CPlayer(int nPriority) : CObjectChara(nPriority)
 	m_nCntState = 0;								// 状態遷移カウンター
 	m_bDash = false;								// ダッシュ判定
 	m_fDashTime = 0.0f;								// ダッシュ時間
+	m_fMoveLength = 0.0f;							// 移動距離
 	m_bMotionAutoSet = false;						// モーションの自動設定
 
 	m_PlayerStatus = sPlayerStatus();				// プレイヤーステータス
@@ -201,7 +204,7 @@ HRESULT CPlayer::Init()
 	ChangeTrickControl(DEBUG_NEW CPlayerControlTrick);
 
 	// 荷物生成
-	m_pBaggage = CBaggageManager::GetInstance()->CreateBaggage(CBaggage::TYPE::TYPE_TMP_FLOWER);
+	m_pBaggage = CBaggageManager::GetInstance()->CreateBaggage(CBaggage::TYPE::TYPE_CLOTH);
 
 	// 武器の位置
 	CMotion* pMotion = GetMotion();
@@ -480,6 +483,9 @@ void CPlayer::Controll()
 	newPosition.x += move.x;
 	newPosition.z += move.z;
 
+	// 移動距離加算
+	m_fMoveLength += move.x;
+	newPosition = MySpline::GetSplinePosition_NonLoop(CGame::GetInstance()->GetCourse()->GetVecPosition(), m_fMoveLength);
 
 	// 向き取得
 	MyLib::Vector3 rot = GetRotation();
