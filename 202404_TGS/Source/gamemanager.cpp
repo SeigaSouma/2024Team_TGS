@@ -25,6 +25,8 @@
 #include "timer.h"
 #include "input.h"
 #include "baggage.h"
+#include "course.h"
+#include "judgezoneManager.h"
 
 //==========================================================================
 // 定数定義
@@ -135,6 +137,7 @@ void CGameManager::Update()
 	{
 	case CGameManager::SceneType::SCENE_MAIN:
 		m_bControll = true;
+		CheckJudgeZone();
 		ContainPlayerBaggage();
 		break;
 
@@ -443,6 +446,24 @@ void CGameManager::ContainPlayerBaggage()
 	}
 
 	pCamera->SetAutoMovingPosR(MyLib::Vector3(posBaggage.x, m_fPosRY, posBaggage.z));
+}
+
+//==========================================================================
+// 判定ゾーン確認
+//==========================================================================
+void CGameManager::CheckJudgeZone()
+{
+	// プレイヤー取得
+	CListManager<CPlayer> playerList = CPlayer::GetListObj();
+	CPlayer* pPlayer = nullptr;
+	playerList.ListLoop(&pPlayer);
+
+	// コース取得
+	CCourse* pCource = CGame::GetInstance()->GetCourse();
+
+	// 進行度計算して確認
+	float progress = pPlayer->GetMoveLength() / pCource->GetCourceLength();
+	CJudgeZoneManager::GetInstance()->Check(progress);
 }
 
 //==========================================================================

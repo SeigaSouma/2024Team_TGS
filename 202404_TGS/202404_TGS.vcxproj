@@ -209,6 +209,7 @@
     <ClCompile Include="Source\input_keyboard.cpp" />
     <ClCompile Include="Source\input_mouse.cpp" />
     <ClCompile Include="Source\instantfade.cpp" />
+    <ClCompile Include="Source\judge.cpp" />
     <ClCompile Include="Source\judgezone.cpp" />
     <ClCompile Include="Source\judgezoneManager.cpp" />
     <ClCompile Include="Source\keyconfig.cpp" />
@@ -359,6 +360,7 @@
     <ClInclude Include="Source\input_keyboard.h" />
     <ClInclude Include="Source\input_mouse.h" />
     <ClInclude Include="Source\instantfade.h" />
+    <ClInclude Include="Source\judge.h" />
     <ClInclude Include="Source\judgezone.h" />
     <ClInclude Include="Source\judgezoneManager.h" />
     <ClInclude Include="Source\keyconfig.h" />

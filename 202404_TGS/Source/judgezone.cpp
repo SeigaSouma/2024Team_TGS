@@ -1,13 +1,12 @@
 //=============================================================================
 // 
-//  判定ゾーンマネージャ [baggageManager.cpp]
+// 判定ゾーン [judgezone.cpp]
 //  Author : 石原颯馬
 // 
 //=============================================================================
-#if 0
-#include "baggageManager.h"
+#include "judgezone.h"
+#include "judge.h"
 #include "baggage.h"
-#include "manager.h"
 #include "calculation.h"
 
 //==========================================================================
@@ -15,229 +14,117 @@
 //==========================================================================
 namespace
 {
-	const std::string TEXT = "data\\TEXT\\baggage\\baggage_info.txt";	// 設置情報スクリプトファイル
-	const std::string TEXT_LINE = "#------------------------------------------------------------------------------";	// テキストのライン
+	
 }
-CBaggageManager* CBaggageManager::m_ThisPtr = nullptr;	// 自身のポインタ
 
+//**************************************************************************
+// 
+// 判定ゾーンクラス
+// 
+//**************************************************************************
 //==========================================================================
 // コンストラクタ
 //==========================================================================
-CBaggageManager::CBaggageManager()
+CJudgeZone::CJudgeZone()
 {
-	m_BaggageInfo.clear();	// 障害物情報
+	m_isEnable = true;
+	m_pJudge = nullptr;
 }
 
 //==========================================================================
 // デストラクタ
 //==========================================================================
-CBaggageManager::~CBaggageManager()
+CJudgeZone::~CJudgeZone()
 {
 	
 }
 
 //==========================================================================
-// 生成処理
-//==========================================================================
-CBaggageManager *CBaggageManager::Create()
-{
-	if (m_ThisPtr == nullptr)
-	{
-		// メモリの確保
-		m_ThisPtr = DEBUG_NEW CBaggageManager;
-
-		if (m_ThisPtr != nullptr)
-		{
-			// 初期化処理
-			m_ThisPtr->Init();
-		}
-	}
-
-	return m_ThisPtr;
-}
-
-//==========================================================================
 // 初期化処理
 //==========================================================================
-HRESULT CBaggageManager::Init()
+HRESULT CJudgeZone::Init()
 {
-	// 読み込み
-	Load();
 	return S_OK;
 }
 
 //==========================================================================
 // 終了処理
 //==========================================================================
-void CBaggageManager::Uninit()
+void CJudgeZone::Uninit()
 {
-	delete m_ThisPtr;
-	m_ThisPtr = nullptr;
-}
-
-//==========================================================================
-// 削除
-//==========================================================================
-void CBaggageManager::Kill()
-{
-	delete m_ThisPtr;
-	m_ThisPtr = nullptr;
-}
-
-//==========================================================================
-// 更新処理
-//==========================================================================
-void CBaggageManager::Update()
-{
-	
-
-}
-
-//==========================================================================
-// 種類指定して生成
-//==========================================================================
-CBaggage* CBaggageManager::CreateBaggage(CBaggage::TYPE idx)
-{
-	return CBaggage::Create(idx, m_BaggageInfo[idx]);
-}
-
-//==========================================================================
-// セーブ
-//==========================================================================
-void CBaggageManager::Save()
-{
-	// ファイルを開く
-	std::ofstream File(TEXT);
-	if (File.is_open()) 
+	if (m_pJudge != nullptr)
 	{
-		File << "#====================================================================================================" << std::endl;
-		File << "#" << std::endl;
-		File << "# 荷物情報スクリプトファイル [baggage_info.txt]" << std::endl;
-		File << "#" << std::endl;
-		File << "#====================================================================================================" << std::endl;
-		File << "SCRIPT		# この行は絶対消さないこと！\n" << std::endl;
-
-		// 荷物情報目次
-		File << TEXT_LINE << std::endl;
-		File << "# 荷物情報" << std::endl;
-		File << "# MODEL  : モデルのファイルパス" << std::endl;
-		File << "# WEIGHT : 重さ" << std::endl;
-		File << "# WIDTH : 振れ幅" << std::endl;
-		File << "# CYCLE : 周期（ラジアン単位）" << std::endl;
-		File << TEXT_LINE << std::endl;
-
-		// 情報設定
-		for (const auto& info : m_BaggageInfo)
-		{
-			File << "BAGGAGESET" << std::endl;
-			File << "MODEL = " << info.path << std::endl;
-			File << "WEIGHT = " << info.weight << std::endl;
-			File << "WIDTH = " << info.width << std::endl;
-			File << "CYCLE = " << info.cycle << std::endl;
-			File << "END_BAGGAGESET" << std::endl;
-			File << "\n" << std::endl;
-		}
-
-		// ファイルを閉じる
-		File << "END_SCRIPT\t\t# この行は絶対消さないこと！" << std::endl;
-		File.close();
+		m_pJudge->Uninit();
+		m_pJudge = nullptr;
 	}
+
+	m_isEnable = false;
 }
 
 //==========================================================================
-// ロード
+// 生成処理
 //==========================================================================
-void CBaggageManager::Load()
+CJudgeZone* CJudgeZone::Create(const float start, const float end)
 {
-	// ファイルを開く
-	std::ifstream File(TEXT);
-	if (File.is_open()) {
-		// コメント用
-		std::string hoge;
+	// メモリの確保
+	CJudgeZone* pObj = DEBUG_NEW CJudgeZone;
 
-		// データ読み込み
-		std::string line;
-		while (std::getline(File, line))
-		{
-			// コメントはスキップ
-			if (line.empty() ||
-				line[0] == '#')
-			{
-				continue;
-			}
+	if (pObj != nullptr)
+	{
+		// 初期化処理
+		pObj->Init();
+		pObj->SetZone(start, end);
+		pObj->m_aJudgeInfo[0] = { TYPE_NONE,CJudge::JUDGE::JUDGE_AAA,0 };
+		pObj->m_aJudgeInfo[1] = { TYPE_HITNUM,CJudge::JUDGE::JUDGE_AAA,10 };
+	}
 
-			if (line.find("BAGGAGESET") != std::string::npos)
-			{// MODELSETで配置情報読み込み
+	return pObj;
+}
 
-				// 読み込み情報
-				CBaggage::SBaggageInfo info;
+//==========================================================================
+// 確認処理
+//==========================================================================
+void CJudgeZone::Check()
+{
+	if (m_pJudge != nullptr)
+	{// どっち行くか決まってる
+		m_pJudge->Check();
+	}
+	else
+	{// 決まってない
+		if (true)
+		{// どっち行くか決まった
+			std::map<CJudge::JUDGE, int> hitnum;
+			hitnum[CJudge::JUDGE::JUDGE_AAA] = 2;
+			hitnum[CJudge::JUDGE::JUDGE_BBB] = 4;
+			hitnum[CJudge::JUDGE::JUDGE_CCC] = 6;
+			hitnum[CJudge::JUDGE::JUDGE_DDD] = 8;
 
-				while (line.find("END_BAGGAGESET") == std::string::npos)
-				{
-					std::getline(File, line);
-					if (line.find("MODEL") != std::string::npos)
-					{// TYPEで配置物の種類
-
-						// ストリーム作成
-						std::istringstream lineStream(line);
-
-						// 情報渡す
-						lineStream >>
-							hoge >>
-							hoge >>		// ＝
-							info.path;	// パス
-						info.path = UtilFunc::Transformation::ReplaceBackslash(info.path);
-					}
-					else if (line.find("WEIGHT") != std::string::npos)
-					{// POSで位置
-
-						// ストリーム作成
-						std::istringstream lineStream(line);
-
-						// 情報渡す
-						lineStream >>
-							hoge >>
-							hoge >>			// ＝
-							info.weight;	// 重さ
-					}
-					else if (line.find("WIDTH") != std::string::npos)
-					{// ROTで向き
-
-						// ストリーム作成
-						std::istringstream lineStream(line);
-
-						// 情報渡す
-						lineStream >>
-							hoge >>
-							hoge >>		// ＝
-							info.width;	// ぶれ幅
-					}
-					else if (line.find("CYCLE") != std::string::npos)
-					{// ROTで向き
-
-						// ストリーム作成
-						std::istringstream lineStream(line);
-
-						// 情報渡す
-						lineStream >>
-							hoge >>
-							hoge >>		// ＝
-							info.cycle;	// 周期
-					}
-				}
-
-				// 取り込み
-				m_BaggageInfo.push_back(info);
-			}
-
-			if (line.find("END_SCRIPT") != std::string::npos)
-			{
-				break;
-			}
+			m_pJudge = CJudge::Create(new CJudgeConditional_HitNum(hitnum));
+			m_pJudge->Check();
 		}
-
-		// ファイルを閉じる
-		File.close();
 	}
 }
-#endif
+
+//==========================================================================
+// 結果処理
+//==========================================================================
+CJudge::JUDGE CJudgeZone::Judge()
+{
+	CJudge::JUDGE judge = CJudge::JUDGE::JUDGE_AAA;
+	if (m_pJudge != nullptr)
+	{
+		judge = m_pJudge->Judge();
+	}
+
+	return judge;
+}
+
+//==========================================================================
+// 判定ゾーン設定処理
+//==========================================================================
+void CJudgeZone::SetZone(const float start, const float end)
+{
+	m_zone.start = start;
+	m_zone.end = end;
+}
