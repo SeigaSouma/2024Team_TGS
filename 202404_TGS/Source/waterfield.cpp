@@ -12,6 +12,7 @@
 
 // Œp³æ
 #include "waterfield_right.h"
+#include "waterfield_left.h"
 
 //==========================================================================
 // ’è”’è‹`
@@ -59,7 +60,7 @@ CWaterField* CWaterField::Create(TYPE type)
 		break;
 
 	case CWaterField::TYPE_LEFT:
-		pObjMeshField = DEBUG_NEW CWaterField_Right;
+		pObjMeshField = DEBUG_NEW CWaterField_Left;
 		break;
 
 	default:

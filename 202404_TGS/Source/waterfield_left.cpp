@@ -1,10 +1,10 @@
 //=============================================================================
 // 
-//  水フィールド処理 [waterfield_right.cpp]
+//  水フィールド処理 [waterfield_left.cpp]
 //  Author : 相馬靜雅
 // 
 //=============================================================================
-#include "waterfield_right.h"
+#include "waterfield_left.h"
 #include "manager.h"
 #include "input.h"
 #include "calculation.h"
@@ -15,14 +15,14 @@
 //==========================================================================
 namespace
 {
-	const std::string TEXTURE = "data\\TEXTURE\\FIELD\\water-bg-pattern-02.jpg";
+	const std::string TEXTURE = "data\\TEXTURE\\FIELD\\water-bg-pattern-04.jpg";
 	const float SCROLL_V = -0.0015f;
 }
 
 //==========================================================================
 // コンストラクタ
 //==========================================================================
-CWaterField_Right::CWaterField_Right() : CWaterField()
+CWaterField_Left::CWaterField_Left() : CWaterField()
 {
 
 }
@@ -30,7 +30,7 @@ CWaterField_Right::CWaterField_Right() : CWaterField()
 //==========================================================================
 // デストラクタ
 //==========================================================================
-CWaterField_Right::~CWaterField_Right()
+CWaterField_Left::~CWaterField_Left()
 {
 
 }
@@ -38,7 +38,7 @@ CWaterField_Right::~CWaterField_Right()
 //==========================================================================
 // 初期化処理
 //==========================================================================
-HRESULT CWaterField_Right::Init()
+HRESULT CWaterField_Left::Init()
 {
 	// 水フィールドの初期化
 	CWaterField::Init();
@@ -51,7 +51,7 @@ HRESULT CWaterField_Right::Init()
 	SetType(CObject::TYPE::TYPE_OBJECT3D);
 
 	// 各種変数初期化
-	SetPosition(MyLib::Vector3(0.0f, 1.0f, 0.0f));			// 位置
+	SetPosition(MyLib::Vector3(0.0f, 1.1f, 0.0f));			// 位置
 
 
 	// 全ての要素を書き換え
@@ -64,7 +64,7 @@ HRESULT CWaterField_Right::Init()
 //==========================================================================
 // 終了処理
 //==========================================================================
-void CWaterField_Right::Uninit()
+void CWaterField_Left::Uninit()
 {
 	// 終了処理
 	CWaterField::Uninit();
@@ -73,9 +73,9 @@ void CWaterField_Right::Uninit()
 //==========================================================================
 // 更新処理
 //==========================================================================
-void CWaterField_Right::Update()
+void CWaterField_Left::Update()
 {
-	m_fTexV -= SCROLL_V;		// Vスクロール用
+	m_fTexV += SCROLL_V;		// Vスクロール用
 	m_fTexU -= SCROLL_V;		// Uスクロール用
 
 	CWaterField::Update();

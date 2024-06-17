@@ -521,6 +521,9 @@
     <ClCompile Include="Source\waterfield_right.cpp">
       <Filter>water</Filter>
     </ClCompile>
+    <ClCompile Include="Source\waterfield_left.cpp">
+      <Filter>water</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ballast.h">
@@ -950,6 +953,9 @@
       <Filter>water</Filter>
     </ClInclude>
     <ClInclude Include="Source\waterfield_right.h">
+      <Filter>water</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\waterfield_left.h">
       <Filter>water</Filter>
     </ClInclude>
   </ItemGroup>
