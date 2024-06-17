@@ -144,6 +144,8 @@ public:
 	void WarpCamera(MyLib::Vector3 pos);		// ƒJƒƒ‰ƒ[ƒv
 	void SetAutoDistanceDest(float fDistance) { m_fAutoDistance_Dest = fDistance; }
 	void SetDistance(float fDistance) { m_fDistance = fDistance; }
+	int GetCntDistance() { return m_nCntDistance; }
+	int GetCntDistanceOrigin() { return m_nOriginCntDistance; }
 
 	// î•ñæ“¾
 	void SetPositionR(const MyLib::Vector3& pos) { m_posR = pos; }

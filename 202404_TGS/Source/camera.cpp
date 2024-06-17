@@ -1817,9 +1817,6 @@ void CStateCameraV_Distance::Distance(CCamera* pCamera)
 	if (m_fMultiPly >= 1.0f)
 	{
 		pCamera->SetStateCameraV(new CStateCameraV);
-
-		// フィードバックエフェクトOFF
-		CManager::GetInstance()->GetRenderer()->SetEnableDrawMultiScreen(false, 0.0f, 1.0f, 60);
 	}
 	else m_fMultiPly += DISTANCE_TIMER;
 }

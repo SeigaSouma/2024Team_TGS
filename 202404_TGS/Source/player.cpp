@@ -56,7 +56,7 @@ namespace
 	const int INVINCIBLE_TIME = 0;				// 無敵の時間
 	const int DEADTIME = 120;					// 死亡時の時間
 	const int FADEOUTTIME = 60;					// フェードアウトの時間
-	const float MULTIPLIY_DASH = 2.0f;		// ダッシュの倍率
+	const float MULTIPLIY_DASH = 2.0f;			// ダッシュの倍率
 	const float TIME_DASHATTACK = 0.3f;			// ダッシュ攻撃に必要な時間
 	const int DEFAULT_STAMINA = 200;			// スタミナのデフォルト値
 	const float SUBVALUE_DASH = 0.1f;			// ダッシュの減算量
@@ -76,6 +76,22 @@ namespace
 	const int DEFAULT_RESPAWN_PERCENT = 20;				// 復活確率
 	const float MULTIPLY_CHARGEATK = 2.0f;				// チャージ攻撃の倍率
 	const float MAX_HEIGHT = 200.0f;					// 最大高さ
+}
+
+//==========================================================================
+// ブラー表現(マルチターゲットレンダリング)用定数定義
+//==========================================================================
+namespace MULTITARGET
+{
+	// ON時
+	const float ON_ALPHA = (0.6f);		// 目標透明度
+	const float ON_MULTI = (1.1f);		// 目標倍率
+	const float ON_TIMER = (120.0f);	// 遷移タイマー
+
+	// 死亡時
+	const float DEATH_ALPHA = (0.0f);		// 目標透明度
+	const float DEATH_MULTI = (1.0f);		// 目標倍率
+	const float DEATH_TIMER = (240.0f);		// 遷移タイマー
 }
 
 //==========================================================================
@@ -1163,28 +1179,36 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 	// 体力設定
 	SetLife(nLife);
 
+	int camlife = GetLifeOrigin() * 0.65f;
+
 	if (nLife <= 0)
 	{// 体力がなくなったら
 
 		// 死亡時の設定
 		DeadSetting(&hitresult);
-		pCamera->SetLenDest(600.0f, 200, -25.0f, 0.375f);	// 距離を近づける
+		pCamera->SetLenDest(pCamera->GetOriginDistance(), 1800, 0.0025f, 0.0025f);	// 距離を近づける
 		pCamera->SetStateCameraV(new CStateCameraV_Distance);
 
 		// フィードバックエフェクトOFF
-		CManager::GetInstance()->GetRenderer()->SetEnableDrawMultiScreen(false, 0.6f, 1.02f, 120.0f);
+		CManager::GetInstance()->GetRenderer()->SetEnableDrawMultiScreen(
+			MULTITARGET::DEATH_ALPHA, 
+			MULTITARGET::DEATH_MULTI,
+			MULTITARGET::DEATH_TIMER);
 	}
-	else if (nLife <= static_cast<float>(GetLifeOrigin()) * 0.65f)
+	else if (nLife <= camlife)
 	{
 		pCamera->SetLenDest(600.0f, 10, -20.0f, 0.07f);	// 距離を近づける
 		CStateCameraV_Distance* pstate = new CStateCameraV_Distance;
 		pstate->SetStartDistance(pCamera->GetDistance());
 		pCamera->SetStateCameraV(pstate);
 
-		// フィードバックエフェクトON
-		CManager::GetInstance()->GetRenderer()->SetEnableDrawMultiScreen(true, 0.6f, 1.02f, 120.0f);
+		
+			// フィードバックエフェクトON
+			CManager::GetInstance()->GetRenderer()->SetEnableDrawMultiScreen(
+				MULTITARGET::ON_ALPHA,
+				MULTITARGET::ON_MULTI,
+				MULTITARGET::ON_TIMER);
 	}
-	
 
 	// 過去の状態保存
 	m_Oldstate = m_state;
