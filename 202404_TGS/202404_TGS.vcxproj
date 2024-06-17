@@ -297,6 +297,7 @@
     <ClCompile Include="Source\tutorial.cpp" />
     <ClCompile Include="Source\tutoriallogo.cpp" />
     <ClCompile Include="Source\waterfield.cpp" />
+    <ClCompile Include="Source\waterfield_left.cpp" />
     <ClCompile Include="Source\waterfield_right.cpp" />
     <ClCompile Include="Source\waterripple.cpp" />
     <ClCompile Include="Source\Xload.cpp" />
@@ -441,6 +442,7 @@
     <ClInclude Include="Source\tutorial.h" />
     <ClInclude Include="Source\tutoriallogo.h" />
     <ClInclude Include="Source\waterfield.h" />
+    <ClInclude Include="Source\waterfield_left.h" />
     <ClInclude Include="Source\waterfield_right.h" />
     <ClInclude Include="Source\waterripple.h" />
     <ClInclude Include="Source\Xload.h" />

@@ -198,6 +198,7 @@ HRESULT CGame::Init()
 
 	CWaterField::Create(CWaterField::TYPE::TYPE_NORMAL);
 	CWaterField::Create(CWaterField::TYPE::TYPE_RIGHT);
+	CWaterField::Create(CWaterField::TYPE::TYPE_LEFT);
 
 	// ê¨å˜
 	return S_OK;
