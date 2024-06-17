@@ -10,6 +10,9 @@
 #include "calculation.h"
 #include "debugproc.h"
 
+// 継承先
+#include "waterfield_right.h"
+
 //==========================================================================
 // 定数定義
 //==========================================================================
@@ -40,10 +43,29 @@ CWaterField::~CWaterField()
 //==========================================================================
 // 生成処理
 //==========================================================================
-CWaterField* CWaterField::Create()
+CWaterField* CWaterField::Create(TYPE type)
 {
 	// メモリの確保
-	CWaterField* pObjMeshField = DEBUG_NEW CWaterField;
+	CWaterField* pObjMeshField = nullptr;
+
+	switch (type)
+	{
+	case CWaterField::TYPE_NORMAL:
+		pObjMeshField = DEBUG_NEW CWaterField;
+		break;
+
+	case CWaterField::TYPE_RIGHT:
+		pObjMeshField = DEBUG_NEW CWaterField_Right;
+		break;
+
+	case CWaterField::TYPE_LEFT:
+		pObjMeshField = DEBUG_NEW CWaterField_Right;
+		break;
+
+	default:
+		return nullptr;
+		break;
+	}
 
 	if (pObjMeshField != nullptr)
 	{
@@ -82,7 +104,7 @@ HRESULT CWaterField::Init()
 
 	// 全ての要素を書き換え
 	D3DXCOLOR* pVtxCol = GetVtxCol();
-	std::fill(pVtxCol, pVtxCol + GetNumVertex(), D3DXCOLOR(0.6f, 0.6f, 1.0f, 0.8f));
+	std::fill(pVtxCol, pVtxCol + GetNumVertex(), D3DXCOLOR(0.8f, 0.8f, 1.0f, 0.8f));
 
 	return E_FAIL;
 }
@@ -102,7 +124,6 @@ void CWaterField::Uninit()
 void CWaterField::Update()
 {
 	m_fTexU -= 0.003f;		// Uスクロール用
-	//m_fTexV += 0.001f;		// Vスクロール用
 
 	if (m_fTexU >= 1.0f)
 	{
@@ -160,9 +181,6 @@ void CWaterField::SetVtx()
 
 		for (int nCntWidth = 0; nCntWidth < nWBlock + 1; nCntWidth++)
 		{// 横の頂点数分繰り返す
-
-			// 頂点カラーの設定
-			pVtx[0].col = D3DXCOLOR(0.8f, 0.8f, 1.0f, 0.8f);
 
 			// テクスチャ座標の設定
 			pVtx[0].tex = D3DXVECTOR2

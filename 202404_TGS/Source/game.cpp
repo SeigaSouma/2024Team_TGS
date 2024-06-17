@@ -196,7 +196,8 @@ HRESULT CGame::Init()
 	// ƒXƒeƒ“ƒVƒ‹‰e¶¬
 	CStencilShadow::Create();
 
-	CWaterField::Create();
+	CWaterField::Create(CWaterField::TYPE::TYPE_NORMAL);
+	CWaterField::Create(CWaterField::TYPE::TYPE_RIGHT);
 
 	// ¬Œ÷
 	return S_OK;
