@@ -538,8 +538,10 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	}
 
 	// ˆÊ’uÝ’è
-	pBaggage->SetPosition(MyLib::Vector3(pos.x, posBaggage.y, pos.z));
-
+	if (!pBaggage->IsAway())
+	{
+		pBaggage->SetPosition(MyLib::Vector3(pos.x, posBaggage.y, pos.z));
+	}
 
 	// ƒJƒƒ‰î•ñŽæ“¾
 	CCamera* pCamera = CManager::GetInstance()->GetCamera();

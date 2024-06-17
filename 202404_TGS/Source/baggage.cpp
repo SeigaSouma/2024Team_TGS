@@ -8,6 +8,7 @@
 #include "manager.h"
 #include "calculation.h"
 #include "game.h"
+#include "camera.h"
 #include "map_obstacle.h"
 
 //==========================================================================
@@ -27,6 +28,8 @@ namespace
 	float ROLL_INER = 0.075f;		// ƒ[ƒ‹Ž²‰ñ“]Šµ«
 	float DEVIATION_WIDTH = 300.0f;	// ‚Ô‚ê•
 	float DEVIATION_SPEED = 0.02f * D3DX_PI;	// ‚Ô‚ê‘¬“x
+	float DEADANGLE_HIT = D3DX_PI * 0.2f;		// ƒqƒbƒgŽž‚ÌŽ€–S”»’è
+	float TIME_DEADMOVE = 0.7f;					// Ž€–SŽžˆÚ“®‚ÌŽžŠÔ
 }
 
 //==========================================================================
@@ -43,9 +46,11 @@ CBaggage::CBaggage(int nPriority) : CObjectQuaternion(nPriority)
 	m_type = TYPE::TYPE_CLOTH;	// Ží—Þ
 	m_fWeight = 0.0f;	// d‚³
 	m_bLand = false;	// ’…’n”»’è
+	m_bAway = false;	// Ž€–S”»’è
 	m_velorot = MyLib::Vector3(0.0f, 0.0f, 0.0f);
 	m_baggageInfo = {};
 	m_fDeviation = 0.0f;
+	m_fDeadMoveTime = 0.0f;	// Ž€–SŽž‚ÌˆÚ“®ŽžŠÔ
 }
 
 //==========================================================================
@@ -140,7 +145,19 @@ void CBaggage::Update()
 	CObjectQuaternion::Update();
 
 	// áŠQ•¨‚Æ‚ÌÕ“Ë”»’è
-	if(Hit()) m_velorot.x += ROLL_FSTSPD;	// Õ“Ë‚µ‚½‚çƒ[ƒ‹Ž²‚É‰ñ“]‘¬“x‚ð—^‚¦‚é
+	if (!m_bAway &&
+		Hit())
+	{
+		m_velorot.x += ROLL_FSTSPD;	// Õ“Ë‚µ‚½‚çƒ[ƒ‹Ž²‚É‰ñ“]‘¬“x‚ð—^‚¦‚é
+	}
+
+	// ‚Á”ò‚ñ‚¾‚çI‚í‚è
+	if (m_bAway)
+	{
+		// Ž€–SŽžˆÚ“®
+		DeadMove();
+		return;
+	}
 
 	// î•ñŽæ“¾
 	MyLib::Vector3 posOrigin = GetOriginPosition();
@@ -247,6 +264,34 @@ void CBaggage::Update()
 }
 
 //==========================================================================
+// Ž€–SŽžˆÚ“®
+//==========================================================================
+void CBaggage::DeadMove()
+{
+	// Ž€–SŽžˆÚ“®‚Ìƒ^ƒCƒ}[‰ÁŽZ
+	m_fDeadMoveTime += CManager::GetInstance()->GetDeltaTime();
+
+	CCamera* pCamera = CManager::GetInstance()->GetCamera();
+	MyLib::Vector3 posV = pCamera->GetPositionVDest();
+	MyLib::Vector3 posR = pCamera->GetPositionRDest();
+	MyLib::Vector3 ray = (posR - posV).Normal();
+
+
+	MyLib::Vector3 pos = GetPosition();
+	MyLib::Vector3 posDest = posV + (200.0f * ray);
+
+	pos = UtilFunc::Correction::EasingEaseIn(m_posAwayStart, posDest, 0.0f, TIME_DEADMOVE, m_fDeadMoveTime);
+
+	if (m_fDeadMoveTime >= TIME_DEADMOVE)
+	{
+		pos = posDest;
+	}
+
+	SetPosition(pos);
+
+}
+
+//==========================================================================
 // —Í’Ç‰Á
 //==========================================================================
 void CBaggage::AddForce(const MyLib::Vector3& power, const MyLib::Vector3& ActPos)
@@ -322,14 +367,41 @@ bool CBaggage::Hit()
 		{
 			if (UtilFunc::Collision::IsAABBCollidingWithBox(GetAABB(), GetWorldMtx(), MyLib::AABB(collider.vtxMin, collider.vtxMax), collider.worldmtx))
 			{
+				// Œü‚«Žæ“¾
+				float angle = MyPos.AngleXY(ObjPos);
+
+				bool bDead = UtilFunc::Collision::CollisionRangeAngle(angle, DEADANGLE_HIT + (-D3DX_PI * 0.5f), -DEADANGLE_HIT + (-D3DX_PI * 0.5f));
+				
+				// ˆÚ“®—ÊŽæ“¾
 				MyLib::Vector3 move = GetMove();
-				move.y *= -1.0f;
+
+				if (bDead)
+				{
+					ImGui::Text("dead");
+					m_bAway = true;
+
+					MyLib::Vector3 hitmove = (MyPos - ObjPos) * 1.0f;
+					move.x += hitmove.x;
+					move.z += hitmove.z;
+
+					SetForce(0.0f);
+
+					// ‚Á”ò‚ÑƒXƒ^[ƒg’n“_
+					m_posAwayStart = MyPos;
+				}
+				else
+				{
+					ImGui::Text("no dead");
+
+					move.y *= -1.0f;
+
+					/*CMyEffekseer::GetInstance()->SetEffect(
+						CMyEffekseer::EFKLABEL::EFKLABEL_IMPACT,
+						GetWorldMtx().GetWorldPosition(), MyLib::Vector3(0.0f, 0.0f, 0.0f), 0.0f, 30.0f, true);*/
+					m_bHit = true;
+				}
 				SetMove(move);
 
-				/*CMyEffekseer::GetInstance()->SetEffect(
-					CMyEffekseer::EFKLABEL::EFKLABEL_IMPACT,
-					GetWorldMtx().GetWorldPosition(), MyLib::Vector3(0.0f, 0.0f, 0.0f), 0.0f, 30.0f, true);*/
-				m_bHit = true;
 				return true;
 			}
 		}
