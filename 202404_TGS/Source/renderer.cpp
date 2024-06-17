@@ -150,9 +150,6 @@ void CRenderer::ResetRendererState()
 //==========================================================================
 void CRenderer::InitMTRender()
 {
-	// マルチターゲット画面の描画判定
-	m_MultitargetInfo.bDraw = false;
-
 	// 保存用バッファ
 	LPDIRECT3DSURFACE9 pRenderDef, pZBuffDef;
 
@@ -303,6 +300,9 @@ void CRenderer::Update()
 {
 	// 全ての更新
 	CObject::UpdateAll();
+
+	// デバッグ表示の描画処理
+	CManager::GetInstance()->GetDebugProc()->Print("画面倍率[ %f ]\n", m_MultitargetInfo.fTimer);
 }
 
 //==========================================================================
@@ -342,7 +342,6 @@ void CRenderer::Draw()
 	if (SUCCEEDED(m_pD3DDevice->BeginScene()))
 	{// 描画が成功したとき
 
-
 		// フォグを解除
 		MyFog::DisableFog(m_pD3DDevice);
 
@@ -361,21 +360,20 @@ void CRenderer::Draw()
 			LPDIRECT3DSURFACE9 pRenderDef = nullptr, pZBuffDef = nullptr;
 			D3DXMATRIX mtxView, mtxProjection;
 
-			
 			// デフォルトのレンダラーターゲットを取得
 			GetDefaultRenderTarget(&pRenderDef, &pZBuffDef, &mtxView, &mtxProjection);
 
 
 			// ターゲット切替
-				CManager::GetInstance()->GetRenderer()->ChangeTarget(pCamerea->GetPositionV(), pCamerea->GetPositionR(), MyLib::Vector3(0.0f, 1.0f, 0.0f));
+			CManager::GetInstance()->GetRenderer()->ChangeTarget(pCamerea->GetPositionV(), pCamerea->GetPositionR(), MyLib::Vector3(0.0f, 1.0f, 0.0f));
 
-				// テクスチャ[0]のクリア
-				m_pD3DDevice->Clear(
-					0, nullptr,
-					(D3DCLEAR_STENCIL | D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
-					D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f),
-					1.0f,
-					0);
+			// テクスチャ[0]のクリア
+			m_pD3DDevice->Clear(
+				0, nullptr,
+				(D3DCLEAR_STENCIL | D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
+				D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f),
+				1.0f,
+				0);
 
 			// 全ての描画
 			CObject::DrawAll();
@@ -389,9 +387,8 @@ void CRenderer::Draw()
 			CManager::GetInstance()->GetCamera()->SetCamera();
 			// レンダーターゲットをもとに戻す
 			CManager::GetInstance()->GetRenderer()->ChangeRendertarget(pRenderDef, pZBuffDef, mtxView, mtxProjection);
-			
+
 			DrawMultiTargetScreen(0, NONE_ALPHACOLOR, NORMALSIZE);
-			
 
 			// テクスチャ0と1の切替
 			pTextureWk = m_Multitarget.pTextureMT[0];
@@ -494,7 +491,6 @@ void CRenderer::DrawMultiTargetScreen(int texIdx, const D3DXCOLOR& col, const D3
 
 	// 頂点バッファをアンロックロック
 	m_Multitarget.pVtxBuff->Unlock();
-
 
 	// 頂点バッファをデータストリームに設定
 	m_pD3DDevice->SetStreamSource(0, m_Multitarget.pVtxBuff, 0, sizeof(VERTEX_2D));
@@ -682,10 +678,9 @@ void CRenderer::ChangeTarget(MyLib::Vector3 posV, MyLib::Vector3 posR, MyLib::Ve
 //==========================================================================
 // マルチターゲット画面の描画判定
 //==========================================================================
-void CRenderer::SetEnableDrawMultiScreen(bool bDraw, float fGoalAlpha, float fGoalMulti, float fTimer)
+void CRenderer::SetEnableDrawMultiScreen(float fGoalAlpha, float fGoalMulti, float fTimer)
 { 
 	// パラメーターの設定
-	m_MultitargetInfo.bDraw = true;
 	m_MultitargetInfo.fTimer = 0.0f;
 	m_MultitargetInfo.fAddTimer = 1.0f / fTimer;
 	m_MultitargetInfo.fStartColAlpha = m_MultitargetInfo.fColAlpha;
@@ -693,43 +688,8 @@ void CRenderer::SetEnableDrawMultiScreen(bool bDraw, float fGoalAlpha, float fGo
 	m_MultitargetInfo.fStartMulti = m_MultitargetInfo.fMulti;
 	m_MultitargetInfo.fMulti = fGoalMulti;
 	m_MultitargetInfo.bActive = true;
-	m_MultitargetInfo.bNext = bDraw;
 
 	return;
-	//if (m_MultitargetInfo.bDraw && !bDraw) // 前回通常描画、今回multiターゲットレンダリング
-	//{
-
-	//	LPDIRECT3DSURFACE9 pRenderDef = nullptr, pZBuffDef = nullptr;
-
-	//	// 現在のレンダリングターゲットを取得(保存)
-	//	m_pD3DDevice->GetRenderTarget(0, &pRenderDef);
-
-	//	// 現在のZバッファを取得(保存)
-	//	m_pD3DDevice->GetDepthStencilSurface(&pZBuffDef);
-
-	//	// レンダリングターゲットを生成したテクスチャに設定
-	//	m_pD3DDevice->SetRenderTarget(0, m_Multitarget.pRenderMT[1]);
-
-	//	// Zバッファを生成したZバッファに設定
-	//	m_pD3DDevice->SetDepthStencilSurface(m_Multitarget.pZBuffMT);
-
-	//	// レンダリングターゲット用のテクスチャのクリア
-	//	m_pD3DDevice->Clear(
-	//		0, nullptr,
-	//		(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
-	//		D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f),
-	//		1.0f,
-	//		0);
-
-
-	//	// レンダリングターゲットを元に戻す
-	//	m_pD3DDevice->SetRenderTarget(0, pRenderDef);
-
-	//	// Zバッファを元に戻す
-	//	m_pD3DDevice->SetDepthStencilSurface(pZBuffDef);
-	//}
-
-	//m_MultitargetInfo.bDraw = bDraw;
 }
 
 //==========================================================================
@@ -741,6 +701,5 @@ void CRenderer::SetMultiTarget()
 
 	if (m_MultitargetInfo.fTimer >= 1.0f) { 
 		m_MultitargetInfo.bActive = false; 
-		m_MultitargetInfo.bDraw = m_MultitargetInfo.bNext;
 	}
 }

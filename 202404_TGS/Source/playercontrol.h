@@ -69,7 +69,7 @@ private:
 	float m_fMaxHeight = 1000.0f;		// ‘§‚Ì“Í‚­Å‘å‚Ì‚‚³
 	float m_fTimeDownHeight = 0.0f;		// ‚‚³‚Ì~‰ºŠÔ
 	float m_fHeightVelocity = 10.0f;	// ‘§‚Ì‰ÁZ—Ê
-
+	bool m_bLandOld;					// ‘O‰ñ‚Ì’…’nî•ñ
 };
 
 //=============================
