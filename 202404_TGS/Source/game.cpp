@@ -41,6 +41,7 @@
 #include "sample_obj3D.h"
 #include "course.h"
 #include "waterfield.h"
+#include "stonewall.h"
 
 #include "2D_Effect.h"
 #include "waterripple.h"
@@ -195,6 +196,31 @@ HRESULT CGame::Init()
 
 	// コース作成
 	m_pCourse = CCourse::Create("data\\TEXT\\map\\course.bin");
+	CStoneWall *pStoneWall = CStoneWall::Create();
+
+	// 基点地点設定
+	pStoneWall->SetVecPosition(m_pCourse->GetVecPosition());
+	pStoneWall->Reset();
+
+	std::vector<CCourse::VtxInfo> vtxInfo = m_pCourse->GetVecVtxinfo();
+	std::vector<MyLib::Vector3> vecpos;
+
+	// posの要素渡し
+	//std::transform(vtxInfo.begin(), vtxInfo.end(), std::back_inserter(vecpos), [](const CCourse::VtxInfo& info)->MyLib::Vector3 {return info.pos; });
+
+	MyLib::Vector3 setpos;
+	for (const auto& info : vtxInfo)
+	{
+		setpos.x = info.pos.x + sinf(D3DX_PI + info.rot.y) * -250.0f;
+		setpos.y = info.pos.y;
+		setpos.z = info.pos.z + cosf(D3DX_PI + info.rot.y) * -250.0f;
+		vecpos.push_back(setpos);
+	}
+
+	// 各頂点座標
+	pStoneWall->SetVecVtxPosition(vecpos);
+	pStoneWall->BindVtxPosition();
+
 
 	// ステンシル影生成
 	CStencilShadow::Create();

@@ -20,8 +20,8 @@ namespace
 {
 	const int WIDTH_BLOCK = 2;
 	const float WIDTH = 200.0f;
-	const float CREATEDISTANCE = 100.0f;	// 生成間隔
 }
+const float CCourse::m_fCreateDistance = 200.0f;	// 生成間隔
 
 //==========================================================================
 // コンストラクタ
@@ -30,7 +30,7 @@ CCourse::CCourse(int nPriority, const LAYER layer) : CObject3DMesh(nPriority, la
 {
 	m_pCollisionLineBox.clear();	// 当たり判定ボックス
 	m_vecSegmentPosition.clear();	// 基点の位置
-	m_vecVtxPosition.clear();		// 各頂点の位置
+	m_vecVtxInfo.clear();			// 各頂点の情報
 	m_courceLength = 0.0f;
 }
 
@@ -147,7 +147,7 @@ void CCourse::CalVtxPosition()
 
 
 	// 頂点情報クリア
-	m_vecVtxPosition.clear();
+	m_vecVtxInfo.clear();
 
 	// 各頂点格納
 	m_courceLength = 0.0f;
@@ -157,20 +157,20 @@ void CCourse::CalVtxPosition()
 
 		while (1)
 		{
-			distance += CREATEDISTANCE;
+			distance += m_fCreateDistance;
 
 			if (distance >= vecLength[i])
 			{
-				m_courceLength += CREATEDISTANCE - (distance - vecLength[i]);
+				m_courceLength += m_fCreateDistance - (distance - vecLength[i]);
 
 				distance = vecLength[i];
 
-				m_vecVtxPosition.push_back(MySpline::GetSplinePosition_NonLoop(m_vecSegmentPosition, m_courceLength, 20.0f));
+				m_vecVtxInfo.push_back(VtxInfo(MySpline::GetSplinePosition_NonLoop(m_vecSegmentPosition, m_courceLength, 20.0f), 0.0f));
 				break;
 			}
 
-			m_courceLength += CREATEDISTANCE;
-			m_vecVtxPosition.push_back(MySpline::GetSplinePosition_NonLoop(m_vecSegmentPosition, m_courceLength));
+			m_courceLength += m_fCreateDistance;
+			m_vecVtxInfo.push_back(VtxInfo(MySpline::GetSplinePosition_NonLoop(m_vecSegmentPosition, m_courceLength), 0.0f));
 		}
 	}
 }
@@ -201,7 +201,7 @@ void CCourse::Reset()
 	// 各種変数初期化
 	SetPosition(MyLib::Vector3(0.0f, 10.0f, 0.0f));				// 位置
 	SetWidthBlock(1);		// 幅分割
-	SetHeightBlock(static_cast<int>(m_vecVtxPosition.size()) - 1);	// 縦分割
+	SetHeightBlock(static_cast<int>(m_vecVtxInfo.size()) - 1);	// 縦分割
 	SetWidthLen(0.0f);		// 縦長さ
 	SetHeightLen(0.0f);		// 横長さ
 
@@ -254,7 +254,7 @@ void CCourse::ReCreateVtx()
 	// 各種変数初期化
 	SetPosition(MyLib::Vector3(0.0f, 10.0f, 0.0f));				// 位置
 	SetWidthBlock(1);		// 幅分割
-	SetHeightBlock(static_cast<int>(m_vecVtxPosition.size()) - 1);	// 縦分割
+	SetHeightBlock(static_cast<int>(m_vecVtxInfo.size()) - 1);	// 縦分割
 	SetWidthLen(0.0f);		// 縦長さ
 	SetHeightLen(0.0f);		// 横長さ
 
@@ -302,9 +302,8 @@ void CCourse::SetVtxPosition()
 	MyLib::Matrix mtxLeft, mtxRight;
 
 	MyLib::Vector3* pVtxPos = GetVtxPos();
-	MyLib::Vector3 rot;
 
-	for (int y = 0; y < static_cast<int>(m_vecVtxPosition.size()); y++)
+	for (int y = 0; y < static_cast<int>(m_vecVtxInfo.size()); y++)
 	{
 		int idx = (WIDTH_BLOCK * y);
 		int nextidx = (WIDTH_BLOCK * y) + 1;
@@ -314,17 +313,29 @@ void CCourse::SetVtxPosition()
 		mtxRight.Identity();
 
 		// 向き反映
-		int next = (y + 1) % static_cast<int>(m_vecVtxPosition.size());
+		int next = (y + 1) % static_cast<int>(m_vecVtxInfo.size());
 
-		rot.y = m_vecVtxPosition[next].AngleXZ(m_vecVtxPosition[y]);
-		UtilFunc::Transformation::RotNormalize(rot.y);
+		bool bEnd = false;
+		if (next == 0)
+		{
+			next = y - 1;
+			bEnd = true;
+		}
+
+		m_vecVtxInfo[y].rot.y = m_vecVtxInfo[next].pos.AngleXZ(m_vecVtxInfo[y].pos);
+		UtilFunc::Transformation::RotNormalize(m_vecVtxInfo[y].rot.y);
+
+		if (bEnd)
+		{
+			m_vecVtxInfo[y].rot.y *= -1;
+		}
 
 		// 回転反映
-		mtxRotate.RotationYawPitchRoll(rot.y, rot.x, rot.z);
+		mtxRotate.RotationYawPitchRoll(m_vecVtxInfo[y].rot.y, m_vecVtxInfo[y].rot.x, m_vecVtxInfo[y].rot.z);
 		mtxParent.Multiply(mtxParent, mtxRotate);
 
 		// 位置反映
-		mtxTrans.Translation(m_vecVtxPosition[y]);
+		mtxTrans.Translation(m_vecVtxInfo[y].pos);
 		mtxParent.Multiply(mtxParent, mtxTrans);
 
 
@@ -341,7 +352,7 @@ void CCourse::SetVtxPosition()
 		mtxRight.Multiply(mtxRight, mtxParent);
 
 		//mtxLeft.Multiply(mtxLeft, mtxRotate);
-
+		ImGui::Text("x:%f y:%f z:%f, rot.y:%f", m_vecVtxInfo[y].pos.x, m_vecVtxInfo[y].pos.y, m_vecVtxInfo[y].pos.z, m_vecVtxInfo[y].rot.y);
 
 		// 頂点座標代入
 		pVtxPos[idx] = mtxLeft.GetWorldPosition();
@@ -394,7 +405,7 @@ void CCourse::Draw()
 	}
 
 	// 描画処理
-	//CObject3DMesh::Draw();
+	CObject3DMesh::Draw();
 
 	pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);	// 埋めるモード
 }
@@ -415,7 +426,7 @@ void CCourse::SetVtx()
 	float fHeightLen = GetHeightLen();
 	int vtxNum = GetNumVertex();
 
-	int heightBlock = static_cast<int>(m_vecVtxPosition.size());
+	int heightBlock = static_cast<int>(m_vecVtxInfo.size());
 
 	for (int nCntHeight = 0; nCntHeight < nHeight + 1; nCntHeight++)
 	{// 縦の分割分繰り返す
@@ -584,6 +595,26 @@ CCollisionLine_Box* CCourse::GetCollisionLineBox(int idx)
 }
 
 //==========================================================================
+// 各頂点情報の位置取得
+//==========================================================================
+CCourse::VtxInfo CCourse::GetVecVtxinfo(int idx)
+{
+	if (static_cast<int>(m_vecVtxInfo.size()) <= idx) return VtxInfo();
+
+	return m_vecVtxInfo[idx];
+}
+
+//==========================================================================
+// 各頂点情報の位置設定
+//==========================================================================
+void CCourse::SetVecVtxinfo(int idx, const VtxInfo& vecinfo)
+{
+	if (static_cast<int>(m_vecVtxInfo.size()) <= idx) return;
+
+	m_vecVtxInfo[idx] = vecinfo;
+}
+
+//==========================================================================
 // 基点の位置取得
 //==========================================================================
 MyLib::Vector3 CCourse::GetVecPosition(int idx)
@@ -601,24 +632,4 @@ void CCourse::SetVecPosition(int idx, const MyLib::Vector3& pos)
 	if (static_cast<int>(m_vecSegmentPosition.size()) <= idx) return;
 
 	m_vecSegmentPosition[idx] = pos;
-}
-
-//==========================================================================
-// 各頂点の位置取得
-//==========================================================================
-MyLib::Vector3 CCourse::GetVecVtxPosition(int idx)
-{
-	if (static_cast<int>(m_vecVtxPosition.size()) <= idx) return MyLib::Vector3();
-
-	return m_vecVtxPosition[idx];
-}
-
-//==========================================================================
-// 各頂点の位置設定
-//==========================================================================
-void CCourse::SetVecVtxPosition(int idx, const MyLib::Vector3& pos)
-{
-	if (static_cast<int>(m_vecVtxPosition.size()) <= idx) return;
-
-	m_vecVtxPosition[idx] = pos;
 }

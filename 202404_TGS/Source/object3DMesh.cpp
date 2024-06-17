@@ -702,6 +702,9 @@ void CObject3DMesh::Draw()
 //==========================================================================
 void CObject3DMesh::SetVtx()
 {
+	if (m_pVtxBuff == nullptr)
+		return;
+
 	// éÌóﬁÇ…í∏ì_ç¿ïWê›íË
 	switch (m_type)
 	{
