@@ -318,8 +318,7 @@ void CCourse::SetVtxPosition()
 		rot.y = m_vecVtxPosition[next].AngleXZ(m_vecVtxPosition[y]);
 		UtilFunc::Transformation::RotNormalize(rot.y);
 
-		ImGui::Text("x:%f y:%f z:%f, rot.y:%f", m_vecVtxPosition[y].x, m_vecVtxPosition[y].y, m_vecVtxPosition[y].z, rot.y);
-
+		// ‰ñ“]”½‰f
 		mtxRotate.RotationYawPitchRoll(rot.y, rot.x, rot.z);
 		mtxParent.Multiply(mtxParent, mtxRotate);
 
@@ -394,7 +393,7 @@ void CCourse::Draw()
 	}
 
 	// •`‰æˆ—
-	CObject3DMesh::Draw();
+	//CObject3DMesh::Draw();
 
 	pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);	// –„‚ß‚éƒ‚[ƒh
 }

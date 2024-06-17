@@ -15,11 +15,11 @@
 #include "map_obstacle.h"
 #include "collisionLine_Box.h"
 #include "keyconfig.h"
+#include "waterripple.h"
 
 namespace
 {
 	const float MULTIPLIY_DASH = 2.0f;		// ダッシュの倍率
-	const float STAMINA_AVOID = 30.0f;		// 回避のスタミナ消費量
 	const float LENGTH_AUTOFACE = 200.0f;	// 自動で向く長さ
 	const float LENGTH_COLLISIONRANGE = 500.0f;		// 当たり判定する範囲の長さ
 	const float RATIO_COLLISIONRANGE = 0.3f;		// 範囲の長さの最小割合
@@ -29,6 +29,7 @@ namespace
 	const float HEIGHT_VELOCITY = 10.0f;
 	float MAX_SURHEIGHT = 100.0f;
 	float SURHEIGHT_VELOCITY = (10.0f);
+	int DEFAULT_WATERRIPPLE_INTERVAL = 21;	// 水波紋のインターバル
 }
 
 //==========================================================================
@@ -90,6 +91,10 @@ void CPlayerControlMove::Move(CPlayer* player)
 
 	// 状態取得
 	CPlayer::STATE state = player->GetState();
+
+	// 移動方向
+	int angle = 0;
+	m_nIntervalAddRippleCounter = 1;
 
 	if ((pMotion->IsGetMove(nMotionType) == 1 || pMotion->IsGetCancelable()) &&
 		state != CPlayer::STATE::STATE_DEAD &&
@@ -199,10 +204,13 @@ void CPlayerControlMove::Move(CPlayer* player)
 			move.z += cosf(stickrot + Camerarot.y) * fMove;
 			fRotDest = D3DX_PI + stickrot + Camerarot.y;
 #endif
-			int angle = (stickrot <= 0.0f) ? -1 : 1;
+			angle = (stickrot <= 0.0f) ? -1 : 1;
 
-			if (angle == -1) fMove *= 0.3f;
-
+			if (angle == -1)
+			{
+				fMove *= 0.3f;
+				m_nIntervalAddRippleCounter = 2;
+			}
 			move.x += sinf(D3DX_PI * 0.5f + Camerarot.y) * (fMove * angle);
 			move.z += cosf(D3DX_PI * 0.5f + Camerarot.y) * (fMove * angle);
 			fRotDest = angle * (-D3DX_PI * 0.5f) + Camerarot.y;
@@ -306,6 +314,65 @@ void CPlayerControlMove::Move(CPlayer* player)
 	{
 		// 移動量設定
 		player->SetMove(move);
+	}
+
+	/*static float height = 30.0f, velocity = 3.1f, thickness = 10.0f;
+	static int life = 45;
+	static int block = 80, interval = 20;
+	static float blocksize = 2.5f;*/
+
+	static float height = 31.5f, velocity = 4.0f, thickness = 16.0f;
+	static int life = 53;
+	static int block = 64;
+	static float blocksize = 4.7f;
+
+
+	ImGui::DragInt("INTERVAL", &m_nIntervalWaterRipple, 1);
+	ImGui::DragInt("BLOCK", &block, 1);
+	ImGui::DragFloat("BLOCK SIZE", &blocksize, 0.1f, 0.0f, 0.0f, "%.2f");
+	ImGui::DragFloat("height", &height, 0.1f, 0.0f, 0.0f, "%.2f");
+	ImGui::DragFloat("velocity", &velocity, 0.1f, 0.0f, 0.0f, "%.2f");
+	ImGui::DragFloat("thickness", &thickness, 1.0f, 0.0f, 0.0f, "%.2f");
+	ImGui::DragInt("life", &life, 1);
+
+	bool bCreateRipple = false;	// 波紋生成フラグ
+
+	// 水波紋カウンター加算間隔更新
+	m_nAddRippleCounter = (m_nAddRippleCounter + 1) % m_nIntervalAddRippleCounter;
+
+	if (m_nAddRippleCounter == 0)
+	{// 水波紋カウンター加算間隔が一周
+
+		// 波紋カウンター加算
+		m_nCntWaterRipple = (m_nCntWaterRipple + 1) % m_nIntervalWaterRipple;
+
+		if (m_nCntWaterRipple == 0)
+		{
+			bCreateRipple = true;
+		}
+
+		// 加速中
+		if (angle == 1)
+		{
+			m_nCntWaterRipple = (m_nCntWaterRipple + 1) % m_nIntervalWaterRipple;
+
+			if (m_nCntWaterRipple == 0)
+			{
+				bCreateRipple = true;
+			}
+		}
+
+		// 波紋
+		if (bCreateRipple)
+		{
+			MyLib::Vector3 setpos = player->GetPosition();
+			setpos.y -= 5.0f;
+
+			CWaterRipple::Create(block, blocksize, setpos, height, velocity, thickness, life);
+
+			// インターバルをランダム調整
+			m_nIntervalWaterRipple = DEFAULT_WATERRIPPLE_INTERVAL + UtilFunc::Transformation::Random(-6, 6);
+		}
 	}
 
 	// 角度の正規化
