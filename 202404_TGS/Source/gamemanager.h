@@ -80,6 +80,7 @@ protected:
 	virtual void SceneWaitAirPush();
 	virtual void SceneGoal();
 	virtual void ContainPlayerBaggage();
+	virtual void CheckJudgeZone();
 	virtual void SetEnemy();
 	virtual void SetBoss();
 

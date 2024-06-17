@@ -494,9 +494,6 @@
     <ClCompile Include="Source\stencilshadow.cpp">
       <Filter>stencilshadow</Filter>
     </ClCompile>
-    <ClCompile Include="Source\waterfield.cpp">
-      <Filter>mesh</Filter>
-    </ClCompile>
     <ClCompile Include="Source\baggageManager.cpp">
       <Filter>baggage</Filter>
     </ClCompile>
@@ -512,7 +509,19 @@
     <ClCompile Include="Source\myassert.cpp">
       <Filter>system</Filter>
     </ClCompile>
+    <ClCompile Include="Source\judge.cpp">
+      <Filter>judgezone</Filter>
+    </ClCompile>
     <ClCompile Include="Source\waterripple.cpp">
+      <Filter>water</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\waterfield.cpp">
+      <Filter>water</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\waterfield_right.cpp">
+      <Filter>water</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\waterfield_left.cpp">
       <Filter>water</Filter>
     </ClCompile>
   </ItemGroup>
@@ -919,9 +928,6 @@
     <ClInclude Include="Source\stencilshadow.h">
       <Filter>stencilshadow</Filter>
     </ClInclude>
-    <ClInclude Include="Source\waterfield.h">
-      <Filter>mesh</Filter>
-    </ClInclude>
     <ClInclude Include="Source\baggageManager.h">
       <Filter>baggage</Filter>
     </ClInclude>
@@ -937,7 +943,19 @@
     <ClInclude Include="Source\myassert.h">
       <Filter>system</Filter>
     </ClInclude>
+    <ClInclude Include="Source\judge.h">
+      <Filter>judgezone</Filter>
+    </ClInclude>
     <ClInclude Include="Source\waterripple.h">
+      <Filter>water</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\waterfield.h">
+      <Filter>water</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\waterfield_right.h">
+      <Filter>water</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\waterfield_left.h">
       <Filter>water</Filter>
     </ClInclude>
   </ItemGroup>
