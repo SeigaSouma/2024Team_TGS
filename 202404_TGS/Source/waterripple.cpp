@@ -1,10 +1,10 @@
 //=============================================================================
 // 
-//  起伏処理 [course.cpp]
+//  水紋処理 [waterripple.cpp]
 //  Author : 相馬靜雅
 // 
 //=============================================================================
-#include "course.h"
+#include "waterripple.h"
 #include "manager.h"
 #include "calculation.h"
 #include "debugproc.h"
@@ -18,25 +18,22 @@
 //==========================================================================
 namespace
 {
-	const int WIDTH_BLOCK = 2;
-	const float WIDTH = 200.0f;
-	const float CREATEDISTANCE = 100.0f;	// 生成間隔
+
 }
 
 //==========================================================================
 // コンストラクタ
 //==========================================================================
-CCourse::CCourse(int nPriority, const LAYER layer) : CObject3DMesh(nPriority, layer)
+CWaterRipple::CWaterRipple(const int block, const float blockSize, int nPriority, const LAYER layer)
+	: m_Block(block), m_BlockSize(blockSize), CObject3DMesh(nPriority, layer)
 {
-	m_pCollisionLineBox.clear();	// 当たり判定ボックス
-	m_vecSegmentPosition.clear();	// 基点の位置
-	m_vecVtxPosition.clear();		// 各頂点の位置
+
 }
 
 //==========================================================================
 // デストラクタ
 //==========================================================================
-CCourse::~CCourse()
+CWaterRipple::~CWaterRipple()
 {
 
 }
@@ -44,16 +41,19 @@ CCourse::~CCourse()
 //==========================================================================
 // 生成処理
 //==========================================================================
-CCourse* CCourse::Create(const std::string& file)
+CWaterRipple* CWaterRipple::Create(
+	const int block, const float blockSize, 
+	const MyLib::Vector3& pos, float height, float velocity, float thickness, int life)
 {
 	// メモリの確保
-	CCourse* pObjMeshField = DEBUG_NEW CCourse;
+	CWaterRipple* pObjMeshField = DEBUG_NEW CWaterRipple(block, blockSize);
 
 	if (pObjMeshField != nullptr)
 	{
-		pObjMeshField->m_FileName = file;
+		pObjMeshField->m_Info = Info(height, velocity, 0.0f, thickness, life, life);
 
 		// 初期化処理
+		pObjMeshField->SetPosition(pos);
 		pObjMeshField->Init();
 	}
 
@@ -63,12 +63,9 @@ CCourse* CCourse::Create(const std::string& file)
 //==========================================================================
 // 初期化処理
 //==========================================================================
-HRESULT CCourse::Init()
+HRESULT CWaterRipple::Init()
 {
 	HRESULT hr;
-
-	// ロード処理
-	Load(m_FileName);
 
 	// テクスチャの割り当て
 	int texIdx = CTexture::GetInstance()->Regist("");
@@ -77,305 +74,178 @@ HRESULT CCourse::Init()
 	// 種類設定
 	SetType(CObject::TYPE::TYPE_OBJECT3D);
 
+	// 各種変数初期化
+	SetWidthBlock(m_Block);		// 幅分割
+	SetHeightBlock(m_Block);	// 縦分割
+	SetWidthLen(m_BlockSize);	// 縦長さ
+	SetHeightLen(m_BlockSize);	// 横長さ
+
 	// オブジェクト3Dメッシュの初期化処理
-	Reset();
+	CObject3DMesh::Init(CObject3DMesh::TYPE_FIELD);
 
 	// 頂点情報設定
 	SetVtx();
 
+
+
+
+	D3DXCOLOR* pVtxCol = GetVtxCol();
+
+	// 全ての要素を書き換え
+	std::fill(pVtxCol, pVtxCol + GetNumVertex(), D3DXCOLOR(0.6f, 0.6f, 1.0f, 0.7f));
 	return S_OK;
 }
 
 //==========================================================================
 // 終了処理
 //==========================================================================
-void CCourse::Uninit()
-{
-	m_pCollisionLineBox.clear();
-
-	// 終了処理
-	CObject3DMesh::Uninit();
-}
-
-//==========================================================================
-// 各頂点計算
-//==========================================================================
-void CCourse::CalVtxPosition()
-{
-
-	// 最初と最後、逆方向に少し出す
-	MyLib::Vector3 begin, end;
-	float angle = 0.0f;
-
-	// 最初
-	angle = m_vecSegmentPosition[1].AngleXZ(m_vecSegmentPosition[0]);
-	begin = MyLib::Vector3(
-		m_vecSegmentPosition[0].x + sinf(angle) * -10.0f,
-		m_vecSegmentPosition[0].y,
-		m_vecSegmentPosition[0].z + cosf(angle) * -10.0f);
-
-	// 最後
-	int endIdx = m_vecSegmentPosition.size() - 1;
-	angle = m_vecSegmentPosition[endIdx].AngleXZ(m_vecSegmentPosition[endIdx - 1]);
-	end = MyLib::Vector3(
-		m_vecSegmentPosition[endIdx].x + sinf(angle) * 10.0f,
-		m_vecSegmentPosition[endIdx].y,
-		m_vecSegmentPosition[endIdx].z + cosf(angle) * 10.0f);
-
-	m_vecSegmentPosition.insert(m_vecSegmentPosition.begin(), begin);
-	m_vecSegmentPosition.push_back(end);
-
-	// セグメントの長さを計算
-	int segmentSize = m_vecSegmentPosition.size();
-	std::vector<float> vecLength(segmentSize);
-
-	for (int i = 0; i < segmentSize; ++i)
-	{
-		// 次回のインデックス(ループ)
-		int next = (i + 1) % segmentSize;
-
-		if (next == 0)
-		{
-			vecLength[i] = 10.0f;
-			break;
-		}
-
-		// 点同士の距離
-		vecLength[i] = m_vecSegmentPosition[i].Distance(m_vecSegmentPosition[next]);
-	}
-
-
-	// 頂点情報クリア
-	m_vecVtxPosition.clear();
-
-	// 各頂点格納
-	float toataldistance = 0.0f;
-	for (int i = 0; i < segmentSize; i++)
-	{
-		float distance = 0.0f;
-
-		while (1)
-		{
-			distance += CREATEDISTANCE;
-
-			if (distance >= vecLength[i])
-			{
-				toataldistance += CREATEDISTANCE - (distance - vecLength[i]);
-
-				distance = vecLength[i];
-
-				m_vecVtxPosition.push_back(MySpline::GetSplinePosition_NonLoop(m_vecSegmentPosition, toataldistance, 20.0f));
-				break;
-			}
-
-			toataldistance += CREATEDISTANCE;
-			m_vecVtxPosition.push_back(MySpline::GetSplinePosition_NonLoop(m_vecSegmentPosition, toataldistance));
-		}
-	}
-}
-
-//==========================================================================
-// リセット
-//==========================================================================
-void CCourse::Reset()
+void CWaterRipple::Uninit()
 {
 	// 終了処理
 	CObject3DMesh::Uninit();
-
-	// 死亡フラグ強制リセット
-	SetEnableDeath(false);
-
-
-	// テクスチャの割り当て
-	int texIdx = CTexture::GetInstance()->Regist("");
-	BindTexture(texIdx);
-
-	// 種類設定
-	SetType(CObject::TYPE::TYPE_OBJECT3D);
-
-
-	// 各頂点計算
-	CalVtxPosition();
-
-	// 各種変数初期化
-	SetPosition(MyLib::Vector3(0.0f, 10.0f, 0.0f));				// 位置
-	SetWidthBlock(1);		// 幅分割
-	SetHeightBlock(static_cast<int>(m_vecVtxPosition.size()) - 1);	// 縦分割
-	SetWidthLen(0.0f);		// 縦長さ
-	SetHeightLen(0.0f);		// 横長さ
-
-	// オブジェクト3Dメッシュの初期化処理
-	CObject3DMesh::Init(CObject3DMesh::TYPE_FIELD);
-
-	// 頂点情報設定
-	SetVtx();
-
-
-	for (const auto& box : m_pCollisionLineBox)
-	{
-		box->Kill();
-	}
-	m_pCollisionLineBox.clear();
-
-	MyLib::AABB aabb(-25.0f, 25.0f);
-	for (const auto& vtx : m_vecSegmentPosition)
-	{
-		m_pCollisionLineBox.push_back(CCollisionLine_Box::Create(aabb, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f)));
-	}
-}
-
-//==========================================================================
-// リセット
-//==========================================================================
-void CCourse::ReCreateVtx()
-{
-
-	// 終了処理
-	CObject3DMesh::Uninit();
-
-	// 死亡フラグ強制リセット
-	SetEnableDeath(false);
-
-
-	// テクスチャの割り当て
-	int texIdx = CTexture::GetInstance()->Regist("");
-	BindTexture(texIdx);
-
-	// 種類設定
-	SetType(CObject::TYPE::TYPE_OBJECT3D);
-
-	m_vecSegmentPosition.erase(m_vecSegmentPosition.begin());
-	m_vecSegmentPosition.pop_back();
-
-	// 各頂点計算
-	CalVtxPosition();
-
-	// 各種変数初期化
-	SetPosition(MyLib::Vector3(0.0f, 10.0f, 0.0f));				// 位置
-	SetWidthBlock(1);		// 幅分割
-	SetHeightBlock(static_cast<int>(m_vecVtxPosition.size()) - 1);	// 縦分割
-	SetWidthLen(0.0f);		// 縦長さ
-	SetHeightLen(0.0f);		// 横長さ
-
-	// オブジェクト3Dメッシュの初期化処理
-	CObject3DMesh::Init(CObject3DMesh::TYPE_FIELD);
-
-	// 頂点情報設定
-	SetVtx();
-
-
-	for (const auto& box : m_pCollisionLineBox)
-	{
-		box->Kill();
-	}
-	m_pCollisionLineBox.clear();
-
-	MyLib::AABB aabb(-25.0f, 25.0f);
-	for (const auto& vtx : m_vecSegmentPosition)
-	{
-		m_pCollisionLineBox.push_back(CCollisionLine_Box::Create(aabb, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f)));
-	}
 }
 
 //==========================================================================
 // 更新処理
 //==========================================================================
-void CCourse::Update()
+void CWaterRipple::Update()
 {
+
+	m_Info.length += m_Info.velocity;
+
 #if _DEBUG
 	// 頂点座標計算
 	SetVtxPosition();
 
 	SetVtx();
 #endif
+
+	m_Info.life--;
+
+	if (m_Info.life <= 0)
+	{
+		Uninit();
+	}
 }
 
 //==========================================================================
 // 頂点座標
 //==========================================================================
-void CCourse::SetVtxPosition()
+void CWaterRipple::SetVtxPosition()
 {
-	// 計算用変数
-	MyLib::Vector3 offset;
-	MyLib::Matrix mtxParent, mtxTrans, mtxRotate;
-	MyLib::Matrix mtxLeft, mtxRight;
 
 	MyLib::Vector3* pVtxPos = GetVtxPos();
-	MyLib::Vector3 rot;
+	MyLib::Vector3* pVtxNor = GetVtxNor();
+	MyLib::Vector3 vec1, vec2, nor;
+	MyLib::Vector3 VtxRight, VtxLeft, VtxNow;
+	int nHeight = GetHeightBlock();
+	int nWidth = GetWidthBlock();
+	float fWidthLen = GetWidthLen();
+	float fHeightLen = GetHeightLen();
+	int vtxNum = GetNumVertex();
 
-	for (int y = 0; y < static_cast<int>(m_vecVtxPosition.size()); y++)
-	{
-		int idx = (WIDTH_BLOCK * y);
-		int nextidx = (WIDTH_BLOCK * y) + 1;
+	MyLib::Vector3 pos = GetPosition();
+	MyLib::Vector3 vtxPos;
 
-		mtxParent.Identity();
-		mtxLeft.Identity();
-		mtxRight.Identity();
+	float lifeRatio = (float)m_Info.life / (float)m_Info.maxLife;
 
-		// 向き反映
-		int next = (y + 1) % static_cast<int>(m_vecVtxPosition.size());
+	for (int nCntHeight = 0; nCntHeight < nHeight + 1; nCntHeight++)
+	{// 縦の分割分繰り返す
 
-		rot.y = m_vecVtxPosition[next].AngleXZ(m_vecVtxPosition[y]);
-		UtilFunc::Transformation::RotNormalize(rot.y);
+		for (int nCntWidth = 0; nCntWidth < nWidth + 1; nCntWidth++)
+		{// 横の分割分繰り返す
 
-		ImGui::Text("x:%f y:%f z:%f, rot.y:%f", m_vecVtxPosition[y].x, m_vecVtxPosition[y].y, m_vecVtxPosition[y].z, rot.y);
+			int idx = nCntWidth + (nWidth + 1) * nCntHeight;
+			vtxPos = pVtxPos[idx] + pos;
 
-		mtxRotate.RotationYawPitchRoll(rot.y, rot.x, rot.z);
-		mtxParent.Multiply(mtxParent, mtxRotate);
-
-		// 位置反映
-		mtxTrans.Translation(m_vecVtxPosition[y]);
-		mtxParent.Multiply(mtxParent, mtxTrans);
-
-
-		
-
-		// オフセット反映
-		offset = MyLib::Vector3(WIDTH, 0.0f, 0.0f);
-		mtxLeft.Translation(offset);
-
-		offset = MyLib::Vector3(-WIDTH, 0.0f, 0.0f);
-		mtxRight.Translation(offset);
-
-		mtxLeft.Multiply(mtxLeft, mtxParent);
-		mtxRight.Multiply(mtxRight, mtxParent);
-
-		//mtxLeft.Multiply(mtxLeft, mtxRotate);
+			// 原点と頂点の距離
+			float fNowLength =
+				sqrtf((pos.x - vtxPos.x) * (pos.x - vtxPos.x)
+					+ (pos.z - vtxPos.z) * (pos.z - vtxPos.z));
 
 
-		// 頂点座標代入
-		pVtxPos[idx] = mtxLeft.GetWorldPosition();
-		pVtxPos[nextidx] = mtxRight.GetWorldPosition();
+			// 原点と最大範囲までの距離
+			float fMaxLength = m_Info.length + m_Info.thickness;
 
-#if 0
-		CEffect3D::Create(
-			m_vecVtxPosition[y] + GetPosition(),
-			MyLib::Vector3(0.0f, 0.0f, 0.0f),
-			D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f),
-			20.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+			// 原点と最小範囲までの距離
+			float fMinLength = m_Info.length - m_Info.thickness;
 
-		CEffect3D::Create(
-			pVtxPos[idx] + GetPosition(),
-			MyLib::Vector3(0.0f, 0.0f, 0.0f),
-			D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f),
-			20.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+			// 範囲の長さ
+			float fRangeLength = fMaxLength - fMinLength;
 
-		CEffect3D::Create(
-			pVtxPos[nextidx] + GetPosition(),
-			MyLib::Vector3(0.0f, 0.0f, 0.0f),
-			D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f),
-			20.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
-#endif
 
-	}
 
-	int i = 0;
-	MyLib::Vector3 fieldpos = GetPosition();
-	for (const auto& vtx : m_vecSegmentPosition)
-	{
-		MyLib::Vector3 setpos = vtx + fieldpos;
-		m_pCollisionLineBox[i]->SetPosition(setpos);
-		i++;
+
+
+
+
+
+
+
+			// 現在距離との割合
+			float ratio = m_Info.length / fNowLength;
+
+			if (fNowLength > fMaxLength || fNowLength < fMinLength)
+			{// 範囲外は移動量ゼロ
+				
+				ratio = 0.0f;
+			}
+
+			if (fNowLength <= fMaxLength &&
+				fNowLength >= fMinLength)
+			{
+
+				if (m_Info.length >= fNowLength)
+				{
+					int n = 0;
+				}
+
+
+				float calMinLen = fMinLength;
+				if (calMinLen <= 0.0f)
+				{
+					calMinLen = 0.0f;
+				}
+
+				float calMaxLen = fMaxLength - calMinLen;
+				float calVtxLen = fNowLength - calMinLen;
+				if (calMaxLen <= 0.0f)
+				{
+					calMaxLen = 0.0f;
+				}
+
+				if (calVtxLen <= 0.0f)
+				{
+					calVtxLen = 0.0f;
+				}
+
+
+				// 最大距離が1.0fになる割合
+				float maxratio = calVtxLen / calMaxLen;
+
+				if (maxratio > 0.5f)
+				{
+					maxratio = 1.0f - maxratio;
+				}
+				else
+				{
+					int n = 0;
+				}
+
+				ratio = maxratio;
+			}
+
+			/*if (ratio >= 1.0f)
+				ratio = 1.0f;*/
+
+			// 波の高さ
+			float waveHeight = m_Info.height * ratio;
+
+			waveHeight *= lifeRatio;
+
+			// 波の高さ設定
+			pVtxPos[idx].y = waveHeight;
+		}
 	}
 
 }
@@ -383,7 +253,7 @@ void CCourse::SetVtxPosition()
 //==========================================================================
 // 描画処理
 //==========================================================================
-void CCourse::Draw()
+void CWaterRipple::Draw()
 {
 	//  デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
@@ -402,7 +272,7 @@ void CCourse::Draw()
 //==========================================================================
 // 頂点情報設定処理
 //==========================================================================
-void CCourse::SetVtx()
+void CWaterRipple::SetVtx()
 {
 
 	MyLib::Vector3 *pVtxPos = GetVtxPos();
@@ -415,8 +285,6 @@ void CCourse::SetVtx()
 	float fHeightLen = GetHeightLen();
 	int vtxNum = GetNumVertex();
 
-	int heightBlock = static_cast<int>(m_vecVtxPosition.size());
-
 	for (int nCntHeight = 0; nCntHeight < nHeight + 1; nCntHeight++)
 	{// 縦の分割分繰り返す
 
@@ -424,11 +292,11 @@ void CCourse::SetVtx()
 		{// 横の分割分繰り返す
 
 			// 今回の頂点
-			int nNowPoint = (nCntWidth + 1) + (nCntHeight * (WIDTH_BLOCK));
-			int nVerTexW = (WIDTH_BLOCK) + 1;
+			int nNowPoint = (nCntWidth + 1) + (nCntHeight * (nWidth));
+			int nVerTexW = (nWidth) + 1;
 
-			int nLeft = nCntWidth + (nCntHeight * (WIDTH_BLOCK));
-			int nRight = nCntWidth + (nCntHeight * (WIDTH_BLOCK)) + nVerTexW;
+			int nLeft = nCntWidth + (nCntHeight * (nWidth));
+			int nRight = nCntWidth + (nCntHeight * (nWidth)) + nVerTexW;
 
 			if (nNowPoint >= vtxNum)
 			{
@@ -440,9 +308,9 @@ void CCourse::SetVtx()
 
 				// 頂点座標の設定
 				VtxRight = MyLib::Vector3(
-					(fWidthLen * nCntWidth) - ((fWidthLen * WIDTH_BLOCK) * 0.5f),
+					(fWidthLen * nCntWidth) - ((fWidthLen * nWidth) * 0.5f),
 					0.0f,
-					-((fHeightLen * nCntHeight) - ((fHeightLen * heightBlock) * 0.5f)));
+					-((fHeightLen * nCntHeight) - ((fHeightLen * nHeight) * 0.5f)));
 			}
 			else
 			{
@@ -454,9 +322,9 @@ void CCourse::SetVtx()
 
 				// 頂点座標の設定
 				VtxLeft = MyLib::Vector3(
-					(fWidthLen * nCntWidth) - ((fWidthLen * WIDTH_BLOCK) * 0.5f),
+					(fWidthLen * nCntWidth) - ((fWidthLen * nWidth) * 0.5f),
 					0.0f,
-					-((fHeightLen * nCntHeight) - ((fHeightLen * heightBlock) * 0.5f)));
+					-((fHeightLen * nCntHeight) - ((fHeightLen * nHeight) * 0.5f)));
 			}
 			else
 			{
@@ -468,9 +336,9 @@ void CCourse::SetVtx()
 
 				// 頂点座標の設定
 				VtxNow = MyLib::Vector3(
-					(fWidthLen * nCntWidth) - ((fWidthLen * WIDTH_BLOCK) * 0.5f),
+					(fWidthLen * nCntWidth) - ((fWidthLen * nWidth) * 0.5f),
 					0.0f,
-					-((fHeightLen * nCntHeight) - ((fHeightLen * heightBlock) * 0.5f)));
+					-((fHeightLen * nCntHeight) - ((fHeightLen * nHeight) * 0.5f)));
 			}
 			else
 			{
@@ -494,131 +362,4 @@ void CCourse::SetVtx()
 
 	// 頂点情報更新
 	CObject3DMesh::SetVtx();
-}
-
-//==========================================================================
-// ロード処理
-//==========================================================================
-HRESULT CCourse::Load(const std::string& file)
-{
-	// ファイルを開く
-	std::ifstream File(file, std::ios::binary);
-	if (!File.is_open()) {
-
-		// 例外処理
-		m_vecSegmentPosition.push_back({ 0.0f, 0.0f, 0.0f });
-		m_vecSegmentPosition.push_back({ 0.0f, 0.0f, 0.0f });
-		m_vecSegmentPosition.push_back({ 0.0f, 0.0f, 500.0f });
-		m_vecSegmentPosition.push_back({ 0.0f, 0.0f, 1000.0f });
-		m_vecSegmentPosition.push_back({ 0.0f, 0.0f, 1800.0f });
-		m_vecSegmentPosition.push_back({ 0.0f, 0.0f, 1800.0f });
-
-		MyLib::AABB aabb(-25.0f, 25.0f);
-
-		for (int i = 0; i < static_cast<int>(m_vecSegmentPosition.size()); i++)
-		{
-			m_pCollisionLineBox.push_back(CCollisionLine_Box::Create(aabb, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f)));
-		}
-
-		// オブジェクト3Dメッシュの初期化処理
-		Reset();
-
-		Save();
-		return E_FAIL;
-	}
-
-	// 構造体のサイズを取得
-	std::streamsize structSize = sizeof(MyLib::Vector3);
-	
-	// ファイルの末尾までデータを読み込む
-	File.seekg(0, std::ios::end);
-	std::streampos fileSize = File.tellg();
-	File.seekg(0, std::ios::beg);
-	
-	// データの個数を計算
-	size_t numVectors = fileSize / structSize;
-	
-	// ベクトルの配列を用意
-	m_vecSegmentPosition.resize(numVectors);
-	
-	// ファイルからデータを読み込む
-	File.read(reinterpret_cast<char*>(m_vecSegmentPosition.data()), fileSize);
-
-	// ファイルを閉じる
-	File.close();
-
-	return S_OK;
-}
-
-//==========================================================================
-// セーブ処理
-//==========================================================================
-void CCourse::Save()
-{
-	// ファイルを開く
-	std::ofstream File(m_FileName, std::ios::binary);
-	if (!File.is_open()) {
-		return;
-	}
-
-	std::vector<MyLib::Vector3> savedata = m_vecSegmentPosition;
-	savedata.erase(savedata.begin());
-	savedata.pop_back();
-
-
-	// データをバイナリファイルに書き出す
-	File.write(reinterpret_cast<char*>(savedata.data()), savedata.size() * sizeof(MyLib::Vector3));
-		
-	// ファイルを閉じる
-	File.close();
-}
-
-//==========================================================================
-// 当たり判定ボックス取得
-//==========================================================================
-CCollisionLine_Box* CCourse::GetCollisionLineBox(int idx)
-{
-	if (static_cast<int>(m_pCollisionLineBox.size()) <= idx) return nullptr;
-
-	return m_pCollisionLineBox[idx];
-}
-
-//==========================================================================
-// 基点の位置取得
-//==========================================================================
-MyLib::Vector3 CCourse::GetVecPosition(int idx)
-{
-	if (static_cast<int>(m_vecSegmentPosition.size()) <= idx) return MyLib::Vector3();
-
-	return m_vecSegmentPosition[idx];
-}
-
-//==========================================================================
-// 基点の位置設定
-//==========================================================================
-void CCourse::SetVecPosition(int idx, const MyLib::Vector3& pos)
-{
-	if (static_cast<int>(m_vecSegmentPosition.size()) <= idx) return;
-
-	m_vecSegmentPosition[idx] = pos;
-}
-
-//==========================================================================
-// 各頂点の位置取得
-//==========================================================================
-MyLib::Vector3 CCourse::GetVecVtxPosition(int idx)
-{
-	if (static_cast<int>(m_vecVtxPosition.size()) <= idx) return MyLib::Vector3();
-
-	return m_vecVtxPosition[idx];
-}
-
-//==========================================================================
-// 各頂点の位置設定
-//==========================================================================
-void CCourse::SetVecVtxPosition(int idx, const MyLib::Vector3& pos)
-{
-	if (static_cast<int>(m_vecVtxPosition.size()) <= idx) return;
-
-	m_vecVtxPosition[idx] = pos;
 }

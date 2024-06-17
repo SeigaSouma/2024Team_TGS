@@ -96,6 +96,9 @@
     <Filter Include="judgezone">
       <UniqueIdentifier>{ae95b690-57e5-4285-938f-297e3c57799b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="water">
+      <UniqueIdentifier>{23c6135c-c662-4da9-acab-bf5212e4ea4f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\ballast.cpp">
@@ -508,6 +511,9 @@
     </ClCompile>
     <ClCompile Include="Source\myassert.cpp">
       <Filter>system</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\waterripple.cpp">
+      <Filter>water</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -930,6 +936,9 @@
     </ClInclude>
     <ClInclude Include="Source\myassert.h">
       <Filter>system</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\waterripple.h">
+      <Filter>water</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

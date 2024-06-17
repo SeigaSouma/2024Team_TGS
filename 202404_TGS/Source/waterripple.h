@@ -1,47 +1,40 @@
 //=============================================================================
 // 
-//  コースヘッダー [course.h]
+//  水紋ヘッダー [waterripple.h]
 //  Author : 相馬靜雅
 // 
 //=============================================================================
 
-#ifndef _COURSE_H_
-#define _COURSE_H_	// 二重インクルード防止
+#ifndef _WATERRIPPLE_H_
+#define _WATERRIPPLE_H_	// 二重インクルード防止
 
 #include "object3DMesh.h"
-#include "collisionLine_Box.h"
 
 //==========================================================================
 // クラス定義
 //==========================================================================
-// コースクラス
-class CCourse : public CObject3DMesh
+// 水紋クラス
+class CWaterRipple : public CObject3DMesh
 {
 
 public:
 
-	//=============================
-	// 構造体定義
-	//=============================
-	// 辺の内部情報
-	struct LineInfo
+	struct Info
 	{
-		MyLib::Vector3 pos;	// 位置
-		MyLib::Vector3 rot;	// 向き
-		float width;		// 幅
+		float height;		// 高さ
+		float velocity;		// 速度
+		float length;		// 長さ
+		float thickness;	// 波の太さ
+		int life;			// 寿命
+		int maxLife;		// 最大寿命
 
-		LineInfo() : pos(0.0f), rot(0.0f), width(0.0f) {}
-		LineInfo(const MyLib::Vector3& _pos, const MyLib::Vector3& _rot, float _width) : pos(_pos), rot(_rot), width(_width) {}
+		Info() : height(0.0f), velocity(0.0f), length(0.0f), thickness(0.0f), life(0), maxLife(0) {}
+		Info(float _height, float _velocity, float _length, float _thickness, int _life, int _maxLife) :
+			height(_height), velocity(_velocity), length(_length), thickness(_thickness), life(_life), maxLife(_maxLife) {}
 	};
 
-	// 辺情報
-	struct Line
-	{
-		LineInfo lineInfo;	// 辺の内部情報
-	};
-
-	CCourse(int nPriority = 1, const LAYER layer = LAYER::LAYER_MAP);
-	~CCourse();
+	CWaterRipple(const int block, const float blockSize, int nPriority = 1, const LAYER layer = LAYER::LAYER_MAP);
+	~CWaterRipple();
 
 	// オーバーライドされた関数
 	virtual HRESULT Init();
@@ -50,39 +43,18 @@ public:
 	virtual void Draw();
 	virtual void SetVtx();
 
-	void Reset();	// リセット
-	void ReCreateVtx();	// リセット
-	void CalVtxPosition();	// 各頂点計算
-
-	// 情報取得・設定
-	CCollisionLine_Box* GetCollisionLineBox(int idx);								// 当たり判定ボックス取得
-	std::vector<MyLib::Vector3> GetVecPosition() { return m_vecSegmentPosition; }	// 基点の位置取得
-	MyLib::Vector3 GetVecPosition(int idx);											// 基点の位置取得
-	void SetVecPosition(const std::vector<MyLib::Vector3>& vecpos) { m_vecSegmentPosition = vecpos; }
-	void SetVecPosition(int idx, const MyLib::Vector3& pos);						// 基点の位置設定
-
-	std::vector<MyLib::Vector3> GetVecVtxPosition() { return m_vecVtxPosition; }	// 各頂点の位置取得
-	MyLib::Vector3 GetVecVtxPosition(int idx);										// 各頂点の位置取得
-	void SetVecVtxPosition(const std::vector<MyLib::Vector3>& vecpos) { m_vecVtxPosition = vecpos; }
-	void SetVecVtxPosition(int idx, const MyLib::Vector3& pos);						// 各頂点の位置設定
-
-	// ファイル操作
-	void Save();	// セーブ
-	HRESULT Load(const std::string& file);	// ロード
-
-	static CCourse *Create(const std::string& file);	// 生成
+	static CWaterRipple *Create(
+		const int block, const float blockSize, 
+		const MyLib::Vector3& pos, float height, float velocity, float thickness, int life);	// 生成
 
 private:
 
 	// メンバ関数
 	void SetVtxPosition();	// 頂点座標
 
-	// メンバ変数
-	std::string m_FileName;	// ファイル名
-	std::vector<MyLib::Vector3> m_vecSegmentPosition;	// 基点の位置
-	std::vector<MyLib::Vector3> m_vecVtxPosition;		// 各頂点の位置
-	std::vector<CCollisionLine_Box*> m_pCollisionLineBox;	// 当たり判定ボックス
-
+	Info m_Info;
+	const int m_Block;	// 分割
+	const float m_BlockSize;	// ブロックサイズ
 };
 
 
