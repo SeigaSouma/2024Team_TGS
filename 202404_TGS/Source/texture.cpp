@@ -216,8 +216,8 @@ HRESULT CTexture::LoadTex(std::string file)
 		// 要素削除
 		m_TexInfo.erase(m_TexInfo.end() - 1);
 
-		std::string error = "テクスチャ読み込み失敗！" + file;
-		MyAssert::CustomAssert(false, error);
+		///*std::string error = "テクスチャ読み込み失敗！" + file;
+		//MyAssert::CustomAssert(false, error);*/
 		return E_FAIL;
 	}
 

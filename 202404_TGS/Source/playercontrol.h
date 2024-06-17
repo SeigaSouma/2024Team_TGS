@@ -30,9 +30,16 @@ class CPlayerControlMove
 public:
 
 	// コンストラクタ
-	CPlayerControlMove() {}
+	CPlayerControlMove() : m_nCntWaterRipple(0), m_nIntervalWaterRipple(21), m_nAddRippleCounter(0), m_nIntervalAddRippleCounter(0){}
 
 	virtual void Move(CPlayer* player);	// 移動
+
+private:
+	int m_nCntWaterRipple;		// 水波紋カウンター
+	int m_nIntervalWaterRipple;	// 水波紋カウンター間隔
+	int m_nAddRippleCounter;			// 水波紋カウンター加算
+	int m_nIntervalAddRippleCounter;	// 水波紋カウンター加算間隔
+
 
 };
 
