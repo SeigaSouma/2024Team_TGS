@@ -7,9 +7,7 @@
 #ifndef _JUDGE_ZONE_MANAGER_H_
 #define _JUDGE_ZONE_MANAGER_H_		// 二重インクルード防止
 #include "listmanager.h"
-
-// 前方宣言
-class CJudgeZone;
+#include "judgezone.h"
 
 //==========================================================================
 // クラス定義
@@ -31,7 +29,9 @@ public:
 	// メンバ関数
 	//=============================
 	void Check(float progress);
-	void Add(CJudgeZone* zone) { m_zoneList.Regist(&zone); }
+	void Add(CJudgeZone* zone) { m_zoneList.Regist(zone); }
+	void Release();	//無効化した判定ゾーンを破棄
+	void ReleaseAll();	//判定ゾーンをすべて破棄
 
 	//=============================
 	// 静的関数
@@ -40,7 +40,7 @@ public:
 	static CJudgeZoneManager* GetInstance() { return m_ThisPtr; }	// インスタンス取得
 
 private:
-	CListManager<CJudgeZone*> m_zoneList;
+	CListManager<CJudgeZone> m_zoneList;
 	static CJudgeZoneManager* m_ThisPtr;		// 自身のポインタ
 };
 

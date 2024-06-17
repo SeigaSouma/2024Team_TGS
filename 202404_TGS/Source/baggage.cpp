@@ -329,10 +329,12 @@ bool CBaggage::Hit()
 				/*CMyEffekseer::GetInstance()->SetEffect(
 					CMyEffekseer::EFKLABEL::EFKLABEL_IMPACT,
 					GetWorldMtx().GetWorldPosition(), MyLib::Vector3(0.0f, 0.0f, 0.0f), 0.0f, 30.0f, true);*/
+				m_bHit = true;
 				return true;
 			}
 		}
 	}
 
+	m_bHit = false;
 	return false;
 }

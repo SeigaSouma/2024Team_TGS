@@ -509,6 +509,9 @@
     <ClCompile Include="Source\myassert.cpp">
       <Filter>system</Filter>
     </ClCompile>
+    <ClCompile Include="Source\judge.cpp">
+      <Filter>judgezone</Filter>
+    </ClCompile>
     <ClCompile Include="Source\waterripple.cpp">
       <Filter>water</Filter>
     </ClCompile>
@@ -936,6 +939,9 @@
     </ClInclude>
     <ClInclude Include="Source\myassert.h">
       <Filter>system</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\judge.h">
+      <Filter>judgezone</Filter>
     </ClInclude>
     <ClInclude Include="Source\waterripple.h">
       <Filter>water</Filter>
