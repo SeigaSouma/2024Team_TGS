@@ -45,7 +45,7 @@ CHARACTERSET
 	JUMP = 0.00		
 	RADIUS = 60.00		
 	HEIGHT = 0.00		
-	LIFE = 150	
+	LIFE = 90	
 
 	PARTSSET						# [0]çò
 		INDEX = 0

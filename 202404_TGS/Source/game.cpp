@@ -177,10 +177,6 @@ HRESULT CGame::Init()
 
 	m_pTimer = CTimer::Create();
 
-	CCheckpoint::Create(MyLib::Vector3(300.0f, 0.0f, 0.0f));
-	CCheckpoint::Create(MyLib::Vector3(1300.0f, 0.0f, 0.0f));
-	CCheckpoint::Create(MyLib::Vector3(2300.0f, 0.0f, 0.0f));
-
 	CGoalflagX::Create(MyLib::Vector3(23000.0f,0.0f,0.0f));
 
 	// 障害物マネージャ
@@ -197,6 +193,20 @@ HRESULT CGame::Init()
 	CStencilShadow::Create();
 
 	CWaterField::Create();
+
+
+	CCheckpoint::Create(1000.0f);
+	CCheckpoint::Create(2000.0f);
+	CCheckpoint::Create(3000.0f);
+	CCheckpoint::Create(4000.0f);
+	CCheckpoint::Create(5000.0f);
+	CCheckpoint::Create(6000.0f);
+	CCheckpoint::Create(7000.0f);
+	CCheckpoint::Create(8000.0f);
+	CCheckpoint::Create(9000.0f);
+
+	// チェックポイント通過リセット
+	CCheckpoint::ResetSaveID();
 
 	// 成功
 	return S_OK;
