@@ -18,11 +18,26 @@
 class CJudgeZone
 {
 public:
+	// 判定種類列挙
+	enum JUDGETYPE
+	{
+		TYPE_NONE = 0,
+		TYPE_HITNUM,
+	};
+
 	// 始点終点構造体
 	struct SZone
 	{
 		float start;	// 始点
 		float end;	// 終点
+	};
+
+	// 判定情報構造体
+	struct SJudgeInfo
+	{
+		JUDGETYPE type;
+		CJudge::JUDGE judge;
+		int hitnum;
 	};
 
 	CJudgeZone();
@@ -55,6 +70,7 @@ private:
 	SZone m_zone;
 	CJudge* m_pJudge;
 	bool m_isEnable;
+	SJudgeInfo m_aJudgeInfo[2];
 };
 
 #endif

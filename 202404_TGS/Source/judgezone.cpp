@@ -28,6 +28,7 @@ namespace
 CJudgeZone::CJudgeZone()
 {
 	m_isEnable = true;
+	m_pJudge = nullptr;
 }
 
 //==========================================================================
@@ -73,6 +74,8 @@ CJudgeZone* CJudgeZone::Create(const float start, const float end)
 		// ‰Šú‰»ˆ—
 		pObj->Init();
 		pObj->SetZone(start, end);
+		pObj->m_aJudgeInfo[0] = { TYPE_NONE,CJudge::JUDGE::JUDGE_AAA,0 };
+		pObj->m_aJudgeInfo[1] = { TYPE_HITNUM,CJudge::JUDGE::JUDGE_AAA,10 };
 	}
 
 	return pObj;
@@ -89,9 +92,15 @@ void CJudgeZone::Check()
 	}
 	else
 	{// Œˆ‚Ü‚Á‚Ä‚È‚¢
-		if (false)
+		if (true)
 		{// ‚Ç‚Á‚¿s‚­‚©Œˆ‚Ü‚Á‚½
-			m_pJudge = CJudge::Create();
+			std::map<CJudge::JUDGE, int> hitnum;
+			hitnum[CJudge::JUDGE::JUDGE_AAA] = 2;
+			hitnum[CJudge::JUDGE::JUDGE_BBB] = 4;
+			hitnum[CJudge::JUDGE::JUDGE_CCC] = 6;
+			hitnum[CJudge::JUDGE::JUDGE_DDD] = 8;
+
+			m_pJudge = CJudge::Create(new CJudgeConditional_HitNum(hitnum));
 			m_pJudge->Check();
 		}
 	}

@@ -31,6 +31,7 @@ CCourse::CCourse(int nPriority, const LAYER layer) : CObject3DMesh(nPriority, la
 	m_pCollisionLineBox.clear();	// 当たり判定ボックス
 	m_vecSegmentPosition.clear();	// 基点の位置
 	m_vecVtxPosition.clear();		// 各頂点の位置
+	m_courceLength = 0.0f;
 }
 
 //==========================================================================
@@ -149,7 +150,7 @@ void CCourse::CalVtxPosition()
 	m_vecVtxPosition.clear();
 
 	// 各頂点格納
-	float toataldistance = 0.0f;
+	m_courceLength = 0.0f;
 	for (int i = 0; i < segmentSize; i++)
 	{
 		float distance = 0.0f;
@@ -160,16 +161,16 @@ void CCourse::CalVtxPosition()
 
 			if (distance >= vecLength[i])
 			{
-				toataldistance += CREATEDISTANCE - (distance - vecLength[i]);
+				m_courceLength += CREATEDISTANCE - (distance - vecLength[i]);
 
 				distance = vecLength[i];
 
-				m_vecVtxPosition.push_back(MySpline::GetSplinePosition_NonLoop(m_vecSegmentPosition, toataldistance, 20.0f));
+				m_vecVtxPosition.push_back(MySpline::GetSplinePosition_NonLoop(m_vecSegmentPosition, m_courceLength, 20.0f));
 				break;
 			}
 
-			toataldistance += CREATEDISTANCE;
-			m_vecVtxPosition.push_back(MySpline::GetSplinePosition_NonLoop(m_vecSegmentPosition, toataldistance));
+			m_courceLength += CREATEDISTANCE;
+			m_vecVtxPosition.push_back(MySpline::GetSplinePosition_NonLoop(m_vecSegmentPosition, m_courceLength));
 		}
 	}
 }

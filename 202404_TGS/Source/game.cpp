@@ -35,6 +35,7 @@
 #include "checkpoint.h"
 #include "map_obstacleManager.h"
 #include "baggageManager.h"
+#include "judgezoneManager.h"
 #include "stencilshadow.h"
 
 #include "sample_obj3D.h"
@@ -68,6 +69,7 @@ CGame::CGame()
 	m_pObstacleManager = nullptr;	// 障害物マネージャ
 	m_pBaggageManager = nullptr;	// 荷物マネージャ
 	m_pCourse = nullptr;			// コースのオブジェクト
+	m_pJudgeZoneManager = nullptr;	// 判定ゾーンマネージャ
 }
 
 //==========================================================================
@@ -162,6 +164,11 @@ HRESULT CGame::Init()
 		pPlayer->SetPosition(MyLib::Vector3(0.0f, 10.0f, 0.0f));
 		pPlayer->SetRotation(MyLib::Vector3(0.0f, 0.0f, 0.0f));
 	}
+
+	// 判定ゾーンマネージャ
+	CJudgeZone* pZone = CJudgeZone::Create(0.2f, 0.3f);
+	m_pJudgeZoneManager = CJudgeZoneManager::Create();
+	m_pJudgeZoneManager->Add(pZone);
 
 	// ステージ
 	m_pStage = CStage::Create("data\\TEXT\\stage\\info.txt");
@@ -287,6 +294,13 @@ void CGame::Uninit()
 	{
 		m_pBaggageManager->Uninit();
 		m_pBaggageManager = nullptr;
+	}
+
+	// 判定ゾーンマネージャ
+	if (m_pJudgeZoneManager != nullptr)
+	{
+		m_pJudgeZoneManager->Uninit();
+		m_pJudgeZoneManager = nullptr;
 	}
 
 	// コース

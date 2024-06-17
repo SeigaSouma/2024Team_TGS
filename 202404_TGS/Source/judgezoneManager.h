@@ -30,7 +30,7 @@ public:
 	//=============================
 	void Check(float progress);
 	void Add(CJudgeZone* zone) { m_zoneList.Regist(zone); }
-	void Release();	//–³Œø‰»‚µ‚½”»’èƒ][ƒ“‚ğ”jŠü
+	void Release();		//–³Œø‰»‚µ‚½”»’èƒ][ƒ“‚ğ”jŠü
 	void ReleaseAll();	//”»’èƒ][ƒ“‚ğ‚·‚×‚Ä”jŠü
 
 	//=============================
