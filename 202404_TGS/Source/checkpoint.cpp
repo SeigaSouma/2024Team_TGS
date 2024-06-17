@@ -9,6 +9,8 @@
 #include "calculation.h"
 #include "player.h"
 #include "game.h"
+#include "spline.h"
+#include "course.h"
 
 //==========================================================================
 // 定数定義
@@ -17,15 +19,6 @@ namespace
 {
 	const char* MODEL = "data\\MODEL\\koko.x";
 }
-
-//==========================================================================
-// 関数ポインタ
-//==========================================================================
-CCheckpoint::CHECKPOINT_FUNC CCheckpoint::m_CheckpointFuncList [] =
-{
-	&CCheckpoint::SampleWho,	// フー
-	&CCheckpoint::SampleWao,	// ワオ
-};
 
 //==========================================================================
 // 静的メンバ変数
@@ -41,7 +34,7 @@ CCheckpoint::CCheckpoint(int nPriority) : CObjectX(nPriority)
 {
 	// 値のクリア
 	m_fStateTime = 0.0f;	// 状態カウンター
-	m_state = SAMPLE_WAO;	// 状態
+	m_fLength = 0.0f;
 }
 
 //==========================================================================
@@ -55,7 +48,7 @@ CCheckpoint::~CCheckpoint()
 //==========================================================================
 // 生成処理
 //==========================================================================
-CCheckpoint* CCheckpoint::Create(MyLib::Vector3 pos)
+CCheckpoint* CCheckpoint::Create(const float length)
 {
 	// メモリの確保
 	CCheckpoint* pObj = DEBUG_NEW CCheckpoint;
@@ -65,8 +58,8 @@ CCheckpoint* CCheckpoint::Create(MyLib::Vector3 pos)
 		// 初期化処理
 		pObj->Init();
 
-		// 位置情報せってうい
-		pObj->SetPosition(pos);
+		// 距離設定
+		pObj->SetLength(length);
 
 		// 総数加算
 		m_nAll++;
@@ -119,7 +112,6 @@ void CCheckpoint::Uninit()
 //==========================================================================
 void CCheckpoint::Kill()
 {
-
 	// リストから削除
 	m_List.Delete(this);
 
@@ -132,15 +124,8 @@ void CCheckpoint::Kill()
 //==========================================================================
 void CCheckpoint::Update()
 {
-	// 状態カウンター加算
-	m_fStateTime += CManager::GetInstance()->GetDeltaTime();
-
-	// 状態別処理
-	(this->*(m_CheckpointFuncList[m_state]))();
-
 	// 位置情報取得
-	MyLib::Vector3 pos = CObjectX::GetPosition();
-	MyLib::Vector3 Playerpos;
+	float playerlen = 0.0f;
 
 	// リストループ
 	CListManager<CPlayer> PlayerList = CPlayer::GetListObj();
@@ -148,10 +133,10 @@ void CCheckpoint::Update()
 	while (PlayerList.ListLoop(&pObj))
 	{
 		// プレイヤーの位置情報取得
-		Playerpos = pObj->GetPosition();
+		playerlen = pObj->GetMoveLength();
 	}
 
-	if (Playerpos.x >= pos.x)
+	if (playerlen >= m_fLength)
 	{// チェックポイント通過したら
 
 		if (m_nSaveID < m_MyIndex)
@@ -159,22 +144,6 @@ void CCheckpoint::Update()
 			m_nSaveID = m_MyIndex;
 		}
 	}
-}
-
-//==========================================================================
-// フー
-//==========================================================================
-void CCheckpoint::SampleWho()
-{
-
-}
-
-//==========================================================================
-// ワオ
-//==========================================================================
-void CCheckpoint::SampleWao()
-{
-
 }
 
 //==========================================================================
@@ -186,3 +155,15 @@ void CCheckpoint::Draw()
 	CObjectX::Draw();
 }
 
+//==========================================================================
+// 距離設定
+//==========================================================================
+void CCheckpoint::SetLength(const float length)
+{
+	// 距離を設定
+	m_fLength = length;
+
+	// 座標を設定
+	MyLib::Vector3 pos = MySpline::GetSplinePosition_NonLoop(CGame::GetInstance()->GetCourse()->GetVecPosition(), m_fLength);
+	SetPosition(pos);
+}

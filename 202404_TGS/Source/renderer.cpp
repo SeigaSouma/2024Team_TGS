@@ -300,9 +300,6 @@ void CRenderer::Update()
 {
 	// 全ての更新
 	CObject::UpdateAll();
-
-	// デバッグ表示の描画処理
-	CManager::GetInstance()->GetDebugProc()->Print("画面倍率[ %f ]\n", m_MultitargetInfo.fTimer);
 }
 
 //==========================================================================

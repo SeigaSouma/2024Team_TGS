@@ -159,21 +159,12 @@ void CRetry_Ui::Update()
 	Moveui();
 	if (pPad->GetPress(INGAME::ACT_CHECKPOINT))
 	{// Yを入力している
-		m_fRetryPushTime += CManager::GetInstance()->GetDeltaTime();
-		if (m_fRetryPushTime >= TIME_RETRY)
-		{
-			m_fRetryPushTime = 0.0f;
-			pPlayer->SetState(CPlayer::STATE::STATE_RETURN);
-		}
+		pPlayer->SetState(CPlayer::STATE::STATE_RETURN);
 	}
 	else if (pPad->GetPress(INGAME::ACT_RETRY))
 	{// Xを入力している
-		m_fRetryPushTime += CManager::GetInstance()->GetDeltaTime();
-		if (m_fRetryPushTime >= TIME_RETRY)
-		{
-			m_fRetryPushTime = 0.0f;
-			pPlayer->SetState(CPlayer::STATE::STATE_RESTART);
-		}
+		
+		pPlayer->SetState(CPlayer::STATE::STATE_RESTART);
 	}
 	else
 	{// 押されてないのでカウントリセット

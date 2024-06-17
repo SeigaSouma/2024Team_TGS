@@ -34,6 +34,7 @@
 #include "edit_map.h"
 #include "damagepoint.h"
 #include "retryui.h"
+#include "timer.h"
 
 #include "checkpoint.h"
 #include "baggage.h"
@@ -92,6 +93,11 @@ namespace MULTITARGET
 	const float DEATH_ALPHA = (0.0f);		// 目標透明度
 	const float DEATH_MULTI = (1.0f);		// 目標倍率
 	const float DEATH_TIMER = (240.0f);		// 遷移タイマー
+
+	// リセット時
+	const float RESET_ALPHA = (0.0f);		// 目標透明度
+	const float RESET_MULTI = (1.0f);		// 目標倍率
+	const float RESET_TIMER = (0.01f);		// 遷移タイマー
 }
 
 //==========================================================================
@@ -919,14 +925,26 @@ void CPlayer::ReaspawnCheckPoint()
 {
 	// チェックポイントのID取得
 	int saveID = CCheckpoint::GetSaveID();
+	MyLib::Vector3 pos;
+	float fLength = 0.0f;
 
-	// チェックポイント取得
-	CListManager<CCheckpoint> checkpointList = CCheckpoint::GetListObj();
-	CCheckpoint* pCheckPoint = checkpointList.GetData(saveID);
+	if (saveID > -1)	// チェックポイント通過済み
+	{
+		// チェックポイント取得
+		CListManager<CCheckpoint> checkpointList = CCheckpoint::GetListObj();
+		CCheckpoint* pCheckPoint = checkpointList.GetData(saveID);
 
-	// 位置取得
-	MyLib::Vector3 pos = pCheckPoint->GetPosition();
+		// 位置取得
+		pos = pCheckPoint->GetPosition();
+		fLength = pCheckPoint->GetLength();
+	}
+	else // チェックポイント未通過
+	{
+		pos = MySpline::GetSplinePosition_NonLoop(CGame::GetInstance()->GetCourse()->GetVecPosition(), 0);
+	}
+
 	SetPosition(pos);
+	SetMoveLength(fLength);
 
 	// カメラ瞬間移動
 	CCamera* pCamera = CManager::GetInstance()->GetCamera();
@@ -952,9 +970,6 @@ void CPlayer::RespawnStart()
 
 	// 位置設定
 	SetPosition(pos);
-
-	//タイマーストップ
-	CGame::GetInstance()->GetGameManager()->SetType(CGameManager::SceneType::SCENE_WAIT_AIRPUSH);
 
 	// リスポーン設定
 	ReaspawnSetting();
@@ -1161,15 +1176,20 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 	int nLife = GetLife();
 
 	// 振動
+	int camlife = GetLifeOrigin() * 0.75f;
 	CCamera* pCamera = CManager::GetInstance()->GetCamera();
 
-	if (nLife % 4 == 0)
+	if (nLife <= camlife)
 	{
-		float ratioDest = 1.0f - static_cast<float>(nLife) / GetLifeOrigin();
-		float ratio = ratioDest;
-		UtilFunc::Transformation::Clamp(ratioDest, 0.0f, 0.7f);
-		UtilFunc::Transformation::Clamp(ratio, 0.1f, 1.0f);
-		pCamera->SetShake(3,  50.0f * ratio, 0.0f);	// 振動
+
+		if (nLife % 4 == 0)
+		{
+			float ratioDest = 1.0f - static_cast<float>(nLife) / GetLifeOrigin();
+			float ratio = ratioDest;
+			UtilFunc::Transformation::Clamp(ratioDest, 0.0f, 0.7f);
+			UtilFunc::Transformation::Clamp(ratio, 0.1f, 1.0f);
+			pCamera->SetShake(3, 50.0f * ratio, 0.0f);	// 振動
+		}
 	}
 
 	nLife -= nValue;
@@ -1178,8 +1198,6 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 
 	// 体力設定
 	SetLife(nLife);
-
-	int camlife = GetLifeOrigin() * 0.65f;
 
 	if (nLife <= 0)
 	{// 体力がなくなったら
@@ -1194,6 +1212,10 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 			MULTITARGET::DEATH_ALPHA, 
 			MULTITARGET::DEATH_MULTI,
 			MULTITARGET::DEATH_TIMER);
+
+		// タイマーを停止
+		CTimer* pt = CGame::GetInstance()->GetTimer();
+		if (pt != nullptr) { pt->SetEnableAddTime(false); }
 	}
 	else if (nLife <= camlife)
 	{
@@ -1561,10 +1583,14 @@ void CPlayer::StateRestart()
 		// 終了処理
 		Uninit();
 #else
-		// チェックポイントに復活
-		RespawnStart();
+		// 開始地点に戻す
+		m_fMoveLength = 0.0f;
+		SetPosition(GetOriginPosition());
 		m_state = STATE::STATE_RESPAWN;
 		SetLife(GetLifeOrigin());
+
+		// チェックポイント通過情報リセット
+		CCheckpoint::ResetSaveID();
 
 		// リトライUIを消す
 		if (m_pRetryUI != nullptr)
@@ -1588,6 +1614,9 @@ void CPlayer::StateRespawn()
 	{
 		m_state = STATE::STATE_NONE;
 	}
+
+	//タイマーストップ
+	CGame::GetInstance()->GetGameManager()->SetType(CGameManager::SceneType::SCENE_WAIT_AIRPUSH);
 }
 
 //==========================================================================
