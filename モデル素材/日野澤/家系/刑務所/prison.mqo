@@ -4,8 +4,8 @@ Format Text Ver 1.0
 Scene {
 	pos -1177.8218 14.5663 24591.6309
 	lookat -820.2231 364.1803 -13.3895
-	head -6.1836
-	pich 0.0292
+	head -6.1636
+	pich 0.0492
 	bank 0.0000
 	ortho 0
 	zoom2 0.3050
@@ -17,17 +17,9 @@ Scene {
 		}
 	}
 }
-Material 10 {
+Material 2 {
 	"mat1" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\Wood_demise.jpg")
 	"mat2" col(0.533 0.533 0.533 1.000) dif(0.800) amb(0.600) emi(0.150) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\Wood_build_00.jpg")
-	"mat3" col(0.071 0.071 0.071 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00)
-	"mat4" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("kawara_yane000.jpg")
-	"piller" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\wood.jpg")
-	"wall" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\whitewood.jpeg")
-	"roof_main" col(0.627 0.627 0.627 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\grain.jpg")
-	"roof_sub" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\kawara_yane000.jpg")
-	"door" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\door.png")
-	"floor" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\tatami.jpg")
 }
 Object "obj13" {
 	visible 15
