@@ -197,7 +197,7 @@ HRESULT CGame::Init()
 
 	// コース作成
 	m_pCourse = CCourse::Create("data\\TEXT\\map\\course.bin");
-	CStoneWall *pStoneWall = CStoneWall::Create();
+	CStoneWall* pStoneWall = CStoneWall::Create();
 
 	// 基点地点設定
 	pStoneWall->SetVecPosition(m_pCourse->GetVecPosition());
@@ -221,6 +221,18 @@ HRESULT CGame::Init()
 	// 各頂点座標
 	pStoneWall->SetVecVtxPosition(vecpos);
 	pStoneWall->BindVtxPosition();
+
+
+
+	// うねりの街フィールド
+	CMapMesh* pTownField = CMapMesh::Create(CMapMesh::MeshType::TYPE_TOWNFIELD_SINUOUS);
+	pTownField->SetVecPosition(m_pCourse->GetVecPosition());
+	pTownField->Reset();
+
+	// 石垣の頂上に頂点をそろえる
+	pTownField->SetVecVtxPosition(pStoneWall->GetVecTopPosition());
+	pTownField->BindVtxPosition();
+
 
 
 	// ステンシル影生成

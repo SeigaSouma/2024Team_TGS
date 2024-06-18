@@ -1,10 +1,10 @@
 //=============================================================================
 // 
-//  石垣処理 [stonewall.cpp]
+//  街フィールド(うねり)処理 [townfield_sinuous.cpp]
 //  Author : 相馬靜雅
 // 
 //=============================================================================
-#include "stonewall.h"
+#include "townfield_sinuous.h"
 #include "manager.h"
 #include "calculation.h"
 #include "debugproc.h"
@@ -19,50 +19,32 @@
 //==========================================================================
 namespace
 {
-	const std::string TEXTURE = "data\\TEXTURE\\map_object\\ishigaki000.png";
+	const std::string TEXTURE = "data\\TEXTURE\\FIELD\\soil.jpg";
 	const int WIDTH_BLOCK = 2;
-	const float WIDTH = 200.0f;		// 斜めの幅
-	const float HEIGHT = 500.0f;	// 高さ
-	const float INTERVAL_TEXU = 500.0f;	// U座標の間隔
+	const float FIELD_WORLDLINE_Z = 5000.0f;		// 絶対座標のライン
+	const float INTERVAL_TEXU = 900.0f;	// U座標の間隔
 }
 
 //==========================================================================
 // コンストラクタ
 //==========================================================================
-CStoneWall::CStoneWall(int nPriority, const LAYER layer) : CMapMesh(nPriority, layer)
+CTownField_Sinuous::CTownField_Sinuous(int nPriority, const LAYER layer) : CMapMesh(nPriority, layer)
 {
-	m_vecTopPosition.clear();	// 頂上の位置
+	
 }
 
 //==========================================================================
 // デストラクタ
 //==========================================================================
-CStoneWall::~CStoneWall()
+CTownField_Sinuous::~CTownField_Sinuous()
 {
 
-}
-
-//==========================================================================
-// 生成処理
-//==========================================================================
-CStoneWall* CStoneWall::Create()
-{
-	// メモリの確保
-	CStoneWall* pObjMeshField = DEBUG_NEW CStoneWall;
-
-	if (pObjMeshField != nullptr)
-	{
-		// 初期化処理
-		pObjMeshField->Init();
-	}
-
-	return pObjMeshField;
 }
 
 //==========================================================================
 // 初期化処理
 //==========================================================================
-HRESULT CStoneWall::Init()
+HRESULT CTownField_Sinuous::Init()
 {
 	HRESULT hr;
 
@@ -78,7 +60,7 @@ HRESULT CStoneWall::Init()
 //==========================================================================
 // 終了処理
 //==========================================================================
-void CStoneWall::Uninit()
+void CTownField_Sinuous::Uninit()
 {
 	// 終了処理
 	CObject3DMesh::Uninit();
@@ -87,7 +69,7 @@ void CStoneWall::Uninit()
 //==========================================================================
 // 頂点座標
 //==========================================================================
-void CStoneWall::BindVtxPosition()
+void CTownField_Sinuous::BindVtxPosition()
 {
 	// 計算用変数
 	MyLib::Vector3 offset;
@@ -96,8 +78,6 @@ void CStoneWall::BindVtxPosition()
 
 	MyLib::Vector3* pVtxPos = GetVtxPos();
 	MyLib::Vector3 rot;
-
-	m_vecTopPosition.clear();
 
 	for (int y = 0; y < static_cast<int>(m_vecVtxPosition.size()); y++)
 	{
@@ -108,23 +88,9 @@ void CStoneWall::BindVtxPosition()
 		mtxLeft.Identity();
 		mtxRight.Identity();
 
-		// 向き反映
-		int next = (y + 1) % static_cast<int>(m_vecVtxPosition.size());
-
-		bool bEnd = false;
-		if (next == 0)
-		{
-			next = y - 1;
-			bEnd = true;
-		}
-
-		rot.y = m_vecVtxPosition[next].AngleXZ(m_vecVtxPosition[y]);
+		rot.y = D3DX_PI * 0.5f;
 		UtilFunc::Transformation::RotNormalize(rot.y);
 
-		if (bEnd)
-		{
-			rot.y *= -1;
-		}
 
 		// 回転反映
 		mtxRotate.RotationYawPitchRoll(rot.y, rot.x, rot.z);
@@ -140,7 +106,8 @@ void CStoneWall::BindVtxPosition()
 		offset = MyLib::Vector3(0.0f, 0.0f, 0.0f);
 		mtxLeft.Translation(offset);
 
-		offset = MyLib::Vector3(-WIDTH, HEIGHT, 0.0f);
+		float wourldLen = FIELD_WORLDLINE_Z - m_vecVtxPosition[y].z;
+		offset = MyLib::Vector3(-wourldLen, 0.0f, 0.0f);
 		mtxRight.Translation(offset);
 
 		mtxLeft.Multiply(mtxLeft, mtxParent);
@@ -151,8 +118,6 @@ void CStoneWall::BindVtxPosition()
 		pVtxPos[idx] = mtxLeft.GetWorldPosition();
 		pVtxPos[nextidx] = mtxRight.GetWorldPosition();
 
-		// 頂上の位置
-		m_vecTopPosition.push_back(pVtxPos[nextidx]);
 	}
 
 	// 頂点情報設定
@@ -162,7 +127,7 @@ void CStoneWall::BindVtxPosition()
 //==========================================================================
 // 各頂点UV座標設定
 //==========================================================================
-void CStoneWall::SetVtxTexUV()
+void CTownField_Sinuous::SetVtxTexUV()
 {
 	D3DXVECTOR2* pTex = GetVtxTex();
 	MyLib::Vector3* pVtxPos = GetVtxPos();
@@ -182,19 +147,30 @@ void CStoneWall::SetVtxTexUV()
 			// リセット
 			posV = 0.0f;
 
-			for (int nCntWidth = 0; nCntWidth < WIDTH_BLOCK; nCntWidth++)
-			{// 横の分割分繰り返す
 
-				idx = nCntWidth + (nCntHeight * WIDTH_BLOCK);
-				pTex[idx] = D3DXVECTOR2(posU, posV);
+			int front = (nCntHeight * WIDTH_BLOCK);
+			int back = (nCntHeight * WIDTH_BLOCK) + 1;
 
-				// 縦の割合分進める
-				posV += sqrtf((pVtxPos[idx].y - pVtxPos[idx + 1].y) * (pVtxPos[idx].y - pVtxPos[idx + 1].y)) / intervalV;
+			// 縦の割合分進める
+			posV += sqrtf((pVtxPos[front].z - pVtxPos[front + 1].z) * (pVtxPos[front].z - pVtxPos[front + 1].z)) / intervalV;
 
-			}
+			pTex[back] = D3DXVECTOR2(posU, 0.0f);
+			pTex[front] = D3DXVECTOR2(posU, posV);
+
+
+			//for (int nCntWidth = 0; nCntWidth < WIDTH_BLOCK; nCntWidth++)
+			//{// 横の分割分繰り返す
+
+			//	idx = nCntWidth + (nCntHeight * WIDTH_BLOCK);
+			//	pTex[idx] = D3DXVECTOR2(posU, posV);
+
+			//	// 縦の割合分進める
+			//	posV += sqrtf((pVtxPos[idx].z - pVtxPos[idx + 1].z) * (pVtxPos[idx].z - pVtxPos[idx + 1].z)) / intervalV;
+
+			//}
 
 			// 横の割合分進める
-			posU += pVtxPos[idx + 1].DistanceXZ(pVtxPos[idx - 1]) / INTERVAL_TEXU;
+			posU += pVtxPos[back + 1].DistanceXZ(pVtxPos[back - 1]) / INTERVAL_TEXU;
 
 		}
 	}

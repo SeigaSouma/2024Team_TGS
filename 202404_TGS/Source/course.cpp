@@ -283,7 +283,7 @@ void CCourse::ReCreateVtx()
 //==========================================================================
 void CCourse::Update()
 {
-#if _DEBUG
+#if 0
 	// í∏ì_ç¿ïWåvéZ
 	SetVtxPosition();
 

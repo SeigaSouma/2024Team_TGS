@@ -530,6 +530,12 @@
     <ClCompile Include="Source\meshbubble.cpp">
       <Filter>water</Filter>
     </ClCompile>
+    <ClCompile Include="Source\mapmesh.cpp">
+      <Filter>map</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\townfield_sinuous.cpp">
+      <Filter>map</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ballast.h">
@@ -969,6 +975,12 @@
     </ClInclude>
     <ClInclude Include="Source\meshbubble.h">
       <Filter>water</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\mapmesh.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\townfield_sinuous.h">
+      <Filter>map</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

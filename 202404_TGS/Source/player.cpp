@@ -1199,7 +1199,7 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 			float randCycle = UtilFunc::Transformation::Random(-20, 20) * 0.001f;
 
 			// ˆÚ“®‹——£‰ÁŽZ
-			float len = m_fMoveLength + GetMove().x * 10.0f;
+			float len = m_fMoveLength + GetMove().x * 20.0f;
 			MyLib::Vector3 setpos = MySpline::GetSplinePosition_NonLoop(CGame::GetInstance()->GetCourse()->GetVecPosition(), len);
 			int x = UtilFunc::Transformation::Random(-80, 80);
 			int z = UtilFunc::Transformation::Random(-80, 80);
