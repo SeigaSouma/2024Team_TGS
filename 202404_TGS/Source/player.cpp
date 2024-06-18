@@ -41,6 +41,7 @@
 #include "baggageManager.h"
 #include "spline.h"
 #include "course.h"
+#include "meshbubble.h"
 
 // égópÉNÉâÉX
 #include "playercontrol.h"
@@ -86,7 +87,7 @@ namespace MULTITARGET
 {
 	// ONéû
 	const float ON_ALPHA = (0.6f);		// ñ⁄ïWìßñæìx
-	const float ON_MULTI = (1.1f);		// ñ⁄ïWî{ó¶
+	const float ON_MULTI = (1.02f);		// ñ⁄ïWî{ó¶
 	const float ON_TIMER = (120.0f);	// ëJà⁄É^ÉCÉ}Å[
 
 	// éÄñSéû
@@ -1188,7 +1189,34 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 			float ratio = ratioDest;
 			UtilFunc::Transformation::Clamp(ratioDest, 0.0f, 0.7f);
 			UtilFunc::Transformation::Clamp(ratio, 0.1f, 1.0f);
-			pCamera->SetShake(3, 50.0f * ratio, 0.0f);	// êUìÆ
+			pCamera->SetShake(3, 20.0f * ratio, 0.0f);	// êUìÆ
+		}
+
+		
+		for (int i = 0; i < 2; i++)
+		{
+			float randmoveX = UtilFunc::Transformation::Random(-50, 50) * 0.01f;
+			float randmoveY = UtilFunc::Transformation::Random(-20, 20) * 0.01f;
+			float randRadius = UtilFunc::Transformation::Random(-20, 20) * 0.01f;
+			float randDestRadius = UtilFunc::Transformation::Random(-30, 30) * 0.1f;
+			float randCycle = UtilFunc::Transformation::Random(-20, 20) * 0.001f;
+
+			// à⁄ìÆãóó£â¡éZ
+			float len = m_fMoveLength + GetMove().x * 10.0f;
+			MyLib::Vector3 setpos = MySpline::GetSplinePosition_NonLoop(CGame::GetInstance()->GetCourse()->GetVecPosition(), len);
+			int x = UtilFunc::Transformation::Random(-80, 80);
+			int z = UtilFunc::Transformation::Random(-80, 80);
+
+			setpos.x += x;
+			setpos.z += z;
+			setpos.y -= 50.0f;
+
+			CMeshBubble::Create(
+				setpos,
+				MyLib::Vector3(8.0f + randmoveX, 3.0f + randmoveY, 0.0f),
+				1.0f + randRadius,
+				10.5f + randDestRadius,
+				0.08f + randCycle);
 		}
 	}
 

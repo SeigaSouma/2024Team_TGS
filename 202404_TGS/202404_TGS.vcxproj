@@ -224,6 +224,7 @@
     <ClCompile Include="Source\map.cpp" />
     <ClCompile Include="Source\map_obstacle.cpp" />
     <ClCompile Include="Source\map_obstacleManager.cpp" />
+    <ClCompile Include="Source\meshbubble.cpp" />
     <ClCompile Include="Source\meshcylinder.cpp" />
     <ClCompile Include="Source\meshdome.cpp" />
     <ClCompile Include="Source\meshfield.cpp" />
@@ -376,6 +377,7 @@
     <ClInclude Include="Source\map.h" />
     <ClInclude Include="Source\map_obstacle.h" />
     <ClInclude Include="Source\map_obstacleManager.h" />
+    <ClInclude Include="Source\meshbubble.h" />
     <ClInclude Include="Source\meshcylinder.h" />
     <ClInclude Include="Source\meshdome.h" />
     <ClInclude Include="Source\meshfield.h" />

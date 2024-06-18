@@ -405,7 +405,7 @@ void CCourse::Draw()
 	}
 
 	// •`‰æˆ—
-	CObject3DMesh::Draw();
+	//CObject3DMesh::Draw();
 
 	pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);	// –„‚ß‚éƒ‚[ƒh
 }

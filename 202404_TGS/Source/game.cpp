@@ -45,6 +45,7 @@
 
 #include "2D_Effect.h"
 #include "waterripple.h"
+#include "meshbubble.h"
 
 //==========================================================================
 // Ã“Iƒƒ“ƒo•Ï”éŒ¾
@@ -395,6 +396,39 @@ void CGame::Update()
 	if (pInputKeyboard->GetTrigger(DIK_2))
 	{
 		CWaterRipple::Create(block, blocksize, MyLib::Vector3(0.0f, -5.0f, -800.0f), height, velocity, thickness, life);
+	}
+
+
+
+	static float destRadius = 13.5f;
+	static int posRange = 80, createIdx = 1;
+
+	ImGui::DragInt("Pos Range", &posRange, 1);
+	ImGui::DragInt("Create Idx", &createIdx, 1);
+	ImGui::DragFloat("destRadius", &destRadius, 0.5f, 0.0f, 0.0f, "%.2f");
+
+	if (pInputKeyboard->GetPress(DIK_3))
+	{
+		for (int i = 0; i < createIdx; i++)
+		{
+			int x = UtilFunc::Transformation::Random(-posRange, posRange);
+			int z = UtilFunc::Transformation::Random(-posRange, posRange);
+
+			float randmoveX = UtilFunc::Transformation::Random(-50, 50) * 0.01f;
+			float randmoveY = UtilFunc::Transformation::Random(-20, 20) * 0.01f;
+			float randRadius = UtilFunc::Transformation::Random(-20, 20) * 0.01f;
+			float randDestRadius = UtilFunc::Transformation::Random(-30, 30) * 0.1f;
+			float randCycle = UtilFunc::Transformation::Random(-20, 20) * 0.001f;
+
+
+			CMeshBubble::Create(
+				MyLib::Vector3(x, -5.0f, z),
+				MyLib::Vector3(8.0f + randmoveX, 3.0f + randmoveY, 0.0f),
+				1.0f + randRadius,
+				destRadius + randDestRadius,
+				0.08f + randCycle);
+		}
+		
 	}
 
 #if _DEBUG

@@ -527,6 +527,9 @@
     <ClCompile Include="Source\stonewall.cpp">
       <Filter>map</Filter>
     </ClCompile>
+    <ClCompile Include="Source\meshbubble.cpp">
+      <Filter>water</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ballast.h">
@@ -963,6 +966,9 @@
     </ClInclude>
     <ClInclude Include="Source\stonewall.h">
       <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\meshbubble.h">
+      <Filter>water</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
