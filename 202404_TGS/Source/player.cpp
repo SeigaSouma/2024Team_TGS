@@ -984,10 +984,6 @@ void CPlayer::ReaspawnSetting()
 
 	MyLib::Vector3 pos = GetPosition();
 	m_pBaggage->SetPosition(MyLib::Vector3(pos.x, MAX_HEIGHT, pos.z));
-
-	CCamera* pCamera = CManager::GetInstance()->GetCamera();
-
-	pCamera->SetLenDest(pCamera->GetOriginDistance(), 0, 1.0f, 1.0f);
 }
 
 //==========================================================================
@@ -1181,7 +1177,6 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 
 	if (nLife <= camlife)
 	{
-
 		if (nLife % 4 == 0)
 		{
 			float ratioDest = 1.0f - static_cast<float>(nLife) / GetLifeOrigin();
@@ -1224,12 +1219,11 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 		pstate->SetStartDistance(pCamera->GetDistance());
 		pCamera->SetStateCameraV(pstate);
 
-		
-			// フィードバックエフェクトON
-			CManager::GetInstance()->GetRenderer()->SetEnableDrawMultiScreen(
-				MULTITARGET::ON_ALPHA,
-				MULTITARGET::ON_MULTI,
-				MULTITARGET::ON_TIMER);
+		// フィードバックエフェクトON
+		CManager::GetInstance()->GetRenderer()->SetEnableDrawMultiScreen(
+			MULTITARGET::ON_ALPHA,
+			MULTITARGET::ON_MULTI,
+			MULTITARGET::ON_TIMER);
 	}
 
 	// 過去の状態保存
@@ -1269,7 +1263,6 @@ void CPlayer::DeadSetting(MyLib::HitResult_Character* result)
 //==========================================================================
 void CPlayer::UpdateState()
 {
-
 	// モーション別の状態設定
 	MotionBySetState();
 
@@ -1532,6 +1525,9 @@ void CPlayer::StateReturn()
 		m_state = STATE::STATE_RESPAWN;
 		SetLife(GetLifeOrigin());
 
+		// 画面リセット
+		ScreenReset();
+
 		// リトライUIを消す
 		if (m_pRetryUI != nullptr)
 		{
@@ -1589,6 +1585,14 @@ void CPlayer::StateRestart()
 		m_state = STATE::STATE_RESPAWN;
 		SetLife(GetLifeOrigin());
 
+		// 画面リセット
+		ScreenReset();
+
+		// カメラ瞬間移動
+		MyLib::Vector3 pos = GetPosition();
+		CCamera* pCamera = CManager::GetInstance()->GetCamera();
+		pCamera->WarpCamera(pos + MyLib::Vector3(0.0f, 150.0f, 0.0f));
+
 		// チェックポイント通過情報リセット
 		CCheckpoint::ResetSaveID();
 
@@ -1615,7 +1619,7 @@ void CPlayer::StateRespawn()
 		m_state = STATE::STATE_NONE;
 	}
 
-	//タイマーストップ
+	//空気待ち状態にする
 	CGame::GetInstance()->GetGameManager()->SetType(CGameManager::SceneType::SCENE_WAIT_AIRPUSH);
 }
 
@@ -1679,4 +1683,19 @@ void CPlayer::SetState(STATE state, int nCntState)
 CPlayer::STATE CPlayer::GetState()
 {
 	return m_state;
+}
+
+//==========================================================================
+// 画面リセット
+//==========================================================================
+void CPlayer::ScreenReset()
+{
+	// フィードバックエフェクトリセット
+	CManager::GetInstance()->GetRenderer()->SetEnableDrawMultiScreen(
+		MULTITARGET::RESET_ALPHA,
+		MULTITARGET::RESET_MULTI,
+		MULTITARGET::RESET_TIMER);
+
+	CCamera* pCamera = CManager::GetInstance()->GetCamera();
+	pCamera->SetStateCameraV(new CStateCameraV);
 }
