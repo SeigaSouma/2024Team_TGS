@@ -804,8 +804,43 @@ float CPlayerControlSurfacing::Surfacing(CPlayer* player)
 //==========================================================================
 void CPlayerControlTrick::Trick(CPlayer* player, int& nIdx, bool& bValue)
 {
-	nIdx = m_pCommandPad->GetSuccess();
+	int type = -1;
+	m_pCommandPad->GetSuccess(nIdx, type);
 	if (nIdx >= 0) bValue = true;
+
+	// ¬Œ÷Žž‚Ì‚ÝŒø‰Ê‚ð—^‚¦‚é
+	if (!bValue) { return; }
+
+	CBaggage* bag = player->GetBaggage();
+
+	// Ží—Þ‚É‚æ‚Á‚ÄŒø‰Ê‚ð—^‚¦‚é
+	switch (type)
+	{
+	case CCommand::TYPE::TYPE_ROTATION:
+	{
+		// ‰×•¨‚ð‚‘¬‰ñ“]‚³‚¹‚é
+		MyLib::Vector3 rot = bag->GetVeloRot();
+		rot.x += 1.0f;
+		bag->SetVeloRot(rot);
+	}
+		break;
+
+	case CCommand::TYPE::TYPE_UP:
+	{
+		// ‰×•¨‚ðã¸‚³‚¹‚é
+		MyLib::Vector3 move = bag->GetMove();
+		move.y += 5.0f;
+		bag->SetMove(move);
+	}
+		break;
+	case CCommand::TYPE::TYPE_FLY:
+	{
+		
+	}
+		break;
+	default:
+		break;
+	}
 }
 
 //==========================================================================
