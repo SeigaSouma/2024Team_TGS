@@ -72,15 +72,18 @@ CCommandGroup* CCommandGroup::Create(const std::string& string)
 //==========================================================================
 // コマンド成功番号を取得
 //==========================================================================
-int CCommandGroup::GetSuccess()
+void CCommandGroup::GetSuccess(int& nMotion, int& nType)
 {
 	bool value = false;
 	for (auto it = m_CommandList.begin(); it != m_CommandList.end(); it++) {
 
-		if ((*it)->GetCommand()) return (*it)->GetId();
+		if ((*it)->GetCommand())
+		{
+			nMotion = (*it)->GetId();
+			nType = (*it)->GetType();
+			return;
+		}
 	}
-
-	return -1;
 }
 
 //==========================================================================
@@ -103,6 +106,8 @@ void CCommandGroup::Load(const std::string& string)
 	std::string line;
 	while (std::getline(File, line))
 	{
+		CCommandPad* pPad = nullptr;
+
 		// コメントはスキップ
 		if (line.empty() ||
 			line[0] == '#')
@@ -113,22 +118,61 @@ void CCommandGroup::Load(const std::string& string)
 		// ストリーム作成
 		std::istringstream lineStream(line);
 
-		if (line.find("COMMAND_FILENAME") != std::string::npos)
-		{// COMMAND_FILENAMEでコマンド情報読み込み
-			std::string commandfile;
-			commandfile.clear();
+		if (line.find("SET") != std::string::npos)
+		{// SETで配置情報読み込み
+			// 読み込み情報
+			while (line.find("END_SET") == std::string::npos)
+			{
+				// ストリーム作成
+				std::getline(File, line);
+				std::istringstream lineStream(line);
 
-			// 情報渡す
-			lineStream >>
-				hoge >>
-				hoge >>
-				commandfile;	// 配置物の種類
+				if (line.find("COMMAND_FILENAME") != std::string::npos)
+				{// COMMAND_FILENAMEでコマンド情報読み込み
+					std::string commandfile;
+					commandfile.clear();
 
-			CCommandPad* pPad = DEBUG_NEW CCommandPad;
-			pPad->Load(commandfile);
-			pPad->SetId(id);
-			ListIn(pPad);
-			id++;
+					// 情報渡す
+					lineStream >>
+						hoge >>
+						hoge >>
+						commandfile;	// 配置物の種類
+
+					pPad = DEBUG_NEW CCommandPad;
+					pPad->Load(commandfile);
+					ListIn(pPad);
+				}
+				if (line.find("PLAY_MOTION") != std::string::npos)
+				{// COMMAND_FILENAMEでコマンド情報読み込み
+					int id = 1;
+
+					// 情報渡す
+					lineStream >>
+						hoge >>
+						hoge >>
+						id;	// 配置物の種類
+
+					if (pPad != nullptr)
+					{
+						pPad->SetId(id);
+					}
+				}
+				if (line.find("TYPE") != std::string::npos)
+				{// COMMAND_FILENAMEでコマンド情報読み込み
+					int id = 1;
+
+					// 情報渡す
+					lineStream >>
+						hoge >>
+						hoge >>
+						id;	// 配置物の種類
+
+					if (pPad != nullptr)
+					{
+						pPad->SetType(id);
+					}
+				}
+			}
 		}
 
 		if (line.find("END_SCRIPT") != std::string::npos)

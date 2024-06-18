@@ -7,7 +7,7 @@
 
 SCRIPT
 
-	MAX_FRAME = 60
+	MAX_FRAME = 60	// 入力受付フレーム数
 
 	COMMANDSET
 		KEY = 2

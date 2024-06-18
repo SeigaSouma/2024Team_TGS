@@ -18,6 +18,7 @@ CCommand::CCommand()
 	m_nNowFlame = 0;
 	m_nMaxFlame = 0;
 	m_nId = 0;
+	m_nType = 0;
 	m_Info.clear();
 }
 
@@ -68,6 +69,21 @@ void CCommand::Load(std::string& string)
 				frame;	// 配置物の種類
 
 			SetMaxFlame(frame);
+		}
+		else if (line.find("PLAY_MOTION") != std::string::npos)
+		{// PLAY_MOTIONで再生モーション設定
+			int id = 0;
+
+			// ストリーム作成
+			std::istringstream lineStream(line);
+
+			// 情報渡す
+			lineStream >>
+				hoge >>
+				hoge >>
+				id;	// モーションの種類
+
+			SetId(id);
 		}
 
 		if (line.find("COMMANDSET") != std::string::npos)

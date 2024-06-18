@@ -486,12 +486,14 @@ void CPlayer::Controll()
 				int idx = -1; bool value = false;
 				m_pControlTrick->Trick(this, idx, value);
 
-				if (value) SetMotion(MOTION_ATK3 + idx);
+				// 操作成功
+				if (value)
+				{
+					SetMotion(idx);	// モーション変更
+				}
 			}
 		}
-
 	}
-
 
 	// 位置取得
 	MyLib::Vector3 pos = GetPosition();

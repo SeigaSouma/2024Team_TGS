@@ -178,6 +178,7 @@ public:
 	MyLib::Vector3 GetCylinderPosition() { return m_posCylinder; };		// “›‚ÌˆÊ’uæ“¾
 	void SetMoveLength(float len) { m_fMoveLength = len; }				// ˆÚ“®‹——£İ’è
 	float GetMoveLength() { return m_fMoveLength; }						// ˆÚ“®‹——£æ“¾
+	CBaggage* GetBaggage() { return m_pBaggage; }			// ©•ª‚Ì‰×•¨æ“¾
 
 	// ƒqƒbƒgŒn
 	void DeadSetting(MyLib::HitResult_Character* result);
