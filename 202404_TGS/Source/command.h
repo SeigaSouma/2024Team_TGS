@@ -13,6 +13,17 @@
 // キーコンフィグ
 class CCommand
 {
+public:
+
+	// 種類
+	enum TYPE
+	{
+		TYPE_ROTATION = 0,	// 高速回転
+		TYPE_UP,			// 上昇
+		TYPE_FLY,			// 飛ぶ
+		TYPE_MAX
+	};
+
 protected:
 
 	// 入力情報
@@ -40,6 +51,8 @@ public:
 	void Load(std::string& string);
 	void SetId(const int nId) { m_nId = nId; }
 	int GetId() { return m_nId; }
+	void SetType(const int nType) { m_nType = nType; }
+	int GetType() { return m_nType; }
 
 protected:
 
@@ -61,6 +74,7 @@ protected:
 private:
 
 	// メンバ変数
+	int m_nType;		// 種類
 	int m_nId;			// 番号
 	int m_nNowFlame;	// 現在のフレーム
 	int m_nMaxFlame;	// 入力受付最大フレーム

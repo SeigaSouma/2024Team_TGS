@@ -98,7 +98,10 @@ HRESULT CCheckpoint::Init()
 void CCheckpoint::Uninit()
 {
 	// ‘”Œ¸‚ç‚·
-	m_nAll--;
+	if (m_nAll > 0)
+	{
+		m_nAll--;
+	}
 
 	// ƒŠƒXƒg‚©‚çíœ
 	m_List.Delete(this);
