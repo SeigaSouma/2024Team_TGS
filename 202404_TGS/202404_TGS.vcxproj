@@ -209,6 +209,7 @@
     <ClCompile Include="Source\input_keyboard.cpp" />
     <ClCompile Include="Source\input_mouse.cpp" />
     <ClCompile Include="Source\instantfade.cpp" />
+    <ClCompile Include="Source\judge.cpp" />
     <ClCompile Include="Source\judgezone.cpp" />
     <ClCompile Include="Source\judgezoneManager.cpp" />
     <ClCompile Include="Source\keyconfig.cpp" />
@@ -288,6 +289,7 @@
     <ClCompile Include="Source\stagecleartext.cpp" />
     <ClCompile Include="Source\stagename.cpp" />
     <ClCompile Include="Source\stencilshadow.cpp" />
+    <ClCompile Include="Source\stonewall.cpp" />
     <ClCompile Include="Source\targetpoint.cpp" />
     <ClCompile Include="Source\texture.cpp" />
     <ClCompile Include="Source\timer.cpp" />
@@ -297,6 +299,8 @@
     <ClCompile Include="Source\tutorial.cpp" />
     <ClCompile Include="Source\tutoriallogo.cpp" />
     <ClCompile Include="Source\waterfield.cpp" />
+    <ClCompile Include="Source\waterfield_left.cpp" />
+    <ClCompile Include="Source\waterfield_right.cpp" />
     <ClCompile Include="Source\waterripple.cpp" />
     <ClCompile Include="Source\Xload.cpp" />
   </ItemGroup>
@@ -357,6 +361,7 @@
     <ClInclude Include="Source\input_keyboard.h" />
     <ClInclude Include="Source\input_mouse.h" />
     <ClInclude Include="Source\instantfade.h" />
+    <ClInclude Include="Source\judge.h" />
     <ClInclude Include="Source\judgezone.h" />
     <ClInclude Include="Source\judgezoneManager.h" />
     <ClInclude Include="Source\keyconfig.h" />
@@ -431,6 +436,7 @@
     <ClInclude Include="Source\stagecleartext.h" />
     <ClInclude Include="Source\stagename.h" />
     <ClInclude Include="Source\stencilshadow.h" />
+    <ClInclude Include="Source\stonewall.h" />
     <ClInclude Include="Source\targetpoint.h" />
     <ClInclude Include="Source\texture.h" />
     <ClInclude Include="Source\timer.h" />
@@ -440,6 +446,8 @@
     <ClInclude Include="Source\tutorial.h" />
     <ClInclude Include="Source\tutoriallogo.h" />
     <ClInclude Include="Source\waterfield.h" />
+    <ClInclude Include="Source\waterfield_left.h" />
+    <ClInclude Include="Source\waterfield_right.h" />
     <ClInclude Include="Source\waterripple.h" />
     <ClInclude Include="Source\Xload.h" />
   </ItemGroup>

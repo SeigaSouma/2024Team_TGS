@@ -27,9 +27,7 @@ private:
 		float fColAlpha;		// 透明度
 		float fTimer;			// 遷移タイマー
 		float fMulti;			// サイズ倍率
-		bool bDraw;				// マルチターゲット画面の描画判定
 		bool bActive;			// 稼働中
-		bool bNext;				// 次
 
 		MultiTargetInfo()	// コンストラクタ
 		{
@@ -40,9 +38,7 @@ private:
 			fColAlpha = 0.0f;
 			fMulti = 0.0f;
 			fTimer = 0.0f;
-			bDraw = false;
 			bActive = false;
-			bNext = false;
 		}
 	};
 
@@ -74,8 +70,15 @@ public:
 	void ChangeRendertarget(LPDIRECT3DSURFACE9 pRender, LPDIRECT3DSURFACE9 pZBuff, D3DXMATRIX viewport, D3DXMATRIX projection);	// ターゲット切明
 	void ChangeTarget(MyLib::Vector3 posV, MyLib::Vector3 posR, MyLib::Vector3 vecU);
 	LPDIRECT3DTEXTURE9 GetTextureMT(int idx) { return m_Multitarget.pTextureMT[idx]; }	// レンダリングターゲット用テクスチャ取得
-	bool IsDrawMultiScreen() { return m_MultitargetInfo.bDraw; };					// マルチターゲット画面の描画判定
-	void SetEnableDrawMultiScreen(bool bDraw, float fGoalAlpha, float fGoalMulti, float fTimer);// マルチターゲット画面の描画判定
+
+	/**
+	@brief	マルチターゲット画面の描画判定	
+	@param	fGoalAlpha	[in]	目標透明色
+	@param	fGoalMulti	[in]	目標画面倍率
+	@param	fTimer		[in]	目標までの時間
+	@return	void
+	*/
+	void SetEnableDrawMultiScreen(float fGoalAlpha, float fGoalMulti, float fTimer);
 
 private:
 

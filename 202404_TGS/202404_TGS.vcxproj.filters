@@ -60,14 +60,8 @@
     <Filter Include="load">
       <UniqueIdentifier>{48e287cf-d433-41b9-b663-ce7532f57c06}</UniqueIdentifier>
     </Filter>
-    <Filter Include="goal">
-      <UniqueIdentifier>{6ab27bb6-67f7-4892-aeae-7674ac92e332}</UniqueIdentifier>
-    </Filter>
     <Filter Include="SAMPLE">
       <UniqueIdentifier>{2f9d7de0-6038-4373-9537-6c74de8f2e2c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="checkpoint">
-      <UniqueIdentifier>{e351929e-a465-4c59-a3fc-a361fb2bc776}</UniqueIdentifier>
     </Filter>
     <Filter Include="baggage">
       <UniqueIdentifier>{9312ed64-aead-4f02-884d-1467aecdfe3c}</UniqueIdentifier>
@@ -77,9 +71,6 @@
     </Filter>
     <Filter Include="keyconfig">
       <UniqueIdentifier>{798ed9c4-d084-4216-885c-c23d994aee58}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="course">
-      <UniqueIdentifier>{2eb08385-ae14-4060-b707-e8d0fa121325}</UniqueIdentifier>
     </Filter>
     <Filter Include="command">
       <UniqueIdentifier>{f9df59bd-df30-4c9f-be88-fe4191d03760}</UniqueIdentifier>
@@ -98,6 +89,15 @@
     </Filter>
     <Filter Include="water">
       <UniqueIdentifier>{23c6135c-c662-4da9-acab-bf5212e4ea4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="map\course">
+      <UniqueIdentifier>{2eb08385-ae14-4060-b707-e8d0fa121325}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="map\checkpoint">
+      <UniqueIdentifier>{e351929e-a465-4c59-a3fc-a361fb2bc776}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="map\goal">
+      <UniqueIdentifier>{6ab27bb6-67f7-4892-aeae-7674ac92e332}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -432,7 +432,7 @@
       <Filter>SAMPLE</Filter>
     </ClCompile>
     <ClCompile Include="Source\goalflag.cpp">
-      <Filter>goal</Filter>
+      <Filter>map\goal</Filter>
     </ClCompile>
     <ClCompile Include="Source\sample_obj2D.cpp">
       <Filter>SAMPLE</Filter>
@@ -441,7 +441,7 @@
       <Filter>SAMPLE</Filter>
     </ClCompile>
     <ClCompile Include="Source\checkpoint.cpp">
-      <Filter>checkpoint</Filter>
+      <Filter>map\checkpoint</Filter>
     </ClCompile>
     <ClCompile Include="Source\sample_character.cpp">
       <Filter>SAMPLE</Filter>
@@ -477,7 +477,7 @@
       <Filter>edit</Filter>
     </ClCompile>
     <ClCompile Include="Source\course.cpp">
-      <Filter>course</Filter>
+      <Filter>map\course</Filter>
     </ClCompile>
     <ClCompile Include="Source\elevation.cpp">
       <Filter>mesh</Filter>
@@ -494,9 +494,6 @@
     <ClCompile Include="Source\stencilshadow.cpp">
       <Filter>stencilshadow</Filter>
     </ClCompile>
-    <ClCompile Include="Source\waterfield.cpp">
-      <Filter>mesh</Filter>
-    </ClCompile>
     <ClCompile Include="Source\baggageManager.cpp">
       <Filter>baggage</Filter>
     </ClCompile>
@@ -512,8 +509,23 @@
     <ClCompile Include="Source\myassert.cpp">
       <Filter>system</Filter>
     </ClCompile>
+    <ClCompile Include="Source\judge.cpp">
+      <Filter>judgezone</Filter>
+    </ClCompile>
     <ClCompile Include="Source\waterripple.cpp">
       <Filter>water</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\waterfield.cpp">
+      <Filter>water</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\waterfield_right.cpp">
+      <Filter>water</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\waterfield_left.cpp">
+      <Filter>water</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\stonewall.cpp">
+      <Filter>map</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -857,7 +869,7 @@
       <Filter>SAMPLE</Filter>
     </ClInclude>
     <ClInclude Include="Source\goalflag.h">
-      <Filter>goal</Filter>
+      <Filter>map\goal</Filter>
     </ClInclude>
     <ClInclude Include="Source\sample_obj3D.h">
       <Filter>SAMPLE</Filter>
@@ -866,7 +878,7 @@
       <Filter>SAMPLE</Filter>
     </ClInclude>
     <ClInclude Include="Source\checkpoint.h">
-      <Filter>checkpoint</Filter>
+      <Filter>map\checkpoint</Filter>
     </ClInclude>
     <ClInclude Include="Source\sample_character.h">
       <Filter>SAMPLE</Filter>
@@ -902,7 +914,7 @@
       <Filter>edit</Filter>
     </ClInclude>
     <ClInclude Include="Source\course.h">
-      <Filter>course</Filter>
+      <Filter>map\course</Filter>
     </ClInclude>
     <ClInclude Include="Source\elevation.h">
       <Filter>mesh</Filter>
@@ -919,9 +931,6 @@
     <ClInclude Include="Source\stencilshadow.h">
       <Filter>stencilshadow</Filter>
     </ClInclude>
-    <ClInclude Include="Source\waterfield.h">
-      <Filter>mesh</Filter>
-    </ClInclude>
     <ClInclude Include="Source\baggageManager.h">
       <Filter>baggage</Filter>
     </ClInclude>
@@ -937,8 +946,23 @@
     <ClInclude Include="Source\myassert.h">
       <Filter>system</Filter>
     </ClInclude>
+    <ClInclude Include="Source\judge.h">
+      <Filter>judgezone</Filter>
+    </ClInclude>
     <ClInclude Include="Source\waterripple.h">
       <Filter>water</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\waterfield.h">
+      <Filter>water</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\waterfield_right.h">
+      <Filter>water</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\waterfield_left.h">
+      <Filter>water</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\stonewall.h">
+      <Filter>map</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

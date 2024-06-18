@@ -35,11 +35,13 @@
 #include "checkpoint.h"
 #include "map_obstacleManager.h"
 #include "baggageManager.h"
+#include "judgezoneManager.h"
 #include "stencilshadow.h"
 
 #include "sample_obj3D.h"
 #include "course.h"
 #include "waterfield.h"
+#include "stonewall.h"
 
 #include "2D_Effect.h"
 #include "waterripple.h"
@@ -68,6 +70,7 @@ CGame::CGame()
 	m_pObstacleManager = nullptr;	// 障害物マネージャ
 	m_pBaggageManager = nullptr;	// 荷物マネージャ
 	m_pCourse = nullptr;			// コースのオブジェクト
+	m_pJudgeZoneManager = nullptr;	// 判定ゾーンマネージャ
 }
 
 //==========================================================================
@@ -163,6 +166,11 @@ HRESULT CGame::Init()
 		pPlayer->SetRotation(MyLib::Vector3(0.0f, 0.0f, 0.0f));
 	}
 
+	// 判定ゾーンマネージャ
+	CJudgeZone* pZone = CJudgeZone::Create(0.2f, 0.3f);
+	m_pJudgeZoneManager = CJudgeZoneManager::Create();
+	m_pJudgeZoneManager->Add(pZone);
+
 	// ステージ
 	m_pStage = CStage::Create("data\\TEXT\\stage\\info.txt");
 
@@ -177,10 +185,6 @@ HRESULT CGame::Init()
 
 	m_pTimer = CTimer::Create();
 
-	CCheckpoint::Create(MyLib::Vector3(300.0f, 0.0f, 0.0f));
-	CCheckpoint::Create(MyLib::Vector3(1300.0f, 0.0f, 0.0f));
-	CCheckpoint::Create(MyLib::Vector3(2300.0f, 0.0f, 0.0f));
-
 	CGoalflagX::Create(MyLib::Vector3(23000.0f,0.0f,0.0f));
 
 	// 障害物マネージャ
@@ -192,11 +196,52 @@ HRESULT CGame::Init()
 
 	// コース作成
 	m_pCourse = CCourse::Create("data\\TEXT\\map\\course.bin");
+	CStoneWall *pStoneWall = CStoneWall::Create();
+
+	// 基点地点設定
+	pStoneWall->SetVecPosition(m_pCourse->GetVecPosition());
+	pStoneWall->Reset();
+
+	std::vector<CCourse::VtxInfo> vtxInfo = m_pCourse->GetVecVtxinfo();
+	std::vector<MyLib::Vector3> vecpos;
+
+	// posの要素渡し
+	//std::transform(vtxInfo.begin(), vtxInfo.end(), std::back_inserter(vecpos), [](const CCourse::VtxInfo& info)->MyLib::Vector3 {return info.pos; });
+
+	MyLib::Vector3 setpos;
+	for (const auto& info : vtxInfo)
+	{
+		setpos.x = info.pos.x + sinf(D3DX_PI + info.rot.y) * -250.0f;
+		setpos.y = info.pos.y;
+		setpos.z = info.pos.z + cosf(D3DX_PI + info.rot.y) * -250.0f;
+		vecpos.push_back(setpos);
+	}
+
+	// 各頂点座標
+	pStoneWall->SetVecVtxPosition(vecpos);
+	pStoneWall->BindVtxPosition();
+
 
 	// ステンシル影生成
 	CStencilShadow::Create();
 
-	CWaterField::Create();
+	CWaterField::Create(CWaterField::TYPE::TYPE_NORMAL);
+	CWaterField::Create(CWaterField::TYPE::TYPE_RIGHT);
+	CWaterField::Create(CWaterField::TYPE::TYPE_LEFT);
+
+
+	CCheckpoint::Create(1000.0f);
+	CCheckpoint::Create(2000.0f);
+	CCheckpoint::Create(3000.0f);
+	CCheckpoint::Create(4000.0f);
+	CCheckpoint::Create(5000.0f);
+	CCheckpoint::Create(6000.0f);
+	CCheckpoint::Create(7000.0f);
+	CCheckpoint::Create(8000.0f);
+	CCheckpoint::Create(9000.0f);
+
+	// チェックポイント通過リセット
+	CCheckpoint::ResetSaveID();
 
 	// 成功
 	return S_OK;
@@ -286,6 +331,13 @@ void CGame::Uninit()
 	{
 		m_pBaggageManager->Uninit();
 		m_pBaggageManager = nullptr;
+	}
+
+	// 判定ゾーンマネージャ
+	if (m_pJudgeZoneManager != nullptr)
+	{
+		m_pJudgeZoneManager->Uninit();
+		m_pJudgeZoneManager = nullptr;
 	}
 
 	// コース

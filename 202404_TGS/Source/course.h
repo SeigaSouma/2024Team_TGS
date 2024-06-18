@@ -40,6 +40,16 @@ public:
 		LineInfo lineInfo;	// 辺の内部情報
 	};
 
+	// 頂点情報
+	struct VtxInfo
+	{
+		MyLib::Vector3 pos;	// 位置
+		MyLib::Vector3 rot;	// 向き
+
+		VtxInfo() : pos(), rot() {}
+		VtxInfo(const MyLib::Vector3& _pos, const MyLib::Vector3& _rot) : pos(_pos), rot(_rot) {}
+	};
+
 	CCourse(int nPriority = 1, const LAYER layer = LAYER::LAYER_MAP);
 	~CCourse();
 
@@ -60,11 +70,13 @@ public:
 	MyLib::Vector3 GetVecPosition(int idx);											// 基点の位置取得
 	void SetVecPosition(const std::vector<MyLib::Vector3>& vecpos) { m_vecSegmentPosition = vecpos; }
 	void SetVecPosition(int idx, const MyLib::Vector3& pos);						// 基点の位置設定
+	float GetCourceLength() { return m_courceLength; }								// コースの長さ
+	static float GetCreateDistance() { return m_fCreateDistance; }					// 生成間隔取得
 
-	std::vector<MyLib::Vector3> GetVecVtxPosition() { return m_vecVtxPosition; }	// 各頂点の位置取得
-	MyLib::Vector3 GetVecVtxPosition(int idx);										// 各頂点の位置取得
-	void SetVecVtxPosition(const std::vector<MyLib::Vector3>& vecpos) { m_vecVtxPosition = vecpos; }
-	void SetVecVtxPosition(int idx, const MyLib::Vector3& pos);						// 各頂点の位置設定
+	std::vector<VtxInfo> GetVecVtxinfo() { return m_vecVtxInfo; }						// 各頂点の情報取得
+	VtxInfo GetVecVtxinfo(int idx);														// 各頂点の情報取得
+	void SetVecVtxinfo(const std::vector<VtxInfo>& vecinfo) { m_vecVtxInfo = vecinfo; }	// 各頂点の情報設定
+	void SetVecVtxinfo(int idx, const VtxInfo& vecinfo);								// 各頂点の情報設定
 
 	// ファイル操作
 	void Save();	// セーブ
@@ -80,9 +92,10 @@ private:
 	// メンバ変数
 	std::string m_FileName;	// ファイル名
 	std::vector<MyLib::Vector3> m_vecSegmentPosition;	// 基点の位置
-	std::vector<MyLib::Vector3> m_vecVtxPosition;		// 各頂点の位置
+	std::vector<VtxInfo> m_vecVtxInfo;		// 各頂点の情報
 	std::vector<CCollisionLine_Box*> m_pCollisionLineBox;	// 当たり判定ボックス
-
+	float m_courceLength;
+	static const float m_fCreateDistance;	// 生成間隔
 };
 
 

@@ -32,6 +32,17 @@ namespace
 	int DEFAULT_WATERRIPPLE_INTERVAL = 21;	// 水波紋のインターバル
 }
 
+//==========================================================================
+// ブラー表現(マルチターゲットレンダリング)用定数定義
+//==========================================================================
+namespace MULTITARGET
+{
+	// OFF時
+	const float OFF_ALPHA = (0.0f);		// 目標透明度
+	const float OFF_MULTI = (1.0f);		// 目標倍率
+	const float OFF_TIMER = (150.0f);	// 遷移タイマー
+}
+
 #define GEKIMUZU (true)
 
 //==========================================================================
@@ -497,19 +508,40 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 		}
 		else if(!pBaggage->IsLand())
 		{
+
+			// 前回が着地
+			if (m_bLandOld)
+			{
+				float multi = 1.0f - static_cast<float>(player->GetLife()) / static_cast<float>(player->GetLifeOrigin());
+
+				// フィードバックエフェクトOFF
+				CManager::GetInstance()->GetRenderer()->SetEnableDrawMultiScreen(
+					MULTITARGET::OFF_ALPHA,
+					MULTITARGET::OFF_MULTI,
+					MULTITARGET::OFF_TIMER * multi);
+			}
+
 			player->SetLife(player->GetLifeOrigin());
+
+			// 前回着地していない状態に
+			m_bLandOld = false;
 		}
 		else
 		{
 			// 位置設定
 			posBaggage.y = posBaggageOrigin.y;
 			player->Hit(1);
+
+			// 前回着地した状態に
+			m_bLandOld = true;
 		}
 	}
 
 	// 位置設定
-	pBaggage->SetPosition(MyLib::Vector3(pos.x, posBaggage.y, pos.z));
-
+	if (!pBaggage->IsAway())
+	{
+		pBaggage->SetPosition(MyLib::Vector3(pos.x, posBaggage.y, pos.z));
+	}
 
 	// カメラ情報取得
 	CCamera* pCamera = CManager::GetInstance()->GetCamera();

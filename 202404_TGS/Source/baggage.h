@@ -61,10 +61,12 @@ public:
 	void SetForce(const MyLib::Vector3& power) { m_force = power; }				// 力設定
 	void AddForce(const MyLib::Vector3& power, const MyLib::Vector3& ActPos);	// 力追加
 	bool IsLand() { return m_bLand; }	// 着地判定
+	bool IsAway() { return m_bAway; }	// 吹っ飛び判定
 	void SetModelPath(const std::string path) { m_baggageInfo.path = path; }
 	void SetCycle(const float& deviation) { m_baggageInfo.cycle = deviation; }
 	void SetWidth(const float& deviWidth) { m_baggageInfo.width = deviWidth; }
 	void SetWeight(const float& weight) { m_baggageInfo.weight = weight; }
+	bool IsHit() { return m_bHit; }		//Hit()での判定を返す
 
 	//=============================
 	// 静的関数
@@ -79,19 +81,23 @@ private:
 	// メンバ関数
 	//=============================
 	bool Hit();
-	// その他
+	void DeadMove();	// 死亡時移動
 
 	//=============================
 	// メンバ変数
 	//=============================
-	TYPE m_type;			// 種類
-	float m_fWeight;		// 重さ
-	MyLib::Vector3 m_force;	// 力
+	TYPE m_type;				// 種類
+	float m_fWeight;			// 重さ
+	MyLib::Vector3 m_force;		// 力
 	MyLib::Vector3 m_velorot;	// 回転速度
-	bool m_bLand;			// 着地判定
+	MyLib::Vector3 m_posAwayStart;		// 吹っ飛びスタート地点
+	bool m_bLand;				// 着地判定
+	bool m_bHit;				// 障害物衝突判定
+	bool m_bAway;				// 吹っ飛び判定
 	static CListManager<CBaggage> m_List;	// リスト
 	SBaggageInfo m_baggageInfo;
 	float m_fDeviation;
+	float m_fDeadMoveTime;	// 死亡時の移動時間
 };
 
 
