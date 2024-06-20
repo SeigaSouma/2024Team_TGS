@@ -20,7 +20,7 @@ namespace
 {
 	const std::string TEXTURE = "data\\TEXTURE\\FIELD\\water-bg-pattern-04.jpg";
 	const int WIDTH_BLOCK = 2;
-	const float WIDTH = 200.0f;
+	const float WIDTH = 600.0f;
 	const float INTERVAL_TEXU = 500.0f;	// U座標の間隔
 }
 const float CCourse::m_fCreateDistance = 200.0f;	// 生成間隔
@@ -209,7 +209,7 @@ void CCourse::Reset()
 	CalVtxPosition();
 
 	// 各種変数初期化
-	SetPosition(MyLib::Vector3(0.0f, 10.0f, 0.0f));				// 位置
+	SetPosition(MyLib::Vector3(0.0f, 0.5f, 0.0f));				// 位置
 	SetWidthBlock(1);		// 幅分割
 	SetHeightBlock(static_cast<int>(m_vecVtxInfo.size()) - 1);	// 縦分割
 	SetWidthLen(0.0f);		// 縦長さ
@@ -449,7 +449,7 @@ void CCourse::SetVtx()
 	MyLib::Vector3 *pVtxPos = GetVtxPos();
 	MyLib::Vector3 *pVtxNor = GetVtxNor();
 	D3DXVECTOR2* pTex = GetVtxTex();
-	MyLib::Vector3 vec1, vec2, nor;
+	MyLib::Vector3 vec1, vec2, nor = MyLib::Vector3(0.0f, 1.0f, 0.0f);
 	MyLib::Vector3 VtxRight, VtxLeft, VtxNow;
 	int nHeight = GetHeightBlock();
 	int nWidth = GetWidthBlock();
@@ -507,6 +507,7 @@ void CCourse::SetVtx()
 			// 縦の割合分進める
 			posV += pVtxPos[idx].DistanceXZ(pVtxPos[idx + 1]) / intervalV;
 			
+#if 0
 			// 今回の頂点
 			int nNowPoint = (nCntWidth + 1) + (nCntHeight * (WIDTH_BLOCK));
 			int nVerTexW = (WIDTH_BLOCK) + 1;
@@ -570,9 +571,11 @@ void CCourse::SetVtx()
 
 			// 外積の正規化をして法線にする
 			D3DXVec3Normalize(&nor, &nor);
-
+	
 			// 法線
 			pVtxNor[nNowPoint] = nor;
+#endif
+			pVtxNor[idx] = nor;
 		}
 	}
 

@@ -211,9 +211,9 @@ HRESULT CGame::Init()
 	MyLib::Vector3 setpos;
 	for (const auto& info : vtxInfo)
 	{
-		setpos.x = info.pos.x + sinf(D3DX_PI + info.rot.y) * -250.0f;
+		setpos.x = info.pos.x + sinf(D3DX_PI + info.rot.y) * -600.0f;
 		setpos.y = info.pos.y;
-		setpos.z = info.pos.z + cosf(D3DX_PI + info.rot.y) * -250.0f;
+		setpos.z = info.pos.z + cosf(D3DX_PI + info.rot.y) * -600.0f;
 		vecpos.push_back(setpos);
 	}
 
