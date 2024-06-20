@@ -41,6 +41,7 @@
 #include "baggageManager.h"
 #include "spline.h"
 #include "course.h"
+#include "meshbubble.h"
 
 // 使用クラス
 #include "playercontrol.h"
@@ -86,7 +87,7 @@ namespace MULTITARGET
 {
 	// ON時
 	const float ON_ALPHA = (0.6f);		// 目標透明度
-	const float ON_MULTI = (1.1f);		// 目標倍率
+	const float ON_MULTI = (1.02f);		// 目標倍率
 	const float ON_TIMER = (120.0f);	// 遷移タイマー
 
 	// 死亡時
@@ -486,12 +487,14 @@ void CPlayer::Controll()
 				int idx = -1; bool value = false;
 				m_pControlTrick->Trick(this, idx, value);
 
-				if (value) SetMotion(MOTION_ATK3 + idx);
+				// 操作成功
+				if (value)
+				{
+					SetMotion(idx);	// モーション変更
+				}
 			}
 		}
-
 	}
-
 
 	// 位置取得
 	MyLib::Vector3 pos = GetPosition();
@@ -984,10 +987,6 @@ void CPlayer::ReaspawnSetting()
 
 	MyLib::Vector3 pos = GetPosition();
 	m_pBaggage->SetPosition(MyLib::Vector3(pos.x, MAX_HEIGHT, pos.z));
-
-	CCamera* pCamera = CManager::GetInstance()->GetCamera();
-
-	pCamera->SetLenDest(pCamera->GetOriginDistance(), 0, 1.0f, 1.0f);
 }
 
 //==========================================================================
@@ -1181,14 +1180,40 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 
 	if (nLife <= camlife)
 	{
-
 		if (nLife % 4 == 0)
 		{
 			float ratioDest = 1.0f - static_cast<float>(nLife) / GetLifeOrigin();
 			float ratio = ratioDest;
 			UtilFunc::Transformation::Clamp(ratioDest, 0.0f, 0.7f);
 			UtilFunc::Transformation::Clamp(ratio, 0.1f, 1.0f);
-			pCamera->SetShake(3, 50.0f * ratio, 0.0f);	// 振動
+			pCamera->SetShake(3, 20.0f * ratio, 0.0f);	// 振動
+		}
+
+		
+		for (int i = 0; i < 2; i++)
+		{
+			float randmoveX = UtilFunc::Transformation::Random(-50, 50) * 0.01f;
+			float randmoveY = UtilFunc::Transformation::Random(-20, 20) * 0.01f;
+			float randRadius = UtilFunc::Transformation::Random(-20, 20) * 0.01f;
+			float randDestRadius = UtilFunc::Transformation::Random(-30, 30) * 0.1f;
+			float randCycle = UtilFunc::Transformation::Random(-20, 20) * 0.001f;
+
+			// 移動距離加算
+			float len = m_fMoveLength + GetMove().x * 20.0f;
+			MyLib::Vector3 setpos = MySpline::GetSplinePosition_NonLoop(CGame::GetInstance()->GetCourse()->GetVecPosition(), len);
+			int x = UtilFunc::Transformation::Random(-80, 80);
+			int z = UtilFunc::Transformation::Random(-80, 80);
+
+			setpos.x += x;
+			setpos.z += z;
+			setpos.y -= 50.0f;
+
+			CMeshBubble::Create(
+				setpos,
+				MyLib::Vector3(8.0f + randmoveX, 3.0f + randmoveY, 0.0f),
+				1.0f + randRadius,
+				10.5f + randDestRadius,
+				0.08f + randCycle);
 		}
 	}
 
@@ -1224,12 +1249,11 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 		pstate->SetStartDistance(pCamera->GetDistance());
 		pCamera->SetStateCameraV(pstate);
 
-		
-			// フィードバックエフェクトON
-			CManager::GetInstance()->GetRenderer()->SetEnableDrawMultiScreen(
-				MULTITARGET::ON_ALPHA,
-				MULTITARGET::ON_MULTI,
-				MULTITARGET::ON_TIMER);
+		// フィードバックエフェクトON
+		CManager::GetInstance()->GetRenderer()->SetEnableDrawMultiScreen(
+			MULTITARGET::ON_ALPHA,
+			MULTITARGET::ON_MULTI,
+			MULTITARGET::ON_TIMER);
 	}
 
 	// 過去の状態保存
@@ -1269,7 +1293,6 @@ void CPlayer::DeadSetting(MyLib::HitResult_Character* result)
 //==========================================================================
 void CPlayer::UpdateState()
 {
-
 	// モーション別の状態設定
 	MotionBySetState();
 
@@ -1532,6 +1555,9 @@ void CPlayer::StateReturn()
 		m_state = STATE::STATE_RESPAWN;
 		SetLife(GetLifeOrigin());
 
+		// 画面リセット
+		ScreenReset();
+
 		// リトライUIを消す
 		if (m_pRetryUI != nullptr)
 		{
@@ -1589,6 +1615,14 @@ void CPlayer::StateRestart()
 		m_state = STATE::STATE_RESPAWN;
 		SetLife(GetLifeOrigin());
 
+		// 画面リセット
+		ScreenReset();
+
+		// カメラ瞬間移動
+		MyLib::Vector3 pos = GetPosition();
+		CCamera* pCamera = CManager::GetInstance()->GetCamera();
+		pCamera->WarpCamera(pos + MyLib::Vector3(0.0f, 150.0f, 0.0f));
+
 		// チェックポイント通過情報リセット
 		CCheckpoint::ResetSaveID();
 
@@ -1615,7 +1649,7 @@ void CPlayer::StateRespawn()
 		m_state = STATE::STATE_NONE;
 	}
 
-	//タイマーストップ
+	//空気待ち状態にする
 	CGame::GetInstance()->GetGameManager()->SetType(CGameManager::SceneType::SCENE_WAIT_AIRPUSH);
 }
 
@@ -1679,4 +1713,19 @@ void CPlayer::SetState(STATE state, int nCntState)
 CPlayer::STATE CPlayer::GetState()
 {
 	return m_state;
+}
+
+//==========================================================================
+// 画面リセット
+//==========================================================================
+void CPlayer::ScreenReset()
+{
+	// フィードバックエフェクトリセット
+	CManager::GetInstance()->GetRenderer()->SetEnableDrawMultiScreen(
+		MULTITARGET::RESET_ALPHA,
+		MULTITARGET::RESET_MULTI,
+		MULTITARGET::RESET_TIMER);
+
+	CCamera* pCamera = CManager::GetInstance()->GetCamera();
+	pCamera->SetStateCameraV(new CStateCameraV);
 }

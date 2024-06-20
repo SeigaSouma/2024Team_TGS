@@ -283,7 +283,7 @@ void CCourse::ReCreateVtx()
 //==========================================================================
 void CCourse::Update()
 {
-#if _DEBUG
+#if 0
 	// 頂点座標計算
 	SetVtxPosition();
 
@@ -405,7 +405,7 @@ void CCourse::Draw()
 	}
 
 	// 描画処理
-	CObject3DMesh::Draw();
+	//CObject3DMesh::Draw();
 
 	pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);	// 埋めるモード
 }

@@ -178,6 +178,7 @@ public:
 	MyLib::Vector3 GetCylinderPosition() { return m_posCylinder; };		// 筒の位置取得
 	void SetMoveLength(float len) { m_fMoveLength = len; }				// 移動距離設定
 	float GetMoveLength() { return m_fMoveLength; }						// 移動距離取得
+	CBaggage* GetBaggage() { return m_pBaggage; }			// 自分の荷物取得
 
 	// ヒット系
 	void DeadSetting(MyLib::HitResult_Character* result);
@@ -234,6 +235,7 @@ private:
 	void UpdateDamageReciveTimer();	// ダメージ受付時間更新
 	void ReaspawnSetting();			// リスポーン設定
 	void Bobbing();					// ぷかぷか
+	void ScreenReset();				// 画面状態リセット
 
 	// モーション系関数
 	void AttackAction(CMotion::AttackInfo ATKInfo, int nCntATK) override;		// 攻撃時処理

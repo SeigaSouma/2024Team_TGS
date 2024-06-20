@@ -27,14 +27,14 @@ public:
 	void Uninit();
 	void ListIn(CCommand* command);
 	static CCommandGroup* Create(const std::string& string);
-	int GetSuccess();
+	void GetSuccess(int& nMotion, int& nType);
 
 	// 静的メンバ関数
 
 private:
 
-	void Load(const std::string& string);
-
+	// メンバ変数
+	void Load(const std::string& string);	// 読み込み
 	std::vector<CCommand*> m_CommandList;	// コマンドリスト
 };
 

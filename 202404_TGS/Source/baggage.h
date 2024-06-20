@@ -67,6 +67,8 @@ public:
 	void SetWidth(const float& deviWidth) { m_baggageInfo.width = deviWidth; }
 	void SetWeight(const float& weight) { m_baggageInfo.weight = weight; }
 	bool IsHit() { return m_bHit; }		//Hit()‚Å‚Ì”»’è‚ğ•Ô‚·
+	MyLib::Vector3 GetVeloRot() { return m_velorot; }	// ‰ñ“]‘¬“x
+	void SetVeloRot(const MyLib::Vector3& velorot) { m_velorot = velorot; }
 
 	//=============================
 	// Ã“IŠÖ”

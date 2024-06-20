@@ -679,7 +679,8 @@ void CRenderer::SetEnableDrawMultiScreen(float fGoalAlpha, float fGoalMulti, flo
 { 
 	// パラメーターの設定
 	m_MultitargetInfo.fTimer = 0.0f;
-	m_MultitargetInfo.fAddTimer = 1.0f / fTimer;
+	if (fTimer != 0.0f){ m_MultitargetInfo.fAddTimer = 1.0f / fTimer; }	// 1フレームごとの加算量設定
+	else { m_MultitargetInfo.fAddTimer = 1.0f; }	// 0なら即
 	m_MultitargetInfo.fStartColAlpha = m_MultitargetInfo.fColAlpha;
 	m_MultitargetInfo.fColAlpha = fGoalAlpha;
 	m_MultitargetInfo.fStartMulti = m_MultitargetInfo.fMulti;

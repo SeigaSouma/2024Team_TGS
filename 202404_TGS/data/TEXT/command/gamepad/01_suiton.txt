@@ -7,7 +7,7 @@
 
 SCRIPT
 
-	MAX_FRAME = 60
+	MAX_FRAME = 30
 
 	COMMANDSET
 		KEY = 1

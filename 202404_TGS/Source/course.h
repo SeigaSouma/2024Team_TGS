@@ -86,10 +86,14 @@ public:
 
 private:
 
+	//=============================
 	// メンバ関数
+	//=============================
 	void SetVtxPosition();	// 頂点座標
 
+	//=============================
 	// メンバ変数
+	//=============================
 	std::string m_FileName;	// ファイル名
 	std::vector<MyLib::Vector3> m_vecSegmentPosition;	// 基点の位置
 	std::vector<VtxInfo> m_vecVtxInfo;		// 各頂点の情報
