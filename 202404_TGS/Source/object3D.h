@@ -36,6 +36,7 @@ public:
 	D3DXCOLOR GetColor() const;						// 色取得
 	void SetColorOrigin(const D3DXCOLOR& col) { m_colOrigin = col; }				// 色設定
 	D3DXCOLOR GetColorOrigin() const { return m_colOrigin; }						// 色取得
+	void SetAlpha(float a) { m_col.a = a; }			// 透明度設定
 	void SetSize(const MyLib::Vector3& size);		// サイズの設定
 	MyLib::Vector3 GetSize() const;					// サイズの取得
 	void SetSizeOrigin(const MyLib::Vector3& size);	// 元のサイズの設定
