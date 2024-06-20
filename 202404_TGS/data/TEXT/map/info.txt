@@ -11,7 +11,7 @@ TEXTURE_FILENAME = data\TEXTURE\sky\sky_02.jpg		# [0]
 #------------------------------------------------------------------------------
 # モデル数
 #------------------------------------------------------------------------------
-NUM_MODEL = 42
+NUM_MODEL = 55
 
 #------------------------------------------------------------------------------
 # モデルファイル名
@@ -68,6 +68,9 @@ MODEL_FILENAME = data\MODEL\map_object\3_fence.x		# [48]
 MODEL_FILENAME = data\MODEL\map_object\5_fence.x		# [49]
 MODEL_FILENAME = data\MODEL\map_object\10_fence.x		# [50]
 MODEL_FILENAME = data\MODEL\map_object\woodship.x		# [51]
+MODEL_FILENAME = data\MODEL\map_object\big_boss.x		# [52]
+MODEL_FILENAME = data\MODEL\map_object\XMedium.x		# [53]
+MODEL_FILENAME = data\MODEL\map_object\type_00.x		# [54]
 
 #==============================================================================
 # 空情報
@@ -94,6 +97,38 @@ MODELSET
 	POS = 469.97 0.00 3368.63
 	ROT = 0.00 -1.23 0.00
 	SCALE = 2.09
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 54
+	POS = 2923.97 550.00 2206.78
+	ROT = 0.00 0.00 0.00
+	SCALE = 1.00
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 53
+	POS = 6872.44 550.00 1116.12
+	ROT = 0.00 0.00 0.00
+	SCALE = 1.00
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 52
+	POS = 13587.17 550.00 1662.11
+	ROT = 0.00 0.00 0.00
+	SCALE = 1.00
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 1
+	POS = 1484.84 0.00 117.13
+	ROT = 0.00 0.00 0.00
+	SCALE = 1.00
 	SHADOW = 1
 END_MODELSET
 

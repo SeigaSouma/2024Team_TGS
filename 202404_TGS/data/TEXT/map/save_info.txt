@@ -11,7 +11,7 @@ TEXTURE_FILENAME = data\TEXTURE\sky\sky_02.jpg		# [0]
 #------------------------------------------------------------------------------
 # モデル数
 #------------------------------------------------------------------------------
-NUM_MODEL = 41
+NUM_MODEL = 55
 
 #------------------------------------------------------------------------------
 # モデルファイル名
@@ -42,21 +42,35 @@ MODEL_FILENAME = data\MODEL\map_object\rock_03_superhuge.x		# [22]
 MODEL_FILENAME = data\MODEL\map_object\rock_04_superhuge.x		# [23]
 MODEL_FILENAME = data\MODEL\map_object\rock_05_superhuge.x		# [24]
 MODEL_FILENAME = data\MODEL\map_object\tree_03_huge.x		# [25]
-MODEL_FILENAME = data\MODEL\box.x		# [26]
-MODEL_FILENAME = data\MODEL\map_object\map_mati001.x		# [27]
-MODEL_FILENAME = data\MODEL\map_object\edo_shop000.x		# [28]
-MODEL_FILENAME = data\MODEL\map_object\edo_shop001.x		# [29]
-MODEL_FILENAME = data\MODEL\map_object\post.x		# [30]
-MODEL_FILENAME = data\MODEL\map_object\post_edo.x		# [31]
-MODEL_FILENAME = data\MODEL\map_object\TokyoTower.x		# [32]
-MODEL_FILENAME = data\MODEL\map_object\light.x		# [33]
-MODEL_FILENAME = data\MODEL\map_object\build_00.x		# [34]
-MODEL_FILENAME = data\MODEL\map_object\YMD_house.x		# [35]
-MODEL_FILENAME = data\MODEL\map_object\YMD_House_00.x		# [36]
-MODEL_FILENAME = data\MODEL\map_object\angry_bird.x		# [37]
-MODEL_FILENAME = data\MODEL\map_object\turibashi.x		# [38]
-MODEL_FILENAME = data\MODEL\map_object\fallen_tree.x		# [39]
-MODEL_FILENAME = data\MODEL\map_object\hasu.x		# [40]
+MODEL_FILENAME = data\MODEL\map_object\tree.x		# [26]
+MODEL_FILENAME = data\MODEL\box.x		# [27]
+MODEL_FILENAME = data\MODEL\map_object\map_mati001.x		# [28]
+MODEL_FILENAME = data\MODEL\map_object\edo_shop000.x		# [29]
+MODEL_FILENAME = data\MODEL\map_object\edo_shop001.x		# [30]
+MODEL_FILENAME = data\MODEL\map_object\build_00.x		# [31]
+MODEL_FILENAME = data\MODEL\map_object\YMD_house.x		# [32]
+MODEL_FILENAME = data\MODEL\map_object\YMD_House_00.x		# [33]
+MODEL_FILENAME = data\MODEL\map_object\dango_store.x		# [34]
+MODEL_FILENAME = data\MODEL\map_object\demise.x		# [35]
+MODEL_FILENAME = data\MODEL\map_object\light.x		# [36]
+MODEL_FILENAME = data\MODEL\map_object\post.x		# [37]
+MODEL_FILENAME = data\MODEL\map_object\post_edo.x		# [38]
+MODEL_FILENAME = data\MODEL\map_object\hikyaku.x		# [39]
+MODEL_FILENAME = data\MODEL\map_object\normal_barrel.x		# [40]
+MODEL_FILENAME = data\MODEL\map_object\spread_barrel.x		# [41]
+MODEL_FILENAME = data\MODEL\map_object\white_signboard.x		# [42]
+MODEL_FILENAME = data\MODEL\map_object\kite.x		# [43]
+MODEL_FILENAME = data\MODEL\map_object\torie.x		# [44]
+MODEL_FILENAME = data\MODEL\map_object\fivetower.x		# [45]
+MODEL_FILENAME = data\MODEL\map_object\TokyoTower.x		# [46]
+MODEL_FILENAME = data\MODEL\map_object\1_fence.x		# [47]
+MODEL_FILENAME = data\MODEL\map_object\3_fence.x		# [48]
+MODEL_FILENAME = data\MODEL\map_object\5_fence.x		# [49]
+MODEL_FILENAME = data\MODEL\map_object\10_fence.x		# [50]
+MODEL_FILENAME = data\MODEL\map_object\woodship.x		# [51]
+MODEL_FILENAME = data\MODEL\map_object\big_boss.x		# [52]
+MODEL_FILENAME = data\MODEL\map_object\XMedium.x		# [53]
+MODEL_FILENAME = data\MODEL\map_object\type_00.x		# [54]
 
 #==============================================================================
 # 空情報
@@ -83,6 +97,38 @@ MODELSET
 	POS = 469.97 0.00 3368.63
 	ROT = 0.00 -1.23 0.00
 	SCALE = 2.09
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 54
+	POS = 2923.97 550.00 2206.78
+	ROT = 0.00 0.00 0.00
+	SCALE = 1.00
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 53
+	POS = 6872.44 550.00 1116.12
+	ROT = 0.00 0.00 0.00
+	SCALE = 1.00
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 52
+	POS = 13587.17 550.00 1662.11
+	ROT = 0.00 0.00 0.00
+	SCALE = 1.00
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 1
+	POS = 1484.84 0.00 117.13
+	ROT = 0.00 0.00 0.00
+	SCALE = 1.00
 	SHADOW = 1
 END_MODELSET
 
