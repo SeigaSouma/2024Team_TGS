@@ -29,6 +29,7 @@ CJudgeZone::CJudgeZone()
 {
 	m_isEnable = true;
 	m_pJudge = nullptr;
+	m_borderHeight = 0.0f;
 }
 
 //==========================================================================
@@ -64,7 +65,7 @@ void CJudgeZone::Uninit()
 //==========================================================================
 // ¶¬ˆ—
 //==========================================================================
-CJudgeZone* CJudgeZone::Create(const float start, const float end)
+CJudgeZone* CJudgeZone::Create(const float start, const float end, const float borderHeight)
 {
 	// ƒƒ‚ƒŠ‚ÌŠm•Û
 	CJudgeZone* pObj = DEBUG_NEW CJudgeZone;
@@ -74,8 +75,7 @@ CJudgeZone* CJudgeZone::Create(const float start, const float end)
 		// ‰Šú‰»ˆ—
 		pObj->Init();
 		pObj->SetZone(start, end);
-		pObj->m_aJudgeInfo[0] = { TYPE_NONE,CJudge::JUDGE::JUDGE_AAA,0 };
-		pObj->m_aJudgeInfo[1] = { TYPE_HITNUM,CJudge::JUDGE::JUDGE_AAA,10 };
+		pObj->SetBorder(borderHeight);
 	}
 
 	return pObj;
@@ -92,17 +92,25 @@ void CJudgeZone::Check()
 	}
 	else
 	{// Œˆ‚Ü‚Á‚Ä‚È‚¢
-		if (true)
-		{// ‚Ç‚Á‚¿s‚­‚©Œˆ‚Ü‚Á‚½
-			std::map<CJudge::JUDGE, int> hitnum;
-			hitnum[CJudge::JUDGE::JUDGE_AAA] = 2;
-			hitnum[CJudge::JUDGE::JUDGE_BBB] = 4;
-			hitnum[CJudge::JUDGE::JUDGE_CCC] = 6;
-			hitnum[CJudge::JUDGE::JUDGE_DDD] = 8;
+		// ‰×•¨æ“¾
+		CListManager<CBaggage> baggageList = CBaggage::GetListObj();
+		CBaggage* pBaggage = nullptr;
+		baggageList.ListLoop(&pBaggage);
 
-			m_pJudge = CJudge::Create(new CJudgeConditional_HitNum(hitnum));
-			m_pJudge->Check();
+		// ã‚©‰º‚©Œˆ‚ß‚é
+		CJudge::BORDER border = (pBaggage->GetPosition().y > m_borderHeight) ? CJudge::BORDER::UP : CJudge::BORDER::DOWN;
+
+		// ¶¬
+		if (m_aJudgeInfo[border].type == CJudge::JUDGETYPE::TYPE_NONE)
+		{
+			m_pJudge = CJudge::Create(new CJudgeConditional_None(m_aJudgeInfo[border].judgeParam));
 		}
+		else if (m_aJudgeInfo[border].type == CJudge::JUDGETYPE::TYPE_HITNUM)
+		{
+			m_pJudge = CJudge::Create(new CJudgeConditional_HitNum(m_aJudgeInfo[border].judgeParam));
+		}
+		
+		m_pJudge->Check();
 	}
 }
 

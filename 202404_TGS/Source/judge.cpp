@@ -98,10 +98,21 @@ CJudge::JUDGE CJudge::Judge()
 //**************************************************************************
 // 条件（無条件）クラス
 //**************************************************************************
-// 
-// ヘッダのみ
-// 
-//**************************************************************************
+//==========================================================================
+// コンストラクタ
+//==========================================================================
+CJudgeConditional_None::CJudgeConditional_None(std::map<CJudge::JUDGE, int> resultborder)
+{
+	int maxNum = -1;
+	for (auto itr = resultborder.begin(); itr != resultborder.end(); itr++)
+	{
+		if ((*itr).second > maxNum)
+		{
+			m_judge = (*itr).first;
+			maxNum = (*itr).second;
+		}
+	}
+}
 
 
 //**************************************************************************
@@ -110,7 +121,7 @@ CJudge::JUDGE CJudge::Judge()
 //==========================================================================
 // コンストラクタ
 //==========================================================================
-CJudgeConditional_HitNum::CJudgeConditional_HitNum(std::map<CJudge::JUDGE, int> resultborder) : CJudgeConditional_None(CJudge::JUDGE::JUDGE_MAX)
+CJudgeConditional_HitNum::CJudgeConditional_HitNum(std::map<CJudge::JUDGE, int> resultborder) : CJudgeConditional_None(resultborder)
 {
 	m_resultBorder = resultborder;
 }
@@ -156,4 +167,3 @@ CJudge::JUDGE CJudgeConditional_HitNum::Result()
 
 	return judge;
 }
-

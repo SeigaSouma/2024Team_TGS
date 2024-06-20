@@ -21,6 +21,13 @@ class CJudgeConditional_None;
 class CJudge
 {
 public:
+	// ”»’èí—Ş—ñ‹“
+	enum JUDGETYPE
+	{
+		TYPE_NONE = 0,
+		TYPE_HITNUM,
+	};
+
 	// ”»’è—ñ‹“
 	enum JUDGE
 	{
@@ -29,6 +36,20 @@ public:
 		JUDGE_CCC,
 		JUDGE_DDD,
 		JUDGE_MAX
+	};
+
+	// ã‰º
+	enum BORDER
+	{
+		UP = 0,
+		DOWN
+	};
+
+	// ”»’èî•ñ\‘¢‘Ì
+	struct SJudgeInfo
+	{
+		JUDGETYPE type;
+		std::map<CJudge::JUDGE, int> judgeParam;
 	};
 
 	CJudge();
@@ -62,7 +83,7 @@ private:
 class CJudgeConditional_None
 {
 public:
-	CJudgeConditional_None(CJudge::JUDGE judge) { m_judge = judge; }
+	CJudgeConditional_None(std::map<CJudge::JUDGE, int> resultborder);
 	virtual ~CJudgeConditional_None() {}
 
 	virtual void ConditionCheck() {}
