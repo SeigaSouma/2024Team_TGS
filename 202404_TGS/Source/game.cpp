@@ -168,9 +168,8 @@ HRESULT CGame::Init()
 	}
 
 	// 判定ゾーンマネージャ
-	CJudgeZone* pZone = CJudgeZone::Create(0.2f, 0.3f);
 	m_pJudgeZoneManager = CJudgeZoneManager::Create();
-	m_pJudgeZoneManager->Add(pZone);
+	m_pJudgeZoneManager->Load("data\\TEXT\\judgezone\\judgezone_01.txt");
 
 	// ステージ
 	m_pStage = CStage::Create("data\\TEXT\\stage\\info.txt");
