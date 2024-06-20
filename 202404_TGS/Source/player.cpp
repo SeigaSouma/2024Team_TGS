@@ -486,11 +486,11 @@ void CPlayer::Controll()
 				int idx = -1; bool value = false;
 				m_pControlTrick->Trick(this, idx, value);
 
-				// 操作成功
-				if (value)
-				{
-					SetMotion(idx);	// モーション変更
-				}
+				//// 操作成功
+				//if (value)
+				//{
+				//	SetMotion(idx);	// モーション変更
+				//}
 			}
 		}
 	}
@@ -1107,8 +1107,6 @@ bool CPlayer::Collision(MyLib::Vector3 &pos, MyLib::Vector3 &move)
 		m_sMotionFrag.bJump = false;
 	}
 
-	
-
 	// 向き設定
 	SetRotation(rot);
 
@@ -1150,7 +1148,6 @@ void CPlayer::CollisionMapObject()
 			D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f),
 			400.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
 	}
-
 }
 
 //==========================================================================
@@ -1176,6 +1173,7 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 	// 振動
 	int camlife = GetLifeOrigin() * 0.75f;
 	CCamera* pCamera = CManager::GetInstance()->GetCamera();
+	CInputGamepad* pPad = CInputGamepad::GetInstance();
 
 	if (nLife <= camlife)
 	{
@@ -1187,6 +1185,12 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 			UtilFunc::Transformation::Clamp(ratio, 0.1f, 1.0f);
 			pCamera->SetShake(3, 50.0f * ratio, 0.0f);	// 振動
 		}
+
+		// コントローラー振動させる
+		if (nLife == camlife) { pPad->SetVibMulti(0.0f); }
+		pPad->SetEnableVibration();
+		pPad->SetVibMulti(pPad->GetVibMulti() + 0.02f);
+		pPad->SetVibration(CInputGamepad::VIBRATION_STATE::VIBRATION_STATE_DMG, 0);
 	}
 
 	nLife -= nValue;
@@ -1209,6 +1213,10 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 			MULTITARGET::DEATH_ALPHA, 
 			MULTITARGET::DEATH_MULTI,
 			MULTITARGET::DEATH_TIMER);
+
+		// コントローラー振動停止
+		pPad->SetEnableVibration();
+		pPad->SetVibMulti(0.0f);
 
 		// タイマーを停止
 		CTimer* pt = CGame::GetInstance()->GetTimer();
@@ -1322,6 +1330,12 @@ void CPlayer::Bobbing()
 	static float fff = 0.0f;
 	static float cycle = 0.9f;
 	static float power = 12.5f;
+	float commandheight = 0;
+
+	if (m_pControlTrick != nullptr)
+	{
+		commandheight = m_pControlTrick->GetHeight();
+	}
 
 	fff += CManager::GetInstance()->GetDeltaTime();
 
@@ -1329,6 +1343,7 @@ void CPlayer::Bobbing()
 	ImGui::DragFloat("Bobbing", &power, 0.1f, 0.0f, 0.0f, "%.2f");
 
 	pos.y += sinf(D3DX_PI * (fff / cycle)) * power;
+	pos.y += commandheight;
 
 	pModel->SetPosition(pos);
 }

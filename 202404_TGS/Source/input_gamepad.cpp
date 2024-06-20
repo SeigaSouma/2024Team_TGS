@@ -16,6 +16,7 @@ namespace
 	const int SHOT_FPS = 15;	// 弾の間隔
 	const int DMG_TIME = 30;	// バイブの時間
 	const int WIN_TIME = 15;	// バイブの時間
+	const float DEFAULT_TIME = (1.0f / 2.0f);
 }
 CInputGamepad* CInputGamepad::m_pThisPtr = nullptr;	// 自身のポインタ
 
@@ -41,6 +42,7 @@ CInputGamepad::CInputGamepad()
 	m_bLStickTip = false;					// 左スティックの傾き判定
 
 	m_nCntPadrepeat = 0;									// リピート用カウント
+	m_fVibrationMulti = 0.0f;
 }
 
 //==========================================================================
@@ -105,7 +107,7 @@ HRESULT CInputGamepad::Init(HINSTANCE hInstance, HWND hWnd)
 		memset(&m_aGamepadStateRepeat[nCntPlayer], 0, sizeof(XINPUT_STATE));
 		memset(&m_aGamepadStateRelease[nCntPlayer], 0, sizeof(XINPUT_STATE));
 		memset(&m_aGamepadStateVib[nCntPlayer], 0, sizeof(XINPUT_VIBRATION));
-
+		memset(&m_aUpdateVib[nCntPlayer], 0, sizeof(XINPUT_VIBRATION));
 		memset(&m_aGamepadState[nCntPlayer], 0, sizeof(XINPUT_STATE));
 
 	}
@@ -183,34 +185,8 @@ void CInputGamepad::Update()
 			memset(&m_aGamepadStateVib[nCntPlayer], 0, sizeof(XINPUT_VIBRATION));
 		}
 
-		if (m_VibrationState[nCntPlayer] != VIBRATION_STATE_NONE)
-		{
-			if (m_VibrationState[nCntPlayer] == VIBRATION_STATE_ITEM)
-			{// アイテムの時は増えていく
-
-				m_aGamepadStateVib[nCntPlayer].wLeftMotorSpeed += (USHRT_MAX / m_nMaxCntVibration[nCntPlayer]);
-				m_aGamepadStateVib[nCntPlayer].wRightMotorSpeed += (USHRT_MAX / m_nMaxCntVibration[nCntPlayer]);
-			}
-			else
-			{
-				m_aGamepadStateVib[nCntPlayer].wLeftMotorSpeed -= (USHRT_MAX / m_nMaxCntVibration[nCntPlayer]);
-				m_aGamepadStateVib[nCntPlayer].wRightMotorSpeed -= (USHRT_MAX / m_nMaxCntVibration[nCntPlayer]);
-			}
-
-			if (m_aGamepadStateVib[nCntPlayer].wLeftMotorSpeed <= 0)
-			{// スピードが0以下
-
-				m_aGamepadStateVib[nCntPlayer].wLeftMotorSpeed = 0;
-			}
-			else if (m_aGamepadStateVib[nCntPlayer].wRightMotorSpeed <= 0)
-			{// スピードが0以下
-
-				m_aGamepadStateVib[nCntPlayer].wRightMotorSpeed = 0;
-			}
-		}
-
-		// コントローラーにバイブの情報をXINPUTに送る
-		XInputSetState(nCntPlayer, &m_aGamepadStateVib[nCntPlayer]);
+		// 振動更新
+		UpdateVibration(nCntPlayer);
 	}
 
 	// スティックのトリガー判定更新
@@ -337,6 +313,58 @@ void CInputGamepad::UpdateTriggerState(int nCntPlayer, XINPUT_STATE inputstate)
 }
 
 //==========================================================================
+// バイブの更新処理
+//==========================================================================
+void CInputGamepad::UpdateVibration(int nCntPlayer)
+{
+	switch (m_VibrationState[nCntPlayer])
+	{
+	case VIBRATION_STATE_NONE:
+	{
+		
+	}
+		break;
+
+	case VIBRATION_STATE_AIR:
+	{
+
+	}
+		break;
+
+	case VIBRATION_STATE_DMG:
+	{
+		m_aGamepadStateVib[nCntPlayer].wLeftMotorSpeed = m_aUpdateVib[nCntPlayer].wLeftMotorSpeed;
+		m_aGamepadStateVib[nCntPlayer].wRightMotorSpeed = m_aUpdateVib[nCntPlayer].wRightMotorSpeed;
+		m_aUpdateVib[nCntPlayer].wLeftMotorSpeed *= m_fVibrationMulti;
+		m_aUpdateVib[nCntPlayer].wRightMotorSpeed *= m_fVibrationMulti;
+	}
+		break;
+
+	default:
+	{
+
+	}
+		break;
+	}
+
+	if (m_aGamepadStateVib[nCntPlayer].wLeftMotorSpeed <= 0)
+	{// スピードが0以下
+
+		m_aGamepadStateVib[nCntPlayer].wLeftMotorSpeed = 0;
+	}
+	else if (m_aGamepadStateVib[nCntPlayer].wRightMotorSpeed <= 0)
+	{// スピードが0以下
+
+		m_aGamepadStateVib[nCntPlayer].wRightMotorSpeed = 0;
+	}
+
+	// コントローラーにバイブの情報をXINPUTに送る
+	m_aGamepadStateVib[nCntPlayer].wLeftMotorSpeed *= m_fVibrationMulti;
+	m_aGamepadStateVib[nCntPlayer].wRightMotorSpeed *= m_fVibrationMulti;
+	XInputSetState(nCntPlayer, &m_aGamepadStateVib[nCntPlayer]);
+}
+
+//==========================================================================
 // バイブの設定処理
 //==========================================================================
 void CInputGamepad::SetVibration(VIBRATION_STATE VibState, int nCntPlayer)
@@ -353,36 +381,21 @@ void CInputGamepad::SetVibration(VIBRATION_STATE VibState, int nCntPlayer)
 
 			m_nCntVibration[nCntPlayer] = 15;
 			m_nMaxCntVibration[nCntPlayer] = m_nCntVibration[nCntPlayer];
-			m_aGamepadStateVib[nCntPlayer].wLeftMotorSpeed = USHRT_MAX * (short)0.8f;
-			m_aGamepadStateVib[nCntPlayer].wRightMotorSpeed = USHRT_MAX * (short)0.8f;
+			m_aUpdateVib[nCntPlayer].wLeftMotorSpeed = (USHRT_MAX * 0.8f);
+			m_aUpdateVib[nCntPlayer].wRightMotorSpeed = (USHRT_MAX * 0.8f);
 			break;
 
-		case VIBRATION_STATE_ENEMYHIT:
+		case VIBRATION_STATE_AIR:
 
 			m_nCntVibration[nCntPlayer] = 10;
 			m_nMaxCntVibration[nCntPlayer] = m_nCntVibration[nCntPlayer];
-			m_aGamepadStateVib[nCntPlayer].wLeftMotorSpeed = USHRT_MAX * (short)0.6f;
-			m_aGamepadStateVib[nCntPlayer].wRightMotorSpeed = USHRT_MAX * (short)0.6f;
-			break;
-
-		case VIBRATION_STATE_ITEM:
-			m_nCntVibration[nCntPlayer] = 100;
-			m_nMaxCntVibration[nCntPlayer] = m_nCntVibration[nCntPlayer];
-			m_aGamepadStateVib[nCntPlayer].wLeftMotorSpeed = (USHRT_MAX * (short)0.00001f);
-			m_aGamepadStateVib[nCntPlayer].wRightMotorSpeed = (USHRT_MAX * (short)0.00001f);
-			break;
-
-		case VIBRATION_STATE_RESPAWN:
-			m_nCntVibration[nCntPlayer] = 120;
-			m_nMaxCntVibration[nCntPlayer] = m_nCntVibration[nCntPlayer];
-			m_aGamepadStateVib[nCntPlayer].wLeftMotorSpeed = USHRT_MAX;
-			m_aGamepadStateVib[nCntPlayer].wRightMotorSpeed = USHRT_MAX;
+			m_aGamepadStateVib[nCntPlayer].wLeftMotorSpeed =  (USHRT_MAX * 0.3f);
+			m_aGamepadStateVib[nCntPlayer].wRightMotorSpeed = (USHRT_MAX * 0.3f);
 			break;
 		}
 
 		// コントローラーにバイブの情報をXINPUTに送る
 		XInputSetState(nCntPlayer, &m_aGamepadStateVib[nCntPlayer]);
-
 	}
 }
 

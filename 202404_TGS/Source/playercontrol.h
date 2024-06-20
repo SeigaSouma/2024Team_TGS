@@ -107,14 +107,20 @@ public:
 	CPlayerControlTrick() {
 		m_pCommandPad = nullptr;
 		m_pCommandPad = CCommandGroup::Create("data\\TEXT\\command\\gamepad.txt");
+		m_fHeightTimer = 0.0f;
+		m_fHeight = 0.0f;
 	}
 
 	virtual void Uninit();
 	virtual void Trick(CPlayer* player, int& nIdx, bool& bValue);	// トリック
+	float GetHeight() { return m_fHeight; }
 
 private:
 
-	CCommandGroup* m_pCommandPad;
+	// メンバ変数
+	CCommandGroup* m_pCommandPad;	// ゲームパッドコマンド
+	float m_fHeightTimer;	// 追加高さ
+	float m_fHeight;		// 高さ
 };
 
 #endif
