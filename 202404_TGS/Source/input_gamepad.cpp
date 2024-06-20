@@ -120,6 +120,15 @@ HRESULT CInputGamepad::Init(HINSTANCE hInstance, HWND hWnd)
 //==========================================================================
 void CInputGamepad::Uninit()
 {
+	// 入力デバイスからデータを取得
+	for (int nCntPlayer = 0; nCntPlayer < mylib_const::MAX_PLAYER; nCntPlayer++)
+	{
+		// コントローラーにバイブの情報をXINPUTに送る
+		m_aGamepadStateVib[nCntPlayer].wLeftMotorSpeed = 0.0f;
+		m_aGamepadStateVib[nCntPlayer].wRightMotorSpeed = 0.0f;
+		XInputSetState(nCntPlayer, &m_aGamepadStateVib[nCntPlayer]);
+	}
+
 	// XInputを無効化
 	XInputEnable(false);
 
