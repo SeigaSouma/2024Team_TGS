@@ -41,6 +41,7 @@
 #include "baggageManager.h"
 #include "spline.h"
 #include "course.h"
+#include "meshbubble.h"
 
 // 使用クラス
 #include "playercontrol.h"
@@ -86,7 +87,7 @@ namespace MULTITARGET
 {
 	// ON時
 	const float ON_ALPHA = (0.6f);		// 目標透明度
-	const float ON_MULTI = (1.1f);		// 目標倍率
+	const float ON_MULTI = (1.02f);		// 目標倍率
 	const float ON_TIMER = (120.0f);	// 遷移タイマー
 
 	// 死亡時
@@ -1183,7 +1184,34 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 			float ratio = ratioDest;
 			UtilFunc::Transformation::Clamp(ratioDest, 0.0f, 0.7f);
 			UtilFunc::Transformation::Clamp(ratio, 0.1f, 1.0f);
-			pCamera->SetShake(3, 50.0f * ratio, 0.0f);	// 振動
+			pCamera->SetShake(3, 20.0f * ratio, 0.0f);	// 振動
+		}
+
+		
+		for (int i = 0; i < 2; i++)
+		{
+			float randmoveX = UtilFunc::Transformation::Random(-50, 50) * 0.01f;
+			float randmoveY = UtilFunc::Transformation::Random(-20, 20) * 0.01f;
+			float randRadius = UtilFunc::Transformation::Random(-20, 20) * 0.01f;
+			float randDestRadius = UtilFunc::Transformation::Random(-30, 30) * 0.1f;
+			float randCycle = UtilFunc::Transformation::Random(-20, 20) * 0.001f;
+
+			// 移動距離加算
+			float len = m_fMoveLength + GetMove().x * 20.0f;
+			MyLib::Vector3 setpos = MySpline::GetSplinePosition_NonLoop(CGame::GetInstance()->GetCourse()->GetVecPosition(), len);
+			int x = UtilFunc::Transformation::Random(-80, 80);
+			int z = UtilFunc::Transformation::Random(-80, 80);
+
+			setpos.x += x;
+			setpos.z += z;
+			setpos.y -= 50.0f;
+
+			CMeshBubble::Create(
+				setpos,
+				MyLib::Vector3(8.0f + randmoveX, 3.0f + randmoveY, 0.0f),
+				1.0f + randRadius,
+				10.5f + randDestRadius,
+				0.08f + randCycle);
 		}
 
 		// コントローラー振動させる

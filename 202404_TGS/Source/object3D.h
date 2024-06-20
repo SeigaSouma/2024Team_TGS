@@ -34,6 +34,9 @@ public:
 	MyLib::Matrix GetWorldMtx() const;				// マトリックス取得
 	void SetColor(const D3DXCOLOR col);				// 色設定
 	D3DXCOLOR GetColor() const;						// 色取得
+	void SetColorOrigin(const D3DXCOLOR& col) { m_colOrigin = col; }				// 色設定
+	D3DXCOLOR GetColorOrigin() const { return m_colOrigin; }						// 色取得
+	void SetAlpha(float a) { m_col.a = a; }			// 透明度設定
 	void SetSize(const MyLib::Vector3& size);		// サイズの設定
 	MyLib::Vector3 GetSize() const;					// サイズの取得
 	void SetSizeOrigin(const MyLib::Vector3& size);	// 元のサイズの設定
@@ -58,6 +61,7 @@ private:
 	MyLib::Matrix m_mtxWorld;	// ワールドマトリックス
 	D3DXVECTOR2 m_fTex[32];		// テクスチャ座標
 	D3DXCOLOR m_col;			// 色
+	D3DXCOLOR m_colOrigin;			// 色
 	MyLib::Vector3 m_fSize;		// サイズ
 	int m_nTexIdx;				// テクスチャのインデックス番号
 };

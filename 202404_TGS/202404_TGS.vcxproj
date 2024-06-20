@@ -222,8 +222,10 @@
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\manager.cpp" />
     <ClCompile Include="Source\map.cpp" />
+    <ClCompile Include="Source\mapmesh.cpp" />
     <ClCompile Include="Source\map_obstacle.cpp" />
     <ClCompile Include="Source\map_obstacleManager.cpp" />
+    <ClCompile Include="Source\meshbubble.cpp" />
     <ClCompile Include="Source\meshcylinder.cpp" />
     <ClCompile Include="Source\meshdome.cpp" />
     <ClCompile Include="Source\meshfield.cpp" />
@@ -296,6 +298,7 @@
     <ClCompile Include="Source\title.cpp" />
     <ClCompile Include="Source\titlelogo.cpp" />
     <ClCompile Include="Source\title_pressenter.cpp" />
+    <ClCompile Include="Source\townfield_sinuous.cpp" />
     <ClCompile Include="Source\tutorial.cpp" />
     <ClCompile Include="Source\tutoriallogo.cpp" />
     <ClCompile Include="Source\waterfield.cpp" />
@@ -374,8 +377,10 @@
     <ClInclude Include="Source\main.h" />
     <ClInclude Include="Source\manager.h" />
     <ClInclude Include="Source\map.h" />
+    <ClInclude Include="Source\mapmesh.h" />
     <ClInclude Include="Source\map_obstacle.h" />
     <ClInclude Include="Source\map_obstacleManager.h" />
+    <ClInclude Include="Source\meshbubble.h" />
     <ClInclude Include="Source\meshcylinder.h" />
     <ClInclude Include="Source\meshdome.h" />
     <ClInclude Include="Source\meshfield.h" />
@@ -443,6 +448,7 @@
     <ClInclude Include="Source\title.h" />
     <ClInclude Include="Source\titlelogo.h" />
     <ClInclude Include="Source\title_pressenter.h" />
+    <ClInclude Include="Source\townfield_sinuous.h" />
     <ClInclude Include="Source\tutorial.h" />
     <ClInclude Include="Source\tutoriallogo.h" />
     <ClInclude Include="Source\waterfield.h" />

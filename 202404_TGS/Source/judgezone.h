@@ -8,6 +8,7 @@
 #define _JUDGE_ZONE_H_		// 二重インクルード防止
 #include "listmanager.h"
 #include "judge.h"
+#include <map>
 
 //==========================================================================
 // クラス定義
@@ -18,26 +19,11 @@
 class CJudgeZone
 {
 public:
-	// 判定種類列挙
-	enum JUDGETYPE
-	{
-		TYPE_NONE = 0,
-		TYPE_HITNUM,
-	};
-
 	// 始点終点構造体
 	struct SZone
 	{
 		float start;	// 始点
 		float end;	// 終点
-	};
-
-	// 判定情報構造体
-	struct SJudgeInfo
-	{
-		JUDGETYPE type;
-		CJudge::JUDGE judge;
-		int hitnum;
 	};
 
 	CJudgeZone();
@@ -59,18 +45,21 @@ public:
 	SZone GetZone() { return m_zone; }
 	void SetZone(const SZone zone) { m_zone = zone; }
 	void SetZone(const float start, const float end);
+	void SetBorder(const float borderHeight) { m_borderHeight = borderHeight; }
+	void SetInfo(CJudge::BORDER border, CJudge::SJudgeInfo info) { m_aJudgeInfo[border] = info; }
 	bool IsEnable() { return m_isEnable; }
 
 	//=============================
 	// 静的関数
 	//=============================
-	static CJudgeZone* Create(const float start, const float end);	// 生成
+	static CJudgeZone* Create(const float start, const float end, const float borderHeight);	// 生成
 
 private:
 	SZone m_zone;
 	CJudge* m_pJudge;
 	bool m_isEnable;
-	SJudgeInfo m_aJudgeInfo[2];
+	CJudge::SJudgeInfo m_aJudgeInfo[2];
+	float m_borderHeight;
 };
 
 #endif

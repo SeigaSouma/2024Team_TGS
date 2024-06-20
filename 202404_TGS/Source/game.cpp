@@ -45,6 +45,7 @@
 
 #include "2D_Effect.h"
 #include "waterripple.h"
+#include "meshbubble.h"
 
 //==========================================================================
 // 静的メンバ変数宣言
@@ -167,9 +168,8 @@ HRESULT CGame::Init()
 	}
 
 	// 判定ゾーンマネージャ
-	CJudgeZone* pZone = CJudgeZone::Create(0.2f, 0.3f);
 	m_pJudgeZoneManager = CJudgeZoneManager::Create();
-	m_pJudgeZoneManager->Add(pZone);
+	m_pJudgeZoneManager->Load("data\\TEXT\\judgezone\\judgezone_01.txt");
 
 	// ステージ
 	m_pStage = CStage::Create("data\\TEXT\\stage\\info.txt");
@@ -196,7 +196,7 @@ HRESULT CGame::Init()
 
 	// コース作成
 	m_pCourse = CCourse::Create("data\\TEXT\\map\\course.bin");
-	CStoneWall *pStoneWall = CStoneWall::Create();
+	CStoneWall* pStoneWall = CStoneWall::Create();
 
 	// 基点地点設定
 	pStoneWall->SetVecPosition(m_pCourse->GetVecPosition());
@@ -211,9 +211,9 @@ HRESULT CGame::Init()
 	MyLib::Vector3 setpos;
 	for (const auto& info : vtxInfo)
 	{
-		setpos.x = info.pos.x + sinf(D3DX_PI + info.rot.y) * -250.0f;
+		setpos.x = info.pos.x + sinf(D3DX_PI + info.rot.y) * -600.0f;
 		setpos.y = info.pos.y;
-		setpos.z = info.pos.z + cosf(D3DX_PI + info.rot.y) * -250.0f;
+		setpos.z = info.pos.z + cosf(D3DX_PI + info.rot.y) * -600.0f;
 		vecpos.push_back(setpos);
 	}
 
@@ -222,12 +222,24 @@ HRESULT CGame::Init()
 	pStoneWall->BindVtxPosition();
 
 
+
+	// うねりの街フィールド
+	CMapMesh* pTownField = CMapMesh::Create(CMapMesh::MeshType::TYPE_TOWNFIELD_SINUOUS);
+	pTownField->SetVecPosition(m_pCourse->GetVecPosition());
+	pTownField->Reset();
+
+	// 石垣の頂上に頂点をそろえる
+	pTownField->SetVecVtxPosition(pStoneWall->GetVecTopPosition());
+	pTownField->BindVtxPosition();
+
+
+
 	// ステンシル影生成
 	CStencilShadow::Create();
 
-	CWaterField::Create(CWaterField::TYPE::TYPE_NORMAL);
+	/*CWaterField::Create(CWaterField::TYPE::TYPE_NORMAL);
 	CWaterField::Create(CWaterField::TYPE::TYPE_RIGHT);
-	CWaterField::Create(CWaterField::TYPE::TYPE_LEFT);
+	CWaterField::Create(CWaterField::TYPE::TYPE_LEFT);*/
 
 
 	CCheckpoint::Create(1000.0f);
@@ -395,6 +407,39 @@ void CGame::Update()
 	if (pInputKeyboard->GetTrigger(DIK_2))
 	{
 		CWaterRipple::Create(block, blocksize, MyLib::Vector3(0.0f, -5.0f, -800.0f), height, velocity, thickness, life);
+	}
+
+
+
+	static float destRadius = 13.5f;
+	static int posRange = 80, createIdx = 1;
+
+	ImGui::DragInt("Pos Range", &posRange, 1);
+	ImGui::DragInt("Create Idx", &createIdx, 1);
+	ImGui::DragFloat("destRadius", &destRadius, 0.5f, 0.0f, 0.0f, "%.2f");
+
+	if (pInputKeyboard->GetPress(DIK_3))
+	{
+		for (int i = 0; i < createIdx; i++)
+		{
+			int x = UtilFunc::Transformation::Random(-posRange, posRange);
+			int z = UtilFunc::Transformation::Random(-posRange, posRange);
+
+			float randmoveX = UtilFunc::Transformation::Random(-50, 50) * 0.01f;
+			float randmoveY = UtilFunc::Transformation::Random(-20, 20) * 0.01f;
+			float randRadius = UtilFunc::Transformation::Random(-20, 20) * 0.01f;
+			float randDestRadius = UtilFunc::Transformation::Random(-30, 30) * 0.1f;
+			float randCycle = UtilFunc::Transformation::Random(-20, 20) * 0.001f;
+
+
+			CMeshBubble::Create(
+				MyLib::Vector3(x, -5.0f, z),
+				MyLib::Vector3(8.0f + randmoveX, 3.0f + randmoveY, 0.0f),
+				1.0f + randRadius,
+				destRadius + randDestRadius,
+				0.08f + randCycle);
+		}
+		
 	}
 
 #if _DEBUG

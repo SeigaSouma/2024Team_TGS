@@ -18,8 +18,10 @@
 //==========================================================================
 namespace
 {
+	const std::string TEXTURE = "data\\TEXTURE\\FIELD\\water-bg-pattern-04.jpg";
 	const int WIDTH_BLOCK = 2;
-	const float WIDTH = 200.0f;
+	const float WIDTH = 600.0f;
+	const float INTERVAL_TEXU = 500.0f;	// U座標の間隔
 }
 const float CCourse::m_fCreateDistance = 200.0f;	// 生成間隔
 
@@ -32,6 +34,8 @@ CCourse::CCourse(int nPriority, const LAYER layer) : CObject3DMesh(nPriority, la
 	m_vecSegmentPosition.clear();	// 基点の位置
 	m_vecVtxInfo.clear();			// 各頂点の情報
 	m_courceLength = 0.0f;
+	m_fTexU = 0.0f;	// Uスクロール用
+	m_fTexV = 0.0f;	// Vスクロール用
 }
 
 //==========================================================================
@@ -72,7 +76,7 @@ HRESULT CCourse::Init()
 	Load(m_FileName);
 
 	// テクスチャの割り当て
-	int texIdx = CTexture::GetInstance()->Regist("");
+	int texIdx = CTexture::GetInstance()->Regist(TEXTURE);
 	BindTexture(texIdx);
 
 	// 種類設定
@@ -83,6 +87,12 @@ HRESULT CCourse::Init()
 
 	// 頂点情報設定
 	SetVtx();
+
+
+	D3DXCOLOR* pVtxCol = GetVtxCol();
+
+	// 全ての要素を書き換え
+	std::fill(pVtxCol, pVtxCol + GetNumVertex(), D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.7f));
 
 	return S_OK;
 }
@@ -188,7 +198,7 @@ void CCourse::Reset()
 
 
 	// テクスチャの割り当て
-	int texIdx = CTexture::GetInstance()->Regist("");
+	int texIdx = CTexture::GetInstance()->Regist(TEXTURE);
 	BindTexture(texIdx);
 
 	// 種類設定
@@ -199,7 +209,7 @@ void CCourse::Reset()
 	CalVtxPosition();
 
 	// 各種変数初期化
-	SetPosition(MyLib::Vector3(0.0f, 10.0f, 0.0f));				// 位置
+	SetPosition(MyLib::Vector3(0.0f, 0.5f, 0.0f));				// 位置
 	SetWidthBlock(1);		// 幅分割
 	SetHeightBlock(static_cast<int>(m_vecVtxInfo.size()) - 1);	// 縦分割
 	SetWidthLen(0.0f);		// 縦長さ
@@ -283,7 +293,27 @@ void CCourse::ReCreateVtx()
 //==========================================================================
 void CCourse::Update()
 {
-#if _DEBUG
+	m_fTexU -= 0.003f;		// Uスクロール用
+
+	if (m_fTexU >= 1.0f)
+	{
+		m_fTexU = 0.0f;
+	}
+	else if (m_fTexU <= 0.0f)
+	{
+		m_fTexU = 1.0f;
+	}
+
+	if (m_fTexV >= 1.0f)
+	{
+		m_fTexV = 0.0f;
+	}
+	else if (m_fTexV <= 0.0f)
+	{
+		m_fTexV = 1.0f;
+	}
+
+#if 1
 	// 頂点座標計算
 	SetVtxPosition();
 
@@ -418,7 +448,8 @@ void CCourse::SetVtx()
 
 	MyLib::Vector3 *pVtxPos = GetVtxPos();
 	MyLib::Vector3 *pVtxNor = GetVtxNor();
-	MyLib::Vector3 vec1, vec2, nor;
+	D3DXVECTOR2* pTex = GetVtxTex();
+	MyLib::Vector3 vec1, vec2, nor = MyLib::Vector3(0.0f, 1.0f, 0.0f);
 	MyLib::Vector3 VtxRight, VtxLeft, VtxNow;
 	int nHeight = GetHeightBlock();
 	int nWidth = GetWidthBlock();
@@ -428,12 +459,55 @@ void CCourse::SetVtx()
 
 	int heightBlock = static_cast<int>(m_vecVtxInfo.size());
 
+	// テクスチャ情報
+	float posU_UP = 0.0f, posU_Down = 0.0f, posV = 0.0f;
+	int texID = CTexture::GetInstance()->Regist(TEXTURE);
+	float intervalV = UtilFunc::Transformation::AdjustSizeByWidth(CTexture::GetInstance()->GetImageSize(texID), INTERVAL_TEXU).y;
+	int idx = 0, nextIdx = 0;
+
 	for (int nCntHeight = 0; nCntHeight < nHeight + 1; nCntHeight++)
 	{// 縦の分割分繰り返す
+
+		// リセット
+		posV = 0.0f;
 
 		for (int nCntWidth = 0; nCntWidth < nWidth + 1; nCntWidth++)
 		{// 横の分割分繰り返す
 
+			// 今回の頂点インデックス
+			idx = nCntWidth + (nCntHeight * (nWidth + 1));
+
+			// 隣のインデックス
+			nextIdx = idx + 2;
+
+			// UV座標設定
+			if (nCntWidth == 0)
+			{
+				pTex[idx] = D3DXVECTOR2(posU_UP + m_fTexU, posV + m_fTexV);
+
+
+				// 横の割合分進める
+				if (nextIdx < vtxNum)
+				{
+					posU_UP += pVtxPos[idx].DistanceXZ(pVtxPos[idx + 2]) / INTERVAL_TEXU;
+				}
+				
+			}
+			else
+			{
+				pTex[idx] = D3DXVECTOR2(posU_Down + m_fTexU, posV + m_fTexV);
+
+				// 横の割合分進める
+				if (nextIdx < vtxNum)
+				{
+					posU_Down += pVtxPos[idx].DistanceXZ(pVtxPos[idx + 2]) / INTERVAL_TEXU;
+				}
+			}
+
+			// 縦の割合分進める
+			posV += pVtxPos[idx].DistanceXZ(pVtxPos[idx + 1]) / intervalV;
+			
+#if 0
 			// 今回の頂点
 			int nNowPoint = (nCntWidth + 1) + (nCntHeight * (WIDTH_BLOCK));
 			int nVerTexW = (WIDTH_BLOCK) + 1;
@@ -497,9 +571,11 @@ void CCourse::SetVtx()
 
 			// 外積の正規化をして法線にする
 			D3DXVec3Normalize(&nor, &nor);
-
+	
 			// 法線
 			pVtxNor[nNowPoint] = nor;
+#endif
+			pVtxNor[idx] = nor;
 		}
 	}
 

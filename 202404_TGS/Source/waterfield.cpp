@@ -165,9 +165,6 @@ void CWaterField::Draw()
 //==========================================================================
 void CWaterField::SetVtx()
 {
-	// 頂点情報更新
-	CObject3DMesh::SetVtx();
-
 	VERTEX_3D* pVtx;	// 頂点情報へのポインタ
 	LPDIRECT3DVERTEXBUFFER9 pVtxBuff = GetVtxBuff();
 	int nHBlock = GetHeightBlock();
@@ -195,4 +192,7 @@ void CWaterField::SetVtx()
 
 	// 頂点バッファをアンロックする
 	pVtxBuff->Unlock();
+
+	// 頂点情報更新
+	CObject3DMesh::SetVtx();
 }
