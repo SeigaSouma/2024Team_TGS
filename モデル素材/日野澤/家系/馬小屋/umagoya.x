@@ -5910,7 +5910,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\チーム制作\\2024Team_TGS\\モデル素材\\日野澤\\TEXTURE\\map_object\\Wood_demise.jpg";
+    "data\\TEXTURE\\map_object\\Wood_demise.jpg";
    }
   }
   Material {
@@ -5919,7 +5919,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.079950;0.079950;0.079950;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\チーム制作\\2024Team_TGS\\モデル素材\\日野澤\\TEXTURE\\map_object\\Wood_build_00.jpg";
+    "data\\TEXTURE\\map_object\\Wood_build_00.jpg";
    }
   }
   Material {
@@ -5928,7 +5928,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\チーム制作\\2024Team_TGS\\モデル素材\\日野澤\\動物\\馬\\Horse_v01.jpg";
+    "data\\TEXTURE\\map_object\\Horse_v01.jpg";
    }
   }
   Material {

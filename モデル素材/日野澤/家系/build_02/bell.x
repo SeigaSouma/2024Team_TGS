@@ -1535,7 +1535,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\チーム制作\\2024Team_TGS\\モデル素材\\日野澤\\TEXTURE\\map_object\\wood02.png";
+    "data\\TEXTURE\\map_object\\wood02.png";
    }
   }
   Material {
@@ -1544,7 +1544,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\チーム制作\\2024Team_TGS\\モデル素材\\日野澤\\TEXTURE\\map_object\\kawara_shop.jpeg";
+    "data\\TEXTURE\\map_object\\kawara_shop.jpeg";
    }
   }
   Material {
@@ -1553,7 +1553,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\チーム制作\\2024Team_TGS\\モデル素材\\日野澤\\TEXTURE\\map_object\\tierchair.jpg";
+    "data\\TEXTURE\\map_object\\tierchair.jpg";
    }
   }
   Material {
@@ -1562,7 +1562,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\チーム制作\\2024Team_TGS\\モデル素材\\日野澤\\TEXTURE\\map_object\\bell.jpg";
+    "data\\TEXTURE\\map_object\\bell.jpg";
    }
   }
  }
