@@ -237,9 +237,9 @@ HRESULT CGame::Init()
 	// ÉXÉeÉìÉVÉãâeê∂ê¨
 	CStencilShadow::Create();
 
-	CWaterField::Create(CWaterField::TYPE::TYPE_NORMAL);
+	/*CWaterField::Create(CWaterField::TYPE::TYPE_NORMAL);
 	CWaterField::Create(CWaterField::TYPE::TYPE_RIGHT);
-	CWaterField::Create(CWaterField::TYPE::TYPE_LEFT);
+	CWaterField::Create(CWaterField::TYPE::TYPE_LEFT);*/
 
 
 	CCheckpoint::Create(1000.0f);
