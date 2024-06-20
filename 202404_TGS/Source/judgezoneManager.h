@@ -8,6 +8,7 @@
 #define _JUDGE_ZONE_MANAGER_H_		// 二重インクルード防止
 #include "listmanager.h"
 #include "judgezone.h"
+#include <string>
 
 //==========================================================================
 // クラス定義
@@ -32,6 +33,9 @@ public:
 	void Add(CJudgeZone* zone) { m_zoneList.Regist(zone); }
 	void Release();		//無効化した判定ゾーンを破棄
 	void ReleaseAll();	//判定ゾーンをすべて破棄
+
+	void Load(std::string path);
+	CJudge::SJudgeInfo LoadCondition(std::string path);
 
 	//=============================
 	// 静的関数

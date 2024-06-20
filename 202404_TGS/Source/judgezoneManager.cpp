@@ -118,16 +118,9 @@ void CJudgeZoneManager::Check(float progress)
 //==========================================================================
 void CJudgeZoneManager::Release()
 {
-	CJudgeZone* pZone = nullptr;
-	while (m_zoneList.ListLoop(&pZone))
-	{
-		if (!pZone->IsEnable())
-		{// 無効のゾーンのみ破棄
-			m_zoneList.Delete(pZone);	// リスト除外
-			pZone->Uninit();			// 終了
-			delete pZone;				// 破棄
-		}
-	}
+	std::list<CJudgeZone*>& list = m_zoneList.GetList();
+	std::list<CJudgeZone*>::iterator res = std::remove_if(list.begin(), list.end(), [](CJudgeZone* p) {return !p->IsEnable(); });
+	list.erase(res, list.end());
 }
 
 //==========================================================================
@@ -142,4 +135,244 @@ void CJudgeZoneManager::ReleaseAll()
 		pZone->Uninit();			// 終了
 		delete pZone;				// 破棄
 	}
+}
+
+//==========================================================================
+// 判定ゾーン類読み込み処理
+//==========================================================================
+void CJudgeZoneManager::Load(std::string path)
+{
+	CJudgeZone* pJudgeZone = nullptr;
+	std::string aPath[2];
+
+	// ファイルを開く
+	std::ifstream File(path);
+	if (File.is_open()) {
+		// コメント用
+		std::string hoge;
+
+		// データ読み込み
+		std::string line;
+		while (std::getline(File, line))
+		{
+			// コメントはスキップ
+			if (line.empty() ||
+				line[0] == '#')
+			{
+				continue;
+			}
+
+			if (line.find("ZONESET") != std::string::npos)
+			{// MODELSETで配置情報読み込み
+
+				// 読み込み情報
+				CJudgeZone::SZone zone = { 0.0f,1.0f };
+				float border = 0.0f;
+
+				while (line.find("END_ZONESET") == std::string::npos)
+				{
+					std::getline(File, line);
+					if (line.find("START") != std::string::npos)
+					{// TYPEで配置物の種類
+
+						// ストリーム作成
+						std::istringstream lineStream(line);
+
+						// 情報渡す
+						lineStream >>
+							hoge >>
+							hoge >>		// ＝
+							zone.start;	// 数値
+					}
+					if (line.find("END") != std::string::npos)
+					{// TYPEで配置物の種類
+
+						// ストリーム作成
+						std::istringstream lineStream(line);
+
+						// 情報渡す
+						lineStream >>
+							hoge >>
+							hoge >>		// ＝
+							zone.end;	// 数値
+					}
+					if (line.find("BORDER") != std::string::npos)
+					{// TYPEで配置物の種類
+
+						// ストリーム作成
+						std::istringstream lineStream(line);
+
+						// 情報渡す
+						lineStream >>
+							hoge >>
+							hoge >>		// ＝
+							border;		// 数値
+					}
+					else if (line.find("CONDITION_TOP") != std::string::npos)
+					{// POSで位置
+
+						// ストリーム作成
+						std::istringstream lineStream(line);
+
+						// 情報渡す
+						lineStream >>
+							hoge >>
+							hoge >>		// ＝
+							aPath[0];	// パス
+						aPath[0] = UtilFunc::Transformation::ReplaceBackslash(aPath[0]);
+					}
+					else if (line.find("CONDITION_UNDER") != std::string::npos)
+					{// ROTで向き
+
+						// ストリーム作成
+						std::istringstream lineStream(line);
+
+						// 情報渡す
+						lineStream >>
+							hoge >>
+							hoge >>		// ＝
+							aPath[1];	// パス
+						aPath[1] = UtilFunc::Transformation::ReplaceBackslash(aPath[1]);
+					}
+				}
+
+				// 取り込み
+				if (pJudgeZone == nullptr)
+				{
+					pJudgeZone = CJudgeZone::Create(zone.start, zone.end, border);
+				}
+			}
+
+			if (line.find("END_SCRIPT") != std::string::npos)
+			{
+				break;
+			}
+		}
+
+		// ファイルを閉じる
+		File.close();
+	}
+
+	// 条件読み込み
+	if (pJudgeZone != nullptr)
+	{
+		pJudgeZone->SetInfo(CJudge::BORDER::UP, LoadCondition(aPath[CJudge::BORDER::UP]));
+		pJudgeZone->SetInfo(CJudge::BORDER::DOWN, LoadCondition(aPath[CJudge::BORDER::DOWN]));
+		m_zoneList.Regist(pJudgeZone);
+	}
+}
+
+//==========================================================================
+// 条件読み込み処理
+//==========================================================================
+CJudge::SJudgeInfo CJudgeZoneManager::LoadCondition(std::string path)
+{
+	CJudge::SJudgeInfo info;
+	info.type = CJudge::JUDGETYPE::TYPE_NONE;
+	info.judgeParam = 
+	{
+		{CJudge::JUDGE::JUDGE_AAA,-1},
+		{CJudge::JUDGE::JUDGE_BBB,-1},
+		{CJudge::JUDGE::JUDGE_CCC,-1},
+		{CJudge::JUDGE::JUDGE_DDD,-1},
+	};
+
+	// ファイルを開く
+	std::ifstream File(path);
+	if (File.is_open()) {
+		// コメント用
+		std::string hoge;
+
+		// データ読み込み
+		std::string line;
+		while (std::getline(File, line))
+		{
+			// コメントはスキップ
+			if (line.empty() ||
+				line[0] == '#')
+			{
+				continue;
+			}
+
+			if (line.find("CONDITIONSET") != std::string::npos)
+			{// MODELSETで配置情報読み込み
+				while (line.find("END_CONDITIONSET") == std::string::npos)
+				{
+					std::getline(File, line);
+					if (line.find("TYPE") != std::string::npos)
+					{// TYPEで配置物の種類
+						int num = 0;
+						
+						// ストリーム作成
+						std::istringstream lineStream(line);
+
+						// 情報渡す
+						lineStream >>
+							hoge >>
+							hoge >>		// ＝
+							num;		// 数値
+
+						info.type = static_cast<CJudge::JUDGETYPE>(num);
+					}
+					if (line.find("JUDGE_AAA") != std::string::npos)
+					{// TYPEで配置物の種類
+
+						// ストリーム作成
+						std::istringstream lineStream(line);
+
+						// 情報渡す
+						lineStream >>
+							hoge >>
+							hoge >>		// ＝
+							info.judgeParam[CJudge::JUDGE::JUDGE_AAA];	// 数値
+					}
+					if (line.find("JUDGE_BBB") != std::string::npos)
+					{// TYPEで配置物の種類
+
+						// ストリーム作成
+						std::istringstream lineStream(line);
+
+						// 情報渡す
+						lineStream >>
+							hoge >>
+							hoge >>		// ＝
+							info.judgeParam[CJudge::JUDGE::JUDGE_BBB];	// 数値
+					}
+					if (line.find("JUDGE_CCC") != std::string::npos)
+					{// TYPEで配置物の種類
+
+						// ストリーム作成
+						std::istringstream lineStream(line);
+
+						// 情報渡す
+						lineStream >>
+							hoge >>
+							hoge >>		// ＝
+							info.judgeParam[CJudge::JUDGE::JUDGE_CCC];	// 数値
+					}
+					if (line.find("JUDGE_DDD") != std::string::npos)
+					{// TYPEで配置物の種類
+
+						// ストリーム作成
+						std::istringstream lineStream(line);
+
+						// 情報渡す
+						lineStream >>
+							hoge >>
+							hoge >>		// ＝
+							info.judgeParam[CJudge::JUDGE::JUDGE_DDD];	// 数値
+					}
+				}
+			}
+
+			if (line.find("END_SCRIPT") != std::string::npos)
+			{
+				break;
+			}
+		}
+
+		// ファイルを閉じる
+		File.close();
+	}
+	return info;
 }
