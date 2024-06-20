@@ -525,7 +525,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.580000;0.580000;0.580000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\n_mat0493_6.jpg";
+    "data\\TEXTURE\\map_object\\n_mat0493_6.jpg";
    }
   }
   Material {
@@ -534,7 +534,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.980000;0.980000;0.980000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\チーム制作\\2024Team_TGS\\モデル素材\\日野澤\\TEXTURE\\map_object\\yellow_light.png";
+    "data\\TEXTURE\\map_object\\yellow_light.png";
    }
   }
   Material {
@@ -543,7 +543,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\チーム制作\\2024Team_TGS\\モデル素材\\日野澤\\TEXTURE\\map_object\\wood_barrel.jpg";
+    "data\\TEXTURE\\map_object\\wood_barrel.jpg";
    }
   }
  }

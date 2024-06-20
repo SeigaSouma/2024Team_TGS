@@ -352,7 +352,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.340480;0.342720;0.347200;;
    TextureFilename {
-    "moon.png";
+    "data\\TEXTURE\\map_object\\moon.png";
    }
   }
  }

@@ -4822,7 +4822,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "Horse_v01.jpg";
+    "data\\TEXTURE\\map_object\\Horse_v01.jpg";
    }
   }
  }

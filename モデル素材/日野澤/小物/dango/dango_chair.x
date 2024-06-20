@@ -427,7 +427,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\ƒ`[ƒ€§ì\\2024Team_TGS\\ƒ‚ƒfƒ‹‘fŞ\\“ú–ìàV\\TEXTURE\\map_object\\wood_hikyaku.jpg";
+    "data\\TEXTURE\\map_object\\wood_hikyaku.jpg";
    }
   }
   Material {

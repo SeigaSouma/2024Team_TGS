@@ -12639,7 +12639,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.187630;0.290000;0.228520;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\チーム制作\\2024Team_TGS\\モデル素材\\日野澤\\TEXTURE\\map_object\\11690_s.jpg";
+    "data\\TEXTURE\\map_object\\11690_s.jpg";
    }
   }
   Material {
@@ -12648,7 +12648,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\チーム制作\\2024Team_TGS\\モデル素材\\日野澤\\TEXTURE\\map_object\\bell.jpg";
+    "data\\TEXTURE\\map_object\\bell.jpg";
    }
   }
   Material {

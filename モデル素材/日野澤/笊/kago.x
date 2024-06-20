@@ -293,7 +293,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\チーム制作\\2024Team_TGS\\モデル素材\\日野澤\\笊\\takekago.png";
+    "data\\TEXTURE\\map_object\\takekago.png";
    }
   }
   Material {
@@ -302,7 +302,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\チーム制作\\2024Team_TGS\\モデル素材\\日野澤\\笊\\istockphoto-1321023003-612x612.jpg";
+    "data\\TEXTURE\\map_object\\kagowood.jpg";
    }
   }
   Material {
@@ -311,7 +311,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\チーム制作\\2024Team_TGS\\モデル素材\\日野澤\\笊\\takekago.png";
+    "data\\TEXTURE\\map_object\\takekago.png";
    }
   }
  }

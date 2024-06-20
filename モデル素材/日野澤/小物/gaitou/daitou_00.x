@@ -2297,7 +2297,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\チーム制作\\2024Team_TGS\\モデル素材\\日野澤\\小物\\rockly.jpg";
+    "data\\TEXTURE\\map_object\\rockly.jpg";
    }
   }
   Material {
@@ -2306,7 +2306,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\チーム制作\\2024Team_TGS\\モデル素材\\日野澤\\TEXTURE\\map_object\\gray.jpg";
+    "data\\TEXTURE\\map_object\\gray.jpg";
    }
   }
   Material {
@@ -2315,7 +2315,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\チーム制作\\2024Team_TGS\\モデル素材\\日野澤\\TEXTURE\\map_object\\gray.jpg";
+    "data\\TEXTURE\\map_object\\gray.jpg";
    }
   }
   Material {
@@ -2324,7 +2324,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.470000;0.470000;0.470000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\チーム制作\\2024Team_TGS\\モデル素材\\日野澤\\TEXTURE\\map_object\\white_wall.jpg";
+    "data\\TEXTURE\\map_object\\white_wall.jpg";
    }
   }
   Material {

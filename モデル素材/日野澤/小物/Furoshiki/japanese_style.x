@@ -581,7 +581,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "japanese_style.png";
+    "data\\TEXTURE\\map_object\\japanese_style.png";
    }
   }
  }
