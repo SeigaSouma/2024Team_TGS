@@ -42,6 +42,7 @@
 #include "course.h"
 #include "waterfield.h"
 #include "stonewall.h"
+#include "stonewall_front.h"
 
 #include "2D_Effect.h"
 #include "waterripple.h"
@@ -167,7 +168,9 @@ HRESULT CGame::Init()
 		pPlayer->SetRotation(MyLib::Vector3(0.0f, 0.0f, 0.0f));
 	}
 
+	//=============================
 	// ステージ
+	//=============================
 	m_pStage = CStage::Create("data\\TEXT\\stage\\info.txt");
 
 	CManager::GetInstance()->GetCamera()->Reset(CScene::MODE_GAME);
@@ -183,15 +186,23 @@ HRESULT CGame::Init()
 
 	CGoalflagX::Create(MyLib::Vector3(23000.0f,0.0f,0.0f));
 
+	//=============================
 	// 障害物マネージャ
+	//=============================
 	m_pObstacleManager = CMap_ObstacleManager::Create();
 
 	/*CMyEffekseer::GetInstance()->SetEffect(
 		CMyEffekseer::EFKLABEL::EFKLABEL_RIVER_SAMPLE,
 		MyLib::Vector3(300.0f, 0.1f, 0.0f), MyLib::Vector3(0.0f, D3DX_PI, 0.0f), 0.0f, 30.0f, true);*/
 
+	//=============================
 	// コース作成
+	//=============================
 	m_pCourse = CCourse::Create("data\\TEXT\\map\\course.bin");
+
+	//=============================
+	// 石垣(奥)
+	//=============================
 	CStoneWall* pStoneWall = CStoneWall::Create();
 
 	// 基点地点設定
@@ -219,7 +230,40 @@ HRESULT CGame::Init()
 
 
 
+
+	//=============================
+	// 石垣(手前)
+	//=============================
+	CStoneWall* pStoneWall_Front = CStoneWall_Front::Create();
+
+	// 基点地点設定
+	pStoneWall_Front->SetVecPosition(m_pCourse->GetVecPosition());
+	pStoneWall_Front->Reset();
+
+	vtxInfo = m_pCourse->GetVecVtxinfo();
+	vecpos.clear();
+
+	for (const auto& info : vtxInfo)
+	{
+		setpos.x = info.pos.x + sinf(D3DX_PI + info.rot.y) * 800.0f;
+		setpos.y = info.pos.y;
+		setpos.z = info.pos.z + cosf(D3DX_PI + info.rot.y) * 800.0f;
+		vecpos.push_back(setpos);
+	}
+
+	// 各頂点座標
+	pStoneWall_Front->SetVecVtxPosition(vecpos);
+	pStoneWall_Front->BindVtxPosition();
+
+
+
+
+
+
+
+	//=============================
 	// うねりの街フィールド
+	//=============================
 	CMapMesh* pTownField = CMapMesh::Create(CMapMesh::MeshType::TYPE_TOWNFIELD_SINUOUS);
 	pTownField->SetVecPosition(m_pCourse->GetVecPosition());
 	pTownField->Reset();
@@ -230,7 +274,9 @@ HRESULT CGame::Init()
 
 
 
-	// ステンシル影生成
+	//=============================
+	// ステンシル影
+	//=============================
 	CStencilShadow::Create();
 
 	/*CWaterField::Create(CWaterField::TYPE::TYPE_NORMAL);
@@ -251,7 +297,9 @@ HRESULT CGame::Init()
 	// チェックポイント通過リセット
 	CCheckpoint::ResetSaveID();
 
+	//=============================
 	// 判定ゾーンマネージャ
+	//=============================
 	m_pJudgeZoneManager = CJudgeZoneManager::Create();
 	m_pJudgeZoneManager->Load("data\\TEXT\\judgezonelist\\judgezonelist_01.txt");
 

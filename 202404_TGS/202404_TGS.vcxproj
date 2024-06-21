@@ -293,6 +293,7 @@
     <ClCompile Include="Source\stagename.cpp" />
     <ClCompile Include="Source\stencilshadow.cpp" />
     <ClCompile Include="Source\stonewall.cpp" />
+    <ClCompile Include="Source\stonewall_front.cpp" />
     <ClCompile Include="Source\targetpoint.cpp" />
     <ClCompile Include="Source\texture.cpp" />
     <ClCompile Include="Source\timer.cpp" />
@@ -300,6 +301,7 @@
     <ClCompile Include="Source\titlelogo.cpp" />
     <ClCompile Include="Source\title_pressenter.cpp" />
     <ClCompile Include="Source\townfield_sinuous.cpp" />
+    <ClCompile Include="Source\townfield_sinuous_front.cpp" />
     <ClCompile Include="Source\tutorial.cpp" />
     <ClCompile Include="Source\tutoriallogo.cpp" />
     <ClCompile Include="Source\waterfield.cpp" />
@@ -444,6 +446,7 @@
     <ClInclude Include="Source\stagename.h" />
     <ClInclude Include="Source\stencilshadow.h" />
     <ClInclude Include="Source\stonewall.h" />
+    <ClInclude Include="Source\stonewall_front.h" />
     <ClInclude Include="Source\targetpoint.h" />
     <ClInclude Include="Source\texture.h" />
     <ClInclude Include="Source\timer.h" />
@@ -451,6 +454,7 @@
     <ClInclude Include="Source\titlelogo.h" />
     <ClInclude Include="Source\title_pressenter.h" />
     <ClInclude Include="Source\townfield_sinuous.h" />
+    <ClInclude Include="Source\townfield_sinuous_front.h" />
     <ClInclude Include="Source\tutorial.h" />
     <ClInclude Include="Source\tutoriallogo.h" />
     <ClInclude Include="Source\waterfield.h" />

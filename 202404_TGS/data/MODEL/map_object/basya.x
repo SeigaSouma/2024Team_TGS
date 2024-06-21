@@ -7285,7 +7285,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "Horse_v01.jpg";
+    "data\\TEXTURE\\map_object\\Horse_v01.jpg";
    }
   }
   Material {
@@ -7306,7 +7306,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\チーム制作\\2024Team_TGS\\モデル素材\\日野澤\\TEXTURE\\map_object\\wood02.png";
+    "data\\TEXTURE\\map_object\\wood02.png";
    }
   }
   Material {
@@ -7315,7 +7315,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\チーム制作\\2024Team_TGS\\モデル素材\\日野澤\\TEXTURE\\map_object\\Metal_barrel.jpg";
+    "data\\TEXTURE\\map_object\\Metal_barrel.jpg";
    }
   }
   Material {
@@ -7330,7 +7330,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\チーム制作\\2024Team_TGS\\モデル素材\\日野澤\\TEXTURE\\map_object\\Metal_barrel.jpg";
+    "data\\TEXTURE\\map_object\\Metal_barrel.jpg";
    }
   }
  }

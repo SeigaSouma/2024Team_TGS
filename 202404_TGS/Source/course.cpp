@@ -21,10 +21,10 @@ namespace
 {
 	const std::string TEXTURE = "data\\TEXTURE\\FIELD\\water-bg-pattern-04.jpg";
 	const int WIDTH_BLOCK = 2;
-	const float WIDTH = 1500.0f;
+	const float WIDTH = 2000.0f;
 	const float INTERVAL_TEXU = 500.0f;	// U座標の間隔
 }
-const float CCourse::m_fCreateDistance = 400.0f;	// 生成間隔
+const float CCourse::m_fCreateDistance = 200.0f;	// 生成間隔
 
 //==========================================================================
 // コンストラクタ
@@ -94,6 +94,11 @@ HRESULT CCourse::Init()
 
 	// 全ての要素を書き換え
 	std::fill(pVtxCol, pVtxCol + GetNumVertex(), D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.7f));
+
+
+	// 頂点座標計算
+	SetVtxPosition();
+
 
 	return S_OK;
 }
@@ -359,6 +364,7 @@ void CCourse::ReCreateVtx()
 //==========================================================================
 void CCourse::CalBothVtxPosition()
 {
+#if 0
 	// 計算用変数
 	MyLib::Vector3 offset;
 	MyLib::Matrix mtxParent, mtxTrans, mtxRotate;
@@ -471,7 +477,122 @@ void CCourse::CalBothVtxPosition()
 
 		idx += WIDTH_BLOCK;
 	}
+#else
 
+	// 計算用変数
+	MyLib::Vector3 offset;
+	MyLib::Matrix mtxParent, mtxTrans, mtxRotate;
+	MyLib::Matrix mtxLeft, mtxRight;
+
+
+	int segmentSize = static_cast<int>(m_vecSegmentPosition.size());
+
+	std::vector<MyLib::Vector3> vecLeft, vecRight;
+	MyLib::Vector3 rot;
+
+	// 左右のセグメント計算
+	for (int y = 0; y < segmentSize; y++)
+	{
+		// インデックス計算
+		int idx = (WIDTH_BLOCK * y);
+		int nextidx = (WIDTH_BLOCK * y) + 1;
+
+		// 各種マトリックス初期化
+		mtxParent.Identity();
+		mtxLeft.Identity();
+		mtxRight.Identity();
+
+		// 向き反映
+		int next = (y + 1) % segmentSize;
+
+		bool bEnd = false;
+		if (next == 0)
+		{
+			next = y - 1;
+			bEnd = true;
+		}
+
+		// 次のセグメントとの向き取得
+		rot.y = m_vecSegmentPosition[next].AngleXZ(m_vecSegmentPosition[y]);
+		UtilFunc::Transformation::RotNormalize(rot.y);
+
+		if (bEnd)
+		{// 終端のみ
+			rot.y *= -1;
+		}
+
+		// 回転反映
+		mtxRotate.RotationYawPitchRoll(rot.y, rot.x, rot.z);
+		mtxParent.Multiply(mtxParent, mtxRotate);
+
+		// 位置反映
+		mtxTrans.Translation(m_vecSegmentPosition[y]);
+		mtxParent.Multiply(mtxParent, mtxTrans);
+
+
+
+
+		// オフセット反映
+		offset = MyLib::Vector3(WIDTH, 0.0f, 0.0f);
+		mtxLeft.Translation(offset);
+
+		offset = MyLib::Vector3(-WIDTH, 0.0f, 0.0f);
+		mtxRight.Translation(offset);
+
+		mtxLeft.Multiply(mtxLeft, mtxParent);
+		mtxRight.Multiply(mtxRight, mtxParent);
+
+		// 頂点座標代入
+		vecLeft.push_back(mtxLeft.GetWorldPosition());
+		vecRight.push_back(mtxRight.GetWorldPosition());
+
+		CEffect3D::Create(
+			vecLeft.back() + GetPosition(),
+			MyLib::Vector3(0.0f, 0.0f, 0.0f),
+			D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f),
+			20.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+
+		CEffect3D::Create(
+			vecRight.back() + GetPosition(),
+			MyLib::Vector3(0.0f, 0.0f, 0.0f),
+			D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f),
+			20.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+
+	}
+
+
+	// 頂点座標
+	MyLib::Vector3* pVtxPos = GetVtxPos();
+	int idx = 0;
+
+	// セグメント分割計算
+	std::vector<MyLib::Vector3> vecpos;
+
+	// 左
+	vecpos.clear();
+	vecpos = CalSegmentDivision(vecLeft);
+	idx = 0;
+	for (int i = 0; i < GetNumVertex() / 2; i++)
+	{
+		// 頂点座標代入
+		pVtxPos[idx] = vecpos[i];
+
+		idx += WIDTH_BLOCK;
+	}
+
+	// 右
+	vecpos.clear();
+	vecpos = CalSegmentDivision(vecRight);
+	idx = 1;
+	for (int i = 0; i < GetNumVertex() / 2; i++)
+	{
+		// 頂点座標代入
+		pVtxPos[idx] = vecpos[i];
+
+		idx += WIDTH_BLOCK;
+	}
+
+#endif
 
 }
 
@@ -500,12 +621,9 @@ void CCourse::Update()
 		m_fTexV = 1.0f;
 	}
 
-#if 1
-	// 頂点座標計算
-	SetVtxPosition();
 
+	// 頂点座標
 	SetVtx();
-#endif
 }
 
 //==========================================================================
@@ -513,7 +631,7 @@ void CCourse::Update()
 //==========================================================================
 void CCourse::SetVtxPosition()
 {
-#if 1
+#if 0
 	// 計算用変数
 	MyLib::Vector3 offset;
 	MyLib::Matrix mtxParent, mtxTrans, mtxRotate;
