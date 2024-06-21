@@ -45,6 +45,7 @@ public:
 	SZone GetZone() { return m_zone; }
 	void SetZone(const SZone zone) { m_zone = zone; }
 	void SetZone(const float start, const float end);
+	float GetBorder() { return m_borderHeight; }
 	void SetBorder(const float borderHeight) { m_borderHeight = borderHeight; }
 	void SetInfo(CJudge::BORDER border, CJudge::SJudgeInfo info) { m_aJudgeInfo[border] = info; }
 	bool IsEnable() { return m_isEnable; }
