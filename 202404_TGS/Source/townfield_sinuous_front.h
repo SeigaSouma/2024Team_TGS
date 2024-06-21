@@ -23,8 +23,6 @@ public:
 	~CTownField_Sinuous_Front();
 
 	// オーバーライドされた関数
-	virtual HRESULT Init() override;
-	virtual void Uninit() override;
 	virtual void BindVtxPosition() override;	// 頂点座標割り当て
 
 private:

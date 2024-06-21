@@ -22,7 +22,10 @@ namespace
 	const std::string TEXTURE = "data\\TEXTURE\\FIELD\\water-bg-pattern-04.jpg";
 	const int WIDTH_BLOCK = 2;
 	const float WIDTH = 2000.0f;
-	const float INTERVAL_TEXU = 500.0f;	// U座標の間隔
+	const float INTERVAL_TEXU = 500.0f;		// U座標の間隔
+	const float INTERVAL_SINCURVE = 1000.0f;	// サインカーブの間隔
+	const float HEIGHT_SINCURVE = 4.0f;	// サインカーブの高さ
+	const float SCROLL_VELOCITY = 10.0f;
 }
 const float CCourse::m_fCreateDistance = 200.0f;	// 生成間隔
 
@@ -37,6 +40,8 @@ CCourse::CCourse(int nPriority, const LAYER layer) : CObject3DMesh(nPriority, la
 	m_courceLength = 0.0f;
 	m_fTexU = 0.0f;	// Uスクロール用
 	m_fTexV = 0.0f;	// Vスクロール用
+	m_fSinCurve = 0.0f;	// サインカーブの移動量
+	m_bEnableWave = true;	// 波の有効判定
 }
 
 //==========================================================================
@@ -99,6 +104,7 @@ HRESULT CCourse::Init()
 	// 頂点座標計算
 	SetVtxPosition();
 
+	SetPosition(MyLib::Vector3(0.0f, HEIGHT_SINCURVE, 0.0f));
 
 	return S_OK;
 }
@@ -142,25 +148,6 @@ void CCourse::CalVtxPosition()
 	m_vecSegmentPosition.insert(m_vecSegmentPosition.begin(), begin);
 	m_vecSegmentPosition.push_back(end);
 
-	//// セグメントの長さを計算
-	//int segmentSize = m_vecSegmentPosition.size();
-	//std::vector<float> vecLength(segmentSize);
-
-	//for (int i = 0; i < segmentSize; ++i)
-	//{
-	//	// 次回のインデックス(ループ)
-	//	int next = (i + 1) % segmentSize;
-
-	//	if (next == 0)
-	//	{
-	//		vecLength[i] = 10.0f;
-	//		break;
-	//	}
-
-	//	// 点同士の距離
-	//	vecLength[i] = m_vecSegmentPosition[i].Distance(m_vecSegmentPosition[next]);
-	//}
-
 
 	// 頂点情報クリア
 	m_vecVtxInfo.clear();
@@ -172,32 +159,6 @@ void CCourse::CalVtxPosition()
 
 	// posの要素渡し
 	std::transform(vecpos.begin(), vecpos.end(), std::back_inserter(m_vecVtxInfo), MyConvert::Vector3ToVtxInfo);
-
-
-	//// 各頂点格納
-	//m_courceLength = 0.0f;
-	//for (int i = 0; i < segmentSize; i++)
-	//{
-	//	float distance = 0.0f;
-
-	//	while (1)
-	//	{
-	//		distance += m_fCreateDistance;
-
-	//		if (distance >= vecLength[i])
-	//		{
-	//			m_courceLength += m_fCreateDistance - (distance - vecLength[i]);
-
-	//			distance = vecLength[i];
-
-	//			m_vecVtxInfo.push_back(VtxInfo(MySpline::GetSplinePosition_NonLoop(m_vecSegmentPosition, m_courceLength, 20.0f), 0.0f));
-	//			break;
-	//		}
-
-	//		m_courceLength += m_fCreateDistance;
-	//		m_vecVtxInfo.push_back(VtxInfo(MySpline::GetSplinePosition_NonLoop(m_vecSegmentPosition, m_courceLength), 0.0f));
-	//	}
-	//}
 }
 
 //==========================================================================
@@ -621,6 +582,29 @@ void CCourse::Update()
 		m_fTexV = 1.0f;
 	}
 
+#if _DEBUG
+
+	static float velocity = SCROLL_VELOCITY;
+	if (ImGui::TreeNode("Course"))
+	{
+		ImGui::Checkbox("Enable Wave!!!", &m_bEnableWave);
+		ImGui::DragFloat("velocity", &velocity, 0.1f, 0.0f, 0.0f, "%.2f");
+		/*ImGui::DragFloat("intervalWave", &INTERVAL_SINCURVE, 10.0f, 0.0f, 0.0f, "%.2f");
+		ImGui::DragFloat("waveHeight", &HEIGHT_SINCURVE, 0.1f, 0.0f, 0.0f, "%.2f");*/
+		SetPosition(MyLib::Vector3(0.0f, HEIGHT_SINCURVE, 0.0f));
+
+		ImGui::TreePop();
+	}
+
+	// サインカーブの移動量
+	m_fSinCurve -= velocity;
+#else
+
+	// サインカーブの移動量
+	m_fSinCurve -= SCROLL_VELOCITY;
+
+#endif
+
 
 	// 頂点座標
 	SetVtx();
@@ -810,6 +794,7 @@ void CCourse::SetVtx()
 	float intervalV = UtilFunc::Transformation::AdjustSizeByWidth(CTexture::GetInstance()->GetImageSize(texID), INTERVAL_TEXU).y;
 	int idx = 0, nextIdx = 0;
 
+	float sincurveDistance = 0.0f;
 	for (int nCntHeight = 0; nCntHeight < nHeight + 1; nCntHeight++)
 	{// 縦の分割分繰り返す
 
@@ -821,6 +806,21 @@ void CCourse::SetVtx()
 
 			// 今回の頂点インデックス
 			idx = nCntWidth + (nCntHeight * (nWidth + 1));
+
+			// 波
+			if (m_bEnableWave)
+			{
+				if (nCntHeight != 0)
+				{
+					// 前回との距離
+					sincurveDistance += m_vecVtxInfo[nCntHeight].pos.DistanceXZ(m_vecVtxInfo[nCntHeight - 1].pos);
+					pVtxPos[idx].y = sinf(D3DX_PI * ((sincurveDistance + m_fSinCurve) / INTERVAL_SINCURVE)) * HEIGHT_SINCURVE;
+				}
+			}
+			else
+			{
+				pVtxPos[idx].y = 0.0f;
+			}
 
 			// 隣のインデックス
 			nextIdx = idx + 2;
@@ -852,74 +852,6 @@ void CCourse::SetVtx()
 			// 縦の割合分進める
 			posV += pVtxPos[idx].DistanceXZ(pVtxPos[idx + 1]) / intervalV;
 			
-#if 0
-			// 今回の頂点
-			int nNowPoint = (nCntWidth + 1) + (nCntHeight * (WIDTH_BLOCK));
-			int nVerTexW = (WIDTH_BLOCK) + 1;
-
-			int nLeft = nCntWidth + (nCntHeight * (WIDTH_BLOCK));
-			int nRight = nCntWidth + (nCntHeight * (WIDTH_BLOCK)) + nVerTexW;
-
-			if (nNowPoint >= vtxNum)
-			{
-				continue;
-			}
-
-			if (nRight >= vtxNum)
-			{// 頂点数超えたら
-
-				// 頂点座標の設定
-				VtxRight = MyLib::Vector3(
-					(fWidthLen * nCntWidth) - ((fWidthLen * WIDTH_BLOCK) * 0.5f),
-					0.0f,
-					-((fHeightLen * nCntHeight) - ((fHeightLen * heightBlock) * 0.5f)));
-			}
-			else
-			{
-				VtxRight = pVtxPos[nRight];
-			}
-
-			if (nLeft >= vtxNum)
-			{// 頂点数超えたら
-
-				// 頂点座標の設定
-				VtxLeft = MyLib::Vector3(
-					(fWidthLen * nCntWidth) - ((fWidthLen * WIDTH_BLOCK) * 0.5f),
-					0.0f,
-					-((fHeightLen * nCntHeight) - ((fHeightLen * heightBlock) * 0.5f)));
-			}
-			else
-			{
-				VtxLeft = pVtxPos[nLeft];
-			}
-
-			if (nNowPoint >= vtxNum)
-			{// 頂点数超えたら
-
-				// 頂点座標の設定
-				VtxNow = MyLib::Vector3(
-					(fWidthLen * nCntWidth) - ((fWidthLen * WIDTH_BLOCK) * 0.5f),
-					0.0f,
-					-((fHeightLen * nCntHeight) - ((fHeightLen * heightBlock) * 0.5f)));
-			}
-			else
-			{
-				VtxNow = pVtxPos[nNowPoint];
-			}
-
-			// ベクトルを計算
-			vec1 = VtxRight - VtxNow;
-			vec2 = VtxLeft - VtxNow;
-
-			// 外積を求める
-			D3DXVec3Cross(&nor, &vec1, &vec2);
-
-			// 外積の正規化をして法線にする
-			D3DXVec3Normalize(&nor, &nor);
-	
-			// 法線
-			pVtxNor[nNowPoint] = nor;
-#endif
 			pVtxNor[idx] = nor;
 		}
 	}
