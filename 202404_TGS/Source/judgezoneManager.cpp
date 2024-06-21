@@ -7,8 +7,12 @@
 #include "judgezoneManager.h"
 #include "judgezone.h"
 #include "judge.h"
+#include "game.h"
+#include "course.h"
 #include "texture.h"
 #include "object2D.h"
+#include "spline.h"
+#include "objectBillboard.h"
 #include <map>
 
 //==========================================================================
@@ -106,6 +110,30 @@ void CJudgeZoneManager::Check(float progress)
 
 				(*itr)->Uninit();
 			}
+
+#ifdef _DEBUG
+			CCourse* pCource = CGame::GetInstance()->GetCourse();
+			MyLib::Vector3 pos;
+			float length = pCource->GetCourceLength();
+
+			//スタート
+			pos = MySpline::GetSplinePosition_NonLoop(pCource->GetVecPosition(), length * (*itr)->GetZone().start);
+			pos.y = (*itr)->GetBorder();
+			CEffect3D::Create(
+				pos,
+				MyLib::Vector3(0.0f, 0.0f, 0.0f),
+				D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f),
+				40.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+
+			//終了
+			pos = MySpline::GetSplinePosition_NonLoop(pCource->GetVecPosition(), length * (*itr)->GetZone().end);
+			pos.y = (*itr)->GetBorder();
+			CEffect3D::Create(
+				pos,
+				MyLib::Vector3(0.0f, 0.0f, 0.0f),
+				D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f),
+				40.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+#endif // _DEBUG
 		}
 	}
 	
@@ -120,6 +148,7 @@ void CJudgeZoneManager::Release()
 {
 	std::list<CJudgeZone*>& list = m_zoneList.GetList();
 	std::list<CJudgeZone*>::iterator res = std::remove_if(list.begin(), list.end(), [](CJudgeZone* p) {return !p->IsEnable(); });
+
 	list.erase(res, list.end());
 }
 
@@ -141,6 +170,60 @@ void CJudgeZoneManager::ReleaseAll()
 // 判定ゾーン類読み込み処理
 //==========================================================================
 void CJudgeZoneManager::Load(std::string path)
+{
+	CJudgeZone* pJudgeZone = nullptr;
+	std::string aPath[2];
+
+	// ファイルを開く
+	std::ifstream File(path);
+	if (File.is_open()) {
+		// コメント用
+		std::string hoge;
+
+		// データ読み込み
+		std::string line;
+		while (std::getline(File, line))
+		{
+			// コメントはスキップ
+			if (line.empty() ||
+				line[0] == '#')
+			{
+				continue;
+			}
+
+			if (line.find("USEZONE") != std::string::npos)
+			{// TYPEで配置物の種類
+
+				// ストリーム作成
+				std::istringstream lineStream(line);
+
+				// 情報渡す
+				std::string path;
+				lineStream >>
+					hoge >>
+					hoge >>		// ＝
+					path;		// 数値
+				path = UtilFunc::Transformation::ReplaceBackslash(path);
+
+				//判定ゾーン読み込み
+				LoadZone(path);
+			}
+
+			if (line.find("END_SCRIPT") != std::string::npos)
+			{
+				break;
+			}
+		}
+
+		// ファイルを閉じる
+		File.close();
+	}
+}
+
+//==========================================================================
+// 判定ゾーン読み込み処理
+//==========================================================================
+void CJudgeZoneManager::LoadZone(std::string path)
 {
 	CJudgeZone* pJudgeZone = nullptr;
 	std::string aPath[2];

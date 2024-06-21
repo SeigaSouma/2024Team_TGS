@@ -14,11 +14,8 @@ SCRIPT			# この行は絶対消さないこと！
 #	TYPE = 1 : ぶつかった回数（指定した数値以下でその判定になる）
 #------------------------------------------------------------------
 CONDITIONSET
-	TYPE = 1
-	JUDGE_AAA = 2
-	JUDGE_BBB = 4
-	JUDGE_CCC = 6
-	JUDGE_DDD = 8
+	TYPE = 0
+	JUDGE_CCC = 1
 END_CONDITIONSET
 
 END_SCRIPT		# この行は絶対消さないこと！

@@ -55,10 +55,8 @@ public:
 	enum VIBRATION_STATE
 	{
 		VIBRATION_STATE_NONE = 0,	//何もしてない状態
-		VIBRATION_STATE_ENEMYHIT,	//ダメージ状態
+		VIBRATION_STATE_AIR,		// 空気噴出状態
 		VIBRATION_STATE_DMG,		//ダメージ状態
-		VIBRATION_STATE_ITEM,		//アイテム
-		VIBRATION_STATE_RESPAWN,	// リスポーン
 
 	};
 
@@ -91,6 +89,8 @@ public:
 	float GetStickRotL(int nCntPlayer);					// スティックの向き取得
 	float GetStickRotR(int nCntPlayer);					// スティックの向き取得
 	bool IsTipStick() { return m_bLStickTip; }		// スティックが倒れてるかの判定
+	float GetVibMulti() { return m_fVibrationMulti; }
+	void SetVibMulti(float fMulti) { m_fVibrationMulti = fMulti; }
 
 	// バイブレーション系
 	void SetEnableVibration();
@@ -117,6 +117,7 @@ private:
 	//=============================
 	void UpdateStickTrigger();		// スティックのトリガー判定
 	void UpdateTriggerState(int nCntPlayer, XINPUT_STATE inputstate);	// トリガーの判定処理
+	void UpdateVibration(int nCntPlayer);	// 振動の更新処理
 
 	//=============================
 	// メンバ変数
@@ -126,6 +127,7 @@ private:
 	XINPUT_STATE m_aGamepadStateRepeat[mylib_const::MAX_PLAYER];		// リピート情報
 	XINPUT_STATE m_aGamepadStateRelease[mylib_const::MAX_PLAYER];		// リリース情報
 	XINPUT_VIBRATION m_aGamepadStateVib[mylib_const::MAX_PLAYER];		// バイブレーション
+	XINPUT_VIBRATION m_aUpdateVib[mylib_const::MAX_PLAYER];				// バイブレーション更新用
 	VIBRATION_STATE m_VibrationState[mylib_const::MAX_PLAYER];			// 振動の種類
 	int m_nCntVibration[mylib_const::MAX_PLAYER];						// 振動の時間
 	int m_nMaxCntVibration[mylib_const::MAX_PLAYER];					// 振動の時間
@@ -142,6 +144,7 @@ private:
 	bool m_bRightStickTrigger[STICK_MAX];					// 右スティックのトリガー判定
 	bool m_bLStickTip;										// 左スティックの傾き判定
 	bool m_bVibrationUse;									// バイブを使用するかどうか
+	float m_fVibrationMulti;								// バイブレーション倍率
 
 	static CInputGamepad* m_pThisPtr;	// 自身のポインタ
 };
