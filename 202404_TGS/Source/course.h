@@ -89,6 +89,8 @@ private:
 	//=============================
 	// メンバ関数
 	//=============================
+	std::vector<MyLib::Vector3> CalSegmentDivision(const std::vector<MyLib::Vector3>& segment);	// セグメント分割計算
+	void CalBothVtxPosition();	// 両方の頂点座標計算
 	void SetVtxPosition();	// 頂点座標
 
 	//=============================
