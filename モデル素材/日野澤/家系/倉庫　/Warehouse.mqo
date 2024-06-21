@@ -2,13 +2,13 @@ Metasequoia Document
 Format Text Ver 1.0
 
 Scene {
-	pos 151.2564 -321.0376 40265.3242
+	pos 822.2172 -1102.2935 25165.8281
 	lookat 0.0000 0.0000 0.0000
-	head 6.2566
-	pich 0.0436
+	head 5.9666
+	pich -0.0108
 	bank 0.0000
 	ortho 0
-	zoom2 0.1863
+	zoom2 0.2981
 	amb 0.250 0.250 0.250
 	dirlights 1 {
 		light {
@@ -18,19 +18,19 @@ Scene {
 	}
 }
 Material 11 {
-	"black" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\11690_s.jpg")
-	"white_tate" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\whitewood.jpeg") proj_type(1) proj_pos(0.000 0.000 0.000) proj_scale(63.834 63.834 63.834) proj_angle(0.000 0.000 0.000)
-	"white_yoko" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\wood_YMD_house01.jpg")
-	"base" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\gray.jpg")
-	"stair" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\castle\25077071.jpg")
-	"stair yoko" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\castle\25077071.jpg")
-	"stair tat" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\castle\25077071.jpg")
-	"into" col(0.000 0.000 0.000 1.000) dif(0.800) amb(0.600) emi(0.360) spc(0.000) power(5.00)
-	"roof_small" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\kawara_yane000.jpg")
-	"door" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\wood.jpg")
-	"top_roof" col(0.518 0.518 0.518 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\kawara_yane000.jpg")
+	"souko_mat1" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\11690_s.jpg")
+	"souko_mat2" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\whitewood.jpeg") proj_type(1) proj_pos(0.000 0.000 0.000) proj_scale(63.834 63.834 63.834) proj_angle(0.000 0.000 0.000)
+	"souko_mat3" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\wood_YMD_house01.jpg")
+	"souko_mat4" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\gray.jpg")
+	"souko_mat5" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\202404_TGS\data\TEXTURE\map_object\25077071.jpg")
+	"souko_mat6" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\202404_TGS\data\TEXTURE\map_object\25077071.jpg")
+	"souko_mat7" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\202404_TGS\data\TEXTURE\map_object\25077071.jpg")
+	"souko_mat8" col(0.000 0.000 0.000 1.000) dif(0.800) amb(0.600) emi(0.360) spc(0.000) power(5.00)
+	"souko_mat9" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\kawara_yane000.jpg")
+	"souko_mat10" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\wood.jpg")
+	"souko_mat11" col(0.518 0.518 0.518 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\kawara_yane000.jpg")
 }
-Object "body" {
+Object "souko" {
 	visible 15
 	locking 0
 	shading 1

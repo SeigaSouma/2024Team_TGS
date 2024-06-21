@@ -4,8 +4,8 @@ Format Text Ver 1.0
 Scene {
 	pos -1097.1636 -3085.6060 62500.0000
 	lookat 0.0000 0.0000 -3749.3896
-	head -25.2755
-	pich 0.0908
+	head -24.8555
+	pich 0.0608
 	bank 0.0200
 	ortho 0
 	zoom2 0.0666
@@ -18,19 +18,19 @@ Scene {
 	}
 }
 Material 11 {
-	"000" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\wood.jpg")
-	"001" col(0.086 0.086 0.086 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00)
-	"002" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\whitewood.jpeg")
-	"003" col(0.408 0.467 0.518 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00)
-	"004" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\grain.jpg")
-	"005" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\kawara_yane000.jpg")
-	"006" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\cobblestone.jpg")
-	"007" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\cobblestone.jpg")
-	"008" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\black_wood.jpg")
-	"010" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\wood_hikyaku.jpg")
-	"012" col(1.000 0.000 0.027 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00)
+	"sento_mat1" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\wood.jpg")
+	"sento_mat2" col(0.086 0.086 0.086 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00)
+	"sento_mat3" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\whitewood.jpeg")
+	"sento_mat4" col(0.408 0.467 0.518 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00)
+	"sento_mat5" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\grain.jpg")
+	"sento_mat6" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\kawara_yane000.jpg")
+	"sento_mat7" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\cobblestone.jpg")
+	"sento_mat8" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\cobblestone.jpg")
+	"sento_mat9" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\black_wood.jpg")
+	"sento_mat10" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\wood_hikyaku.jpg")
+	"sento_mat11" col(1.000 0.000 0.027 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00)
 }
-Object "obj37" {
+Object "sentou" {
 	visible 15
 	locking 0
 	shading 1
