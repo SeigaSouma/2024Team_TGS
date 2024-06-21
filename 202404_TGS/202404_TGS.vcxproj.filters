@@ -539,6 +539,12 @@
     <ClCompile Include="Source\convert.cpp">
       <Filter>system</Filter>
     </ClCompile>
+    <ClCompile Include="Source\stonewall_front.cpp">
+      <Filter>map</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\townfield_sinuous_front.cpp">
+      <Filter>map</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ballast.h">
@@ -987,6 +993,12 @@
     </ClInclude>
     <ClInclude Include="Source\convert.h">
       <Filter>system</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\stonewall_front.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\townfield_sinuous_front.h">
+      <Filter>map</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

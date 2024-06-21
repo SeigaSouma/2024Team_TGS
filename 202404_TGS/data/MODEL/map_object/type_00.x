@@ -4111,7 +4111,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\Git\\2024Team_TGS\\ÉÇÉfÉãëfçﬁ\\ì˙ñÏ‡V\\TEXTURE\\map_object\\wood_YMD_house00.jpg";
+    "data\\TEXTURE\\map_object\\wood_YMD_house00.jpg";
    }
   }
   Material {
@@ -4120,7 +4120,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\Git\\2024Team_TGS\\ÉÇÉfÉãëfçﬁ\\ì˙ñÏ‡V\\TEXTURE\\map_object\\wood_YMD_house00.jpg";
+    "data\\TEXTURE\\map_object\\wood_YMD_house00.jpg";
    }
   }
   Material {
@@ -4129,7 +4129,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\Git\\2024Team_TGS\\ÉÇÉfÉãëfçﬁ\\ì˙ñÏ‡V\\TEXTURE\\map_object\\wood_YMD_house01.jpg";
+    "data\\TEXTURE\\map_object\\wood_YMD_house01.jpg";
    }
   }
   Material {
@@ -4144,7 +4144,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\Git\\2024Team_TGS\\ÉÇÉfÉãëfçﬁ\\ì˙ñÏ‡V\\TEXTURE\\map_object\\kawara_yane000.jpg";
+    "data\\TEXTURE\\map_object\\kawara_yane000.jpg";
    }
   }
   Material {
@@ -4189,7 +4189,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "data\\castle\\25077071.jpg";
+    "data\\TEXTURE\\map_object\\25077071.jpg";
    }
   }
   Material {
@@ -4198,7 +4198,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "data\\castle\\25077071.jpg";
+    "data\\TEXTURE\\map_object\\25077071.jpg";
    }
   }
   Material {
@@ -4207,7 +4207,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "data\\castle\\25077071.jpg";
+    "data\\TEXTURE\\map_object\\25077071.jpg";
    }
   }
   Material {

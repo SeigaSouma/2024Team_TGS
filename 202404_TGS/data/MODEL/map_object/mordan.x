@@ -1554,7 +1554,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\チーム制作\\2024Team_TGS\\モデル素材\\日野澤\\TEXTURE\\map_object\\black_wood.jpg";
+    "data\\TEXTURE\\map_object\\black_wood.jpg";
    }
   }
   Material {
@@ -1563,7 +1563,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\チーム制作\\2024Team_TGS\\モデル素材\\日野澤\\TEXTURE\\map_object\\door.png";
+    "data\\TEXTURE\\map_object\\door.png";
    }
   }
   Material {
@@ -1572,7 +1572,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\チーム制作\\2024Team_TGS\\モデル素材\\日野澤\\TEXTURE\\map_object\\Wood_YMD_house02.jpg";
+    "data\\TEXTURE\\map_object\\Wood_YMD_house02.jpg";
    }
   }
   Material {
@@ -1581,7 +1581,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\チーム制作\\2024Team_TGS\\モデル素材\\日野澤\\TEXTURE\\map_object\\whitewood.jpeg";
+    "data\\TEXTURE\\map_object\\whitewood.jpeg";
    }
   }
   Material {
@@ -1590,7 +1590,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\チーム制作\\2024Team_TGS\\モデル素材\\日野澤\\TEXTURE\\map_object\\black_wood.jpg";
+    "data\\TEXTURE\\map_object\\black_wood.jpg";
    }
   }
   Material {
@@ -1599,7 +1599,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\チーム制作\\2024Team_TGS\\モデル素材\\日野澤\\TEXTURE\\map_object\\black_wood.jpg";
+    "data\\TEXTURE\\map_object\\black_wood.jpg";
    }
   }
  }
