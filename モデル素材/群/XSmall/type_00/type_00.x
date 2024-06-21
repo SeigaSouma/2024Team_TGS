@@ -4057,7 +4057,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\ƒ`[ƒ€§ì\\2024Team_TGS\\ƒ‚ƒfƒ‹‘fŞ\\“ú–ìàV\\TEXTURE\\map_object\\wood.jpg";
+    "data\\TEXTURE\\map_object\\wood.jpg";
    }
   }
   Material {
@@ -4066,7 +4066,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\ƒ`[ƒ€§ì\\2024Team_TGS\\ƒ‚ƒfƒ‹‘fŞ\\“ú–ìàV\\TEXTURE\\map_object\\whitewood.jpeg";
+    "data\\TEXTURE\\map_object\\whitewood.jpeg";
    }
   }
   Material {
@@ -4075,7 +4075,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\ƒ`[ƒ€§ì\\2024Team_TGS\\ƒ‚ƒfƒ‹‘fŞ\\“ú–ìàV\\TEXTURE\\map_object\\grain.jpg";
+    "data\\TEXTURE\\map_object\\grain.jpg";
    }
   }
   Material {
@@ -4084,7 +4084,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\ƒ`[ƒ€§ì\\2024Team_TGS\\ƒ‚ƒfƒ‹‘fŞ\\“ú–ìàV\\TEXTURE\\map_object\\kawara_yane000.jpg";
+    "data\\TEXTURE\\map_object\\kawara_yane000.jpg";
    }
   }
   Material {
@@ -4093,7 +4093,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\ƒ`[ƒ€§ì\\2024Team_TGS\\ƒ‚ƒfƒ‹‘fŞ\\“ú–ìàV\\TEXTURE\\map_object\\door.png";
+    "data\\TEXTURE\\map_object\\door.png";
    }
   }
   Material {
@@ -4102,7 +4102,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\ƒ`[ƒ€§ì\\2024Team_TGS\\ƒ‚ƒfƒ‹‘fŞ\\“ú–ìàV\\TEXTURE\\map_object\\tatami.jpg";
+    "data\\TEXTURE\\map_object\\tatami.jpg";
    }
   }
   Material {
@@ -4111,7 +4111,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\Git\\2024Team_TGS\\ƒ‚ƒfƒ‹‘fŞ\\“ú–ìàV\\TEXTURE\\map_object\\wood_YMD_house00.jpg";
+    "data\\TEXTURE\\map_object\\wood_YMD_house00.jpg";
    }
   }
   Material {
@@ -4120,7 +4120,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\Git\\2024Team_TGS\\ƒ‚ƒfƒ‹‘fŞ\\“ú–ìàV\\TEXTURE\\map_object\\wood_YMD_house00.jpg";
+    "data\\TEXTURE\\map_object\\wood_YMD_house00.jpg";
    }
   }
   Material {
@@ -4129,7 +4129,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\Git\\2024Team_TGS\\ƒ‚ƒfƒ‹‘fŞ\\“ú–ìàV\\TEXTURE\\map_object\\wood_YMD_house01.jpg";
+    "data\\TEXTURE\\map_object\\wood_YMD_house01.jpg";
    }
   }
   Material {
@@ -4144,7 +4144,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\Git\\2024Team_TGS\\ƒ‚ƒfƒ‹‘fŞ\\“ú–ìàV\\TEXTURE\\map_object\\kawara_yane000.jpg";
+    "data\\TEXTURE\\map_object\\kawara_yane000.jpg";
    }
   }
   Material {
@@ -4153,7 +4153,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\ƒ`[ƒ€§ì\\2024Team_TGS\\ƒ‚ƒfƒ‹‘fŞ\\“ú–ìàV\\TEXTURE\\map_object\\11690_s.jpg";
+    "data\\TEXTURE\\map_object\\11690_s.jpg";
    }
   }
   Material {
@@ -4162,7 +4162,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\ƒ`[ƒ€§ì\\2024Team_TGS\\ƒ‚ƒfƒ‹‘fŞ\\“ú–ìàV\\TEXTURE\\map_object\\whitewood.jpeg";
+    "data\\TEXTURE\\map_object\\whitewood.jpeg";
    }
   }
   Material {
@@ -4171,7 +4171,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\ƒ`[ƒ€§ì\\2024Team_TGS\\ƒ‚ƒfƒ‹‘fŞ\\“ú–ìàV\\TEXTURE\\map_object\\wood_YMD_house01.jpg";
+    "data\\TEXTURE\\map_object\\wood_YMD_house01.jpg";
    }
   }
   Material {
@@ -4180,7 +4180,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\ƒ`[ƒ€§ì\\2024Team_TGS\\ƒ‚ƒfƒ‹‘fŞ\\“ú–ìàV\\TEXTURE\\map_object\\gray.jpg";
+    "data\\TEXTURE\\map_object\\gray.jpg";
    }
   }
   Material {
@@ -4189,7 +4189,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\ƒ`[ƒ€§ì\\2024Team_TGS\\ƒ‚ƒfƒ‹‘fŞ\\“ú–ìàV\\castle\\25077071.jpg";
+    "data\\TEXTURE\\map_object\\25077071.jpg";
    }
   }
   Material {
@@ -4198,7 +4198,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\ƒ`[ƒ€§ì\\2024Team_TGS\\ƒ‚ƒfƒ‹‘fŞ\\“ú–ìàV\\castle\\25077071.jpg";
+    "data\\TEXTURE\\map_object\\25077071.jpg";
    }
   }
   Material {
@@ -4207,7 +4207,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\ƒ`[ƒ€§ì\\2024Team_TGS\\ƒ‚ƒfƒ‹‘fŞ\\“ú–ìàV\\castle\\25077071.jpg";
+    "data\\TEXTURE\\map_object\\25077071.jpg";
    }
   }
   Material {
@@ -4222,7 +4222,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\ƒ`[ƒ€§ì\\2024Team_TGS\\ƒ‚ƒfƒ‹‘fŞ\\“ú–ìàV\\TEXTURE\\map_object\\kawara_yane000.jpg";
+    "data\\TEXTURE\\map_object\\kawara_yane000.jpg";
    }
   }
   Material {
@@ -4231,7 +4231,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\ƒ`[ƒ€§ì\\2024Team_TGS\\ƒ‚ƒfƒ‹‘fŞ\\“ú–ìàV\\TEXTURE\\map_object\\kawara_yane000.jpg";
+    "data\\TEXTURE\\map_object\\kawara_yane000.jpg";
    }
   }
   Material {
