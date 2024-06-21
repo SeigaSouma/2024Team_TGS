@@ -207,9 +207,9 @@ HRESULT CGame::Init()
 	MyLib::Vector3 setpos;
 	for (const auto& info : vtxInfo)
 	{
-		setpos.x = info.pos.x + sinf(D3DX_PI + info.rot.y) * -250.0f;
+		setpos.x = info.pos.x + sinf(D3DX_PI + info.rot.y) * -600.0f;
 		setpos.y = info.pos.y;
-		setpos.z = info.pos.z + cosf(D3DX_PI + info.rot.y) * -250.0f;
+		setpos.z = info.pos.z + cosf(D3DX_PI + info.rot.y) * -600.0f;
 		vecpos.push_back(setpos);
 	}
 
@@ -233,9 +233,9 @@ HRESULT CGame::Init()
 	// ÉXÉeÉìÉVÉãâeê∂ê¨
 	CStencilShadow::Create();
 
-	CWaterField::Create(CWaterField::TYPE::TYPE_NORMAL);
+	/*CWaterField::Create(CWaterField::TYPE::TYPE_NORMAL);
 	CWaterField::Create(CWaterField::TYPE::TYPE_RIGHT);
-	CWaterField::Create(CWaterField::TYPE::TYPE_LEFT);
+	CWaterField::Create(CWaterField::TYPE::TYPE_LEFT);*/
 
 
 	CCheckpoint::Create(1000.0f);

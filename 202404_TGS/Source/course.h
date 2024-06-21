@@ -99,6 +99,8 @@ private:
 	std::vector<VtxInfo> m_vecVtxInfo;		// 各頂点の情報
 	std::vector<CCollisionLine_Box*> m_pCollisionLineBox;	// 当たり判定ボックス
 	float m_courceLength;
+	float m_fTexU;	// Uスクロール用
+	float m_fTexV;	// Vスクロール用
 	static const float m_fCreateDistance;	// 生成間隔
 };
 

@@ -181,7 +181,6 @@ void CMapMesh::Reset()
 	CalVtxPosition();
 
 	// Šeí•Ï”‰Šú‰»
-	SetPosition(MyLib::Vector3(0.0f, 10.0f, 0.0f));				// ˆÊ’u
 	SetWidthBlock(1);		// ••ªŠ„
 	SetHeightBlock(static_cast<int>(m_vecVtxPosition.size()) - 1);	// c•ªŠ„
 	SetWidthLen(0.0f);		// c’·‚³

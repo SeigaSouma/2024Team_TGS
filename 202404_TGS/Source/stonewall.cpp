@@ -22,7 +22,7 @@ namespace
 	const std::string TEXTURE = "data\\TEXTURE\\map_object\\ishigaki000.png";
 	const int WIDTH_BLOCK = 2;
 	const float WIDTH = 200.0f;		// Î‚ß‚Ì•
-	const float HEIGHT = 500.0f;	// ‚‚³
+	const float HEIGHT = 300.0f;	// ‚‚³
 	const float INTERVAL_TEXU = 500.0f;	// UÀ•W‚ÌŠÔŠu
 }
 

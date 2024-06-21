@@ -157,18 +157,6 @@ void CTownField_Sinuous::SetVtxTexUV()
 			pTex[back] = D3DXVECTOR2(posU, 0.0f);
 			pTex[front] = D3DXVECTOR2(posU, posV);
 
-
-			//for (int nCntWidth = 0; nCntWidth < WIDTH_BLOCK; nCntWidth++)
-			//{// ‰¡‚Ì•ªŠ„•ªŒJ‚è•Ô‚·
-
-			//	idx = nCntWidth + (nCntHeight * WIDTH_BLOCK);
-			//	pTex[idx] = D3DXVECTOR2(posU, posV);
-
-			//	// c‚ÌŠ„‡•ªi‚ß‚é
-			//	posV += sqrtf((pVtxPos[idx].z - pVtxPos[idx + 1].z) * (pVtxPos[idx].z - pVtxPos[idx + 1].z)) / intervalV;
-
-			//}
-
 			// ‰¡‚ÌŠ„‡•ªi‚ß‚é
 			posU += pVtxPos[back + 1].DistanceXZ(pVtxPos[back - 1]) / INTERVAL_TEXU;
 

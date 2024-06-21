@@ -11,7 +11,7 @@ TEXTURE_FILENAME = data\TEXTURE\sky\sky_02.jpg		# [0]
 #------------------------------------------------------------------------------
 # モデル数
 #------------------------------------------------------------------------------
-NUM_MODEL = 42
+NUM_MODEL = 66
 
 #------------------------------------------------------------------------------
 # モデルファイル名
@@ -68,6 +68,20 @@ MODEL_FILENAME = data\MODEL\map_object\3_fence.x		# [48]
 MODEL_FILENAME = data\MODEL\map_object\5_fence.x		# [49]
 MODEL_FILENAME = data\MODEL\map_object\10_fence.x		# [50]
 MODEL_FILENAME = data\MODEL\map_object\woodship.x		# [51]
+MODEL_FILENAME = data\MODEL\map_object\big_boss.x		# [52]
+MODEL_FILENAME = data\MODEL\map_object\XMedium.x		# [53]
+MODEL_FILENAME = data\MODEL\map_object\type_00.x		# [54]
+MODEL_FILENAME = data\MODEL\map_object\castle.x		# [55]
+MODEL_FILENAME = data\MODEL\map_object\basya.x		# [56]
+MODEL_FILENAME = data\MODEL\map_object\horse.x		# [57]
+MODEL_FILENAME = data\MODEL\map_object\ship.x		# [58]
+MODEL_FILENAME = data\MODEL\map_object\matsutree.x		# [59]
+MODEL_FILENAME = data\MODEL\map_object\bell.x		# [60]
+MODEL_FILENAME = data\MODEL\map_object\mordan.x		# [61]
+MODEL_FILENAME = data\MODEL\map_object\prison.x		# [62]
+MODEL_FILENAME = data\MODEL\map_object\sentou.x		# [63]
+MODEL_FILENAME = data\MODEL\map_object\souko.x		# [64]
+MODEL_FILENAME = data\MODEL\map_object\umagoya.x		# [65]
 
 #==============================================================================
 # 空情報
@@ -90,10 +104,90 @@ END_SKYSET
 # モデルの配置
 #==============================================================================
 MODELSET
-	TYPE = 29
-	POS = 469.97 0.00 3368.63
-	ROT = 0.00 -1.23 0.00
-	SCALE = 2.09
+	TYPE = 54
+	POS = 2923.97 550.00 2206.78
+	ROT = 0.00 0.00 0.00
+	SCALE = 1.00
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 53
+	POS = 6872.44 550.00 1116.12
+	ROT = 0.00 0.00 0.00
+	SCALE = 1.00
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 52
+	POS = 13587.17 550.00 1662.11
+	ROT = 0.00 0.00 0.00
+	SCALE = 1.00
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 1
+	POS = 1484.84 0.00 117.13
+	ROT = 0.00 0.00 0.00
+	SCALE = 1.00
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 65
+	POS = 9193.89 550.00 1539.23
+	ROT = 0.00 0.00 0.00
+	SCALE = 1.14
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 64
+	POS = 8310.85 550.00 2426.86
+	ROT = 0.00 0.00 0.00
+	SCALE = 1.00
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 63
+	POS = 5537.81 550.00 3808.67
+	ROT = 0.00 0.00 0.00
+	SCALE = 1.00
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 62
+	POS = 5795.50 550.00 557.72
+	ROT = 0.00 0.00 0.00
+	SCALE = 1.00
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 57
+	POS = 5656.82 550.00 528.19
+	ROT = 0.00 0.00 0.00
+	SCALE = 1.00
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 56
+	POS = 8300.49 0.00 594.51
+	ROT = 0.00 0.00 0.00
+	SCALE = 5.66
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 55
+	POS = 18093.13 550.00 3704.57
+	ROT = 0.00 0.00 0.00
+	SCALE = 3.08
 	SHADOW = 1
 END_MODELSET
 

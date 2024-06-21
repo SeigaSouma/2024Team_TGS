@@ -30,6 +30,8 @@ namespace
 	float MAX_SURHEIGHT = 100.0f;
 	float SURHEIGHT_VELOCITY = (10.0f);
 	int DEFAULT_WATERRIPPLE_INTERVAL = 21;	// …”g–ä‚ÌƒCƒ“ƒ^[ƒoƒ‹
+	const float HEIGHT_MOVETIMER = (1.0f / 0.5f);	// ‚‚³•Ï‰»‘JˆÚƒ^ƒCƒ}[
+	const float COMMAND_HEIGHT = 200.0f;	// ‚‚³
 }
 
 //==========================================================================
@@ -519,6 +521,10 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 					MULTITARGET::OFF_ALPHA,
 					MULTITARGET::OFF_MULTI,
 					MULTITARGET::OFF_TIMER * multi);
+
+				// ƒRƒ“ƒgƒ[ƒ‰[U“®’âŽ~
+				pInputGamepad->SetEnableVibration();
+				pInputGamepad->SetVibMulti(0.0f);
 			}
 
 			player->SetLife(player->GetLifeOrigin());
@@ -577,7 +583,6 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 		// ‚‚³‚Ì~‰ºŽžŠÔ‰ÁŽZ
 		m_fTimeDownHeight += CManager::GetInstance()->GetDeltaTime();
 
-
 		if (fall) 
 		{// —Ž‰º’†
 
@@ -601,6 +606,15 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 		m_fHeightVelocity += (0.0f - m_fHeightVelocity) * 0.2f;
 		m_fHeight += ADD_HEIGHT + m_fHeightVelocity;
 		m_fHeight = UtilFunc::Transformation::Clamp(m_fHeight, MIN_HEIGHT, LENGTH_COLLISIONHEIGHT);
+
+		float ratio = m_fHeight / m_fMaxHeight;
+		ratio = UtilFunc::Transformation::Clamp(ratio, 0.2f, 1.0f);
+
+		// U“®
+		pInputGamepad->SetEnableVibration();
+		pInputGamepad->SetVibMulti(1.0f * ratio);
+		pInputGamepad->SetVibration(CInputGamepad::VIBRATION_STATE::VIBRATION_STATE_AIR, 0);
+		m_fMaxHeight;
 
 		if (posBaggage.y <= posBaggageOrigin.y + m_fHeight &&
 			posBaggage.x <= pos.x + range &&
@@ -808,9 +822,6 @@ void CPlayerControlTrick::Trick(CPlayer* player, int& nIdx, bool& bValue)
 	m_pCommandPad->GetSuccess(nIdx, type);
 	if (nIdx >= 0) bValue = true;
 
-	// ¬Œ÷Žž‚Ì‚ÝŒø‰Ê‚ð—^‚¦‚é
-	if (!bValue) { return; }
-
 	CBaggage* bag = player->GetBaggage();
 
 	// Ží—Þ‚É‚æ‚Á‚ÄŒø‰Ê‚ð—^‚¦‚é
@@ -835,11 +846,34 @@ void CPlayerControlTrick::Trick(CPlayer* player, int& nIdx, bool& bValue)
 		break;
 	case CCommand::TYPE::TYPE_FLY:
 	{
-		
+		if (m_fHeightTimer < 1.0f)
+		{
+			m_fHeightTimer += HEIGHT_MOVETIMER * CManager::GetInstance()->GetDeltaTime();
+
+			if (m_fHeightTimer >= 1.0f)
+			{
+				m_fHeightTimer = 1.0f;
+			}
+		}
 	}
 		break;
 	default:
+		if (m_fHeightTimer > 0.0f)
+		{
+			m_fHeightTimer -= HEIGHT_MOVETIMER * CManager::GetInstance()->GetDeltaTime();
+
+			if (m_fHeightTimer <= 0.0f)
+			{
+				m_fHeightTimer = 0.0f;
+			}
+		}
 		break;
+	}
+
+	// ‚‚³‚ðÝ’è‚·‚é
+	if(m_fHeightTimer != 0.0f)
+	{
+		m_fHeight = UtilFunc::Correction::EasingLinear(0.0f, COMMAND_HEIGHT, m_fHeightTimer);
 	}
 }
 
