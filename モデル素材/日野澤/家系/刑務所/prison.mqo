@@ -18,10 +18,10 @@ Scene {
 	}
 }
 Material 2 {
-	"mat1" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\Wood_demise.jpg")
-	"mat2" col(0.533 0.533 0.533 1.000) dif(0.800) amb(0.600) emi(0.150) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\Wood_build_00.jpg")
+	"prison_mat1" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\Wood_demise.jpg")
+	"prison_mat2" col(0.533 0.533 0.533 1.000) dif(0.800) amb(0.600) emi(0.150) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\Wood_build_00.jpg")
 }
-Object "obj13" {
+Object "prison" {
 	visible 15
 	locking 0
 	shading 1
