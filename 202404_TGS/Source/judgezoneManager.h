@@ -35,6 +35,7 @@ public:
 	void ReleaseAll();	//”»’èƒ][ƒ“‚ğ‚·‚×‚Ä”jŠü
 
 	void Load(std::string path);
+	void LoadZone(std::string path);
 	CJudge::SJudgeInfo LoadCondition(std::string path);
 
 	//=============================

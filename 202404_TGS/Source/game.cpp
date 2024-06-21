@@ -167,10 +167,6 @@ HRESULT CGame::Init()
 		pPlayer->SetRotation(MyLib::Vector3(0.0f, 0.0f, 0.0f));
 	}
 
-	// 判定ゾーンマネージャ
-	m_pJudgeZoneManager = CJudgeZoneManager::Create();
-	m_pJudgeZoneManager->Load("data\\TEXT\\judgezone\\judgezone_01.txt");
-
 	// ステージ
 	m_pStage = CStage::Create("data\\TEXT\\stage\\info.txt");
 
@@ -254,6 +250,10 @@ HRESULT CGame::Init()
 
 	// チェックポイント通過リセット
 	CCheckpoint::ResetSaveID();
+
+	// 判定ゾーンマネージャ
+	m_pJudgeZoneManager = CJudgeZoneManager::Create();
+	m_pJudgeZoneManager->Load("data\\TEXT\\judgezonelist\\judgezonelist_01.txt");
 
 	// 成功
 	return S_OK;
