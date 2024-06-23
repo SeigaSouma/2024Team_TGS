@@ -25,6 +25,7 @@ public:
 	{
 		TYPE_STONEWALL_LEFT = 0,	// 石垣左
 		TYPE_TOWNFIELD_SINUOUS,		// 街フィールド(うねり)
+		TYPE_TOWNFIELD_SINUOUS_FRONT,		// 街フィールド(うねり)(手前)
 		TYPE_MAX
 	};
 

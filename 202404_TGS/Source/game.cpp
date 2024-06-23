@@ -273,6 +273,18 @@ HRESULT CGame::Init()
 	pTownField->BindVtxPosition();
 
 
+	//=============================
+	// うねりの街フィールド(手前)
+	//=============================
+	CMapMesh* pTownFieldFront = CMapMesh::Create(CMapMesh::MeshType::TYPE_TOWNFIELD_SINUOUS_FRONT);
+	pTownFieldFront->SetVecPosition(m_pCourse->GetVecPosition());
+	pTownFieldFront->Reset();
+
+	// 石垣の頂上に頂点をそろえる
+	pTownFieldFront->SetVecVtxPosition(pStoneWall_Front->GetVecTopPosition());
+	pTownFieldFront->BindVtxPosition();
+
+
 
 	//=============================
 	// ステンシル影

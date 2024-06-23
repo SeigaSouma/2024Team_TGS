@@ -21,7 +21,7 @@ namespace
 {
 	const std::string TEXTURE = "data\\TEXTURE\\FIELD\\soil.jpg";
 	const int WIDTH_BLOCK = 2;
-	const float FIELD_WORLDLINE_Z = 5000.0f;		// 絶対座標のライン
+	const float FIELD_WORLDLINE_Z = -5000.0f;		// 絶対座標のライン
 	const float INTERVAL_TEXU = 900.0f;	// U座標の間隔
 }
 
@@ -39,31 +39,6 @@ CTownField_Sinuous_Front::CTownField_Sinuous_Front(int nPriority, const LAYER la
 CTownField_Sinuous_Front::~CTownField_Sinuous_Front()
 {
 
-}
-
-//==========================================================================
-// 初期化処理
-//==========================================================================
-HRESULT CTownField_Sinuous_Front::Init()
-{
-	HRESULT hr;
-
-	// 初期化処理
-	CTownField_Sinuous::Init();
-
-	// テクスチャの割り当て
-	int texIdx = CTexture::GetInstance()->Regist(TEXTURE);
-	BindTexture(texIdx);
-	return S_OK;
-}
-
-//==========================================================================
-// 終了処理
-//==========================================================================
-void CTownField_Sinuous_Front::Uninit()
-{
-	// 終了処理
-	CObject3DMesh::Uninit();
 }
 
 //==========================================================================
@@ -115,8 +90,8 @@ void CTownField_Sinuous_Front::BindVtxPosition()
 
 
 		// 頂点座標代入
-		pVtxPos[idx] = mtxLeft.GetWorldPosition();
-		pVtxPos[nextidx] = mtxRight.GetWorldPosition();
+		pVtxPos[nextidx] = mtxLeft.GetWorldPosition();
+		pVtxPos[idx] = mtxRight.GetWorldPosition();
 
 	}
 
@@ -154,8 +129,8 @@ void CTownField_Sinuous_Front::SetVtxTexUV()
 			// 縦の割合分進める
 			posV += sqrtf((pVtxPos[front].z - pVtxPos[front + 1].z) * (pVtxPos[front].z - pVtxPos[front + 1].z)) / intervalV;
 
-			pTex[back] = D3DXVECTOR2(posU, 0.0f);
-			pTex[front] = D3DXVECTOR2(posU, posV);
+			pTex[back] = D3DXVECTOR2(posU, posV);
+			pTex[front] = D3DXVECTOR2(posU, 0.0f);
 
 			// 横の割合分進める
 			posU += pVtxPos[back + 1].DistanceXZ(pVtxPos[back - 1]) / INTERVAL_TEXU;

@@ -123,7 +123,7 @@ void CStoneWall_Front::BindVtxPosition()
 		pVtxPos[nextidx] = mtxRight.GetWorldPosition();
 
 		// í∏è„ÇÃà íu
-		m_vecTopPosition.push_back(pVtxPos[nextidx]);
+		m_vecTopPosition.push_back(pVtxPos[idx]);
 	}
 
 	// í∏ì_èÓïÒê›íË
