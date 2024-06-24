@@ -67,8 +67,10 @@ public:
 	void SetWidth(const float& deviWidth) { m_baggageInfo.width = deviWidth; }
 	void SetWeight(const float& weight) { m_baggageInfo.weight = weight; }
 	bool IsHit() { return m_bHit; }		//Hit()での判定を返す
+	bool IsEnd() { return m_bEnd; }		// 終了判定を返す
 	MyLib::Vector3 GetVeloRot() { return m_velorot; }	// 回転速度
 	void SetVeloRot(const MyLib::Vector3& velorot) { m_velorot = velorot; }
+	void Reset();						// 判定リセット
 
 	//=============================
 	// 静的関数
@@ -96,6 +98,7 @@ private:
 	bool m_bLand;				// 着地判定
 	bool m_bHit;				// 障害物衝突判定
 	bool m_bAway;				// 吹っ飛び判定
+	bool m_bEnd;				// 終了判定
 	static CListManager<CBaggage> m_List;	// リスト
 	SBaggageInfo m_baggageInfo;
 	float m_fDeviation;

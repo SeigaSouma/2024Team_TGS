@@ -387,6 +387,13 @@ void CPlayerControlMove::Move(CPlayer* player)
 //==========================================================================
 void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 {
+	if (!EndCheck(pBaggage))
+	{
+		// リトライUI生成
+		player->CreateRetryUI();
+		return;
+	}
+
 	// インプット情報取得
 	CInputKeyboard* pInputKeyboard = CInputKeyboard::GetInstance();
 	CInputGamepad* pInputGamepad = CInputGamepad::GetInstance();
@@ -507,7 +514,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 		{
 			posBaggage.y = posBaggageOrigin.y;
 			player->Hit(1);
-			//m_bLandOld = true;
+			m_bLandOld = true;
 		}
 		else if(!pBaggage->IsLand())
 		{
@@ -690,6 +697,18 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 		//	"移動中のエフェクト 【%d】\n"
 		//	, *m_BressHandle);
 	}
+}
+
+//==========================================================================
+// 荷物の終了判定
+//==========================================================================
+bool CPlayerControlBaggage::EndCheck(CBaggage* pBaggage)
+{
+	if (pBaggage == nullptr) { return false; }
+
+	if (pBaggage->IsEnd()) { return false; }
+
+	return true;
 }
 
 //==========================================================================
