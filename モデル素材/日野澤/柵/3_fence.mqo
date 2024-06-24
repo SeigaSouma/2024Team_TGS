@@ -18,9 +18,9 @@ Scene {
 	}
 }
 Material 1 {
-	"mat1" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("wood02.png")
+	"fence_3" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("wood02.png")
 }
-Object "obj1" {
+Object "fence_3" {
 	visible 15
 	locking 0
 	shading 1

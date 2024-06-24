@@ -99,6 +99,9 @@
     <Filter Include="map\goal">
       <UniqueIdentifier>{6ab27bb6-67f7-4892-aeae-7674ac92e332}</UniqueIdentifier>
     </Filter>
+    <Filter Include="map\mesh">
+      <UniqueIdentifier>{f3feccb1-469b-43fc-9949-2130e35ef250}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\ballast.cpp">
@@ -524,26 +527,29 @@
     <ClCompile Include="Source\waterfield_left.cpp">
       <Filter>water</Filter>
     </ClCompile>
-    <ClCompile Include="Source\stonewall.cpp">
-      <Filter>map</Filter>
-    </ClCompile>
     <ClCompile Include="Source\meshbubble.cpp">
       <Filter>water</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\mapmesh.cpp">
-      <Filter>map</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\townfield_sinuous.cpp">
-      <Filter>map</Filter>
     </ClCompile>
     <ClCompile Include="Source\convert.cpp">
       <Filter>system</Filter>
     </ClCompile>
-    <ClCompile Include="Source\stonewall_front.cpp">
+    <ClCompile Include="Source\waterstone.cpp">
       <Filter>map</Filter>
     </ClCompile>
+    <ClCompile Include="Source\mapmesh.cpp">
+      <Filter>map\mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\stonewall.cpp">
+      <Filter>map\mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\stonewall_front.cpp">
+      <Filter>map\mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\townfield_sinuous.cpp">
+      <Filter>map\mesh</Filter>
+    </ClCompile>
     <ClCompile Include="Source\townfield_sinuous_front.cpp">
-      <Filter>map</Filter>
+      <Filter>map\mesh</Filter>
     </ClCompile>
     <ClCompile Include="Source\judgeobj.cpp">
       <Filter>judgezone</Filter>
@@ -985,26 +991,29 @@
     <ClInclude Include="Source\waterfield_left.h">
       <Filter>water</Filter>
     </ClInclude>
-    <ClInclude Include="Source\stonewall.h">
-      <Filter>map</Filter>
-    </ClInclude>
     <ClInclude Include="Source\meshbubble.h">
       <Filter>water</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\mapmesh.h">
-      <Filter>map</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\townfield_sinuous.h">
-      <Filter>map</Filter>
     </ClInclude>
     <ClInclude Include="Source\convert.h">
       <Filter>system</Filter>
     </ClInclude>
-    <ClInclude Include="Source\stonewall_front.h">
+    <ClInclude Include="Source\waterstone.h">
       <Filter>map</Filter>
     </ClInclude>
+    <ClInclude Include="Source\mapmesh.h">
+      <Filter>map\mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\stonewall.h">
+      <Filter>map\mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\stonewall_front.h">
+      <Filter>map\mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\townfield_sinuous.h">
+      <Filter>map\mesh</Filter>
+    </ClInclude>
     <ClInclude Include="Source\townfield_sinuous_front.h">
-      <Filter>map</Filter>
+      <Filter>map\mesh</Filter>
     </ClInclude>
     <ClInclude Include="Source\judgestatefunc.h">
       <Filter>judgezone</Filter>
