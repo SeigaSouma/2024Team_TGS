@@ -7,6 +7,7 @@
 #include "waterstone.h"
 #include "manager.h"
 #include "calculation.h"
+#include "3D_effect.h"
 
 //==========================================================================
 // 定数定義
@@ -21,7 +22,7 @@ namespace
 		"data\\MODEL\\map_object\\rock_04.x",
 		"data\\MODEL\\map_object\\rock_05.x",
 	};
-	const float DEFAULT_SPLASHTIME = 1.5f;	// 通常のしぶき時間
+	const float DEFAULT_SPLASHTIME = 0.8f;	// 通常のしぶき時間
 }
 
 //==========================================================================
@@ -113,9 +114,40 @@ void CWaterStone::Update()
 	if (m_fIntervalSplash <= m_fSplashTimer)
 	{
 
+		MyLib::Vector3 move;
+		MyLib::Vector3 posOrigin = GetPosition();
+		MyLib::Vector3 pos;
+
+		for (int i = 0; i < 10; i++)
+		{
+			float randmoveX = UtilFunc::Transformation::Random(-150, 150) * 0.01f;
+			float randmoveY = UtilFunc::Transformation::Random(10, 40) * 0.1f;
+			float randRadius = UtilFunc::Transformation::Random(-30, 30) * 0.1f;
+
+			move.x = randmoveX;
+			move.z = randmoveX;
+			move.y = randmoveY;
+
+			float radius = 40.0f + randRadius;
+
+			int xz = UtilFunc::Transformation::Random(-50, 50);
+			pos = posOrigin + MyLib::Vector3(xz, 0.0f, xz);
+
+
+			float rand = UtilFunc::Transformation::Random(-50, 50) * 0.01f;
+			CEffect3D* pEffect = CEffect3D::Create(
+				pos,
+				move,
+				D3DXCOLOR(0.5f + rand, 0.5f + rand, 1.0f, 1.0f),
+				radius, 50,
+				CEffect3D::MOVEEFFECT::MOVEEFFECT_ADD,
+				CEffect3D::TYPE::TYPE_SMOKE);
+			pEffect->SetEnableGravity();
+			pEffect->SetGravityValue(0.1f);
+		}
 
 		// インターバル更新
-		m_fIntervalSplash = DEFAULT_SPLASHTIME + UtilFunc::Transformation::Random(-30, 30) * 0.01f;
+		m_fIntervalSplash = DEFAULT_SPLASHTIME + UtilFunc::Transformation::Random(-60, 60) * 0.01f;
 
 		// しぶきタイマー
 		m_fSplashTimer = 0.0f;
