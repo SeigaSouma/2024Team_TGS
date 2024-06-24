@@ -245,7 +245,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\202404_TGS\\data\\TEXTURE\\map_object\\hasu.png";
+    "data\\TEXTURE\\map_object\\hasu.png";
    }
   }
   Material {

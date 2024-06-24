@@ -62,6 +62,7 @@ private:
 
 	// ƒƒ“ƒoŠÖ”
 	bool CollisionObstacle(CPlayer* player, CBaggage* pBaggage);	// áŠQ•¨”»’è
+	bool EndCheck(CBaggage* pBaggage);
 
 	// ƒƒ“ƒo•Ï”
 	Effekseer::Handle* m_BressHandle = nullptr;

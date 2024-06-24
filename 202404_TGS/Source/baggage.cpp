@@ -10,6 +10,7 @@
 #include "game.h"
 #include "camera.h"
 #include "map_obstacle.h"
+#include "renderer.h"
 
 //==========================================================================
 // 定数定義
@@ -33,6 +34,17 @@ namespace
 }
 
 //==========================================================================
+// ブラー表現(マルチターゲットレンダリング)用定数定義
+//==========================================================================
+namespace MULTITARGET
+{
+	// 開始時
+	const float START_ALPHA = (0.7f);		// 目標透明度
+	const float START_MULTI = (1.0f);		// 目標倍率
+	const float START_TIMER = (0.0f);		// 遷移タイマー
+}
+
+//==========================================================================
 // 静的メンバ変数
 //==========================================================================
 CListManager<CBaggage> CBaggage::m_List = {};	// リスト
@@ -47,6 +59,7 @@ CBaggage::CBaggage(int nPriority) : CObjectQuaternion(nPriority)
 	m_fWeight = 0.0f;	// 重さ
 	m_bLand = false;	// 着地判定
 	m_bAway = false;	// 死亡判定
+	m_bEnd = false;		// 終了処理
 	m_velorot = MyLib::Vector3(0.0f, 0.0f, 0.0f);
 	m_baggageInfo = {};
 	m_fDeviation = 0.0f;
@@ -285,6 +298,15 @@ void CBaggage::DeadMove()
 	if (m_fDeadMoveTime >= TIME_DEADMOVE)
 	{
 		pos = posDest;
+		if (!m_bEnd)
+		{
+			//// フィードバックエフェクトON
+			//CManager::GetInstance()->GetRenderer()->SetEnableDrawMultiScreen(
+			//	MULTITARGET::START_ALPHA,
+			//	MULTITARGET::START_MULTI,
+			//	MULTITARGET::START_TIMER);
+		}
+		m_bEnd = true;
 	}
 
 	SetPosition(pos);
@@ -409,4 +431,18 @@ bool CBaggage::Hit()
 
 	m_bHit = false;
 	return false;
+}
+
+//==========================================================================
+// 判定リセット
+//==========================================================================
+void CBaggage::Reset()
+{
+	m_bHit = false;
+	m_bEnd = false;
+	m_bAway = false;
+	m_bLand = false;
+	m_velorot = MyLib::Vector3(0.0f, 0.0f, 0.0f);
+	m_fDeviation = 0.0f;
+	m_fDeadMoveTime = 0.0f;	// 死亡時の移動時間
 }
