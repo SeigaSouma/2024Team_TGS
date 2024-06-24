@@ -15,10 +15,10 @@ SCRIPT			# この行は絶対消さないこと！
 # CONDITION_UNDER	: 下の条件ファイルパス
 #------------------------------------------------------------------
 ZONESET
-	START = 0.16f
-	END = 0.21f
-	BORDER = 880.0f
-	CONDITION_TOP = data\\TEXT\\judgecondition\\condition_easy.txt
+	START = 0.6f
+	END = 0.7f
+	BORDER = 400.0f
+	CONDITION_TOP = data\\TEXT\\judgecondition\\condition_nohit.txt
 	CONDITION_UNDER = data\\TEXT\\judgecondition\\condition_BBB.txt
 END_ZONESET
 

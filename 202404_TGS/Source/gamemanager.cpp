@@ -463,6 +463,7 @@ void CGameManager::CheckJudgeZone()
 
 	// 進行度計算して確認
 	float progress = pPlayer->GetMoveLength() / pCource->GetCourceLength();
+	CManager::GetInstance()->GetDebugProc()->Print("進行度:%f\n", progress);
 	CJudgeZoneManager::GetInstance()->Check(progress);
 }
 
