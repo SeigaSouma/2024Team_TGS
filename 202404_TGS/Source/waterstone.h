@@ -41,7 +41,7 @@ public:
 	@brief		生成処理
 	@details	必要があれば引数追加
 	*/
-	static CWaterStone *Create();
+	static CWaterStone *Create(const MyLib::Vector3& pos);
 
 private:
 
@@ -53,7 +53,8 @@ private:
 	//=============================
 	// メンバ変数
 	//=============================
-
+	float m_fSplashTimer;		// しぶきタイマー
+	float m_fIntervalSplash;	// しぶきまでのインターバル
 };
 
 

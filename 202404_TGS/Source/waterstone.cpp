@@ -13,7 +13,14 @@
 //==========================================================================
 namespace
 {
-	const char* MODEL = "data\\MODEL\\box.x";
+	const std::string MODEL[] =
+	{
+		"data\\MODEL\\map_object\\rock_01_small.x",
+		"data\\MODEL\\map_object\\rock_02.x",
+		"data\\MODEL\\map_object\\rock_03.x",
+		"data\\MODEL\\map_object\\rock_04.x",
+		"data\\MODEL\\map_object\\rock_05.x",
+	};
 }
 
 //==========================================================================
@@ -22,7 +29,8 @@ namespace
 CWaterStone::CWaterStone(int nPriority) : CObjectX(nPriority)
 {
 	// 値のクリア
-
+	m_fSplashTimer = 0.0f;		// しぶきタイマー
+	m_fIntervalSplash = 0.0f;	// しぶきまでのインターバル
 }
 
 //==========================================================================
@@ -36,13 +44,15 @@ CWaterStone::~CWaterStone()
 //==========================================================================
 // 生成処理
 //==========================================================================
-CWaterStone *CWaterStone::Create()
+CWaterStone *CWaterStone::Create(const MyLib::Vector3& pos)
 {
 	// メモリの確保
 	CWaterStone* pObj = DEBUG_NEW CWaterStone;
 
 	if (pObj != nullptr)
 	{
+		pObj->SetPosition(pos);
+
 		// 初期化処理
 		pObj->Init();
 	}
@@ -60,7 +70,10 @@ HRESULT CWaterStone::Init()
 	CObject::SetType(TYPE_OBJECTX);
 
 	// 初期化処理
-	HRESULT hr = CObjectX::Init(MODEL);
+	int idx = (sizeof(MODEL) / sizeof(*MODEL)) - 1;
+	idx = UtilFunc::Transformation::Random(0, idx);
+
+	HRESULT hr = CObjectX::Init(MODEL[idx]);
 	if (FAILED(hr))
 	{
 		return E_FAIL;
@@ -92,7 +105,19 @@ void CWaterStone::Kill()
 //==========================================================================
 void CWaterStone::Update()
 {
-	
+	// しぶきタイマー加算
+	m_fSplashTimer += CManager::GetInstance()->GetDeltaTime();
+
+	// スプラッシュ！
+	if (m_fIntervalSplash <= m_fSplashTimer)
+	{
+		// インターバル更新
+		m_fIntervalSplash = 0.0f;
+
+		// しぶきタイマー
+		m_fSplashTimer = 0.0f;
+	}
+
 }
 
 //==========================================================================
