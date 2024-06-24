@@ -190,6 +190,7 @@
     <ClCompile Include="Source\edit_course.cpp" />
     <ClCompile Include="Source\edit_map.cpp" />
     <ClCompile Include="Source\edit_obstacle.cpp" />
+    <ClCompile Include="Source\edit_waterstone.cpp" />
     <ClCompile Include="Source\elevation.cpp" />
     <ClCompile Include="Source\fade.cpp" />
     <ClCompile Include="Source\fog.cpp" />
@@ -351,6 +352,7 @@
     <ClInclude Include="Source\edit_course.h" />
     <ClInclude Include="Source\edit_map.h" />
     <ClInclude Include="Source\edit_obstacle.h" />
+    <ClInclude Include="Source\edit_waterstone.h" />
     <ClInclude Include="Source\elevation.h" />
     <ClInclude Include="Source\fade.h" />
     <ClInclude Include="Source\fog.h" />

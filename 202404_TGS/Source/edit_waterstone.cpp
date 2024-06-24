@@ -1,10 +1,10 @@
 //=============================================================================
 // 
-//  コースエディタ―処理 [edit_course.cpp]
+//  コースエディタ―処理 [edit_waterstone.cpp]
 //  Author : 相馬靜雅
 // 
 //=============================================================================
-#include "edit_course.h"
+#include "edit_waterstone.h"
 #include "course.h"
 #include "manager.h"
 #include "calculation.h"
@@ -24,7 +24,7 @@ namespace
 //==========================================================================
 // コンストラクタ
 //==========================================================================
-CEdit_Course::CEdit_Course()
+CEdit_WaterStone::CEdit_WaterStone()
 {
 	// 値のクリア
 	m_nEditIdx = 0;			// 操作するインデックス番号
@@ -37,7 +37,7 @@ CEdit_Course::CEdit_Course()
 //==========================================================================
 // デストラクタ
 //==========================================================================
-CEdit_Course::~CEdit_Course()
+CEdit_WaterStone::~CEdit_WaterStone()
 {
 
 }
@@ -45,7 +45,7 @@ CEdit_Course::~CEdit_Course()
 //==========================================================================
 // 初期化処理
 //==========================================================================
-HRESULT CEdit_Course::Init()
+HRESULT CEdit_WaterStone::Init()
 {
 
 	return S_OK;
@@ -54,7 +54,7 @@ HRESULT CEdit_Course::Init()
 //==========================================================================
 // 終了処理
 //==========================================================================
-void CEdit_Course::Uninit()
+void CEdit_WaterStone::Uninit()
 {
 	// 終了処理
 	CEdit::Uninit();
@@ -63,7 +63,7 @@ void CEdit_Course::Uninit()
 //==========================================================================
 // 更新処理
 //==========================================================================
-void CEdit_Course::Update()
+void CEdit_WaterStone::Update()
 {
 	// ウィンドウのマウスホバー判定
 	ImGuiHoveredFlags frag = 128;
@@ -98,7 +98,7 @@ void CEdit_Course::Update()
 //==========================================================================
 // ファイル操作
 //==========================================================================
-void CEdit_Course::FileControl()
+void CEdit_WaterStone::FileControl()
 {
 	CCourse* pCourse = CGame::GetInstance()->GetCourse();
 	if (pCourse == nullptr) return;
@@ -130,7 +130,7 @@ void CEdit_Course::FileControl()
 //==========================================================================
 // 辺の数変更
 //==========================================================================
-void CEdit_Course::ChangeLineNum()
+void CEdit_WaterStone::ChangeLineNum()
 {
 	ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
@@ -148,7 +148,7 @@ void CEdit_Course::ChangeLineNum()
 //==========================================================================
 // モード変更
 //==========================================================================
-void CEdit_Course::ChangeMode()
+void CEdit_WaterStone::ChangeMode()
 {
 	ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
@@ -165,7 +165,7 @@ void CEdit_Course::ChangeMode()
 //==========================================================================
 // ライン選択
 //==========================================================================
-void CEdit_Course::SelectLine()
+void CEdit_WaterStone::SelectLine()
 {
 	if (m_bSetMode) return;	// セットモードは終わり
 
@@ -239,7 +239,7 @@ void CEdit_Course::SelectLine()
 //==========================================================================
 // ライン掴み
 //==========================================================================
-void CEdit_Course::DragLine()
+void CEdit_WaterStone::DragLine()
 {
 	CCourse* pCourse = CGame::GetInstance()->GetCourse();
 	if (pCourse == nullptr) return;
@@ -307,7 +307,7 @@ void CEdit_Course::DragLine()
 //==========================================================================
 // トランスフォーム
 //==========================================================================
-void CEdit_Course::Transform()
+void CEdit_WaterStone::Transform()
 {
 	CCourse* pCourse = CGame::GetInstance()->GetCourse();
 	if (pCourse == nullptr) return;
@@ -447,7 +447,7 @@ void CEdit_Course::Transform()
 //==========================================================================
 // 地点追加
 //==========================================================================
-void CEdit_Course::AddPoint()
+void CEdit_WaterStone::AddPoint()
 {
 	if (!m_bSetMode) return;	// セットモード以外は終わり
 
@@ -490,7 +490,7 @@ void CEdit_Course::AddPoint()
 //==========================================================================
 // 最初と最後変形
 //==========================================================================
-void CEdit_Course::TransformBeginEnd()
+void CEdit_WaterStone::TransformBeginEnd()
 {
 	CCourse* pCourse = CGame::GetInstance()->GetCourse();
 	if (pCourse == nullptr) return;
