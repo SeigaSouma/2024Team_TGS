@@ -314,7 +314,8 @@ void CPlayerControlMove::Move(CPlayer* player)
 	player->SetMotionFrag(motionFrag);
 
 #if _DEBUG
-	if (!pInputGamepad->GetPress(CInputGamepad::BUTTON::BUTTON_BACK, 0))
+	if (!pInputGamepad->GetPress(CInputGamepad::BUTTON::BUTTON_BACK, 0) &&
+		!pInputKeyboard->GetPress(DIK_S))
 #endif
 	{
 		// 移動量設定
@@ -509,7 +510,8 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 #if GEKIMUZU
 
 #if _DEBUG
-	if (!pInputGamepad->GetPress(CInputGamepad::BUTTON::BUTTON_BACK, 0))
+	if (!pInputGamepad->GetPress(CInputGamepad::BUTTON::BUTTON_BACK, 0) &&
+		!pInputKeyboard->GetPress(DIK_S))
 #endif
 	{
 		// 高さ制限
@@ -586,15 +588,15 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 		m_pBressHeight->SetPosition(pos);
 	}
 #endif
-	
+	//=============================
+		// 息エフェクト
+		//=============================
+	BressEffect(player, pBaggage);
 	bool bKantsu = CollisionObstacle(player, pBaggage);
 	if (CInputKeyboard::GetInstance()->GetPress(DIK_RETURN) ||
 		pKeyConfigPad->GetPress(INGAME::ACT_AIR))
 	{
-		//=============================
-		// 息エフェクト
-		//=============================
-		BressEffect(player, pBaggage);
+		
 
 		// 高さの降下時間加算
 		m_fTimeDownHeight += CManager::GetInstance()->GetDeltaTime();
@@ -765,7 +767,7 @@ void CPlayerControlBaggage::BressEffect(CPlayer* player, CBaggage* pBaggage)
 	for (int i = 0; i < createIdx; i++)
 	{
 		MyLib::Vector3 move;
-		float randmoveXZ = UtilFunc::Transformation::Random(XZrange, XZrange + 50) * 0.1f;
+		float randmoveXZ = UtilFunc::Transformation::Random(XZrange, XZrange + 100) * 0.1f;
 		float randmoveY = UtilFunc::Transformation::Random(Yrange, Yrange + 20) * 0.1f;
 		float randRadius = UtilFunc::Transformation::Random(-10, 10);
 
