@@ -21,6 +21,7 @@ namespace
 		"data\\MODEL\\map_object\\rock_04.x",
 		"data\\MODEL\\map_object\\rock_05.x",
 	};
+	const float DEFAULT_SPLASHTIME = 1.5f;	// 通常のしぶき時間
 }
 
 //==========================================================================
@@ -111,8 +112,10 @@ void CWaterStone::Update()
 	// スプラッシュ！
 	if (m_fIntervalSplash <= m_fSplashTimer)
 	{
+
+
 		// インターバル更新
-		m_fIntervalSplash = 0.0f;
+		m_fIntervalSplash = DEFAULT_SPLASHTIME + UtilFunc::Transformation::Random(-30, 30) * 0.01f;
 
 		// しぶきタイマー
 		m_fSplashTimer = 0.0f;
