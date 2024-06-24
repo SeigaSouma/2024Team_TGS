@@ -4,8 +4,8 @@ Format Text Ver 1.0
 Scene {
 	pos -6.6592 519.6360 39062.5000
 	lookat -386.2337 1023.4823 340.1621
-	head 24.2370
-	pich 0.0808
+	head 23.7070
+	pich -0.0592
 	bank 0.0000
 	ortho 0
 	zoom2 0.1920
@@ -18,14 +18,14 @@ Scene {
 	}
 }
 Material 6 {
-	"base" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\black_wood.jpg")
-	"door" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\door.png")
-	"wall_wood" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\Wood_YMD_house02.jpg")
-	"white_wall" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\whitewood.jpeg")
-	"mat1" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\black_wood.jpg")
-	"mat2" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\black_wood.jpg")
+	"modan_mat1" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\black_wood.jpg")
+	"modan_mat2" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\door.png")
+	"modan_mat3" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\Wood_YMD_house02.jpg")
+	"modan_mat4" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\whitewood.jpeg")
+	"modan_mat5" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\black_wood.jpg")
+	"modan_mat6" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\black_wood.jpg")
 }
-Object "roof" {
+Object "modan" {
 	visible 15
 	locking 0
 	shading 1

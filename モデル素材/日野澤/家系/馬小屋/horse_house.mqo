@@ -4,8 +4,8 @@ Format Text Ver 1.0
 Scene {
 	pos -1307.3384 -962.0885 15369.7705
 	lookat -820.2231 364.1803 -13.3895
-	head 6.3364
-	pich -0.0108
+	head 6.0264
+	pich 0.2092
 	bank 0.0000
 	ortho 0
 	zoom2 0.4880
@@ -18,12 +18,12 @@ Scene {
 	}
 }
 Material 4 {
-	"mat1" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\Wood_demise.jpg")
-	"mat2" col(0.533 0.533 0.533 1.000) dif(0.800) amb(0.600) emi(0.150) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\Wood_build_00.jpg")
-	"13___Default" col(0.914 0.914 0.914 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\動物\馬\Horse_v01.jpg")
-	"mat3" col(0.490 0.275 0.200 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00)
+	"horsehouse_mat1" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\Wood_demise.jpg")
+	"horsehouse_mat2" col(0.533 0.533 0.533 1.000) dif(0.800) amb(0.600) emi(0.150) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\Wood_build_00.jpg")
+	"horsehouse_mat3" col(0.914 0.914 0.914 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\202404_TGS\data\TEXTURE\map_object\Horse_v01.jpg")
+	"horsehouse_mat4" col(0.490 0.275 0.200 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00)
 }
-Object "obj8" {
+Object "horsehouse" {
 	visible 15
 	locking 0
 	shading 1

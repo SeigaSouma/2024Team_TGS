@@ -168,7 +168,7 @@ void CObjectLine::Draw()
 	pDevice->SetFVF(FVF_VERTEX_3D);
 
 	// ポリゴンの描画
-	pDevice->DrawPrimitive(D3DPT_LINELIST, 0, 2);
+	pDevice->DrawPrimitive(D3DPT_LINELIST, 0, 1);
 
 	// ライティングを有効にする
 	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);

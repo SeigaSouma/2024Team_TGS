@@ -4,8 +4,8 @@ Format Text Ver 1.0
 Scene {
 	pos -491.2734 -862.8197 100000.0000
 	lookat 0.0000 0.0000 0.0000
-	head -1.2236
-	pich 0.2008
+	head -1.0536
+	pich 0.2608
 	bank 0.0000
 	ortho 0
 	zoom2 0.0750
@@ -18,12 +18,12 @@ Scene {
 	}
 }
 Material 4 {
-	"pillar" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\wood02.png")
-	"roof" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\kawara_shop.jpeg")
-	"wall" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\tierchair.jpg")
-	"bell" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\bell.jpg")
+	"build002_mat1" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\wood02.png")
+	"build002_mat2" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\kawara_shop.jpeg")
+	"build002_mat3" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\tierchair.jpg")
+	"build003_mat4" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\TEXTURE\map_object\bell.jpg")
 }
-Object "bell" {
+Object "build002" {
 	visible 15
 	locking 0
 	shading 1

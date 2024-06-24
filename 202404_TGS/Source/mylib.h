@@ -291,6 +291,45 @@ namespace MyLib
 		}
 
 		/**
+		@brief	ベクトルを90度回転(X軸)
+		*/
+		Vector3 rotateAroundX()
+		{
+			float angle = 90 * D3DX_PI / 180.0f;
+
+			return Vector3(
+				x,
+				y * cosf(angle) - z * sinf(angle),
+				y * sinf(angle) + z * cosf(angle));
+		}
+
+		/**
+		@brief	ベクトルを90度回転(Y軸)
+		*/
+		Vector3 rotateAroundY()
+		{
+			float angle = 90 * D3DX_PI / 180.0f;
+
+			return Vector3(
+				x * cosf(angle) + z * sinf(angle),
+				y,
+				-x * sinf(angle) + z * cosf(angle));
+		}
+
+		/**
+		@brief	ベクトルを90度回転(Z軸)
+		*/
+		Vector3 rotateAroundZ()
+		{
+			float angle = 90 * D3DX_PI / 180.0f;
+
+			return Vector3(
+				x * cosf(angle) - y * sinf(angle),
+				x * sinf(angle) + y * cosf(angle),
+				z);
+		}
+
+		/**
 		@brief	文字列変換
 		@return	(x, y, z)の形式で変換された文字列
 		*/

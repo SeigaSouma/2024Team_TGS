@@ -12,6 +12,7 @@
 #include "3D_effect.h"
 #include "camera.h"
 #include "spline.h"
+#include "convert.h"
 
 //==========================================================================
 // 定数定義
@@ -20,8 +21,11 @@ namespace
 {
 	const std::string TEXTURE = "data\\TEXTURE\\FIELD\\water-bg-pattern-04.jpg";
 	const int WIDTH_BLOCK = 2;
-	const float WIDTH = 600.0f;
-	const float INTERVAL_TEXU = 500.0f;	// U座標の間隔
+	const float WIDTH = 2000.0f;
+	const float INTERVAL_TEXU = 500.0f;		// U座標の間隔
+	const float INTERVAL_SINCURVE = 1000.0f;	// サインカーブの間隔
+	const float HEIGHT_SINCURVE = 4.0f;	// サインカーブの高さ
+	const float SCROLL_VELOCITY = 10.0f;
 }
 const float CCourse::m_fCreateDistance = 200.0f;	// 生成間隔
 
@@ -36,6 +40,8 @@ CCourse::CCourse(int nPriority, const LAYER layer) : CObject3DMesh(nPriority, la
 	m_courceLength = 0.0f;
 	m_fTexU = 0.0f;	// Uスクロール用
 	m_fTexV = 0.0f;	// Vスクロール用
+	m_fSinCurve = 0.0f;	// サインカーブの移動量
+	m_bEnableWave = true;	// 波の有効判定
 }
 
 //==========================================================================
@@ -94,6 +100,12 @@ HRESULT CCourse::Init()
 	// 全ての要素を書き換え
 	std::fill(pVtxCol, pVtxCol + GetNumVertex(), D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.7f));
 
+
+	// 頂点座標計算
+	SetVtxPosition();
+
+	SetPosition(MyLib::Vector3(0.0f, HEIGHT_SINCURVE, 0.0f));
+
 	return S_OK;
 }
 
@@ -136,8 +148,26 @@ void CCourse::CalVtxPosition()
 	m_vecSegmentPosition.insert(m_vecSegmentPosition.begin(), begin);
 	m_vecSegmentPosition.push_back(end);
 
+
+	// 頂点情報クリア
+	m_vecVtxInfo.clear();
+
+
+
+	// セグメント分割計算
+	std::vector<MyLib::Vector3> vecpos = CalSegmentDivision(m_vecSegmentPosition);
+
+	// posの要素渡し
+	std::transform(vecpos.begin(), vecpos.end(), std::back_inserter(m_vecVtxInfo), MyConvert::Vector3ToVtxInfo);
+}
+
+//==========================================================================
+// セグメント分割計算
+//==========================================================================
+std::vector<MyLib::Vector3> CCourse::CalSegmentDivision(const std::vector<MyLib::Vector3>& segment)
+{
 	// セグメントの長さを計算
-	int segmentSize = m_vecSegmentPosition.size();
+	int segmentSize = segment.size();
 	std::vector<float> vecLength(segmentSize);
 
 	for (int i = 0; i < segmentSize; ++i)
@@ -152,15 +182,13 @@ void CCourse::CalVtxPosition()
 		}
 
 		// 点同士の距離
-		vecLength[i] = m_vecSegmentPosition[i].Distance(m_vecSegmentPosition[next]);
+		vecLength[i] = segment[i].Distance(segment[next]);
 	}
 
-
-	// 頂点情報クリア
-	m_vecVtxInfo.clear();
-
 	// 各頂点格納
-	m_courceLength = 0.0f;
+	float courceLength = 0.0f;
+	std::vector<MyLib::Vector3> vecpos;
+
 	for (int i = 0; i < segmentSize; i++)
 	{
 		float distance = 0.0f;
@@ -171,18 +199,20 @@ void CCourse::CalVtxPosition()
 
 			if (distance >= vecLength[i])
 			{
-				m_courceLength += m_fCreateDistance - (distance - vecLength[i]);
+				courceLength += m_fCreateDistance - (distance - vecLength[i]);
 
 				distance = vecLength[i];
 
-				m_vecVtxInfo.push_back(VtxInfo(MySpline::GetSplinePosition_NonLoop(m_vecSegmentPosition, m_courceLength, 20.0f), 0.0f));
+				vecpos.push_back(MySpline::GetSplinePosition_NonLoop(segment, courceLength, 20.0f));
 				break;
 			}
 
-			m_courceLength += m_fCreateDistance;
-			m_vecVtxInfo.push_back(VtxInfo(MySpline::GetSplinePosition_NonLoop(m_vecSegmentPosition, m_courceLength), 0.0f));
+			courceLength += m_fCreateDistance;
+			vecpos.push_back(MySpline::GetSplinePosition_NonLoop(segment, courceLength));
 		}
 	}
+
+	return vecpos;
 }
 
 //==========================================================================
@@ -233,6 +263,7 @@ void CCourse::Reset()
 	{
 		m_pCollisionLineBox.push_back(CCollisionLine_Box::Create(aabb, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f)));
 	}
+
 }
 
 //==========================================================================
@@ -255,6 +286,7 @@ void CCourse::ReCreateVtx()
 	// 種類設定
 	SetType(CObject::TYPE::TYPE_OBJECT3D);
 
+	// 最初と最後を消す
 	m_vecSegmentPosition.erase(m_vecSegmentPosition.begin());
 	m_vecSegmentPosition.pop_back();
 
@@ -289,6 +321,243 @@ void CCourse::ReCreateVtx()
 }
 
 //==========================================================================
+// 両方の頂点座標計算
+//==========================================================================
+void CCourse::CalBothVtxPosition()
+{
+#if 0
+	// 計算用変数
+	MyLib::Vector3 offset;
+	MyLib::Matrix mtxParent, mtxTrans, mtxRotate;
+	MyLib::Matrix mtxLeft, mtxRight;
+
+
+	int segmentSize = static_cast<int>(m_vecSegmentPosition.size());
+
+	std::vector<MyLib::Vector3> vecLeft, vecRight;
+	MyLib::Vector3 rot;
+
+	// 左右のセグメント計算
+	for (int y = 0; y < segmentSize; y++)
+	{
+		// インデックス計算
+		int idx = (WIDTH_BLOCK * y);
+		int nextidx = (WIDTH_BLOCK * y) + 1;
+
+		// 各種マトリックス初期化
+		mtxParent.Identity();
+		mtxLeft.Identity();
+		mtxRight.Identity();
+
+		// 向き反映
+		int next = (y + 1) % segmentSize;
+
+		bool bEnd = false;
+		if (next == 0)
+		{
+			next = y - 1;
+			bEnd = true;
+		}
+
+		// 次のセグメントとの向き取得
+		rot.y = m_vecSegmentPosition[next].AngleXZ(m_vecSegmentPosition[y]);
+		UtilFunc::Transformation::RotNormalize(rot.y);
+
+		if (bEnd)
+		{// 終端のみ
+			rot.y *= -1;
+		}
+
+		// 回転反映
+		mtxRotate.RotationYawPitchRoll(rot.y, rot.x, rot.z);
+		mtxParent.Multiply(mtxParent, mtxRotate);
+
+		// 位置反映
+		mtxTrans.Translation(m_vecSegmentPosition[y]);
+		mtxParent.Multiply(mtxParent, mtxTrans);
+
+
+
+
+		// オフセット反映
+		offset = MyLib::Vector3(WIDTH, 0.0f, 0.0f);
+		mtxLeft.Translation(offset);
+
+		offset = MyLib::Vector3(-WIDTH, 0.0f, 0.0f);
+		mtxRight.Translation(offset);
+
+		mtxLeft.Multiply(mtxLeft, mtxParent);
+		mtxRight.Multiply(mtxRight, mtxParent);
+
+		// 頂点座標代入
+		vecLeft.push_back(mtxLeft.GetWorldPosition());
+		vecRight.push_back(mtxRight.GetWorldPosition());
+
+		CEffect3D::Create(
+			vecLeft.back() + GetPosition(),
+			MyLib::Vector3(0.0f, 0.0f, 0.0f),
+			D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f),
+			20.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+
+		CEffect3D::Create(
+			vecRight.back() + GetPosition(),
+			MyLib::Vector3(0.0f, 0.0f, 0.0f),
+			D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f),
+			20.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+
+	}
+
+
+	// 頂点座標
+	MyLib::Vector3* pVtxPos = GetVtxPos();
+	int idx = 0;
+
+	// セグメント分割計算
+	std::vector<MyLib::Vector3> vecpos;
+
+	// 左
+	vecpos.clear();
+	vecpos = CalSegmentDivision(vecLeft);
+	idx = 0;
+	for (int i = 0; i < static_cast<int>(vecpos.size()) - 1; i++)
+	{
+		// 頂点座標代入
+		pVtxPos[idx] = vecpos[i];
+
+		idx += WIDTH_BLOCK;
+	}
+
+	// 右
+	vecpos.clear();
+	vecpos = CalSegmentDivision(vecRight);
+	idx = 1;
+	for (int i = 0; i < static_cast<int>(vecpos.size()); i++)
+	{
+		// 頂点座標代入
+		pVtxPos[idx] = vecpos[i];
+
+		idx += WIDTH_BLOCK;
+	}
+#else
+
+	// 計算用変数
+	MyLib::Vector3 offset;
+	MyLib::Matrix mtxParent, mtxTrans, mtxRotate;
+	MyLib::Matrix mtxLeft, mtxRight;
+
+
+	int segmentSize = static_cast<int>(m_vecSegmentPosition.size());
+
+	std::vector<MyLib::Vector3> vecLeft, vecRight;
+	MyLib::Vector3 rot;
+
+	// 左右のセグメント計算
+	for (int y = 0; y < segmentSize; y++)
+	{
+		// インデックス計算
+		int idx = (WIDTH_BLOCK * y);
+		int nextidx = (WIDTH_BLOCK * y) + 1;
+
+		// 各種マトリックス初期化
+		mtxParent.Identity();
+		mtxLeft.Identity();
+		mtxRight.Identity();
+
+		// 向き反映
+		int next = (y + 1) % segmentSize;
+
+		bool bEnd = false;
+		if (next == 0)
+		{
+			next = y - 1;
+			bEnd = true;
+		}
+
+		// 次のセグメントとの向き取得
+		rot.y = m_vecSegmentPosition[next].AngleXZ(m_vecSegmentPosition[y]);
+		UtilFunc::Transformation::RotNormalize(rot.y);
+
+		if (bEnd)
+		{// 終端のみ
+			rot.y *= -1;
+		}
+
+		// 回転反映
+		mtxRotate.RotationYawPitchRoll(rot.y, rot.x, rot.z);
+		mtxParent.Multiply(mtxParent, mtxRotate);
+
+		// 位置反映
+		mtxTrans.Translation(m_vecSegmentPosition[y]);
+		mtxParent.Multiply(mtxParent, mtxTrans);
+
+
+
+
+		// オフセット反映
+		offset = MyLib::Vector3(WIDTH, 0.0f, 0.0f);
+		mtxLeft.Translation(offset);
+
+		offset = MyLib::Vector3(-WIDTH, 0.0f, 0.0f);
+		mtxRight.Translation(offset);
+
+		mtxLeft.Multiply(mtxLeft, mtxParent);
+		mtxRight.Multiply(mtxRight, mtxParent);
+
+		// 頂点座標代入
+		vecLeft.push_back(mtxLeft.GetWorldPosition());
+		vecRight.push_back(mtxRight.GetWorldPosition());
+
+		CEffect3D::Create(
+			vecLeft.back() + GetPosition(),
+			MyLib::Vector3(0.0f, 0.0f, 0.0f),
+			D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f),
+			20.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+
+		CEffect3D::Create(
+			vecRight.back() + GetPosition(),
+			MyLib::Vector3(0.0f, 0.0f, 0.0f),
+			D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f),
+			20.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+
+	}
+
+
+	// 頂点座標
+	MyLib::Vector3* pVtxPos = GetVtxPos();
+	int idx = 0;
+
+	// セグメント分割計算
+	std::vector<MyLib::Vector3> vecpos;
+
+	// 左
+	vecpos.clear();
+	vecpos = CalSegmentDivision(vecLeft);
+	idx = 0;
+	for (int i = 0; i < GetNumVertex() / 2; i++)
+	{
+		// 頂点座標代入
+		pVtxPos[idx] = vecpos[i];
+
+		idx += WIDTH_BLOCK;
+	}
+
+	// 右
+	vecpos.clear();
+	vecpos = CalSegmentDivision(vecRight);
+	idx = 1;
+	for (int i = 0; i < GetNumVertex() / 2; i++)
+	{
+		// 頂点座標代入
+		pVtxPos[idx] = vecpos[i];
+
+		idx += WIDTH_BLOCK;
+	}
+
+#endif
+
+}
+
+//==========================================================================
 // 更新処理
 //==========================================================================
 void CCourse::Update()
@@ -313,12 +582,32 @@ void CCourse::Update()
 		m_fTexV = 1.0f;
 	}
 
-#if 1
-	// 頂点座標計算
-	SetVtxPosition();
+#if _DEBUG
 
-	SetVtx();
+	static float velocity = SCROLL_VELOCITY;
+	if (ImGui::TreeNode("Course"))
+	{
+		ImGui::Checkbox("Enable Wave!!!", &m_bEnableWave);
+		ImGui::DragFloat("velocity", &velocity, 0.1f, 0.0f, 0.0f, "%.2f");
+		/*ImGui::DragFloat("intervalWave", &INTERVAL_SINCURVE, 10.0f, 0.0f, 0.0f, "%.2f");
+		ImGui::DragFloat("waveHeight", &HEIGHT_SINCURVE, 0.1f, 0.0f, 0.0f, "%.2f");*/
+		SetPosition(MyLib::Vector3(0.0f, HEIGHT_SINCURVE, 0.0f));
+
+		ImGui::TreePop();
+	}
+
+	// サインカーブの移動量
+	m_fSinCurve -= velocity;
+#else
+
+	// サインカーブの移動量
+	m_fSinCurve -= SCROLL_VELOCITY;
+
 #endif
+
+
+	// 頂点座標
+	SetVtx();
 }
 
 //==========================================================================
@@ -326,12 +615,15 @@ void CCourse::Update()
 //==========================================================================
 void CCourse::SetVtxPosition()
 {
+#if 0
 	// 計算用変数
 	MyLib::Vector3 offset;
 	MyLib::Matrix mtxParent, mtxTrans, mtxRotate;
 	MyLib::Matrix mtxLeft, mtxRight;
 
 	MyLib::Vector3* pVtxPos = GetVtxPos();
+
+	MyLib::Vector3 beforeVec = MyLib::Vector3(0.0f, 0.0f, 1.0f);
 
 	for (int y = 0; y < static_cast<int>(m_vecVtxInfo.size()); y++)
 	{
@@ -368,8 +660,14 @@ void CCourse::SetVtxPosition()
 		mtxTrans.Translation(m_vecVtxInfo[y].pos);
 		mtxParent.Multiply(mtxParent, mtxTrans);
 
-
-		
+		if (y == 1)
+		{// 初回スキップ
+			CEffect3D::Create(
+				m_vecVtxInfo[y].pos + GetPosition(),
+				0.0f,
+				D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f),
+				20.0f, 4, CEffect3D::MOVEEFFECT::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+		}
 
 		// オフセット反映
 		offset = MyLib::Vector3(WIDTH, 0.0f, 0.0f);
@@ -388,27 +686,58 @@ void CCourse::SetVtxPosition()
 		pVtxPos[idx] = mtxLeft.GetWorldPosition();
 		pVtxPos[nextidx] = mtxRight.GetWorldPosition();
 
-#if 0
-		CEffect3D::Create(
-			m_vecVtxPosition[y] + GetPosition(),
-			MyLib::Vector3(0.0f, 0.0f, 0.0f),
-			D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f),
-			20.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
 
-		CEffect3D::Create(
-			pVtxPos[idx] + GetPosition(),
-			MyLib::Vector3(0.0f, 0.0f, 0.0f),
-			D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f),
-			20.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+		if (y > 0)
+		{// 初回スキップ
 
-		CEffect3D::Create(
-			pVtxPos[nextidx] + GetPosition(),
-			MyLib::Vector3(0.0f, 0.0f, 0.0f),
-			D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f),
-			20.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
-#endif
+			int up = idx - WIDTH_BLOCK, down = nextidx - WIDTH_BLOCK;
+			int before = y - 1;
+
+
+
+			// ベクトルABを90度反時計回りに回転
+			MyLib::Vector3 rotatedB = (m_vecVtxInfo[before].pos - m_vecVtxInfo[y].pos).rotateAroundY();
+
+			// 新しいベクトルの終点を計算
+			MyLib::Vector3 newB = m_vecVtxInfo[y].pos + rotatedB;
+
+
+			MyLib::Vector3 AB = newB - m_vecVtxInfo[y].pos;
+			MyLib::Vector3 AP = pVtxPos[idx] - m_vecVtxInfo[y].pos;
+
+			// 今回の点が前回のよりも左にあったら同地点に置く
+			// 上
+			float crossProductY = AB.x * AP.z - AB.z * AP.x;
+			if (crossProductY > 0)
+			{
+				pVtxPos[idx] = pVtxPos[up];
+
+				CEffect3D::Create(
+					pVtxPos[idx] + GetPosition(),
+					0.0f,
+					D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f),
+					80.0f, 2, CEffect3D::MOVEEFFECT::MOVEEFFECT_GENSUI, CEffect3D::TYPE_NORMAL);
+			}
+
+			AP = pVtxPos[nextidx] - m_vecVtxInfo[y].pos;
+
+			// 下
+			crossProductY = AB.x * AP.z - AB.z * AP.x;
+			if (crossProductY > 0)
+			{
+				pVtxPos[nextidx] = pVtxPos[down];
+			}
+
+		}
+
+
 
 	}
+
+#else
+	// 両方の頂点座標計算
+	CalBothVtxPosition();
+#endif
 
 	int i = 0;
 	MyLib::Vector3 fieldpos = GetPosition();
@@ -465,6 +794,7 @@ void CCourse::SetVtx()
 	float intervalV = UtilFunc::Transformation::AdjustSizeByWidth(CTexture::GetInstance()->GetImageSize(texID), INTERVAL_TEXU).y;
 	int idx = 0, nextIdx = 0;
 
+	float sincurveDistance = 0.0f;
 	for (int nCntHeight = 0; nCntHeight < nHeight + 1; nCntHeight++)
 	{// 縦の分割分繰り返す
 
@@ -476,6 +806,21 @@ void CCourse::SetVtx()
 
 			// 今回の頂点インデックス
 			idx = nCntWidth + (nCntHeight * (nWidth + 1));
+
+			// 波
+			if (m_bEnableWave)
+			{
+				if (nCntHeight != 0)
+				{
+					// 前回との距離
+					sincurveDistance += m_vecVtxInfo[nCntHeight].pos.DistanceXZ(m_vecVtxInfo[nCntHeight - 1].pos);
+					pVtxPos[idx].y = sinf(D3DX_PI * ((sincurveDistance + m_fSinCurve) / INTERVAL_SINCURVE)) * HEIGHT_SINCURVE;
+				}
+			}
+			else
+			{
+				pVtxPos[idx].y = 0.0f;
+			}
 
 			// 隣のインデックス
 			nextIdx = idx + 2;
@@ -507,74 +852,6 @@ void CCourse::SetVtx()
 			// 縦の割合分進める
 			posV += pVtxPos[idx].DistanceXZ(pVtxPos[idx + 1]) / intervalV;
 			
-#if 0
-			// 今回の頂点
-			int nNowPoint = (nCntWidth + 1) + (nCntHeight * (WIDTH_BLOCK));
-			int nVerTexW = (WIDTH_BLOCK) + 1;
-
-			int nLeft = nCntWidth + (nCntHeight * (WIDTH_BLOCK));
-			int nRight = nCntWidth + (nCntHeight * (WIDTH_BLOCK)) + nVerTexW;
-
-			if (nNowPoint >= vtxNum)
-			{
-				continue;
-			}
-
-			if (nRight >= vtxNum)
-			{// 頂点数超えたら
-
-				// 頂点座標の設定
-				VtxRight = MyLib::Vector3(
-					(fWidthLen * nCntWidth) - ((fWidthLen * WIDTH_BLOCK) * 0.5f),
-					0.0f,
-					-((fHeightLen * nCntHeight) - ((fHeightLen * heightBlock) * 0.5f)));
-			}
-			else
-			{
-				VtxRight = pVtxPos[nRight];
-			}
-
-			if (nLeft >= vtxNum)
-			{// 頂点数超えたら
-
-				// 頂点座標の設定
-				VtxLeft = MyLib::Vector3(
-					(fWidthLen * nCntWidth) - ((fWidthLen * WIDTH_BLOCK) * 0.5f),
-					0.0f,
-					-((fHeightLen * nCntHeight) - ((fHeightLen * heightBlock) * 0.5f)));
-			}
-			else
-			{
-				VtxLeft = pVtxPos[nLeft];
-			}
-
-			if (nNowPoint >= vtxNum)
-			{// 頂点数超えたら
-
-				// 頂点座標の設定
-				VtxNow = MyLib::Vector3(
-					(fWidthLen * nCntWidth) - ((fWidthLen * WIDTH_BLOCK) * 0.5f),
-					0.0f,
-					-((fHeightLen * nCntHeight) - ((fHeightLen * heightBlock) * 0.5f)));
-			}
-			else
-			{
-				VtxNow = pVtxPos[nNowPoint];
-			}
-
-			// ベクトルを計算
-			vec1 = VtxRight - VtxNow;
-			vec2 = VtxLeft - VtxNow;
-
-			// 外積を求める
-			D3DXVec3Cross(&nor, &vec1, &vec2);
-
-			// 外積の正規化をして法線にする
-			D3DXVec3Normalize(&nor, &nor);
-	
-			// 法線
-			pVtxNor[nNowPoint] = nor;
-#endif
 			pVtxNor[idx] = nor;
 		}
 	}

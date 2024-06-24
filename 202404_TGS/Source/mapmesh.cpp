@@ -17,6 +17,7 @@
 // åpè≥êÊ
 #include "stonewall.h"
 #include "townfield_sinuous.h"
+#include "townfield_sinuous_front.h"
 
 //==========================================================================
 // íËêîíËã`
@@ -64,6 +65,10 @@ CMapMesh* CMapMesh::Create(MeshType type)
 
 	case CMapMesh::TYPE_TOWNFIELD_SINUOUS:
 		pObjMeshField = DEBUG_NEW CTownField_Sinuous;
+		break;
+
+	case CMapMesh::TYPE_TOWNFIELD_SINUOUS_FRONT:
+		pObjMeshField = DEBUG_NEW CTownField_Sinuous_Front;
 		break;
 
 	default:

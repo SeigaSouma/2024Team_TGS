@@ -536,6 +536,15 @@
     <ClCompile Include="Source\townfield_sinuous.cpp">
       <Filter>map</Filter>
     </ClCompile>
+    <ClCompile Include="Source\convert.cpp">
+      <Filter>system</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\stonewall_front.cpp">
+      <Filter>map</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\townfield_sinuous_front.cpp">
+      <Filter>map</Filter>
+    </ClCompile>
     <ClCompile Include="Source\judgeobj.cpp">
       <Filter>judgezone</Filter>
     </ClCompile>
@@ -986,6 +995,15 @@
       <Filter>map</Filter>
     </ClInclude>
     <ClInclude Include="Source\townfield_sinuous.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\convert.h">
+      <Filter>system</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\stonewall_front.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\townfield_sinuous_front.h">
       <Filter>map</Filter>
     </ClInclude>
     <ClInclude Include="Source\judgestatefunc.h">

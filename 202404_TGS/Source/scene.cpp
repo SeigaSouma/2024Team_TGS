@@ -129,6 +129,7 @@ HRESULT CScene::Init()
 	//**********************************
 	// É}ÉbÉvÇÃê∂ê¨
 	//**********************************
+	CEdit_Map_Release::Create(MAP_TEXT, CManager::BuildMode::MODE_RELEASE);
 #ifndef _DEBUG
 	CEdit_Map_Release::Create(MAP_TEXT, CManager::BuildMode::MODE_RELEASE);
 #endif

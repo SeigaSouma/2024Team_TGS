@@ -657,7 +657,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "data\\TEXTURE\\map_object\\Matel_barrel.jpg";
+    "data\\TEXTURE\\map_object\\Metal_barrel.jpg";
    }
   }
  }
