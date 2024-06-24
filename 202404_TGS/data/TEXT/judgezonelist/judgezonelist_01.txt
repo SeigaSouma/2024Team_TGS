@@ -12,5 +12,7 @@ SCRIPT			# この行は絶対消さないこと！
 #------------------------------------------------------------------
 USEZONE = data\\TEXT\\judgezone\\judgezone_01.txt
 USEZONE = data\\TEXT\\judgezone\\judgezone_02.txt
+USEZONE = data\\TEXT\\judgezone\\judgezone_03.txt
+USEZONE = data\\TEXT\\judgezone\\judgezone_04.txt
 
 END_SCRIPT		# この行は絶対消さないこと！
