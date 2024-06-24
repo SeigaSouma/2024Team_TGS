@@ -186,7 +186,7 @@ std::vector<MyLib::Vector3> CCourse::CalSegmentDivision(const std::vector<MyLib:
 	}
 
 	// Še’¸“_Ši”[
-	float courceLength = 0.0f;
+	m_courceLength = 0.0f;
 	std::vector<MyLib::Vector3> vecpos;
 
 	for (int i = 0; i < segmentSize; i++)
@@ -199,16 +199,16 @@ std::vector<MyLib::Vector3> CCourse::CalSegmentDivision(const std::vector<MyLib:
 
 			if (distance >= vecLength[i])
 			{
-				courceLength += m_fCreateDistance - (distance - vecLength[i]);
+				m_courceLength += m_fCreateDistance - (distance - vecLength[i]);
 
 				distance = vecLength[i];
 
-				vecpos.push_back(MySpline::GetSplinePosition_NonLoop(segment, courceLength, 20.0f));
+				vecpos.push_back(MySpline::GetSplinePosition_NonLoop(segment, m_courceLength, 20.0f));
 				break;
 			}
 
-			courceLength += m_fCreateDistance;
-			vecpos.push_back(MySpline::GetSplinePosition_NonLoop(segment, courceLength));
+			m_courceLength += m_fCreateDistance;
+			vecpos.push_back(MySpline::GetSplinePosition_NonLoop(segment, m_courceLength));
 		}
 	}
 
