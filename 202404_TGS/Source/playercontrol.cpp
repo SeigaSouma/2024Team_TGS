@@ -507,6 +507,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 		{
 			posBaggage.y = posBaggageOrigin.y;
 			player->Hit(1);
+			//m_bLandOld = true;
 		}
 		else if(!pBaggage->IsLand())
 		{

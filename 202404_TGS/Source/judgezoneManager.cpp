@@ -7,6 +7,7 @@
 #include "judgezoneManager.h"
 #include "judgezone.h"
 #include "judge.h"
+#include "judgeobj.h"
 #include "game.h"
 #include "course.h"
 #include "texture.h"
@@ -101,12 +102,7 @@ void CJudgeZoneManager::Check(float progress)
 			else if (progress > zone.end)
 			{//I—¹i”»’èj
 				CJudge::JUDGE judge = (*itr)->Judge();	//‚±‚±‚É”»’è‚ª“ü‚Á‚Ä‚é
-				CObject2D* pObj = CObject2D::Create();
-				pObj->SetSize(D3DXVECTOR2(128.0f, 36.0f));
-				pObj->SetPosition(MyLib::Vector3(400.0f, 100.0f, 0.0f));
-				int nTexIdx = CTexture::GetInstance()->Regist(TEXTURE[judge]);
-				pObj->BindTexture(nTexIdx);
-				pObj->SetVtx();
+				CJudgeObj::Create(MyLib::Vector3(400.0f, 100.0f, 0.0f), judge);
 
 				(*itr)->Uninit();
 			}
@@ -146,10 +142,22 @@ void CJudgeZoneManager::Check(float progress)
 //==========================================================================
 void CJudgeZoneManager::Release()
 {
-	std::list<CJudgeZone*>& list = m_zoneList.GetList();
-	std::list<CJudgeZone*>::iterator res = std::remove_if(list.begin(), list.end(), [](CJudgeZone* p) {return !p->IsEnable(); });
-
-	list.erase(res, list.end());
+	std::list<CJudgeZone*> removeList;
+	std::list<CJudgeZone*>::iterator itr;
+	itr = m_zoneList.GetEnd();
+	CJudgeZone* pObj = nullptr;
+	while (m_zoneList.ListLoop(itr))
+	{
+		if (!(*itr)->IsEnable())
+		{
+			removeList.push_back((*itr));
+		}
+	}
+	
+	for (itr = removeList.begin(); itr != removeList.end(); itr++)
+	{
+		m_zoneList.Delete((*itr));
+	}
 }
 
 //==========================================================================

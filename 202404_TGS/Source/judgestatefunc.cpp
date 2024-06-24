@@ -1,0 +1,289 @@
+//=============================================================================
+// 
+//  判定状態関数 [judgestatefunc.cpp]
+//  Author : 石原颯馬
+// 
+//=============================================================================
+#include "judgestatefunc.h"
+#include "judgeobj.h"
+#include "manager.h"
+#include "game.h"
+
+//==========================================================================
+// 定数定義
+//==========================================================================
+namespace
+{
+	const float TIME_APPEAR = 1.0f;		// 出現時間
+	const float TIME_WAIT = 0.4f;		// 待ち時間
+	const float TIME_FADEOUT = 0.6f;	// フェードアウト時間
+	const MyLib::Vector3 DESTROTATION_GETTOGETHER = MyLib::Vector3(0.0f, 0.0f, D3DX_PI * 0.75f);
+	const MyLib::Vector3 DESTPOSITION_GETTOGETHER = MyLib::Vector3(130.0f, 230.0f, 0.0f);
+	const MyLib::Vector3 DESTPOSITION_STINGS = MyLib::Vector3(0.0f, 360.0f, 0.0f);
+}
+//==========================================================================
+// 関数ポインタ
+//==========================================================================
+CJudgeStateFunc::STATE_FUNC CJudgeStateFunc::m_StateFuncList[] =
+{
+	&CJudgeStateFunc::StateAppear,
+	&CJudgeStateFunc::StateWait,
+	&CJudgeStateFunc::StateFadeOut,
+};
+
+//**************************************************************************
+// 基底状態関数
+//**************************************************************************
+//==========================================================================
+// コンストラクタ
+//==========================================================================
+CJudgeStateFunc::CJudgeStateFunc(CJudgeObj* pObj)
+{
+	m_pObj = pObj;
+	m_state = CJudgeStateFunc::STATE_APPEAR;
+	m_fStateTime = 0.0f;
+}
+
+//**************************************************************************
+// AAAランク別状態関数
+//**************************************************************************
+//==========================================================================
+// 出現状態
+//==========================================================================
+void CJudgeStateFunc_AAA::StateAppear()
+{
+	float stateTime = GetStateTime();
+	if (stateTime >= TIME_APPEAR)
+	{
+		SetStateTime(0.0f);
+		SetState(STATE_WAIT);
+		return;
+	}
+
+	// サイズ設定
+	CJudgeObj* pObj = GetObj();
+	float ratio = stateTime / TIME_APPEAR;
+	D3DXVECTOR2 size = pObj->GetSize();
+	D3DXVECTOR2 sizeOrigin = pObj->GetSizeOrigin();
+	size.x = UtilFunc::Correction::EasingEaseIn(0.0f, sizeOrigin.x * 1.6f, ratio);
+	size.y = UtilFunc::Correction::EasingEaseIn(0.0f, sizeOrigin.y * 1.6f, ratio);
+	pObj->SetSize(size);
+}
+
+//==========================================================================
+// 待機状態
+//==========================================================================
+void CJudgeStateFunc_AAA::StateWait()
+{
+	float stateTime = GetStateTime();
+	if (stateTime >= TIME_WAIT)
+	{
+		SetStateTime(0.0f);
+		SetState(STATE_FADEOUT);
+		return;
+	}
+}
+
+//==========================================================================
+// 消える状態
+//==========================================================================
+void CJudgeStateFunc_AAA::StateFadeOut()
+{
+	CJudgeObj* pObj = GetObj();
+	float stateTime = GetStateTime();
+	if (stateTime >= TIME_FADEOUT)
+	{
+		SetStateTime(0.0f);
+		pObj->Uninit();
+
+		// 戦闘開始に遷移
+		CGame::GetInstance()->GetGameManager()->SetType(CGameManager::SceneType::SCENE_MAIN);
+		return;
+	}
+
+	// 不透明度設定
+	pObj->SetAlpha(1.0f - stateTime / TIME_FADEOUT);
+}
+
+//**************************************************************************
+// BBBランク別状態関数
+//**************************************************************************
+//==========================================================================
+// 出現状態
+//==========================================================================
+void CJudgeStateFunc_BBB::StateAppear()
+{
+	float stateTime = GetStateTime();
+	if (stateTime >= TIME_APPEAR)
+	{
+		SetStateTime(0.0f);
+		SetState(STATE_WAIT);
+		return;
+	}
+
+	// サイズ設定
+	CJudgeObj* pObj = GetObj();
+	float ratio = stateTime / TIME_APPEAR;
+	D3DXVECTOR2 size = pObj->GetSize();
+	D3DXVECTOR2 sizeOrigin = pObj->GetSizeOrigin();
+	size.x = UtilFunc::Correction::EasingEaseIn(0.0f, sizeOrigin.x * 1.6f, ratio);
+	size.y = UtilFunc::Correction::EasingEaseIn(0.0f, sizeOrigin.y * 1.6f, ratio);
+	pObj->SetSize(size);
+}
+
+//==========================================================================
+// 待機状態
+//==========================================================================
+void CJudgeStateFunc_BBB::StateWait()
+{
+	float stateTime = GetStateTime();
+	if (stateTime >= TIME_WAIT)
+	{
+		SetStateTime(0.0f);
+		SetState(STATE_FADEOUT);
+		return;
+	}
+}
+
+//==========================================================================
+// 消える状態
+//==========================================================================
+void CJudgeStateFunc_BBB::StateFadeOut()
+{
+	CJudgeObj* pObj = GetObj();
+	float stateTime = GetStateTime();
+	if (stateTime >= TIME_FADEOUT)
+	{
+		SetStateTime(0.0f);
+		pObj->Uninit();
+
+		// 戦闘開始に遷移
+		CGame::GetInstance()->GetGameManager()->SetType(CGameManager::SceneType::SCENE_MAIN);
+		return;
+	}
+
+	// 不透明度設定
+	pObj->SetAlpha(1.0f - stateTime / TIME_FADEOUT);
+}
+
+//**************************************************************************
+// CCCランク別状態関数
+//**************************************************************************
+//==========================================================================
+// 出現状態
+//==========================================================================
+void CJudgeStateFunc_CCC::StateAppear()
+{
+	float stateTime = GetStateTime();
+	if (stateTime >= TIME_APPEAR)
+	{
+		SetStateTime(0.0f);
+		SetState(STATE_WAIT);
+		return;
+	}
+
+	// サイズ設定
+	CJudgeObj* pObj = GetObj();
+	float ratio = stateTime / TIME_APPEAR;
+	D3DXVECTOR2 size = pObj->GetSize();
+	D3DXVECTOR2 sizeOrigin = pObj->GetSizeOrigin();
+	size.x = UtilFunc::Correction::EasingEaseIn(0.0f, sizeOrigin.x * 1.6f, ratio);
+	size.y = UtilFunc::Correction::EasingEaseIn(0.0f, sizeOrigin.y * 1.6f, ratio);
+	pObj->SetSize(size);
+}
+
+//==========================================================================
+// 待機状態
+//==========================================================================
+void CJudgeStateFunc_CCC::StateWait()
+{
+	float stateTime = GetStateTime();
+	if (stateTime >= TIME_WAIT)
+	{
+		SetStateTime(0.0f);
+		SetState(STATE_FADEOUT);
+		return;
+	}
+}
+
+//==========================================================================
+// 消える状態
+//==========================================================================
+void CJudgeStateFunc_CCC::StateFadeOut()
+{
+	CJudgeObj* pObj = GetObj();
+	float stateTime = GetStateTime();
+	if (stateTime >= TIME_FADEOUT)
+	{
+		SetStateTime(0.0f);
+		pObj->Uninit();
+
+		// 戦闘開始に遷移
+		CGame::GetInstance()->GetGameManager()->SetType(CGameManager::SceneType::SCENE_MAIN);
+		return;
+	}
+
+	// 不透明度設定
+	pObj->SetAlpha(1.0f - stateTime / TIME_FADEOUT);
+}
+
+//**************************************************************************
+// DDDランク別状態関数
+//**************************************************************************
+//==========================================================================
+// 出現状態
+//==========================================================================
+void CJudgeStateFunc_DDD::StateAppear()
+{
+	float stateTime = GetStateTime();
+	if (stateTime >= TIME_APPEAR)
+	{
+		SetStateTime(0.0f);
+		SetState(STATE_WAIT);
+		return;
+	}
+
+	// サイズ設定
+	CJudgeObj* pObj = GetObj();
+	float ratio = stateTime / TIME_APPEAR;
+	D3DXVECTOR2 size = pObj->GetSize();
+	D3DXVECTOR2 sizeOrigin = pObj->GetSizeOrigin();
+	size.x = UtilFunc::Correction::EasingEaseIn(0.0f, sizeOrigin.x * 1.6f, ratio);
+	size.y = UtilFunc::Correction::EasingEaseIn(0.0f, sizeOrigin.y * 1.6f, ratio);
+	pObj->SetSize(size);
+}
+
+//==========================================================================
+// 待機状態
+//==========================================================================
+void CJudgeStateFunc_DDD::StateWait()
+{
+	float stateTime = GetStateTime();
+	if (stateTime >= TIME_WAIT)
+	{
+		SetStateTime(0.0f);
+		SetState(STATE_FADEOUT);
+		return;
+	}
+}
+
+//==========================================================================
+// 消える状態
+//==========================================================================
+void CJudgeStateFunc_DDD::StateFadeOut()
+{
+	CJudgeObj* pObj = GetObj();
+	float stateTime = GetStateTime();
+	if (stateTime >= TIME_FADEOUT)
+	{
+		SetStateTime(0.0f);
+		pObj->Uninit();
+
+		// 戦闘開始に遷移
+		CGame::GetInstance()->GetGameManager()->SetType(CGameManager::SceneType::SCENE_MAIN);
+		return;
+	}
+
+	// 不透明度設定
+	pObj->SetAlpha(1.0f - stateTime / TIME_FADEOUT);
+}
