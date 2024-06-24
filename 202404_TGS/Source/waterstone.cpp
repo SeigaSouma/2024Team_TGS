@@ -22,7 +22,7 @@ namespace
 		"data\\MODEL\\map_object\\rock_04.x",
 		"data\\MODEL\\map_object\\rock_05.x",
 	};
-	const float DEFAULT_SPLASHTIME = 0.8f;	// 通常のしぶき時間
+	float DEFAULT_SPLASHTIME = 0.14f;	// 通常のしぶき時間
 }
 
 //==========================================================================
@@ -110,6 +110,41 @@ void CWaterStone::Update()
 	// しぶきタイマー加算
 	m_fSplashTimer += CManager::GetInstance()->GetDeltaTime();
 
+
+	static int createIdx = 8;
+	static int Life = 50;
+	static int Randrange = 28;
+	static int posXZrange = 50;
+	static int XZrange = 117;
+	static int MinYRange = 37;
+	static int MaxYRange = 43;
+	static int colorRandRange = 22;
+	static float defradius = 25.2f;
+	static float gravity = 0.16f;
+	static float movefactor = 0.4f;
+
+	// カラーエディット
+	static ImVec4 myColor = ImVec4(0.658f, 0.658f, 1.0, 0.87f); // RGBA
+
+	if (ImGui::TreeNode("Stone Water"))
+	{
+		ImGui::DragInt("CreateNum", &createIdx, 1);
+		ImGui::DragFloat("Interval", &DEFAULT_SPLASHTIME, 0.01f, 0.0f, 0.0f, "%.2f");
+		ImGui::DragInt("Interval_Randrange", &Randrange, 1);
+		ImGui::DragInt("Life", &Life, 1);
+		ImGui::DragInt("pos XZrange", &posXZrange, 1);
+		ImGui::DragInt("XZrange", &XZrange, 1);
+		ImGui::DragInt("MinYRange", &MinYRange, 1);
+		ImGui::DragInt("MaxYRange", &MaxYRange, 1, MinYRange);
+		ImGui::DragInt("colorRandRange", &colorRandRange, 1);
+		ImGui::DragFloat("defradius", &defradius, 0.1f, 0.0f, 0.0f, "%.2f");
+		ImGui::DragFloat("gravity", &gravity, 0.01f, 0.0f, 0.0f, "%.2f");
+		ImGui::DragFloat("Move factor", &movefactor, 0.01f, 0.0f, 0.0f, "%.2f");
+		ImGui::ColorEdit4("Color", &myColor.x);
+
+		ImGui::TreePop();
+	}
+
 	// スプラッシュ！
 	if (m_fIntervalSplash <= m_fSplashTimer)
 	{
@@ -118,36 +153,37 @@ void CWaterStone::Update()
 		MyLib::Vector3 posOrigin = GetPosition();
 		MyLib::Vector3 pos;
 
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < createIdx; i++)
 		{
-			float randmoveX = UtilFunc::Transformation::Random(-150, 150) * 0.01f;
-			float randmoveY = UtilFunc::Transformation::Random(10, 40) * 0.1f;
+			float randmoveX = UtilFunc::Transformation::Random(-XZrange, XZrange) * 0.01f;
+			float randmoveY = UtilFunc::Transformation::Random(MinYRange, MaxYRange) * 0.1f;
 			float randRadius = UtilFunc::Transformation::Random(-30, 30) * 0.1f;
 
 			move.x = randmoveX;
 			move.z = randmoveX;
 			move.y = randmoveY;
 
-			float radius = 40.0f + randRadius;
+			float radius = defradius + randRadius;
 
-			int xz = UtilFunc::Transformation::Random(-50, 50);
+			int xz = UtilFunc::Transformation::Random(-posXZrange, posXZrange);
 			pos = posOrigin + MyLib::Vector3(xz, 0.0f, xz);
 
 
-			float rand = UtilFunc::Transformation::Random(-50, 50) * 0.01f;
+			float colorrand = UtilFunc::Transformation::Random(-colorRandRange, colorRandRange) * 0.01f;
 			CEffect3D* pEffect = CEffect3D::Create(
 				pos,
 				move,
-				D3DXCOLOR(0.5f + rand, 0.5f + rand, 1.0f, 1.0f),
-				radius, 50,
+				D3DXCOLOR(myColor.x + colorrand, myColor.y + colorrand, myColor.z, myColor.w),
+				radius,
+				Life,
 				CEffect3D::MOVEEFFECT::MOVEEFFECT_ADD,
 				CEffect3D::TYPE::TYPE_SMOKE);
 			pEffect->SetEnableGravity();
-			pEffect->SetGravityValue(0.1f);
+			pEffect->SetGravityValue(gravity);
 		}
 
 		// インターバル更新
-		m_fIntervalSplash = DEFAULT_SPLASHTIME + UtilFunc::Transformation::Random(-60, 60) * 0.01f;
+		m_fIntervalSplash = DEFAULT_SPLASHTIME + UtilFunc::Transformation::Random(-Randrange, Randrange) * 0.01f;
 
 		// しぶきタイマー
 		m_fSplashTimer = 0.0f;
