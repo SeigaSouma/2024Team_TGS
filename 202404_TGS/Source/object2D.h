@@ -19,7 +19,7 @@ class CObject2D : public CObject
 public:
 
 	CObject2D(int nPriority = mylib_const::PRIORITY_DEF2D, const LAYER layer = LAYER::LAYER_2D);
-	~CObject2D();
+	virtual ~CObject2D();
 
 	// オーバーライドされた関数
 	HRESULT Init();

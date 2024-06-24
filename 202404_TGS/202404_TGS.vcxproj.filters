@@ -551,6 +551,12 @@
     <ClCompile Include="Source\townfield_sinuous_front.cpp">
       <Filter>map\mesh</Filter>
     </ClCompile>
+    <ClCompile Include="Source\judgeobj.cpp">
+      <Filter>judgezone</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\judgestatefunc.cpp">
+      <Filter>judgezone</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ballast.h">
@@ -1008,6 +1014,12 @@
     </ClInclude>
     <ClInclude Include="Source\townfield_sinuous_front.h">
       <Filter>map\mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\judgestatefunc.h">
+      <Filter>judgezone</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\judgeobj.h">
+      <Filter>judgezone</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
