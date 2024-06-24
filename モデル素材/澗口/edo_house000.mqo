@@ -4,8 +4,8 @@ Format Text Ver 1.0
 Scene {
 	pos 2.6324 -106.6118 37051.6484
 	lookat 0.0000 0.0000 0.0000
-	head -25.4638
-	pich 0.3192
+	head -25.3838
+	pich 0.0592
 	bank 0.0000
 	ortho 0
 	zoom2 0.2024
@@ -18,10 +18,10 @@ Scene {
 	}
 }
 Material 4 {
-	"mat1" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Downloads\kayabuki_yane.jpg")
-	"mat2" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\Git\2024Team_TGS\モデル素材\澗口\TEXTURE\edo_nagaya001.png") proj_type(1) proj_pos(-54.100 1449.782 0.000) proj_scale(2682.675 1655.765 183.645) proj_angle(0.000 0.000 0.000)
-	"mat3" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\Git\2024Team_TGS\モデル素材\澗口\TEXTURE\edo_nagaya000.png") proj_type(1) proj_pos(0.000 1337.661 -6.738) proj_scale(1657.646 1448.802 845.424) proj_angle(90.500 -0.000 0.000)
-	"mat4" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\Git\2024Team_TGS\モデル素材\澗口\TEXTURE\edo_nagaya000.png") proj_type(1) proj_pos(0.000 1209.964 0.000) proj_scale(3450.678 1285.358 724.314) proj_angle(0.000 0.000 0.000)
+	"mat1" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\202404_TGS\data\TEXTURE\map_object\kayabuki_yane.jpg")
+	"mat2" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\202404_TGS\data\TEXTURE\map_object\edo_nagaya001.png") proj_type(1) proj_pos(-54.100 1449.782 0.000) proj_scale(2682.675 1655.765 183.645) proj_angle(0.000 0.000 0.000)
+	"mat3" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\202404_TGS\data\TEXTURE\map_object\edo_nagaya000.png") proj_type(1) proj_pos(0.000 1337.661 -6.738) proj_scale(1657.646 1448.802 845.424) proj_angle(90.500 -0.000 0.000)
+	"mat4" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\202404_TGS\data\TEXTURE\map_object\edo_nagaya000.png") proj_type(1) proj_pos(0.000 1209.964 0.000) proj_scale(3450.678 1285.358 724.314) proj_angle(0.000 0.000 0.000)
 }
 Object "obj1" {
 	visible 15
