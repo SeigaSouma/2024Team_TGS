@@ -47,6 +47,7 @@
 #include "2D_Effect.h"
 #include "waterripple.h"
 #include "meshbubble.h"
+#include "waterstone.h"
 
 //==========================================================================
 // Ã“Iƒƒ“ƒo•Ï”éŒ¾
@@ -501,6 +502,19 @@ void CGame::Update()
 		}
 		
 	}
+
+
+	if (pInputKeyboard->GetTrigger(DIK_4))
+	{
+
+		int z = UtilFunc::Transformation::Random(-20, 20) * 10;
+		int x = UtilFunc::Transformation::Random(2, 50) * 100;
+
+
+		CWaterStone::Create(MyLib::Vector3(x, -40.0f, z));
+
+	}
+
 
 #if _DEBUG
 

@@ -32,6 +32,7 @@ const char *CEffect3D::m_apTextureFile[] =					// ファイル読み込み
 	"data\\TEXTURE\\effect\\effect001.png",		// 十字エフェクト
 	"data\\TEXTURE\\effect\\Star01.png",		// 十字エフェクト
 	"data\\TEXTURE\\effect\\thunder_02.tga",	// 雷エフェクト
+	"data\\TEXTURE\\effect\\water.png",			// 水エフェクト
 	"",											// nullptrエフェクト
 };
 int CEffect3D::m_nNumAll = 0;	// 総数
@@ -234,6 +235,10 @@ HRESULT CEffect3D::Init(const MyLib::Vector3& pos, const MyLib::Vector3& move, c
 		break;
 
 	case TYPE_THUNDER:
+		m_bAddAlpha = true;
+		break;
+
+	case TYPE_WATER:
 		m_bAddAlpha = true;
 		break;
 

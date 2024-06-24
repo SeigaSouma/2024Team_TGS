@@ -2,13 +2,13 @@ Metasequoia Document
 Format Text Ver 1.0
 
 Scene {
-	pos 43.1156 -210.6647 15728.6406
+	pos 63.0120 -661.6500 6144.0000
 	lookat 0.0000 0.0000 0.0000
-	head 6.3283
-	pich -0.0064
+	head 5.7183
+	pich 0.1636
 	bank 0.0000
 	ortho 0
-	zoom2 0.4841
+	zoom2 1.2393
 	amb 0.250 0.250 0.250
 	dirlights 1 {
 		light {
@@ -17,11 +17,10 @@ Scene {
 		}
 	}
 }
-Material 2 {
-	"mat1" col(0.776 0.776 0.776 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("whitewood.jpeg")
-	"mat2" col(0.361 0.361 0.361 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("whitewood.jpeg")
+Material 1 {
+	"signalboard_white" col(0.776 0.776 0.776 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\É`Å[ÉÄêßçÏ\2024Team_TGS\202404_TGS\data\TEXTURE\map_object\wood_YMD_house01.jpg")
 }
-Object "obj1" {
+Object "signalboard_white" {
 	visible 15
 	locking 0
 	shading 1

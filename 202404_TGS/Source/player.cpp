@@ -487,11 +487,11 @@ void CPlayer::Controll()
 				int idx = -1; bool value = false;
 				m_pControlTrick->Trick(this, idx, value);
 
-				//// 操作成功
-				//if (value)
-				//{
-				//	SetMotion(idx);	// モーション変更
-				//}
+				// 操作成功
+				if (value)
+				{
+					SetMotion(idx);	// モーション変更
+				}
 			}
 		}
 	}
@@ -1513,10 +1513,7 @@ void CPlayer::StateDead()
 		}
 
 		// リトライUIなければ生成
-		if (m_pRetryUI == nullptr)
-		{
-			m_pRetryUI = CRetry_Ui::Create();
-		}
+		CreateRetryUI();
 	}
 
 	// 位置設定
@@ -1741,6 +1738,27 @@ void CPlayer::ScreenReset()
 		MULTITARGET::RESET_MULTI,
 		MULTITARGET::RESET_TIMER);
 
+	// 荷物のフラグをリセットする
+	if (m_pBaggage != nullptr)
+	{
+		// 判定をリセットする
+		m_pBaggage->Reset();
+	}
+
 	CCamera* pCamera = CManager::GetInstance()->GetCamera();
 	pCamera->SetStateCameraV(new CStateCameraV);
+}
+
+//==========================================================================
+// リトライUI生成
+//==========================================================================
+void CPlayer::CreateRetryUI()
+{
+	if (m_pRetryUI == nullptr)
+	{
+		MyLib::HitResult_Character hitresult = {};
+		m_pRetryUI = CRetry_Ui::Create();
+		hitresult.isdeath = true;
+		DeadSetting(&hitresult);
+	}
 }

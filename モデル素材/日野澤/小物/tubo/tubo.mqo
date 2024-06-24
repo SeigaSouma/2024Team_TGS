@@ -4,8 +4,8 @@ Format Text Ver 1.0
 Scene {
 	pos -54.8768 -163.4658 2400.0000
 	lookat 0.0000 0.0000 0.0000
-	head 1.4165
-	pich 0.2936
+	head 1.4865
+	pich -0.3364
 	bank 0.0000
 	ortho 0
 	zoom2 3.1250
@@ -18,7 +18,7 @@ Scene {
 	}
 }
 Material 3 {
-	"gara" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\モデル素材\日野澤\小物\tubo\tubo.png") proj_type(1) proj_pos(0.000 0.000 0.000) proj_scale(64.153 58.353 58.353) proj_angle(0.000 0.000 0.000)
+	"gara" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム制作\2024Team_TGS\202404_TGS\data\TEXTURE\map_object\tubo.png") proj_type(1) proj_pos(0.000 0.000 0.000) proj_scale(64.153 58.353 58.353) proj_angle(0.000 0.000 0.000)
 	"mat1" col(1.000 0.886 0.553 1.000) dif(0.800) amb(0.600) emi(0.170) spc(0.000) power(5.00) proj_type(1) proj_pos(0.000 0.000 0.000) proj_scale(141.078 138.982 199.029) proj_angle(0.000 0.000 0.000)
 	"mat2" col(0.000 0.000 0.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00)
 }

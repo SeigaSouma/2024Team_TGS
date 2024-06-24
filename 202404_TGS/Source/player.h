@@ -179,6 +179,8 @@ public:
 	void SetMoveLength(float len) { m_fMoveLength = len; }				// 移動距離設定
 	float GetMoveLength() { return m_fMoveLength; }						// 移動距離取得
 	CBaggage* GetBaggage() { return m_pBaggage; }			// 自分の荷物取得
+	CRetry_Ui* GetRetryUI() { return m_pRetryUI; }			// リトライUI取得
+	void CreateRetryUI();										// リトライUI設定
 
 	// ヒット系
 	void DeadSetting(MyLib::HitResult_Character* result);

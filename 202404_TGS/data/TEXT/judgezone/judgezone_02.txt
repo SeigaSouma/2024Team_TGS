@@ -1,6 +1,6 @@
 #===================================================================================================
 #
-# 判定ゾーンスクリプトファイル [judgezone_01.txt]
+# 判定ゾーンスクリプトファイル [judgezone_02.txt]
 # Author : 石原颯馬
 #
 #===================================================================================================
@@ -15,10 +15,10 @@ SCRIPT			# この行は絶対消さないこと！
 # CONDITION_UNDER	: 下の条件ファイルパス
 #------------------------------------------------------------------
 ZONESET
-	START = 0.6f
-	END = 0.7f
-	BORDER = 400.0f
-	CONDITION_TOP = data\\TEXT\\judgecondition\\condition_02.txt
+	START = 0.3f
+	END = 0.34f
+	BORDER = 600.0f
+	CONDITION_TOP = data\\TEXT\\judgecondition\\condition_nohit.txt
 	CONDITION_UNDER = data\\TEXT\\judgecondition\\condition_BBB.txt
 END_ZONESET
 
