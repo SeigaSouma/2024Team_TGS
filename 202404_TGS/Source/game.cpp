@@ -49,6 +49,7 @@
 #include "meshbubble.h"
 #include "waterstone.h"
 #include "map_ui.h"
+#include "waterstoneManager.h"
 
 //==========================================================================
 // 静的メンバ変数宣言
@@ -323,6 +324,10 @@ HRESULT CGame::Init()
 	//=============================
 	m_pMapUI = CMapUI::Create();
 
+	//=============================
+	// 水中石マネージャ
+	//=============================
+	CWaterStone_Manager::Create();
 	// 成功
 	return S_OK;
 }
@@ -525,7 +530,7 @@ void CGame::Update()
 		int x = UtilFunc::Transformation::Random(2, 50) * 100;
 
 
-		CWaterStone::Create(MyLib::Vector3(x, -40.0f, z));
+		//CWaterStone::Create(MyLib::Vector3(x, -40.0f, z));
 
 	}
 
@@ -645,7 +650,7 @@ void CGame::ChangeEdit()
 		}
 
 		// テキスト
-		static const char* items[] = { "OFF", "Map", "Obstacle", "Course"};
+		static const char* items[] = { "OFF", "Map", "Obstacle", "Course", "WaterStone"};
 		int selectedItem = m_EditType;
 
 		// [グループ]エディット切り替え

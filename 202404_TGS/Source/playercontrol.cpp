@@ -16,6 +16,8 @@
 #include "collisionLine_Box.h"
 #include "keyconfig.h"
 #include "waterripple.h"
+#include "course.h"
+#include "spline.h"
 
 namespace
 {
@@ -32,6 +34,7 @@ namespace
 	int DEFAULT_WATERRIPPLE_INTERVAL = 21;	// 水波紋のインターバル
 	const float HEIGHT_MOVETIMER = (1.0f / 0.5f);	// 高さ変化遷移タイマー
 	const float COMMAND_HEIGHT = 200.0f;	// 高さ
+	float INTERVAL_BRESSEFFECT = 0.32f;	// 息出すまでの間隔
 }
 
 //==========================================================================
@@ -311,7 +314,8 @@ void CPlayerControlMove::Move(CPlayer* player)
 	player->SetMotionFrag(motionFrag);
 
 #if _DEBUG
-	if (!pInputGamepad->GetPress(CInputGamepad::BUTTON::BUTTON_BACK, 0))
+	if (!pInputGamepad->GetPress(CInputGamepad::BUTTON::BUTTON_BACK, 0) &&
+		!pInputKeyboard->GetPress(DIK_S))
 #endif
 	{
 		// 移動量設定
@@ -506,7 +510,8 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 #if GEKIMUZU
 
 #if _DEBUG
-	if (!pInputGamepad->GetPress(CInputGamepad::BUTTON::BUTTON_BACK, 0))
+	if (!pInputGamepad->GetPress(CInputGamepad::BUTTON::BUTTON_BACK, 0) &&
+		!pInputKeyboard->GetPress(DIK_S))
 #endif
 	{
 		// 高さ制限
@@ -583,11 +588,16 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 		m_pBressHeight->SetPosition(pos);
 	}
 #endif
-	
+	//=============================
+		// 息エフェクト
+		//=============================
+	BressEffect(player, pBaggage);
 	bool bKantsu = CollisionObstacle(player, pBaggage);
 	if (CInputKeyboard::GetInstance()->GetPress(DIK_RETURN) ||
 		pKeyConfigPad->GetPress(INGAME::ACT_AIR))
 	{
+		
+
 		// 高さの降下時間加算
 		m_fTimeDownHeight += CManager::GetInstance()->GetDeltaTime();
 
@@ -696,6 +706,104 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 		//	"------------------[プレイヤーの操作]------------------\n"
 		//	"移動中のエフェクト 【%d】\n"
 		//	, *m_BressHandle);
+	}
+}
+
+//==========================================================================
+// 息エフェクト
+//==========================================================================
+void CPlayerControlBaggage::BressEffect(CPlayer* player, CBaggage* pBaggage)
+{
+	// 息時間加算
+	m_fBressTimer += CManager::GetInstance()->GetDeltaTime();
+
+	static int createIdx = 4;
+	static int Life = 50;
+	static int Randrange = 9;
+	static int XZrange = 492;
+	static int Yrange = 487;
+	static float defradius = 61.80f;
+	static float gravity = 1.7f;
+	static float movefactor = 0.4f;
+
+	// カラーエディット
+	static ImVec4 myColor = ImVec4(1.0f, 1.0, 1.0, 0.08235f); // RGBA
+
+	if (ImGui::TreeNode("Bress"))
+	{
+		ImGui::DragInt("CreateNum", &createIdx, 1);
+		ImGui::DragFloat("Interval", &INTERVAL_BRESSEFFECT, 0.01f, 0.0f, 0.0f, "%.2f");
+		ImGui::DragInt("Interval_Randrange", &Randrange, 1);
+		ImGui::DragInt("Life", &Life, 1);
+		ImGui::DragInt("XZrange", &XZrange, 1);
+		ImGui::DragInt("Yrange", &Yrange, 1);
+		ImGui::DragFloat("defradius", &defradius, 0.1f, 0.0f, 0.0f, "%.2f");
+		ImGui::DragFloat("gravity", &gravity, 0.01f, 0.0f, 0.0f, "%.2f");
+		ImGui::DragFloat("Move factor", &movefactor, 0.01f, 0.0f, 0.0f, "%.2f");
+		ImGui::ColorEdit4("Color", &myColor.x);
+
+		ImGui::TreePop();
+	}
+
+	if (m_fIntervalBress > m_fBressTimer)
+	{
+		return;
+	}
+
+	m_fBressTimer = 0.0f;
+	m_fIntervalBress = INTERVAL_BRESSEFFECT + UtilFunc::Transformation::Random(-Randrange, Randrange) * 0.01f;
+
+
+	// 情報取得
+	MyLib::Vector3 pos = player->GetPosition();
+	MyLib::Vector3 rot = player->GetRotation();
+	MyLib::Vector3 posBaggage = pBaggage->GetPosition();
+	MyLib::Vector3 posBaggageOrigin = pBaggage->GetOriginPosition();
+
+	// 息の発生地点
+	MyLib::Vector3 bresspos = pos;
+	bresspos.y = posBaggageOrigin.y;
+
+	for (int i = 0; i < createIdx; i++)
+	{
+		MyLib::Vector3 move;
+		float randmoveXZ = UtilFunc::Transformation::Random(XZrange, XZrange + 100) * 0.1f;
+		float randmoveY = UtilFunc::Transformation::Random(Yrange, Yrange + 20) * 0.1f;
+		float randRadius = UtilFunc::Transformation::Random(-10, 10);
+
+
+
+		// 移動量計算
+		float moveLen = player->GetMoveLength();
+		moveLen += move.x;
+
+		// 少し先の位置との向きで算出
+		MyLib::Vector3 newPosition = MySpline::GetSplinePosition_NonLoop(CGame::GetInstance()->GetCourse()->GetVecPosition(), moveLen);
+		float angle = pos.AngleXZ(newPosition);
+
+		if (i % 2 == 0)
+		{
+			angle += D3DX_PI;
+		}
+
+		move.x = sinf(D3DX_PI * 0.5f + angle) * randmoveXZ;
+		move.y = randmoveY;
+		move.z = cosf(D3DX_PI * 0.5f + angle) * randmoveXZ;
+
+		// 半径
+		float radius = defradius + randRadius;
+
+
+		CEffect3D* pEffect = CEffect3D::Create(
+			bresspos,
+			move,
+			D3DXCOLOR(myColor.x, myColor.y, myColor.z, myColor.w),
+			radius, Life,
+			CEffect3D::MOVEEFFECT::MOVEEFFECT_GENSUI,
+			CEffect3D::TYPE::TYPE_SMOKE);
+		pEffect->SetEnableGravity();
+		pEffect->SetGravityValue(-gravity);
+		pEffect->SetMoveFactor(movefactor);
 	}
 }
 

@@ -563,6 +563,12 @@
     <ClCompile Include="Source\map_ui.cpp">
       <Filter>map_ui</Filter>
     </ClCompile>
+    <ClCompile Include="Source\edit_waterstone.cpp">
+      <Filter>edit</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\waterstoneManager.cpp">
+      <Filter>map</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ballast.h">
@@ -1029,6 +1035,12 @@
     </ClInclude>
     <ClInclude Include="Source\map_ui.h">
       <Filter>map_ui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\edit_waterstone.h">
+      <Filter>edit</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\waterstoneManager.h">
+      <Filter>map</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

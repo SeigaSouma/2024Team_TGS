@@ -12,6 +12,7 @@
 #include "edit_map.h"
 #include "edit_obstacle.h"
 #include "edit_course.h"
+#include "edit_waterstone.h"
 
 //==========================================================================
 // コンストラクタ
@@ -54,6 +55,10 @@ CEdit* CEdit::Create(CGame::EditType type)
 
 	case CGame::EditType::EDITTYPE_COURSE:
 		pMarker = DEBUG_NEW CEdit_Course;
+		break;
+
+	case CGame::EditType::EDITTYPE_WATERSTONE:
+		pMarker = DEBUG_NEW CEdit_WaterStone;
 		break;
 
 	default:
