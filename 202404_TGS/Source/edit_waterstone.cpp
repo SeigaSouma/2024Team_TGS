@@ -5,12 +5,14 @@
 // 
 //=============================================================================
 #include "edit_waterstone.h"
-#include "course.h"
+#include "waterstone.h"
+#include "waterstoneManager.h"
 #include "manager.h"
 #include "calculation.h"
 #include "map_obstacle.h"
 #include "camera.h"
 #include "spline.h"
+#include "collisionLine_Box.h"
 
 //==========================================================================
 // 定数定義
@@ -72,9 +74,6 @@ void CEdit_WaterStone::Update()
 	// ファイル操作
 	FileControl();
 
-	// 辺の総数変更
-	ChangeLineNum();
-
 	// モード変更
 	ChangeMode();
 
@@ -90,9 +89,6 @@ void CEdit_WaterStone::Update()
 	// トランスフォーム
 	Transform();
 
-	// 最初と最後変形
-	TransformBeginEnd();
-
 }
 
 //==========================================================================
@@ -100,8 +96,9 @@ void CEdit_WaterStone::Update()
 //==========================================================================
 void CEdit_WaterStone::FileControl()
 {
-	CCourse* pCourse = CGame::GetInstance()->GetCourse();
-	if (pCourse == nullptr) return;
+	// 水中石マネージャ取得
+	CWaterStone_Manager* pMgr = CWaterStone_Manager::GetInstance();
+	if (pMgr == nullptr) return;
 
 	ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
@@ -109,14 +106,14 @@ void CEdit_WaterStone::FileControl()
 	ImGui::SetNextItemWidth(width);
 	if (ImGui::Button("Save"))
 	{
-		pCourse->Save();
+		pMgr->Save();
 	}
 	ImGui::SameLine();
 
 	ImGui::SetNextItemWidth(width);
 	if (ImGui::Button("Save_as"))
 	{
-		pCourse->Save();
+		pMgr->Save();
 	}
 	ImGui::SameLine();
 
@@ -125,24 +122,6 @@ void CEdit_WaterStone::FileControl()
 	{
 
 	}
-}
-
-//==========================================================================
-// 辺の数変更
-//==========================================================================
-void CEdit_WaterStone::ChangeLineNum()
-{
-	ImGui::Dummy(ImVec2(0.0f, 10.0f));
-
-	CCourse* pCourse = CGame::GetInstance()->GetCourse();
-	if (pCourse == nullptr) return;
-
-	ImVec2 imageSize = ImVec2(150, 50);
-	if (ImGui::Button("Re : Create", imageSize))
-	{
-		pCourse->ReCreateVtx();
-	}
-
 }
 
 //==========================================================================
@@ -169,13 +148,6 @@ void CEdit_WaterStone::SelectLine()
 {
 	if (m_bSetMode) return;	// セットモードは終わり
 
-	CCourse* pCourse = CGame::GetInstance()->GetCourse();
-	if (pCourse == nullptr) return;
-
-	// 辺情報取得
-	std::vector<MyLib::Vector3> vecSegmentPos = pCourse->GetVecPosition();
-	MyLib::Vector3 coursepos = pCourse->GetPosition();
-
 	// マウス情報
 	CInputMouse* pMouse = CInputMouse::GetInstance();
 	MyLib::Vector3 mouseRay = pMouse->GetRay();
@@ -194,25 +166,33 @@ void CEdit_WaterStone::SelectLine()
 		// 操作判定リセット
 		m_bEdit = false;
 
+
+		// 障害物のリスト取得
+		CListManager<CWaterStone> list = CWaterStone::GetListObj();
+
+		// 先頭を保存
+		std::list<CWaterStone*>::iterator itr = list.GetEnd();
+		CWaterStone* pObj = nullptr;
+
 		int i = 0;
-		for (const auto& vtxpos : vecSegmentPos)
+		while (list.ListLoop(itr))
 		{
-			if (i == 0 || i == vecSegmentPos.size() - 1)
-			{
-				i++;
-				continue;
-			}
+			CWaterStone* pObj = *itr;
+			MyLib::Vector3 ObjPos = pObj->GetPosition();
+
+
+
 			// マトリックス初期化
 			mtx.Identity();
 			mtxTrans.Identity();
 
 			// 位置情報反映
-			MyLib::Vector3 transpos = vtxpos + coursepos;
-			mtxTrans.Translation(transpos);
+			mtxTrans.Translation(ObjPos);
 			mtx.Multiply(mtx, mtxTrans);
 
 			MyLib::Vector3 OBpos;
 
+			MyLib::AABB aabb = pObj->GetAABB();
 			if (UtilFunc::Collision::CollisionRayAABB(&mousePos, &mouseRay, &aabb, &mtx, time, &OBpos))
 			{// 重なり && 左クリック
 
@@ -225,14 +205,6 @@ void CEdit_WaterStone::SelectLine()
 			i++;
 		}
 
-		// 色リセット
-		for (int i = 0; i < vecSegmentPos.size(); i++)
-		{
-			CCollisionLine_Box* pBox = pCourse->GetCollisionLineBox(i);
-			if (pBox == nullptr) continue;
-
-			pBox->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-		}
 	}
 }
 
@@ -241,22 +213,26 @@ void CEdit_WaterStone::SelectLine()
 //==========================================================================
 void CEdit_WaterStone::DragLine()
 {
-	CCourse* pCourse = CGame::GetInstance()->GetCourse();
-	if (pCourse == nullptr) return;
+
+	// 水中石マネージャ取得
+	CWaterStone_Manager* pMgr = CWaterStone_Manager::GetInstance();
+	if (pMgr == nullptr) return;
 
 	if (!m_bEdit) return;
 	if (m_bSetMode) return;	// セットモードは終わり
 
-	// 辺情報取得
-	MyLib::Vector3 segmentPos = pCourse->GetVecPosition(m_nEditIdx);
-	MyLib::Vector3 coursepos = pCourse->GetPosition();
+	// 障害物のリスト取得
+	CListManager<CWaterStone> list = CWaterStone::GetListObj();
+	CWaterStone* pObj = list.GetData(m_nEditIdx);
+
+	MyLib::Vector3 ObjPos = pObj->GetPosition();
 
 	// マウス情報
 	CInputMouse* pMouse = CInputMouse::GetInstance();
 	MyLib::Vector3 mouseRay = pMouse->GetRay();
 	MyLib::Vector3 mousePos = pMouse->GetNearPosition();
 
-	MyLib::AABB aabb = MyLib::AABB(-50.0f, 50.0f);
+	MyLib::AABB aabb = pObj->GetAABB();
 	float time = 0.0f;
 	MyLib::Matrix mtx, mtxTrans;
 
@@ -270,8 +246,7 @@ void CEdit_WaterStone::DragLine()
 		mtxTrans.Identity();
 
 		// 位置情報反映
-		MyLib::Vector3 transpos = segmentPos + coursepos;
-		mtxTrans.Translation(transpos);
+		mtxTrans.Translation(ObjPos);
 		mtx.Multiply(mtx, mtxTrans);
 
 		MyLib::Vector3 OBpos;
@@ -288,6 +263,8 @@ void CEdit_WaterStone::DragLine()
 		m_bDrag = false;
 	}
 
+	ObjPos = pObj->GetPosition();
+
 	// ドラッグ中
 	if (m_bDrag)
 	{
@@ -296,12 +273,12 @@ void CEdit_WaterStone::DragLine()
 
 		// 再移動中
 		MyLib::Vector3 diffpos = pMouse->GetWorldDiffPosition();
-		segmentPos.x += diffpos.x;
-		segmentPos.z += diffpos.z;
+		ObjPos.x += diffpos.x;
+		ObjPos.z += diffpos.z;
 	}
 
 	// 頂点データ設定
-	pCourse->SetVecPosition(m_nEditIdx, segmentPos);
+	pObj->SetPosition(ObjPos);
 }
 
 //==========================================================================
@@ -309,25 +286,36 @@ void CEdit_WaterStone::DragLine()
 //==========================================================================
 void CEdit_WaterStone::Transform()
 {
-	CCourse* pCourse = CGame::GetInstance()->GetCourse();
-	if (pCourse == nullptr) return;
+	// 障害物のリスト取得
+	CListManager<CWaterStone> list = CWaterStone::GetListObj();
+	CWaterStone* pSelectStone = list.GetData(m_nEditIdx);
+	if (pSelectStone == nullptr) return;
 
-	// 辺情報取得
-	std::vector<MyLib::Vector3> vecSegmentPos = pCourse->GetVecPosition();
-	if (m_bEdit)
+	// 先頭を保存
+	std::list<CWaterStone*>::iterator itr = list.GetEnd();
+	CWaterStone* pObj = nullptr;
+
+	int i = 0;
+	while (list.ListLoop(itr))
 	{
-		for (int i = 0; i < vecSegmentPos.size(); i++)
-		{
-			CCollisionLine_Box* pBox = pCourse->GetCollisionLineBox(i);
-			if (pBox == nullptr) continue;
+		CWaterStone* pObj = *itr;
+		MyLib::Vector3 ObjPos = pObj->GetPosition();
 
-			D3DXCOLOR col = (i == m_nEditIdx) ? D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f) : D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-			pBox->SetColor(col);
-		}
+		// デバッグ上のBOX取得
+		CCollisionLine_Box* pBox = pObj->GetCollisionLineBox();
+		if (pBox == nullptr) continue;
+
+		// 色リセット
+		D3DXCOLOR col = (i == m_nEditIdx) ? D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f) : D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+		pBox->SetColor(col);
+
+		i++;
 	}
 
-	// 操作する辺の情報
-	MyLib::Vector3 editpos = pCourse->GetVecPosition(m_nEditIdx);
+
+
+	CWaterStone_Manager::SStoneInfo selectInfo = pSelectStone->GetStoneInfo();
+
 
 	ImGui::Dummy(ImVec2(0.0f, 10.0f));
 	if (ImGui::TreeNode("Transform"))
@@ -348,7 +336,8 @@ void CEdit_WaterStone::Transform()
 
 		// リセット
 		if (ImGui::Button("RESET")) {
-			editpos = 0.0f;
+			selectInfo.pos = 0.0f;
+			selectInfo.rot = 0.0f;
 		}
 		
 
@@ -363,7 +352,7 @@ void CEdit_WaterStone::Transform()
 		ImGui::PushID(0); // ウィジェットごとに異なるIDを割り当てる
 		{
 			ImGui::SetNextItemWidth(windowWidth);
-			ImGui::DragFloat("x", &editpos.x, POS_MOVE, 0.0f, 0.0f, "%.2f");
+			ImGui::DragFloat("x", &selectInfo.pos.x, POS_MOVE, 0.0f, 0.0f, "%.2f");
 			ImGui::SameLine();
 		}
 		ImGui::PopID();
@@ -372,7 +361,7 @@ void CEdit_WaterStone::Transform()
 		ImGui::PushID(0); // ウィジェットごとに異なるIDを割り当てる
 		{
 			ImGui::SetNextItemWidth(windowWidth);
-			ImGui::DragFloat("y", &editpos.y, POS_MOVE, 0.0f, 0.0f, "%.2f");
+			ImGui::DragFloat("y", &selectInfo.pos.y, POS_MOVE, 0.0f, 0.0f, "%.2f");
 			ImGui::SameLine();
 		}
 		ImGui::PopID();
@@ -381,67 +370,54 @@ void CEdit_WaterStone::Transform()
 		ImGui::PushID(0); // ウィジェットごとに異なるIDを割り当てる
 		{
 			ImGui::SetNextItemWidth(windowWidth);
-			ImGui::DragFloat("z", &editpos.z, POS_MOVE, 0.0f, 0.0f, "%.2f");
+			ImGui::DragFloat("z", &selectInfo.pos.z, POS_MOVE, 0.0f, 0.0f, "%.2f");
 		}
 		ImGui::PopID();
 
 
-		////=============================
-		//// 向き設定
-		////=============================
-		//ImGui::Text("rot");
-		//ImGui::SameLine();
+		//=============================
+		// 向き設定
+		//=============================
+		ImGui::Text("rot");
+		ImGui::SameLine();
 
-		//// X
-		//ImGui::PushID(1); // ウィジェットごとに異なるIDを割り当てる
-		//{
-		//	ImGui::SetNextItemWidth(windowWidth);
-		//	ImGui::DragFloat("x", &editInfo.rot.x, ROT_MOVE, 0.0f, 0.0f, "%.2f");
-		//	ImGui::SameLine();
-		//}
-		//ImGui::PopID();
+		// X
+		ImGui::PushID(1); // ウィジェットごとに異なるIDを割り当てる
+		{
+			ImGui::SetNextItemWidth(windowWidth);
+			ImGui::DragFloat("x", &selectInfo.rot.x, ROT_MOVE, 0.0f, 0.0f, "%.2f");
+			ImGui::SameLine();
+		}
+		ImGui::PopID();
 
-		//// Y
-		//ImGui::PushID(1); // ウィジェットごとに異なるIDを割り当てる
-		//{
-		//	ImGui::SetNextItemWidth(windowWidth);
-		//	ImGui::DragFloat("y", &editInfo.rot.y, ROT_MOVE, 0.0f, 0.0f, "%.2f");
-		//	ImGui::SameLine();
-		//}
-		//ImGui::PopID();
+		// Y
+		ImGui::PushID(1); // ウィジェットごとに異なるIDを割り当てる
+		{
+			ImGui::SetNextItemWidth(windowWidth);
+			ImGui::DragFloat("y", &selectInfo.rot.y, ROT_MOVE, 0.0f, 0.0f, "%.2f");
+			ImGui::SameLine();
+		}
+		ImGui::PopID();
 
-		//// Z
-		//ImGui::PushID(1); // ウィジェットごとに異なるIDを割り当てる
-		//{
-		//	ImGui::SetNextItemWidth(windowWidth);
-		//	ImGui::DragFloat("z", &editInfo.rot.z, ROT_MOVE, 0.0f, 0.0f, "%.2f");
-		//}
-		//ImGui::PopID();
+		// Z
+		ImGui::PushID(1); // ウィジェットごとに異なるIDを割り当てる
+		{
+			ImGui::SetNextItemWidth(windowWidth);
+			ImGui::DragFloat("z", &selectInfo.rot.z, ROT_MOVE, 0.0f, 0.0f, "%.2f");
+		}
+		ImGui::PopID();
 
-
-
-
-		////=============================
-		//// 幅設定
-		////=============================
-		//ImGui::Text("width");
-		//ImGui::SameLine();
-
-		//// X
-		//ImGui::PushID(2); // ウィジェットごとに異なるIDを割り当てる
-		//{
-		//	ImGui::SetNextItemWidth(windowWidth);
-		//	ImGui::DragFloat("width", &editInfo.width, POS_MOVE, 0.0f, 0.0f, "%.2f");
-		//	ImGui::SameLine();
-		//}
-		//ImGui::PopID();
 
 
 		ImGui::TreePop();
 	}
 
-	// ライン情報設定
-	pCourse->SetVecPosition(m_nEditIdx, editpos);
+	if (m_bDrag)
+		return;
+
+	// 石情報設定
+	pSelectStone->SetStoneInfo(selectInfo);
+	pSelectStone->SetPosition(selectInfo.pos);
 }
 
 //==========================================================================
@@ -467,59 +443,15 @@ void CEdit_WaterStone::AddPoint()
 		pCamera->GetMtxView(),
 		pCamera->GetMtxProjection());
 
-	CCourse* pCourse = CGame::GetInstance()->GetCourse();
-	if (pCourse == nullptr) return;
+	
 
-	// 基点情報取得
-	std::vector<MyLib::Vector3> vecSegmentPos = pCourse->GetVecPosition();
-
+	// 設置
 	if (!m_bHoverWindow &&
 		!CInputKeyboard::GetInstance()->GetPress(DIK_LALT) &&
 		pMouse->GetTrigger(CInputMouse::BUTTON::BUTTON_LEFT))
 	{
-
-		int endIdx = (vecSegmentPos.size() - 1);
-		vecSegmentPos.insert(vecSegmentPos.begin() + endIdx, pos);
-
-		// 基点情報設定
-		pCourse->SetVecPosition(vecSegmentPos);
-		pCourse->ReCreateVtx();
+		pos.y = 0.0f;
+		CWaterStone_Manager::SStoneInfo info(pos, 0.0f);
+		CWaterStone::Create(info);
 	}
 }
-
-//==========================================================================
-// 最初と最後変形
-//==========================================================================
-void CEdit_WaterStone::TransformBeginEnd()
-{
-	CCourse* pCourse = CGame::GetInstance()->GetCourse();
-	if (pCourse == nullptr) return;
-
-	// 辺情報取得
-	std::vector<MyLib::Vector3> segmentPos = pCourse->GetVecPosition();
-
-	// 最初と最後、逆方向に少し出す
-	MyLib::Vector3 begin, end;
-	float angle = 0.0f;
-
-	// 最初
-	angle = segmentPos[2].AngleXZ(segmentPos[1]);
-	begin = MyLib::Vector3(
-		segmentPos[1].x + sinf(angle) * -10.0f,
-		segmentPos[1].y,
-		segmentPos[1].z + cosf(angle) * -10.0f);
-
-	// 最後
-	int endIdx = (segmentPos.size() - 1) - 1;
-	angle = segmentPos[endIdx].AngleXZ(segmentPos[endIdx - 1]);
-	end = MyLib::Vector3(
-		segmentPos[endIdx].x + sinf(angle) * 10.0f,
-		segmentPos[endIdx].y,
-		segmentPos[endIdx].z + cosf(angle) * 10.0f);
-
-	segmentPos[0] = begin;
-	segmentPos[(segmentPos.size() - 1)] = end;
-
-	pCourse->SetVecPosition(segmentPos);
-}
-

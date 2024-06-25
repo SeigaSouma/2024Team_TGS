@@ -24,6 +24,7 @@ namespace
 	};
 	float DEFAULT_SPLASHTIME = 0.14f;	// 通常のしぶき時間
 }
+CListManager<CWaterStone> CWaterStone::m_List = {};	// リスト
 
 //==========================================================================
 // コンストラクタ
@@ -46,14 +47,15 @@ CWaterStone::~CWaterStone()
 //==========================================================================
 // 生成処理
 //==========================================================================
-CWaterStone *CWaterStone::Create(const MyLib::Vector3& pos)
+CWaterStone *CWaterStone::Create(const CWaterStone_Manager::SStoneInfo& info)
 {
 	// メモリの確保
 	CWaterStone* pObj = DEBUG_NEW CWaterStone;
 
 	if (pObj != nullptr)
 	{
-		pObj->SetPosition(pos);
+		// 引数情報設定
+		pObj->m_StoneInfo = info;
 
 		// 初期化処理
 		pObj->Init();
@@ -67,7 +69,9 @@ CWaterStone *CWaterStone::Create(const MyLib::Vector3& pos)
 //==========================================================================
 HRESULT CWaterStone::Init()
 {
-	
+	// 位置設定
+	SetPosition(m_StoneInfo.pos);
+
 	// 種類の設定
 	CObject::SetType(TYPE_OBJECTX);
 
@@ -81,6 +85,9 @@ HRESULT CWaterStone::Init()
 		return E_FAIL;
 	}
 
+	// リスト追加
+	m_List.Regist(this);
+
 	return S_OK;
 }
 
@@ -89,6 +96,9 @@ HRESULT CWaterStone::Init()
 //==========================================================================
 void CWaterStone::Uninit()
 {
+	// リスト削除
+	m_List.Delete(this);
+
 	// 終了処理
 	CObjectX::Uninit();
 }
@@ -189,6 +199,7 @@ void CWaterStone::Update()
 		m_fSplashTimer = 0.0f;
 	}
 
+	m_StoneInfo.pos = GetPosition();
 }
 
 //==========================================================================

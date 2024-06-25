@@ -46,9 +46,7 @@ private:
 	void SelectLine();		// ライン選択
 	void DragLine();		// ライン掴み
 	void Transform();		// トランスフォーム
-	void ChangeLineNum();	// 辺の数変更
 	void ChangeMode();		// モード変更
-	void TransformBeginEnd();	// 最初と最後変形
 	void AddPoint();		// 地点追加
 
 	LineData m_lineData;	// 辺情報
