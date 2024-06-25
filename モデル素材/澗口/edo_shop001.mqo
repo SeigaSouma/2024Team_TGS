@@ -2,10 +2,10 @@ Metasequoia Document
 Format Text Ver 1.0
 
 Scene {
-	pos -1371.6720 -1490.7985 39062.5000
+	pos -187.3116 -1604.9535 39062.5000
 	lookat 0.0000 0.0000 0.0000
-	head 40.1112
-	pich 0.1208
+	head 39.9716
+	pich 0.2408
 	bank 0.0000
 	ortho 0
 	zoom2 0.1920
@@ -18,19 +18,19 @@ Scene {
 	}
 }
 Material 11 {
-	"shop2nd_1" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("TEXTURE\edo_nagaya001.png")
-	"shop2nd_2" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("TEXTURE\edo_nagaya000.png") proj_type(1) proj_pos(384.634 1140.626 0.000) proj_scale(2074.751 1216.735 596.280) proj_angle(179.500 -0.000 0.000)
-	"shop2nd_3" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("TEXTURE\edo_nagaya000.png")
-	"shop2nd_4" col(0.298 0.333 0.510 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00)
-	"shop2nd_5" col(1.000 0.965 0.898 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00)
-	"shop2nd_6" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("TEXTURE\edo_nagaya000.png")
-	"shop2nd_7" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("TEXTURE\edo_nagaya000.png") proj_type(1) proj_pos(387.446 2850.690 0.000) proj_scale(1725.128 996.673 100.000) proj_angle(179.500 -0.000 0.000)
-	"shop2nd_8" col(0.690 0.231 0.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00)
-	"shop2nd_9" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("TEXTURE\edo_shop001.png") proj_type(1) proj_pos(-96.521 943.126 7.903) proj_scale(800.295 1001.656 54.147) proj_angle(-89.500 -0.000 0.000)
-	"shop2nd_10" col(1.000 0.012 0.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00)
-	"shop2nd_11" col(0.337 0.039 0.604 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00)
+	"shop_1" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("TEXTURE\edo_nagaya001.png")
+	"shop_2" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("TEXTURE\edo_nagaya000.png") proj_type(1) proj_pos(384.634 1140.626 0.000) proj_scale(2074.751 1216.735 596.280) proj_angle(179.500 -0.000 0.000)
+	"shop_3" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("TEXTURE\edo_nagaya000.png")
+	"shop_4" col(0.298 0.333 0.510 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00)
+	"shop_5" col(1.000 0.965 0.898 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00)
+	"shop_6" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("TEXTURE\edo_nagaya000.png")
+	"shop_7" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("TEXTURE\edo_nagaya000.png") proj_type(1) proj_pos(387.446 2850.690 0.000) proj_scale(1725.128 996.673 100.000) proj_angle(179.500 -0.000 0.000)
+	"shop_8" col(0.690 0.231 0.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00)
+	"shop_12" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("TEXTURE\map_object\edo_shop001.png") proj_type(1) proj_pos(-96.521 943.126 7.903) proj_scale(800.295 1001.656 54.147) proj_angle(-89.500 -0.000 0.000)
+	"shop_10" col(1.000 0.012 0.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00)
+	"shop_11" col(0.337 0.039 0.604 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00)
 }
-Object "shop2nd" {
+Object "shop" {
 	visible 15
 	locking 0
 	shading 1
