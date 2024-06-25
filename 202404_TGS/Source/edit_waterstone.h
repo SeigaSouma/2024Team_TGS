@@ -1,12 +1,12 @@
 //=============================================================================
 // 
-//  コースエディタ―ヘッダー [edit_course.h]
+//  水中岩エディタ―ヘッダー [edit_waterstone.h]
 //  Author : 相馬靜雅
 // 
 //=============================================================================
 
-#ifndef _EDIT_COURSE_H_
-#define _EDIT_COURSE_H_	// 二重インクルード防止
+#ifndef _EDIT_WATERSTONE_H_
+#define _EDIT_WATERSTONE_H_	// 二重インクルード防止
 
 #include "listmanager.h"
 #include "objectX.h"
@@ -16,13 +16,13 @@
 //==========================================================================
 // クラス定義
 //==========================================================================
-// コースエディタ―クラス
-class CEdit_Course : public CEdit
+// 水中岩クラス
+class CEdit_WaterStone : public CEdit
 {
 public:
 
-	CEdit_Course();
-	~CEdit_Course();
+	CEdit_WaterStone();
+	~CEdit_WaterStone();
 	
 	// オーバーライド関数
 	HRESULT Init() override;
@@ -46,9 +46,7 @@ private:
 	void SelectLine();		// ライン選択
 	void DragLine();		// ライン掴み
 	void Transform();		// トランスフォーム
-	void ChangeLineNum();	// 辺の数変更
 	void ChangeMode();		// モード変更
-	void TransformBeginEnd();	// 最初と最後変形
 	void AddPoint();		// 地点追加
 
 	LineData m_lineData;	// 辺情報
