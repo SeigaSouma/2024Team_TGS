@@ -48,6 +48,7 @@
 #include "waterripple.h"
 #include "meshbubble.h"
 #include "waterstone.h"
+#include "map_ui.h"
 
 //==========================================================================
 // 静的メンバ変数宣言
@@ -74,6 +75,7 @@ CGame::CGame()
 	m_pBaggageManager = nullptr;	// 荷物マネージャ
 	m_pCourse = nullptr;			// コースのオブジェクト
 	m_pJudgeZoneManager = nullptr;	// 判定ゾーンマネージャ
+	m_pMapUI = nullptr;				// マップUI
 }
 
 //==========================================================================
@@ -316,6 +318,11 @@ HRESULT CGame::Init()
 	m_pJudgeZoneManager = CJudgeZoneManager::Create();
 	m_pJudgeZoneManager->Load("data\\TEXT\\judgezonelist\\judgezonelist_01.txt");
 
+	//=============================
+	// マップUI作成
+	//=============================
+	m_pMapUI = CMapUI::Create();
+
 	// 成功
 	return S_OK;
 }
@@ -411,6 +418,13 @@ void CGame::Uninit()
 	{
 		m_pJudgeZoneManager->Uninit();
 		m_pJudgeZoneManager = nullptr;
+	}
+
+	// マップUI
+	if (m_pMapUI != nullptr)
+	{
+		m_pMapUI = nullptr;
+		CMapUI::Release();
 	}
 
 	// コース
@@ -568,6 +582,12 @@ void CGame::Update()
 	}
 
 #endif
+
+	// マップ更新処理
+	if (m_pMapUI != nullptr)
+	{
+		m_pMapUI->Update();
+	}
 
 	// シーンの更新
 	CScene::Update();

@@ -102,6 +102,9 @@
     <Filter Include="map\mesh">
       <UniqueIdentifier>{f3feccb1-469b-43fc-9949-2130e35ef250}</UniqueIdentifier>
     </Filter>
+    <Filter Include="map_ui">
+      <UniqueIdentifier>{071d1a04-b7ef-47ca-9c8e-b5efa874ece7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\ballast.cpp">
@@ -556,6 +559,9 @@
     </ClCompile>
     <ClCompile Include="Source\judgestatefunc.cpp">
       <Filter>judgezone</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\map_ui.cpp">
+      <Filter>map_ui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1020,6 +1026,9 @@
     </ClInclude>
     <ClInclude Include="Source\judgeobj.h">
       <Filter>judgezone</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\map_ui.h">
+      <Filter>map_ui</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
