@@ -1017,7 +1017,6 @@ void CCamera::MoveCameraFollow()
 //==========================================================================
 void CCamera::SetCamera()
 {
-
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
 

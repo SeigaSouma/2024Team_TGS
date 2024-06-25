@@ -27,6 +27,7 @@ class CMap_ObstacleManager;
 class CBaggageManager;
 class CCourse;
 class CJudgeZoneManager;
+class CMapUI;
 
 //==========================================================================
 // クラス定義
@@ -96,6 +97,7 @@ protected:
 	CBaggageManager* m_pBaggageManager;		// 荷物マネージャ
 	CCourse* m_pCourse;						// コースのオブジェクト
 	CJudgeZoneManager* m_pJudgeZoneManager;	// 判定ゾーンマネージャ
+	CMapUI* m_pMapUI;						// マップUI
 	bool m_bEdit;				// エディットの判定
 	bool m_clear; // クリア判定
 	float m_fMaxRokOnDistance;			// ロックオンの最大距離
