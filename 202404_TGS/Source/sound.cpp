@@ -13,70 +13,23 @@
 CSound::SOUNDINFO CSound::m_aSoundInfo[LABEL_MAX] = 
 {
 	{ "data/BGM/title.wav", -1 },			// タイトル
-	{ "data/BGM/game.wav", -1 },			// ゲーム中
-	{ "data/BGM/gameclear.wav", -1 },		// ゲームクリア
-	{ "data/BGM/enhance.wav", -1 },			// 強化
-	{ "data/BGM/enhance_wind.wav", -1 },	// 強化の風
-	{ "data/BGM/boss.wav", -1 },			// ボス
+	{ "data/BGM/BGM_game_000.wav", -1 },	// ゲーム
+	{ "data/BGM/BGM_water_flow.wav", -1 },	// 水流
 	{ "data/BGM/result.wav", -1 },			// リザルト
-	{ "data/BGM/galleryClear.wav", -1 },	// 観客
 	{ "data/BGM/tutorial.wav", -1 },	// チュートリアル
-	{ "data/BGM/ranking.wav", -1 },	// ランキング
+	{ "data/BGM/ranking.wav", -1 },		// ランキング
 	{ "data/SE/walk01.wav", 0 },			// 歩行1
-	{ "data/SE/walk02.wav", 0 },			// 歩行2
-	{ "data/SE/dash01.wav", 0 },			// ダッシュ1
-	{ "data/SE/dash02.wav", 0 },			// ダッシュ2
-	{ "data/SE/jump.wav", 0 },				// ジャンプ
-	{ "data/SE/avoid.wav", 0 },				// 回避
-	{ "data/SE/knockback_passive.wav", 0 },	// 受け身
-	{ "data/SE/atkswing_01.wav", 0 },		// 通常攻撃スイング1
-	{ "data/SE/atkswing_02.wav", 0 },		// 通常攻撃スイング2
-	{ "data/SE/atkswing_03.wav", 0 },		// 通常攻撃スイング3
-	{ "data/SE/atkswing_02_dash.wav", 0 },	// ダッシュ攻撃スイング2
-	{ "data/SE/atkhit_01.wav", 0 },			// 通常攻撃ヒット1
-	{ "data/SE/atkhit_02.wav", 0 },			// 通常攻撃ヒット2
-	{ "data/SE/atkhit_03.wav", 0 },			// 通常攻撃ヒット3
-	{ "data/SE/gallery01.wav", 0 },			// 観客1
-	{ "data/SE/gallery02.wav", 0 },			// 観客2
-	{ "data/SE/Inenhance.wav", 0 },			// 強化入場
-	{ "data/SE/battlestart.wav", 0 },			// 戦闘開始
-	{ "data/SE/battlestart_strart.wav", 0 },	// 戦闘開始開始
-	{ "data/SE/battlestart_charge.wav", 0 },	// 戦闘開始溜め
-	{ "data/SE/skilltreeStart.wav", 0 },		// スキルツリー起動
-	{ "data/SE/skillget.wav", 0 },				// スキル獲得
-	{ "data/SE/skilltree_wait.wav", -1 },		// スキルツリー起動待ち
-	{ "data/SE/gameclear.wav", 0 },				// クリア
-	{ "data/SE/battleresult.wav", 0 },			// 戦果表示
-	{ "data/SE/battleresult_end.wav", 0 },		// 戦果表示閉じ
-	{ "data/SE/battleresult_rank.wav", 0 },		// 戦果ランク
-	{ "data/SE/strongATK.wav", 0 },				// 強攻撃発生
-	{ "data/SE/charge_start.wav", 0 },			// チャージ攻撃開始
-	{ "data/SE/charge_complete.wav", 0 },		// チャージ攻撃完了
-	{ "data/SE/charge_endress.wav", -1 },		// チャージ続け
-	{ "data/SE/charge_move.wav", 0 },			// チャージ攻撃移動
-	{ "data/SE/chargeatk_hit.wav", 0 },			// チャージ攻撃ヒット
 	{ "data/SE/cursor_move.wav", 0 },			// カーソル移動
-	{ "data/SE/surcor_end.wav", 0 },			// カーソル閉じ
+	{ "data/SE/cursor_end.wav", 0 },			// カーソル閉じ
 	{ "data/SE/cancel01.wav", 0 },				// キャンセル1
 	{ "data/SE/cancel02.wav", 0 },				// キャンセル2
-	{ "data/SE/counter_normal.wav", 0 },		// カウンター通常攻撃
-	{ "data/SE/counter_strong.wav", 0 },		// カウンター強攻撃
-	{ "data/SE/counter_hit4.wav", 0 },			// カウンター攻撃
-	{ "data/SE/playerdmg_01.wav", 0 },			// 通常攻撃被弾
-	{ "data/SE/playerdmg_big.wav", 0 },			// 強攻撃被弾
-	{ "data/SE/guard.wav", 0 },					// ガード被弾
-	{ "data/SE/guardbreak.wav", 0 },			// ガードブレイク
-	{ "data/SE/enemyField_strong.wav", 0 },		// 敵地面(強)
-	{ "data/SE/enemyField_short.wav", 0 },		// 敵地面(短)
-	{ "data/SE/enemyswing_01.wav", 0 },			// 敵攻撃スイング(遅)
-	{ "data/SE/enemyswing_02.wav", 0 },			// 敵攻撃スイング(早)
-	{ "data/SE/boost.wav", -1 },				// ブースト
-	{ "data/SE/wings.wav", -1 },				// 羽音
-	{ "data/SE/bloom.wav", 0 },					// 花が咲く
-	{ "data/SE/charge.wav", 0 },				// チャージ
-	{ "data/SE/goal.wav", 0 },					// ゴール
+	{ "data/SE/SE_drown.wav", -1 },				// 溺れ
+	{ "data/SE/SE_collide.wav", 0 },				// ヒット
+	{ "data/SE/SE_cracks_grass.wav", 0 },				// 画面割れ
+	{ "data/SE/SE_breath_stream.wav", -1 },				// 息ループ
 
 };	// サウンドの情報
+CSound* CSound::m_pThisPtr = nullptr;	// 自身のポインタ
 
 //==========================================================================
 // マクロ定義
@@ -92,6 +45,25 @@ CSound::CSound()
 CSound::~CSound()
 {
 
+}
+
+//==========================================================================
+// 生成処理
+//==========================================================================
+CSound* CSound::Create(HWND hWnd)
+{
+	if (m_pThisPtr != nullptr)
+	{
+		return m_pThisPtr;
+	}
+
+	m_pThisPtr = DEBUG_NEW CSound;
+	if (m_pThisPtr != nullptr)
+	{
+		m_pThisPtr->Init(hWnd);
+	}
+
+	return m_pThisPtr;
 }
 
 //==========================================================================

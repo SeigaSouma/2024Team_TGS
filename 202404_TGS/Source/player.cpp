@@ -620,10 +620,8 @@ void CPlayer::Controll()
 		CCollisionObject::Create(GetPosition(), mylib_const::DEFAULT_VECTOR3, 100000.0f, 3, 10000, CCollisionObject::TAG_PLAYER);
 	}
 
-	if (pInputKeyboard->GetRepeat(DIK_RIGHT, 4)){
-		//CManager::GetInstance()->GetSound()->PlaySound(CSound::LABEL_SE_NORMALATK_HIT2);
-		CManager::GetInstance()->GetSound()->PlaySound(CSound::LABEL::LABEL_SE_COUNTER_TURN, false);
-
+	if (pInputKeyboard->GetRepeat(DIK_RIGHT, 4))
+	{
 		CPlayer::Hit(10000);
 	}
 
@@ -631,14 +629,14 @@ void CPlayer::Controll()
 	if (pInputKeyboard->GetTrigger(DIK_UP))
 	{
 		fff += 0.1f;
-		CManager::GetInstance()->GetSound()->SetFrequency(CSound::LABEL_BGM_GAME, fff);
+		CSound::GetInstance()->SetFrequency(CSound::LABEL_BGM_GAME, fff);
 
 
 	}
 	if (pInputKeyboard->GetTrigger(DIK_DOWN))
 	{
 		fff -= 0.1f;
-		CManager::GetInstance()->GetSound()->SetFrequency(CSound::LABEL_BGM_GAME, fff);
+		CSound::GetInstance()->SetFrequency(CSound::LABEL_BGM_GAME, fff);
 	}
 
 	if (pInputKeyboard->GetPress(DIK_J))
@@ -829,22 +827,22 @@ void CPlayer::AttackAction(CMotion::AttackInfo ATKInfo, int nCntATK)
 	case MOTION::MOTION_WALK:
 		/*if (nCntATK == 0)
 		{
-			CManager::GetInstance()->GetSound()->PlaySound(CSound::LABEL_SE_WALK1);
+			CSound::GetInstance()->PlaySound(CSound::LABEL_SE_WALK1);
 		}
 		else{
 
-			CManager::GetInstance()->GetSound()->PlaySound(CSound::LABEL_SE_WALK2);
+			CSound::GetInstance()->PlaySound(CSound::LABEL_SE_WALK2);
 		}*/
 		break;
 
 	case MOTION::MOTION_DASH:
 		/*if (nCntATK == 0)
 		{
-			CManager::GetInstance()->GetSound()->PlaySound(CSound::LABEL_SE_DASH1);
+			CSound::GetInstance()->PlaySound(CSound::LABEL_SE_DASH1);
 		}
 		else {
 
-			CManager::GetInstance()->GetSound()->PlaySound(CSound::LABEL_SE_DASH2);
+			CSound::GetInstance()->PlaySound(CSound::LABEL_SE_DASH2);
 		}*/
 		break;
 
@@ -1178,6 +1176,11 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 
 	if (nLife <= camlife)
 	{
+		if (nLife == camlife)
+		{
+			CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_DROWN);
+		}
+
 		if (nLife % 4 == 0)
 		{
 			float ratioDest = 1.0f - static_cast<float>(nLife) / GetLifeOrigin();
@@ -1215,14 +1218,16 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 		}
 
 		// コントローラー振動させる
-		if (nLife == camlife) { pPad->SetVibMulti(0.0f); }
+		if (nLife == camlife) 
+		{ 
+			pPad->SetVibMulti(0.0f); 
+		}
 		pPad->SetEnableVibration();
 		pPad->SetVibMulti(pPad->GetVibMulti() + 0.02f);
 		pPad->SetVibration(CInputGamepad::VIBRATION_STATE::VIBRATION_STATE_DMG, 0);
 	}
 
 	nLife -= nValue;
-
 	UtilFunc::Transformation::Clamp(nLife, 0, GetLifeOrigin());
 
 	// 体力設定
@@ -1248,7 +1253,10 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 
 		// タイマーを停止
 		CTimer* pt = CGame::GetInstance()->GetTimer();
-		if (pt != nullptr) { pt->SetEnableAddTime(false); }
+		if (pt != nullptr) 
+		{ 
+			pt->SetEnableAddTime(false); 
+		}
 	}
 	else if (nLife <= camlife)
 	{
@@ -1338,7 +1346,7 @@ void CPlayer::UpdateDamageReciveTimer()
 
 		if (!m_sDamageInfo.bReceived)
 		{
-			CManager::GetInstance()->GetSound()->PlaySound(CSound::LABEL::LABEL_SE_WINGS);
+
 		}
 
 		// ダメージ受け付け判定

@@ -53,7 +53,7 @@ HRESULT CPause_Tutorial::Init()
 void CPause_Tutorial::DecideByMode()
 {
 	// サウンド再生
-	//CManager::GetInstance()->GetSound()->PlaySound(CSound::LABEL_SE_DONE);
+	//CSound::GetInstance()->PlaySound(CSound::LABEL_SE_DONE);
 
 	// ゲームへ
 	CManager::GetInstance()->GetFade()->SetFade(CScene::MODE_GAME);

@@ -81,7 +81,7 @@ HRESULT CResultScore::Init()
 
 	m_pObj2D->SetPosition(MyLib::Vector3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f));
 
-	CManager::GetInstance()->GetSound()->PlaySound(CSound::LABEL::LABEL_SE_BATTLERESULT_RANK);
+
 
 	CObject::SetType(CObject::TYPE::TYPE_OBJECT2D);
 

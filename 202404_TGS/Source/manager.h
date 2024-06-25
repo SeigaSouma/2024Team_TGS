@@ -74,7 +74,6 @@ public:
 	static CManager *GetInstance();	// インスタンス取得
 
 	CRenderer *GetRenderer();
-	CSound *GetSound();
 	CDebugProc *GetDebugProc();
 	CLight *GetLight();
 	CCamera *GetCamera();
@@ -105,7 +104,7 @@ private:
 
 	CRenderer *m_pRenderer;				// レンダラー
 	CInput*m_pInput;					// 入力機器
-	CSound *m_pSound;					// サウンド
+	CSound* m_pSound;					// サウンド
 	CDebugProc *m_pDebugProc;			// デバッグ表示
 	CLight *m_pLight;					// ライト
 	CCamera *m_pCamera;					// カメラ

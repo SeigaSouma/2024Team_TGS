@@ -179,12 +179,8 @@ HRESULT CGame::Init()
 
 	CManager::GetInstance()->GetCamera()->Reset(CScene::MODE_GAME);
 
-	//CObjectLine* pppp = CObjectLine::Create(MyLib::Vector3(0.0f, 3000.0f, 0.0f), MyLib::Vector3(0.0f, 10.0f, 0.0f), mylib_const::DEFAULT_COLOR);
-
 	// クリアの判定
 	SetEnableClear(true);
-
-	//CSample_Obj3D::Create();
 
 	m_pTimer = CTimer::Create();
 
@@ -195,9 +191,6 @@ HRESULT CGame::Init()
 	//=============================
 	m_pObstacleManager = CMap_ObstacleManager::Create();
 
-	/*CMyEffekseer::GetInstance()->SetEffect(
-		CMyEffekseer::EFKLABEL::EFKLABEL_RIVER_SAMPLE,
-		MyLib::Vector3(300.0f, 0.1f, 0.0f), MyLib::Vector3(0.0f, D3DX_PI, 0.0f), 0.0f, 30.0f, true);*/
 
 	//=============================
 	// コース作成
@@ -328,6 +321,11 @@ HRESULT CGame::Init()
 	// 水中石マネージャ
 	//=============================
 	CWaterStone_Manager::Create();
+
+	// BGM再生
+	CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_BGM_GAME);
+	CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_BGM_WATER_FLOW);
+
 	// 成功
 	return S_OK;
 }

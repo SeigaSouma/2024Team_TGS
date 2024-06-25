@@ -29,7 +29,6 @@ public:
 		SCENE_MAINCLEAR,		// メインクリア
 		SCENE_BEFOREBATTLE,		// 戦闘準備
 		SCENE_BATTLESTART,		// 戦闘開始
-		SCENE_ENHANCE,			// 強化
 		SCENE_SKILLTREE,		// スキルツリー
 		SCENE_BOSS,				// ボス
 		SCENE_TRANSITIONWAIT,	// 遷移待機
@@ -76,7 +75,6 @@ protected:
 
 	// メンバ関数
 	virtual void SceneTransition();	// 遷移中
-	virtual void SceneEnhance();
 	virtual void SceneWaitAirPush();
 	virtual void SceneGoal();
 	virtual void ContainPlayerBaggage();

@@ -199,6 +199,10 @@ void CObjectLine::SetVtx()
 	pVtx[0].col = m_Info.col;
 	pVtx[1].col = m_Info.col;
 
+	//// 法線の設定
+	//pVtx[0].nor = MyLib::Vector3(0.0f, 1.0f, 0.0f);
+	//pVtx[1].nor = MyLib::Vector3(0.0f, 1.0f, 0.0f);
+
 	// 頂点バッファをアンロックロック
 	m_pVtxBuff->Unlock();
 }

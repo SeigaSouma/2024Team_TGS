@@ -173,23 +173,10 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	//**********************************
 	// サウンド
 	//**********************************
-	if (m_pSound != nullptr)
-	{// 確保されていたら
+	m_pSound = CSound::Create(hWnd);
+	if (m_pSound == nullptr)
+	{
 		return E_FAIL;
-	}
-
-	// メモリ確保
-	m_pSound = DEBUG_NEW CSound;
-
-	if (m_pSound != nullptr)
-	{// メモリの確保が出来ていたら
-
-		// 初期化処理
-		hr = m_pSound->Init(hWnd);
-		if (FAILED(hr))
-		{// 初期化処理が失敗した場合
-			return E_FAIL;
-		}
 	}
 
 
@@ -980,14 +967,6 @@ void CManager::SetEnableHitStop(int nCntHitStop)
 CRenderer *CManager::GetRenderer()
 {
 	return m_pRenderer;
-}
-
-//==========================================================================
-// サウンドの取得
-//==========================================================================
-CSound *CManager::GetSound()
-{
-	return m_pSound;
 }
 
 //==========================================================================

@@ -112,8 +112,6 @@ HRESULT CBattleStart::Init()
 
 	MyLib::Vector3 pos = GetPosition();
 
-	CManager::GetInstance()->GetSound()->PlaySound(CSound::LABEL::LABEL_SE_BATTLESTART_START);
-
 	return S_OK;
 }
 
@@ -171,7 +169,7 @@ void CBattleStart::StateExpansion()
 	{
 		m_fStateTime = 0.0f;
 		m_state = STATE_WAIT;
-		//CManager::GetInstance()->GetSound()->PlaySound(CSound::LABEL::LABEL_SE_BATTLESTART_CHARGE);
+		//CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_BATTLESTART_CHARGE);
 		return;
 	}
 
@@ -206,7 +204,7 @@ void CBattleStart::StateDrop()
 	{
 		m_fStateTime = 0.0f;
 		m_state = STATE_FADEOUT;
-		//CManager::GetInstance()->GetSound()->PlaySound(CSound::LABEL::LABEL_SE_BATTLESTART_CHARGE);
+		//CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_BATTLESTART_CHARGE);
 
 		SetSize(GetSizeOrigin());
 
@@ -243,7 +241,6 @@ void CBattleStart::StateFadeOut()
 
 		// í“¬ŠJŽn‚É‘JˆÚ
 		CGame::GetInstance()->GetGameManager()->SetType(CGameManager::SceneType::SCENE_MAIN);
-		CManager::GetInstance()->GetSound()->PlaySound(CSound::LABEL_SE_WINGS);
 		return;
 	}
 	float ratio = 1.0f - m_fStateTime / TIME_FADEOUT;

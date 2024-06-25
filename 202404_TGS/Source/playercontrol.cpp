@@ -254,7 +254,7 @@ void CPlayerControlMove::Move(CPlayer* player)
 			pMotion->Set(CPlayer::MOTION::MOTION_JUMP);
 
 			// サウンド再生
-			CManager::GetInstance()->GetSound()->PlaySound(CSound::LABEL_SE_JUMP);
+			CSound::GetInstance()->PlaySound(CSound::LABEL_SE_JUMP);
 		}
 #endif
 
@@ -527,6 +527,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 			// 前回が着地
 			if (m_bLandOld)
 			{
+				CSound::GetInstance()->StopSound(CSound::LABEL::LABEL_SE_DROWN);
 				float multi = 1.0f - static_cast<float>(player->GetLife()) / static_cast<float>(player->GetLifeOrigin());
 
 				// フィードバックエフェクトOFF
@@ -554,6 +555,11 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 			// 前回着地した状態に
 			m_bLandOld = true;
 		}
+	}
+
+	if (pInputKeyboard->GetTrigger(DIK_4))
+	{
+		CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_DROWN);
 	}
 
 	// 位置設定
@@ -589,14 +595,13 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	}
 #endif
 	//=============================
-		// 息エフェクト
-		//=============================
+	// 息エフェクト
+	//=============================
 	BressEffect(player, pBaggage);
 	bool bKantsu = CollisionObstacle(player, pBaggage);
 	if (CInputKeyboard::GetInstance()->GetPress(DIK_RETURN) ||
 		pKeyConfigPad->GetPress(INGAME::ACT_AIR))
 	{
-		
 
 		// 高さの降下時間加算
 		m_fTimeDownHeight += CManager::GetInstance()->GetDeltaTime();
@@ -609,6 +614,9 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 
 			if (m_BressHandle != nullptr)
 			{
+				// SEストップ
+				CSound::GetInstance()->StopSound(CSound::LABEL::LABEL_SE_BRESS_STREAM);
+
 				CMyEffekseer::GetInstance()->SetTrigger(*m_BressHandle, 1);
 			}
 
@@ -618,6 +626,10 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 				&m_BressHandle,
 				CMyEffekseer::EFKLABEL::EFKLABEL_BRESS,
 				d, 0.0f, 0.0f, 90.0f, true);
+
+
+			// SE再生
+			CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_BRESS_STREAM);
 		}
 
 		// 息の加算計算
@@ -626,6 +638,10 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 		m_fHeight = UtilFunc::Transformation::Clamp(m_fHeight, MIN_HEIGHT, LENGTH_COLLISIONHEIGHT);
 
 		float ratio = m_fHeight / m_fMaxHeight;
+
+		// SEのピッチ変更
+		CSound::GetInstance()->SetFrequency(CSound::LABEL::LABEL_SE_BRESS_STREAM, 0.5f + ratio * 1.5f);
+
 		ratio = UtilFunc::Transformation::Clamp(ratio, 0.2f, 1.0f);
 
 		// 振動
@@ -690,6 +706,9 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	{
 		//CMyEffekseer::GetInstance()->Stop(m_BressHandle);
 		CMyEffekseer::GetInstance()->SetTrigger(*m_BressHandle, 0);
+
+		// SEストップ
+		CSound::GetInstance()->StopSound(CSound::LABEL::LABEL_SE_BRESS_STREAM);
 	}
 
 

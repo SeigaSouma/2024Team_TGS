@@ -72,7 +72,7 @@ HRESULT CResult::Init()
 	}
 
 	// BGM再生
-	CManager::GetInstance()->GetSound()->PlaySound(CSound::LABEL_BGM_RESULT);
+	CSound::GetInstance()->PlaySound(CSound::LABEL_BGM_RESULT);
 
 	// メッセージを生成
 	if (CGame::GetInstance()->IsClearFrag())

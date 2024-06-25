@@ -305,6 +305,9 @@ void CBaggage::DeadMove()
 			//	MULTITARGET::START_ALPHA,
 			//	MULTITARGET::START_MULTI,
 			//	MULTITARGET::START_TIMER);
+			 
+			// SEÄ¶
+			CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_CRACK_GRASS);
 		}
 		m_bEnd = true;
 	}
@@ -423,6 +426,9 @@ bool CBaggage::Hit()
 					m_bHit = true;
 				}
 				SetMove(move);
+
+				// SEÄ¶
+				CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_HIT);
 
 				return true;
 			}

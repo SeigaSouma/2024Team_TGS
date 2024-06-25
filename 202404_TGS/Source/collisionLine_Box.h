@@ -18,7 +18,7 @@ class CCollisionLine_Box : public CObject
 {
 public:
 
-	CCollisionLine_Box(int nPriority = 3, const LAYER layer = LAYER::LAYER_LINE);
+	CCollisionLine_Box(int nPriority = mylib_const::PRIORITY_DEF2D, const LAYER layer = LAYER::LAYER_LINE);
 	~CCollisionLine_Box();
 
 	//  オーバーライド関数

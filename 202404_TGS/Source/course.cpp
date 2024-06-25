@@ -251,7 +251,6 @@ void CCourse::Reset()
 	// 頂点情報設定
 	SetVtx();
 
-
 	for (const auto& box : m_pCollisionLineBox)
 	{
 		box->Kill();
@@ -261,7 +260,7 @@ void CCourse::Reset()
 	MyLib::AABB aabb(-25.0f, 25.0f);
 	for (const auto& vtx : m_vecSegmentPosition)
 	{
-		m_pCollisionLineBox.push_back(CCollisionLine_Box::Create(aabb, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f)));
+		m_pCollisionLineBox.push_back(CCollisionLine_Box::Create(aabb, D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f)));
 	}
 
 }
@@ -280,7 +279,7 @@ void CCourse::ReCreateVtx()
 
 
 	// テクスチャの割り当て
-	int texIdx = CTexture::GetInstance()->Regist("");
+	int texIdx = CTexture::GetInstance()->Regist(TEXTURE);
 	BindTexture(texIdx);
 
 	// 種類設定
@@ -299,12 +298,19 @@ void CCourse::ReCreateVtx()
 	SetHeightBlock(static_cast<int>(m_vecVtxInfo.size()) - 1);	// 縦分割
 	SetWidthLen(0.0f);		// 縦長さ
 	SetHeightLen(0.0f);		// 横長さ
+	m_fSinCurve = 0.0f;	// サインカーブの移動量
 
 	// オブジェクト3Dメッシュの初期化処理
 	CObject3DMesh::Init(CObject3DMesh::TYPE_FIELD);
 
 	// 頂点情報設定
 	SetVtx();
+
+
+	D3DXCOLOR* pVtxCol = GetVtxCol();
+
+	// 全ての要素を書き換え
+	std::fill(pVtxCol, pVtxCol + GetNumVertex(), D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.7f));
 
 
 	for (const auto& box : m_pCollisionLineBox)
@@ -316,8 +322,13 @@ void CCourse::ReCreateVtx()
 	MyLib::AABB aabb(-25.0f, 25.0f);
 	for (const auto& vtx : m_vecSegmentPosition)
 	{
-		m_pCollisionLineBox.push_back(CCollisionLine_Box::Create(aabb, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f)));
+		m_pCollisionLineBox.push_back(CCollisionLine_Box::Create(aabb, D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f)));
 	}
+
+	// 頂点座標計算
+	SetVtxPosition();
+
+	SetPosition(MyLib::Vector3(0.0f, HEIGHT_SINCURVE, 0.0f));
 }
 
 //==========================================================================
@@ -535,6 +546,11 @@ void CCourse::CalBothVtxPosition()
 	idx = 0;
 	for (int i = 0; i < GetNumVertex() / 2; i++)
 	{
+		if (vecpos.size() <= i)
+		{
+			break;
+		}
+
 		// 頂点座標代入
 		pVtxPos[idx] = vecpos[i];
 
@@ -547,6 +563,11 @@ void CCourse::CalBothVtxPosition()
 	idx = 1;
 	for (int i = 0; i < GetNumVertex() / 2; i++)
 	{
+		if (vecpos.size() <= i)
+		{
+			break;
+		}
+
 		// 頂点座標代入
 		pVtxPos[idx] = vecpos[i];
 

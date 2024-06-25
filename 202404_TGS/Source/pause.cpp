@@ -249,7 +249,7 @@ void CPause::UpdateSelect()
 		m_nSelect = (m_nSelect + (MENU_MAX - 1)) % MENU_MAX;
 
 		// サウンド再生
-		CManager::GetInstance()->GetSound()->PlaySound(CSound::LABEL::LABEL_SE_CURSOR_MOVE);
+		CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_CURSOR_MOVE);
 	}
 	else if (pInputKeyboard->GetTrigger(DIK_S) ||
 		pInputGamepad->GetTrigger(CInputGamepad::BUTTON_DOWN, 0) ||
@@ -260,7 +260,7 @@ void CPause::UpdateSelect()
 		m_nSelect = (m_nSelect + 1) % MENU_MAX;
 
 		// サウンド再生
-		CManager::GetInstance()->GetSound()->PlaySound(CSound::LABEL::LABEL_SE_CURSOR_MOVE);
+		CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_CURSOR_MOVE);
 	}
 
 
@@ -288,13 +288,11 @@ void CPause::Decide()
 
 		// モード別決定処理
 		DecideByMode();
-		CManager::GetInstance()->GetSound()->PlaySound(CSound::LABEL::LABEL_SE_BATTLERESULT_END);
 		break;
 
 	case MENU_RETURNTITLE:
 
 		// サウンド再生
-		CManager::GetInstance()->GetSound()->PlaySound(CSound::LABEL::LABEL_SE_BATTLERESULT_END);
 
 		// タイトルに戻る
 		CManager::GetInstance()->GetFade()->SetFade(CScene::MODE_TITLE);
