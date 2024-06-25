@@ -4,8 +4,8 @@ Format Text Ver 1.0
 Scene {
 	pos -496.5700 -152.8987 15728.6426
 	lookat 0.0000 0.0000 0.0000
-	head -0.2336
-	pich -0.8508
+	head -1.5336
+	pich 0.2292
 	bank 0.0000
 	ortho 0
 	zoom2 0.4768
@@ -18,7 +18,7 @@ Scene {
 	}
 }
 Material 1 {
-	"13___Default" col(0.914 0.914 0.914 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("Horse_v01.jpg")
+	"13___Default" col(0.914 0.914 0.914 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("data\\TEXTURE\\map_object\\Horse_v01.jpg")
 }
 Object "obj1" {
 	visible 15

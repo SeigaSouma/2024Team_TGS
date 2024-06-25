@@ -8,7 +8,7 @@
 #ifndef _PLAYERCONTROL_H_
 #define _PLAYERCONTROL_H_	// 二重インクルード防止
 
-#define BRESSRANGE (1)
+#define BRESSRANGE (0)
 
 #include "player.h"
 #include "baggage.h"
@@ -62,6 +62,8 @@ private:
 
 	// メンバ関数
 	bool CollisionObstacle(CPlayer* player, CBaggage* pBaggage);	// 障害物判定
+	bool EndCheck(CBaggage* pBaggage);
+	void BressEffect(CPlayer* player, CBaggage* pBaggage);		// 息エフェクト
 
 	// メンバ変数
 	Effekseer::Handle* m_BressHandle = nullptr;
@@ -76,6 +78,8 @@ private:
 	float m_fMaxHeight = 1000.0f;		// 息の届く最大の高さ
 	float m_fTimeDownHeight = 0.0f;		// 高さの降下時間
 	float m_fHeightVelocity = 10.0f;	// 息の加算量
+	float m_fBressTimer = 0.0f;			// 息のタイマー
+	float m_fIntervalBress = 0.0f;		// 息のタイマー
 	bool m_bLandOld;					// 前回の着地情報
 };
 

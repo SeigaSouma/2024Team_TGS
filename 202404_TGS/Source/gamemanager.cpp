@@ -383,7 +383,8 @@ void CGameManager::SceneWaitAirPush()
 	CInputGamepad* pInputGamepad = CInputGamepad::GetInstance();
 
 	if (pTimer != nullptr &&
-		pConfigPad->GetTrigger(INGAME::ACT_AIR))
+		pConfigPad->GetTrigger(INGAME::ACT_AIR) ||
+		CInputKeyboard::GetInstance()->GetTrigger(DIK_RETURN))
 	{
 		pTimer->SetEnableAddTime(true);
 		m_SceneType = CGameManager::SceneType::SCENE_MAIN;
@@ -463,6 +464,7 @@ void CGameManager::CheckJudgeZone()
 
 	// 進行度計算して確認
 	float progress = pPlayer->GetMoveLength() / pCource->GetCourceLength();
+	CManager::GetInstance()->GetDebugProc()->Print("進行度:%f\n", progress);
 	CJudgeZoneManager::GetInstance()->Check(progress);
 }
 

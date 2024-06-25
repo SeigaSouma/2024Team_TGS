@@ -43,6 +43,7 @@ public:
 		EDITTYPE_MAP,			// マップ
 		EDITTYPE_OBSTACLE,		// 障害物
 		EDITTYPE_COURSE,		// コース
+		EDITTYPE_WATERSTONE,	// 水中石
 		EDITTYPE_MAX
 	};
 

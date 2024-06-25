@@ -40,7 +40,8 @@ public:
 		TYPE_JUJI,			// 十字エフェクト
 		TYPE_JUJI2,			// 十字エフェクト
 		TYPE_THUNDER,		// 雷エフェクト
-		TYPE_nullptr,			// nullptrエフェクト
+		TYPE_WATER,			// 水滴エフェクト
+		TYPE_nullptr,		// nullptrエフェクト
 		TYPE_MAX
 	}TYPE;
 
@@ -64,6 +65,7 @@ public:
 	void SetEnableGravity() { m_bGravity = true; }	// 重力有効
 	void SetDisableZSort() { m_bZSort = false; }	// Zソート無効
 	void SetGravityValue(float fValue);					// 重力の値設定
+	void SetMoveFactor(float factor) { m_fMoveFactor = factor; };		// 移動補正係数
 	void SetUp(MyLib::Vector3 setup, D3DXMATRIX *pMtxParent, CObject *pObj, int nParentIdx);	// セットアップ
 	void UpdatePosition(MyLib::Vector3 rot);	// 位置更新
 	void UninitParent();	// 親の破棄
@@ -90,6 +92,7 @@ private:
 	float m_fMaxRadius;			// 最大半径
 	float m_fAddSizeValue;		// サイズ変更量
 	float m_fGravity;			// 重力
+	float m_fMoveFactor;		// 移動補正係数
 	int m_nLife;				// 寿命
 	int m_nMaxLife;				// 最大寿命(固定)
 	int m_moveType;				// 移動の種類

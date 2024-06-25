@@ -32,6 +32,7 @@ const char *CEffect3D::m_apTextureFile[] =					// ファイル読み込み
 	"data\\TEXTURE\\effect\\effect001.png",		// 十字エフェクト
 	"data\\TEXTURE\\effect\\Star01.png",		// 十字エフェクト
 	"data\\TEXTURE\\effect\\thunder_02.tga",	// 雷エフェクト
+	"data\\TEXTURE\\effect\\water.png",			// 水エフェクト
 	"",											// nullptrエフェクト
 };
 int CEffect3D::m_nNumAll = 0;	// 総数
@@ -53,6 +54,7 @@ CEffect3D::CEffect3D(int nPriority) : CObjectBillboard(nPriority)
 	m_fMaxRadius = 0.0f;						// 最大半径
 	m_fAddSizeValue = 0.0f;						// サイズ変更量
 	m_fGravity = 0.0f;							// 重力
+	m_fMoveFactor = 0.0f;						// 移動補正係数
 	m_nLife = 0;								// 寿命
 	m_nMaxLife = 0;								// 最大寿命(固定)
 	m_moveType = MOVEEFFECT_NONE;				// 移動の種類
@@ -237,6 +239,10 @@ HRESULT CEffect3D::Init(const MyLib::Vector3& pos, const MyLib::Vector3& move, c
 		m_bAddAlpha = true;
 		break;
 
+	case TYPE_WATER:
+		m_bAddAlpha = true;
+		break;
+
 	default:
 		m_bAddAlpha = true;
 		break;
@@ -265,6 +271,9 @@ HRESULT CEffect3D::Init(const MyLib::Vector3& pos, const MyLib::Vector3& move, c
 		Uninit();
 		return E_FAIL;
 	}
+
+	// 移動補正係数
+	m_fMoveFactor = 0.15f;
 
 	return S_OK;
 }
@@ -489,9 +498,9 @@ void CEffect3D::Gensui()
 	// 移動量取得
 	MyLib::Vector3 move = GetMove();
 
-	move.x += (0.0f - move.x) * 0.15f;
-	move.y += (0.0f - move.y) * 0.15f;
-	move.z += (0.0f - move.z) * 0.15f;
+	move.x += (0.0f - move.x) * m_fMoveFactor;
+	move.y += (0.0f - move.y) * m_fMoveFactor;
+	move.z += (0.0f - move.z) * m_fMoveFactor;
 
 	// 移動量設定
 	SetMove(move);

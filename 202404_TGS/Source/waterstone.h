@@ -9,6 +9,7 @@
 #define _WATERSTONE_H_		// 二重インクルード防止
 
 #include "objectX.h"
+#include "waterstoneManager.h"
 
 //==========================================================================
 // クラス定義
@@ -33,6 +34,8 @@ public:
 	// メンバ関数
 	//=============================
 	void Kill();		// 削除
+	void SetStoneInfo(const CWaterStone_Manager::SStoneInfo& info) { m_StoneInfo = info; }	// 石情報設定
+	CWaterStone_Manager::SStoneInfo GetStoneInfo() { return m_StoneInfo; }	// 石情報取得
 
 	//=============================
 	// 静的関数
@@ -41,7 +44,8 @@ public:
 	@brief		生成処理
 	@details	必要があれば引数追加
 	*/
-	static CWaterStone *Create(const MyLib::Vector3& pos);
+	static CWaterStone* Create(const CWaterStone_Manager::SStoneInfo& info);
+	static CListManager<CWaterStone> GetListObj() { return m_List; }	// リスト取得
 
 private:
 
@@ -55,6 +59,8 @@ private:
 	//=============================
 	float m_fSplashTimer;		// しぶきタイマー
 	float m_fIntervalSplash;	// しぶきまでのインターバル
+	CWaterStone_Manager::SStoneInfo m_StoneInfo;	// 石情報
+	static CListManager<CWaterStone> m_List;		// リスト
 };
 
 

@@ -557,6 +557,12 @@
     <ClCompile Include="Source\judgestatefunc.cpp">
       <Filter>judgezone</Filter>
     </ClCompile>
+    <ClCompile Include="Source\edit_waterstone.cpp">
+      <Filter>edit</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\waterstoneManager.cpp">
+      <Filter>map</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ballast.h">
@@ -1020,6 +1026,12 @@
     </ClInclude>
     <ClInclude Include="Source\judgeobj.h">
       <Filter>judgezone</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\edit_waterstone.h">
+      <Filter>edit</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\waterstoneManager.h">
+      <Filter>map</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
