@@ -35,6 +35,8 @@ namespace
 	const float HEIGHT_MOVETIMER = (1.0f / 0.5f);	// 高さ変化遷移タイマー
 	const float COMMAND_HEIGHT = 200.0f;	// 高さ
 	float INTERVAL_BRESSEFFECT = 0.32f;	// 息出すまでの間隔
+	const float DEFAULT_BRESSSCALE_EFFECT = 90.0f;	// デフォの息エフェクトスケール
+	const float MIN_RATIO_HEIGHT_BRESS = 0.2f;	// 息の高さの最小割合
 }
 
 //==========================================================================
@@ -620,12 +622,13 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 				CMyEffekseer::GetInstance()->SetTrigger(*m_BressHandle, 1);
 			}
 
+			// 息エフェクト生成
 			MyLib::Vector3 d = pos;
 			d.y = posBaggageOrigin.y;
 			CMyEffekseer::GetInstance()->SetEffect(
 				&m_BressHandle,
 				CMyEffekseer::EFKLABEL::EFKLABEL_BRESS,
-				d, 0.0f, 0.0f, 90.0f, true);
+				d, 0.0f, 0.0f, DEFAULT_BRESSSCALE_EFFECT, true);
 
 
 			// SE再生
@@ -637,18 +640,18 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 		m_fHeight += ADD_HEIGHT + m_fHeightVelocity;
 		m_fHeight = UtilFunc::Transformation::Clamp(m_fHeight, MIN_HEIGHT, LENGTH_COLLISIONHEIGHT);
 
+		// 高さの割合
 		float ratio = m_fHeight / m_fMaxHeight;
 
 		// SEのピッチ変更
 		CSound::GetInstance()->SetFrequency(CSound::LABEL::LABEL_SE_BRESS_STREAM, 0.5f + ratio * 1.5f);
 
-		ratio = UtilFunc::Transformation::Clamp(ratio, 0.2f, 1.0f);
+		ratio = UtilFunc::Transformation::Clamp(ratio, MIN_RATIO_HEIGHT_BRESS, 1.0f);
 
 		// 振動
 		pInputGamepad->SetEnableVibration();
 		pInputGamepad->SetVibMulti(1.0f * ratio);
 		pInputGamepad->SetVibration(CInputGamepad::VIBRATION_STATE::VIBRATION_STATE_AIR, 0);
-		m_fMaxHeight;
 
 		if (posBaggage.y <= posBaggageOrigin.y + m_fHeight &&
 			posBaggage.x <= pos.x + range &&
@@ -696,12 +699,13 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 		m_fHeight = UtilFunc::Transformation::Clamp(m_fHeight, LENGTH_COLLISIONHEIGHT * ratioMinDownheight, LENGTH_COLLISIONHEIGHT);
 	}
 
-
+	// 落下状態更新
 	if (posBaggage.y <= MIN_HEIGHT)
 	{
 		fall = true;
 	}
 
+	// 息エフェクト状態変更
 	if (fall && m_BressHandle != nullptr)
 	{
 		//CMyEffekseer::GetInstance()->Stop(m_BressHandle);
@@ -718,13 +722,13 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	// 位置設定
 	if (m_BressHandle != nullptr)
 	{
-		CMyEffekseer::GetInstance()->SetPosition(*m_BressHandle, d);
+		// 高さの割合
+		float ratio = m_fHeight / m_fMaxHeight;
+		ratio = UtilFunc::Transformation::Clamp(ratio, MIN_RATIO_HEIGHT_BRESS, 1.0f);
 
-		//// デバッグ表示
-		//CManager::GetInstance()->GetDebugProc()->Print(
-		//	"------------------[プレイヤーの操作]------------------\n"
-		//	"移動中のエフェクト 【%d】\n"
-		//	, *m_BressHandle);
+		CMyEffekseer::GetInstance()->SetPosition(*m_BressHandle, d);
+		CMyEffekseer::GetInstance()->SetScale(*m_BressHandle, DEFAULT_BRESSSCALE_EFFECT * ratio);
+
 	}
 }
 
