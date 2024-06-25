@@ -4,8 +4,8 @@ Format Text Ver 1.0
 Scene {
 	pos 674.2592 -2350.4915 40265.3281
 	lookat 0.0000 0.0000 0.0000
-	head 30.7165
-	pich 0.0092
+	head 36.9265
+	pich 0.6092
 	bank 0.0000
 	ortho 0
 	zoom2 0.1863
@@ -18,11 +18,11 @@ Scene {
 	}
 }
 Material 5 {
-	"mat1" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("TEXTURE\kayabuki_yane.jpg") proj_type(1) proj_pos(0.000 0.000 0.000) proj_scale(2458.172 2458.172 2458.172) proj_angle(0.000 0.000 0.000)
-	"mat2" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("TEXTURE\kayabuki_yane.jpg") proj_type(1) proj_pos(0.000 0.000 0.000) proj_scale(2927.014 2927.014 2927.014) proj_angle(-86.000 -0.000 0.000)
-	"mat3" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("TEXTURE\edo_nagaya001.png") proj_type(1) proj_pos(0.000 648.182 1118.259) proj_scale(2470.460 792.348 100.000) proj_angle(-89.000 -0.000 0.000)
-	"mat4" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("TEXTURE\edo_nagaya000.png") proj_type(1) proj_pos(893.253 781.747 0.000) proj_scale(1674.265 920.232 100.000) proj_angle(0.000 0.000 0.000)
-	"mat5" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("TEXTURE\edo_nagaya000.png") proj_type(1) proj_pos(-29.359 757.655 84.431) proj_scale(1090.288 981.875 100.000) proj_angle(91.500 -0.000 0.000)
+	"kayabuki_L00" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("TEXTURE\map_object\kayabuki_yane.jpg") proj_type(1) proj_pos(0.000 0.000 0.000) proj_scale(2458.172 2458.172 2458.172) proj_angle(0.000 0.000 0.000)
+	"kayabuki_L01" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("TEXTURE\map_object\kayabuki_yane.jpg") proj_type(1) proj_pos(0.000 0.000 0.000) proj_scale(2927.014 2927.014 2927.014) proj_angle(-86.000 -0.000 0.000)
+	"nagaya_L00" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("TEXTURE\map_object\edo_nagaya001.png") proj_type(1) proj_pos(0.000 648.182 1118.259) proj_scale(2470.460 792.348 100.000) proj_angle(-89.000 -0.000 0.000)
+	"nagaya_L01" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("TEXTURE\map_object\edo_nagaya000.png") proj_type(1) proj_pos(893.253 781.747 0.000) proj_scale(1674.265 920.232 100.000) proj_angle(0.000 0.000 0.000)
+	"nagaya_L02" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("TEXTURE\map_object\edo_nagaya000.png") proj_type(1) proj_pos(-29.359 757.655 84.431) proj_scale(1090.288 981.875 100.000) proj_angle(91.500 -0.000 0.000)
 }
 Object "obj1" {
 	visible 15
