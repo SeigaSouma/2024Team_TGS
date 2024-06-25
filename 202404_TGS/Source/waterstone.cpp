@@ -120,7 +120,7 @@ void CWaterStone::Update()
 	// しぶきタイマー加算
 	m_fSplashTimer += CManager::GetInstance()->GetDeltaTime();
 
-
+#if 0
 	static int createIdx = 8;
 	static int Life = 50;
 	static int Randrange = 28;
@@ -131,7 +131,22 @@ void CWaterStone::Update()
 	static int colorRandRange = 22;
 	static float defradius = 25.2f;
 	static float gravity = 0.16f;
-	static float movefactor = 0.4f;
+
+#else
+
+	static int createIdx = 8;
+	static int Life = 50;
+	static int Randrange = 11;
+	static int posXZrange = 67;
+	static int XZrange = 23;
+	static int MinYRange = 37;
+	static int MaxYRange = 43;
+	static int ForwardRange_Min = 544;
+	static int ForwardRange = 775;
+	static int colorRandRange = 22;
+	static float defradius = 25.2f;
+	static float gravity = 0.16f;
+#endif
 
 	// カラーエディット
 	static ImVec4 myColor = ImVec4(0.658f, 0.658f, 1.0, 0.87f); // RGBA
@@ -143,13 +158,14 @@ void CWaterStone::Update()
 		ImGui::DragInt("Interval_Randrange", &Randrange, 1);
 		ImGui::DragInt("Life", &Life, 1);
 		ImGui::DragInt("pos XZrange", &posXZrange, 1);
-		ImGui::DragInt("XZrange", &XZrange, 1);
+		ImGui::DragInt("XZrange", &XZrange, 1, 0);
 		ImGui::DragInt("MinYRange", &MinYRange, 1);
 		ImGui::DragInt("MaxYRange", &MaxYRange, 1, MinYRange);
+		ImGui::DragInt("ForwardRange_Min", &ForwardRange_Min, 1, 0);
+		ImGui::DragInt("ForwardRange_Max", &ForwardRange, 1, ForwardRange_Min +1);
 		ImGui::DragInt("colorRandRange", &colorRandRange, 1);
 		ImGui::DragFloat("defradius", &defradius, 0.1f, 0.0f, 0.0f, "%.2f");
 		ImGui::DragFloat("gravity", &gravity, 0.01f, 0.0f, 0.0f, "%.2f");
-		ImGui::DragFloat("Move factor", &movefactor, 0.01f, 0.0f, 0.0f, "%.2f");
 		ImGui::ColorEdit4("Color", &myColor.x);
 
 		ImGui::TreePop();
@@ -165,18 +181,42 @@ void CWaterStone::Update()
 
 		for (int i = 0; i < createIdx; i++)
 		{
-			float randmoveX = UtilFunc::Transformation::Random(-XZrange, XZrange) * 0.01f;
+			// 移動量
+			float randmoveX = UtilFunc::Transformation::Random(0, XZrange) * 0.1f;
 			float randmoveY = UtilFunc::Transformation::Random(MinYRange, MaxYRange) * 0.1f;
 			float randRadius = UtilFunc::Transformation::Random(-30, 30) * 0.1f;
+			
 
-			move.x = randmoveX;
-			move.z = randmoveX;
+			float angle = 0.3f;
+			angle += UtilFunc::Transformation::Random(-20, 20) * 0.001f;
+
+			if (i >= createIdx / 2)
+			{
+				angle *= -1;
+			}
+			move.x = sinf(D3DX_PI * angle + m_StoneInfo.rot.y) * randmoveX;
+			move.z = cosf(D3DX_PI * angle + m_StoneInfo.rot.y) * randmoveX;
 			move.y = randmoveY;
 
+			// 半径
 			float radius = defradius + randRadius;
 
-			int xz = UtilFunc::Transformation::Random(-posXZrange, posXZrange);
-			pos = posOrigin + MyLib::Vector3(xz, 0.0f, xz);
+			// 生成位置のぶれ
+			int xz = UtilFunc::Transformation::Random(0, posXZrange);
+			if (i >= createIdx / 2)
+			{
+				xz *= -1;
+			}
+			
+			// 生成位置
+			MyLib::Vector3 randpos;
+			randpos.x = sinf(D3DX_PI * 0.5f + m_StoneInfo.rot.y) * xz;
+			randpos.z = cosf(D3DX_PI * 0.5f + m_StoneInfo.rot.y) * xz;
+
+			float forwardRandPos = UtilFunc::Transformation::Random(ForwardRange_Min, ForwardRange) * 0.1f;
+			randpos.x += sinf(D3DX_PI + m_StoneInfo.rot.y) * forwardRandPos;
+			randpos.z += cosf(D3DX_PI + m_StoneInfo.rot.y) * forwardRandPos;
+			pos = posOrigin + randpos;
 
 
 			float colorrand = UtilFunc::Transformation::Random(-colorRandRange, colorRandRange) * 0.01f;
