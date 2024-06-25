@@ -11,7 +11,7 @@ TEXTURE_FILENAME = data\TEXTURE\sky\sky_02.jpg		# [0]
 #------------------------------------------------------------------------------
 # モデル数
 #------------------------------------------------------------------------------
-NUM_MODEL = 67
+NUM_MODEL = 72
 
 #------------------------------------------------------------------------------
 # モデルファイル名
@@ -83,6 +83,11 @@ MODEL_FILENAME = data\MODEL\map_object\sentou.x		# [63]
 MODEL_FILENAME = data\MODEL\map_object\souko.x		# [64]
 MODEL_FILENAME = data\MODEL\map_object\umagoya.x		# [65]
 MODEL_FILENAME = data\MODEL\map_object\big_boss_2nd.x		# [66]
+MODEL_FILENAME = data\MODEL\river_object\bush.x		# [67]
+MODEL_FILENAME = data\MODEL\river_object\crab.x		# [68]
+MODEL_FILENAME = data\MODEL\river_object\hat.x		# [69]
+MODEL_FILENAME = data\MODEL\river_object\rockman.x		# [70]
+MODEL_FILENAME = data\MODEL\river_object\ryohukaruma.x		# [71]
 
 #==============================================================================
 # 空情報

@@ -420,6 +420,11 @@ void CEdit_WaterStone::Transform()
 		ImGui::PopID();
 
 
+		//=============================
+		// Ží—ÞÝ’è
+		//=============================
+		ImGui::SetNextItemWidth(windowWidth);
+		ImGui::SliderInt("Type", &selectInfo.type, 0, CWaterStone::GetModelNum());
 
 		ImGui::TreePop();
 	}
@@ -433,6 +438,7 @@ void CEdit_WaterStone::Transform()
 	// Îî•ñÝ’è
 	pSelectStone->SetStoneInfo(selectInfo);
 	pSelectStone->SetPosition(selectInfo.pos);
+	//pSelectStone->BindXData(selectInfo.type);
 }
 
 //==========================================================================
@@ -466,7 +472,7 @@ void CEdit_WaterStone::AddPoint()
 		pMouse->GetTrigger(CInputMouse::BUTTON::BUTTON_LEFT))
 	{
 		pos.y = 0.0f;
-		CWaterStone_Manager::SStoneInfo info(pos, 0.0f);
+		CWaterStone_Manager::SStoneInfo info(pos, 0.0f, 0);
 		CWaterStone::Create(info);
 	}
 }

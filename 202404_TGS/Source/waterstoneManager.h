@@ -24,11 +24,12 @@ public:
 	// êŒèÓïÒ
 	struct SStoneInfo
 	{
-		MyLib::Vector3 pos;
-		MyLib::Vector3 rot;
+		MyLib::Vector3 pos;	// à íu
+		MyLib::Vector3 rot;	// å¸Ç´
+		int type;			// éÌóﬁ
 
-		SStoneInfo() : pos(), rot() {}
-		SStoneInfo(const MyLib::Vector3& _pos, const MyLib::Vector3& _rot) : pos(_pos), rot(_rot) {}
+		SStoneInfo() : pos(), rot(), type(0) {}
+		SStoneInfo(const MyLib::Vector3& _pos, const MyLib::Vector3& _rot, int _type) : pos(_pos), rot(_rot), type(_type) {}
 	};
 
 

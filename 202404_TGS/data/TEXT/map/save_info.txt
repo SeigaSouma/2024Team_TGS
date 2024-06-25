@@ -11,7 +11,7 @@ TEXTURE_FILENAME = data\TEXTURE\sky\sky_02.jpg		# [0]
 #------------------------------------------------------------------------------
 # モデル数
 #------------------------------------------------------------------------------
-NUM_MODEL = 66
+NUM_MODEL = 72
 
 #------------------------------------------------------------------------------
 # モデルファイル名
@@ -82,6 +82,12 @@ MODEL_FILENAME = data\MODEL\map_object\prison.x		# [62]
 MODEL_FILENAME = data\MODEL\map_object\sentou.x		# [63]
 MODEL_FILENAME = data\MODEL\map_object\souko.x		# [64]
 MODEL_FILENAME = data\MODEL\map_object\umagoya.x		# [65]
+MODEL_FILENAME = data\MODEL\map_object\big_boss_2nd.x		# [66]
+MODEL_FILENAME = data\MODEL\river_object\bush.x		# [67]
+MODEL_FILENAME = data\MODEL\river_object\crab.x		# [68]
+MODEL_FILENAME = data\MODEL\river_object\hat.x		# [69]
+MODEL_FILENAME = data\MODEL\river_object\rockman.x		# [70]
+MODEL_FILENAME = data\MODEL\river_object\ryohukaruma.x		# [71]
 
 #==============================================================================
 # 空情報
@@ -308,6 +314,102 @@ MODELSET
 	POS = 20935.63 302.27 5922.94
 	ROT = 0.00 0.00 0.00
 	SCALE = 1.68
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 71
+	POS = 2593.71 0.00 375.17
+	ROT = 0.28 0.00 -0.41
+	SCALE = 2.82
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 71
+	POS = 2722.65 0.00 328.03
+	ROT = 0.60 0.00 -0.09
+	SCALE = 2.83
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 71
+	POS = 2795.50 0.00 316.59
+	ROT = 0.54 0.00 -0.25
+	SCALE = 2.83
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 71
+	POS = 0.00 0.00 0.00
+	ROT = 0.00 0.00 0.00
+	SCALE = 1.00
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 71
+	POS = 0.00 0.00 0.00
+	ROT = 0.00 0.00 0.00
+	SCALE = 1.00
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 70
+	POS = 2096.20 94.49 -1022.95
+	ROT = 0.00 0.00 0.00
+	SCALE = 2.53
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 67
+	POS = 3662.77 -74.68 62.74
+	ROT = 0.00 0.00 0.00
+	SCALE = 5.09
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 68
+	POS = 2540.72 19.89 -258.44
+	ROT = 0.00 0.79 0.00
+	SCALE = 4.31
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 68
+	POS = 3816.10 28.64 -1056.56
+	ROT = 0.00 1.67 0.00
+	SCALE = 4.32
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 68
+	POS = 0.00 0.00 0.00
+	ROT = 0.00 0.00 0.00
+	SCALE = 1.00
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 68
+	POS = 0.00 0.00 0.00
+	ROT = 0.00 0.00 0.00
+	SCALE = 1.00
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 69
+	POS = 3097.14 25.31 186.17
+	ROT = -0.75 0.00 0.00
+	SCALE = 3.20
 	SHADOW = 1
 END_MODELSET
 

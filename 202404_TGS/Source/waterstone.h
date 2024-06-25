@@ -45,8 +45,8 @@ public:
 	@details	必要があれば引数追加
 	*/
 	static CWaterStone* Create(const CWaterStone_Manager::SStoneInfo& info);
-	static CListManager<CWaterStone> GetListObj() { return m_List; }	// リスト取得
-
+	static CListManager<CWaterStone> GetListObj() { return m_List; }				// リスト取得
+	static int GetModelNum() { return static_cast<int>(m_vecModelFile.size()); }	// モデルの種類数取得
 private:
 
 	//=============================
@@ -60,6 +60,7 @@ private:
 	float m_fSplashTimer;		// しぶきタイマー
 	float m_fIntervalSplash;	// しぶきまでのインターバル
 	CWaterStone_Manager::SStoneInfo m_StoneInfo;	// 石情報
+	static const std::vector<std::string> m_vecModelFile;	// モデルファイルのコンテナ
 	static CListManager<CWaterStone> m_List;		// リスト
 };
 

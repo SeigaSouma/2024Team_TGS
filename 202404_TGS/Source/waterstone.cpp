@@ -14,17 +14,17 @@
 //==========================================================================
 namespace
 {
-	const std::string MODEL[] =
-	{
-		"data\\MODEL\\map_object\\rock_01_small.x",
-		"data\\MODEL\\map_object\\rock_02.x",
-		"data\\MODEL\\map_object\\rock_03.x",
-		"data\\MODEL\\map_object\\rock_04.x",
-		"data\\MODEL\\map_object\\rock_05.x",
-	};
 	float DEFAULT_SPLASHTIME = 0.14f;	// 通常のしぶき時間
 }
-CListManager<CWaterStone> CWaterStone::m_List = {};	// リスト
+CListManager<CWaterStone> CWaterStone::m_List = {};				// リスト
+const std::vector<std::string> CWaterStone::m_vecModelFile =	// モデルファイルのコンテナ
+{
+	"data\\MODEL\\map_object\\rock_01_small.x",
+	"data\\MODEL\\map_object\\rock_02.x",
+	"data\\MODEL\\map_object\\rock_03.x",
+	"data\\MODEL\\map_object\\rock_04.x",
+	"data\\MODEL\\map_object\\rock_05.x",
+};
 
 //==========================================================================
 // コンストラクタ
@@ -75,11 +75,9 @@ HRESULT CWaterStone::Init()
 	// 種類の設定
 	CObject::SetType(TYPE_OBJECTX);
 
+	m_StoneInfo.type = 0;
 	// 初期化処理
-	int idx = (sizeof(MODEL) / sizeof(*MODEL)) - 1;
-	idx = UtilFunc::Transformation::Random(0, idx);
-
-	HRESULT hr = CObjectX::Init(MODEL[idx]);
+	HRESULT hr = CObjectX::Init(m_vecModelFile[m_StoneInfo.type]);
 	if (FAILED(hr))
 	{
 		return E_FAIL;
