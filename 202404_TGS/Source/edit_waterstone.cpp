@@ -238,7 +238,7 @@ void CEdit_WaterStone::DragLine()
 
 
 	if (!m_bHoverWindow &&
-		pMouse->GetPress(CInputMouse::BUTTON::BUTTON_LEFT))
+		pMouse->GetPress(CInputMouse::BUTTON::BUTTON_LEFT) && !CInputKeyboard::GetInstance()->GetPress(DIK_LALT))
 	{// 左押し込み時
 
 		// マトリックス初期化
@@ -316,6 +316,18 @@ void CEdit_WaterStone::Transform()
 
 	CWaterStone_Manager::SStoneInfo selectInfo = pSelectStone->GetStoneInfo();
 
+	MyLib::Vector3 move;
+	move.x = sinf(D3DX_PI + selectInfo.rot.y) * 30.0f;
+	move.z = cosf(D3DX_PI + selectInfo.rot.y) * 30.0f;
+
+	CEffect3D::Create(
+		MyLib::Vector3(selectInfo.pos.x, selectInfo.pos.y + 100.0f, selectInfo.pos.z),
+		move,
+		mylib_const::DEFAULT_COLOR,
+		40.0f,
+		10,
+		CEffect3D::MOVEEFFECT::MOVEEFFECT_SUB,
+		CEffect3D::TYPE::TYPE_NORMAL);
 
 	ImGui::Dummy(ImVec2(0.0f, 10.0f));
 	if (ImGui::TreeNode("Transform"))
@@ -411,6 +423,9 @@ void CEdit_WaterStone::Transform()
 
 		ImGui::TreePop();
 	}
+
+	// 角度の正規化
+	UtilFunc::Transformation::RotNormalize(selectInfo.rot);
 
 	if (m_bDrag)
 		return;
