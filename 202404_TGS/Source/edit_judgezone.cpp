@@ -70,11 +70,37 @@ void CEdit_JudgeZone::Update()
 	ImGuiHoveredFlags frag = 128;
 	m_bHoverWindow = ImGui::IsWindowHovered(frag);
 
+	// 設定ゾーンの適用
+	ApplyZone();
+
 	// ファイル操作
 	FileControl();
 
 	// 判定ゾーン設定
 	SetJudgeZone();
+}
+
+//==========================================================================
+// 設定ゾーンの適用
+//==========================================================================
+void CEdit_JudgeZone::ApplyZone()
+{
+	// ボタン押されてなかったら終了
+	if (!ImGui::Button("Apply")) return;
+
+	// 既存の再設定か新規作成か
+	if (false)
+	{// 既存の再設定
+
+	}
+	else
+	{// 新規作成
+		CJudgeZone* pJudgeZone = CJudgeZone::Create(m_JudgeZoneData.zone.start, m_JudgeZoneData.zone.end, m_JudgeZoneData.zone.borderHeight);
+		pJudgeZone->SetInfo(CJudge::BORDER::TOP, m_JudgeZoneData.conditionTop);
+		pJudgeZone->SetInfo(CJudge::BORDER::UNDER, m_JudgeZoneData.conditionTop);
+
+		CJudgeZoneManager::GetInstance()->Add(pJudgeZone);
+	}
 }
 
 //==========================================================================

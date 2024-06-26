@@ -82,6 +82,7 @@ HRESULT CJudgeZoneManager::Init()
 //==========================================================================
 void CJudgeZoneManager::Uninit()
 {
+	ReleaseAll();
 	delete m_ThisPtr;
 	m_ThisPtr = nullptr;
 }

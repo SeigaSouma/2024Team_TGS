@@ -43,6 +43,7 @@ private:
 	};
 
 	// メンバ関数
+	void ApplyZone();		// 設定ゾーンの適用
 	void FileControl();		// ファイル操作
 	void SetJudgeZone();	// 判定ゾーン設定
 	void SetCondition(CJudge::SJudgeCondition& condition,bool* pEnable, CJudge::CONDITIONTYPE& conditionType);
