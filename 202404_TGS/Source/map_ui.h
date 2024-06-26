@@ -12,6 +12,7 @@
 // 前方宣言
 class CObjectX;
 class CCamera;
+class CPlayer;
 
 //==========================================================================
 // クラス定義
@@ -46,6 +47,9 @@ public:
 	void Update() override;
 	void Draw() override;
 
+	// 設定
+	void BindPlayer(CPlayer* pPlayer) { m_pMyPlayer = pPlayer; }
+
 private:
 
 	// 静的メンバ変数
@@ -53,10 +57,13 @@ private:
 	static std::string m_aModelList[TYPE::TYPE_MAX];	// オブジェクトファイル名
 
 	// メンバ関数
+	void SetMapRotation();	// マップの回転
 
 	// メンバ変数
-	CObjectX* m_apObj[TYPE::TYPE_MAX];					// オブジェクト
-	CCamera* m_pMyCamera;								// カメラ
+	float m_fRatio;			// ゴールまでの割合
+	CObjectX* m_apObj[TYPE::TYPE_MAX];	// オブジェクト
+	CCamera* m_pMyCamera;	// カメラ
+	CPlayer* m_pMyPlayer;	// プレイヤー
 };
 
 #endif
