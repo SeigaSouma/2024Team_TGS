@@ -1302,6 +1302,12 @@ void CPlayer::DeadSetting(MyLib::HitResult_Character* result)
 
 	// 死んだ
 	result->isdeath = true;
+
+	// 空気エフェクトをリセットする
+	if (m_pControlBaggage)
+	{
+		m_pControlBaggage->EffectStop();
+	}
 }
 
 //==========================================================================
