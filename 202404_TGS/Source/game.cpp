@@ -76,6 +76,7 @@ CGame::CGame()
 	m_pBaggageManager = nullptr;	// 荷物マネージャ
 	m_pCourse = nullptr;			// コースのオブジェクト
 	m_pJudgeZoneManager = nullptr;	// 判定ゾーンマネージャ
+	m_pWaterStoneManager = nullptr;	// 水中石マネージャ
 	m_pMapUI = nullptr;				// マップUI
 }
 
@@ -317,7 +318,7 @@ HRESULT CGame::Init()
 	//=============================
 	// 水中石マネージャ
 	//=============================
-	CWaterStone_Manager::Create();
+	m_pWaterStoneManager = CWaterStone_Manager::Create();
 
 	// BGM再生
 	CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_BGM_GAME);
@@ -418,6 +419,13 @@ void CGame::Uninit()
 	{
 		m_pJudgeZoneManager->Uninit();
 		m_pJudgeZoneManager = nullptr;
+	}
+
+	// 水中石マネージャ
+	if (m_pWaterStoneManager != nullptr)
+	{
+		m_pWaterStoneManager->Uninit();
+		m_pWaterStoneManager = nullptr;
 	}
 
 	// マップUI

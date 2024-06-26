@@ -27,6 +27,7 @@ class CMap_ObstacleManager;
 class CBaggageManager;
 class CCourse;
 class CJudgeZoneManager;
+class CWaterStone_Manager;
 class CMapUI;
 
 //==========================================================================
@@ -98,6 +99,7 @@ protected:
 	CBaggageManager* m_pBaggageManager;		// 荷物マネージャ
 	CCourse* m_pCourse;						// コースのオブジェクト
 	CJudgeZoneManager* m_pJudgeZoneManager;	// 判定ゾーンマネージャ
+	CWaterStone_Manager* m_pWaterStoneManager;	// 水中石マネージャ
 	CMapUI* m_pMapUI;						// マップUI
 	bool m_bEdit;				// エディットの判定
 	bool m_clear; // クリア判定
