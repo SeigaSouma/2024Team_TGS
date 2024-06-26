@@ -47,6 +47,7 @@ CGameManager::CGameManager()
 {
 	// 値のクリア
 	m_SceneType = SCENE_MAIN;	// シーンの種類
+	m_OldSceneType = SCENE_MAIN;	// シーンの種類
 	m_bEndRush = false;			// ラッシュが終了したか
 	m_bControll = false;		// 操作できるか
 	m_bEndNormalStage = false;	// 通常ステージが終了したか
@@ -114,7 +115,7 @@ HRESULT CGameManager::Init()
 	m_SceneType = SceneType::SCENE_WAIT_AIRPUSH;	// シーンの種類 
 #endif
 
-
+	m_OldSceneType = m_SceneType;
 	return S_OK;
 }
 
@@ -297,7 +298,7 @@ void CGameManager::SceneWaitAirPush()
 		CInputKeyboard::GetInstance()->GetTrigger(DIK_RETURN))
 	{
 		pTimer->SetEnableAddTime(true);
-		m_SceneType = CGameManager::SceneType::SCENE_MAIN;
+		SetType(SceneType::SCENE_MAIN);
 	}
 	else if (pTimer != nullptr)
 	{
@@ -460,6 +461,7 @@ int CGameManager::GetNowStage()
 //==========================================================================
 void CGameManager::SetType(SceneType type)
 {
+	m_OldSceneType = m_SceneType;
 	m_SceneType = type;
 }
 

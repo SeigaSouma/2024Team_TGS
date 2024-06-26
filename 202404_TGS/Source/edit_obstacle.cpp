@@ -488,6 +488,24 @@ void CEdit_Obstacle_Arrangment::ObjectSelect()
 		m_pHandle->SetState(CHandle::State::STATE_NONE);
 	}
 
+	if (pKeyboard->GetTrigger(DIK_DELETE))
+	{
+		if (m_pHandle != nullptr)
+		{
+			m_pHandle->Kill();
+			m_pHandle = nullptr;
+		}
+
+		if (m_pGrabObj != nullptr)
+		{
+			m_pGrabObj->Kill();
+			m_pGrabObj = nullptr;
+		}
+
+		// 当たり判定ボックス生成
+		CreateBoxLine();
+	}
+
 }
 
 //==========================================================================
@@ -522,7 +540,10 @@ void CEdit_Obstacle_Arrangment::ChangeHandle()
 		}
 
 		// ハンドル生成
-		m_pHandle = CHandle::Create(m_HandleType, m_pGrabObj->GetPosition());
+		if (m_pGrabObj != nullptr)
+		{
+			m_pHandle = CHandle::Create(m_HandleType, m_pGrabObj->GetPosition());
+		}
 	}
 
 }
@@ -768,7 +789,7 @@ void CEdit_Obstacle_Collider::Update()
 			ImGui::SetNextItemWidth(140.0f);
 			if (ImGui::SliderInt("Edit Idx", &m_nEditIdx, 0, m_pObjX.size() - 1))
 			{
-
+				CreateBoxLine();
 			}
 			ImGui::Dummy(ImVec2(0.0f, 10.0f));
 			ImGui::TreePop();
@@ -813,16 +834,7 @@ void CEdit_Obstacle_Collider::Update()
 	// カメラの情報取得
 	CCamera* pCamera = CManager::GetInstance()->GetCamera();
 	pCamera->SetTargetPosition(m_pObjX[m_nEditIdx]->GetPosition());
-
-	//for (int i = 0; i < 4; i++)
-	//{
-	//	CEffect3D* pEffect = CEffect3D::Create(
-	//		m_pObjX[m_nEditIdx]->GetPosition(),
-	//		MyLib::Vector3(0.0f, 0.0f, 0.0f),
-	//		D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f),
-	//		20.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE::TYPE_BLACK);
-	//	pEffect->SetDisableZSort();
-	//}
+	pCamera->SetAutoMovingPosR(m_pObjX[m_nEditIdx]->GetPosition());
 
 	// 障害物マネージャ取得
 	CMap_ObstacleManager* pObstacleMgr = CMap_ObstacleManager::GetInstance();

@@ -36,6 +36,7 @@ public:
 	void Kill();		// íœ
 	void SetStoneInfo(const CWaterStone_Manager::SStoneInfo& info) { m_StoneInfo = info; }	// Îî•ñİ’è
 	CWaterStone_Manager::SStoneInfo GetStoneInfo() { return m_StoneInfo; }	// Îî•ñæ“¾
+	void ChangeModelType(int type);	// ƒ‚ƒfƒ‹‚Ìí—Ş•ÏX
 
 	//=============================
 	// Ã“IŠÖ”

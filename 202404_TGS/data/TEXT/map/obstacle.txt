@@ -1,149 +1,199 @@
 #------------------------------------------------------------------------------
  テキストファイル名
 #------------------------------------------------------------------------------
-TEXT_FILENAME = data\\TEXT\\mapobstacle\\stone\\setup.txt		# [0]
-TEXT_FILENAME = data\\TEXT\\mapobstacle\\bridge\\setup.txt		# [1]
-TEXT_FILENAME = data\\TEXT\\mapobstacle\\turibashi\\setup.txt		# [2]
-TEXT_FILENAME = data\\TEXT\\mapobstacle\\angry_bird\\setup.txt		# [3]
-TEXT_FILENAME = data\\TEXT\\mapobstacle\\fallen_tree\\setup.txt		# [4]
-TEXT_FILENAME = data\\TEXT\\mapobstacle\\hasu\\setup.txt		# [5]
-TEXT_FILENAME = data\\TEXT\\mapobstacle\\koinobori\\setup.txt		# [6]
-TEXT_FILENAME = data\\TEXT\\mapobstacle\\washing\\setup.txt		# [7]
-TEXT_FILENAME = data\\TEXT\\mapobstacle\\woodleaf\\setup.txt		# [8]
+TEXT_FILENAME = data\\TEXT\\mapobstacle\\bridge\\setup.txt		# [0]
+TEXT_FILENAME = data\\TEXT\\mapobstacle\\turibashi\\setup.txt		# [1]
+TEXT_FILENAME = data\\TEXT\\mapobstacle\\angry_bird\\setup.txt		# [2]
+TEXT_FILENAME = data\\TEXT\\mapobstacle\\fallen_tree\\setup.txt		# [3]
+TEXT_FILENAME = data\\TEXT\\mapobstacle\\hasu\\setup.txt		# [4]
+TEXT_FILENAME = data\\TEXT\\mapobstacle\\koinobori\\setup.txt		# [5]
+TEXT_FILENAME = data\\TEXT\\mapobstacle\\washing\\setup.txt		# [6]
+TEXT_FILENAME = data\\TEXT\\mapobstacle\\woodleaf\\setup.txt		# [7]
+TEXT_FILENAME = data\\TEXT\\mapobstacle\\ship\\setup.txt		# [8]
 
 #------------------------------------------------------------------------------
  モデルの配置
 #------------------------------------------------------------------------------
 MODELSET
+	TYPE = 2
+	POS = 2144.61 959.45 -229.51
+	ROT = 0.00 0.00 0.00
+	SCALE = 1.37 1.37 1.37
+END_MODELSET
+
+MODELSET
+	TYPE = 8
+	POS = 7707.78 112.38 24.17
+	ROT = 0.00 -1.57 -0.70
+	SCALE = 4.66 4.66 4.66
+END_MODELSET
+
+MODELSET
 	TYPE = 1
-	POS = 640.59 260.37 118.87
-	ROT = 0.00 1.57 0.00
+	POS = 1144.96 189.59 326.39
+	ROT = 0.00 1.57 -0.13
+	SCALE = 1.00 1.00 1.00
+END_MODELSET
+
+MODELSET
+	TYPE = 1
+	POS = 1148.03 105.62 -491.32
+	ROT = 0.00 -1.57 0.07
+	SCALE = 1.00 1.00 1.00
 END_MODELSET
 
 MODELSET
 	TYPE = 2
-	POS = 1600.00 411.26 113.37
-	ROT = 0.00 1.57 0.00
+	POS = 2440.38 903.76 -92.32
+	ROT = 0.00 2.58 0.00
+	SCALE = 1.15 1.15 1.15
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 2335.17 799.75 -327.24
+	ROT = 0.00 -2.58 0.00
+	SCALE = 1.35 1.35 1.35
 END_MODELSET
 
 MODELSET
 	TYPE = 3
-	POS = 2483.14 199.61 0.00
-	ROT = 0.00 3.14 0.00
+	POS = 4272.69 228.94 -612.70
+	ROT = -0.15 0.12 0.00
+	SCALE = 2.56 2.56 2.56
 END_MODELSET
 
 MODELSET
-	TYPE = 4
-	POS = 3612.94 292.06 -85.91
-	ROT = -0.25 0.00 0.00
+	TYPE = 3
+	POS = 5096.64 210.65 -393.29
+	ROT = -0.09 -0.57 0.00
+	SCALE = 2.40 2.40 2.40
 END_MODELSET
 
 MODELSET
-	TYPE = 0
-	POS = 3723.96 1000.00 -937.87
+	TYPE = 2
+	POS = 2718.45 1021.42 -281.16
+	ROT = 0.00 0.72 -0.22
+	SCALE = 1.17 1.17 1.17
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 2966.91 890.95 -376.44
 	ROT = 0.00 0.00 0.00
+	SCALE = 1.63 1.63 1.63
 END_MODELSET
 
 MODELSET
-	TYPE = 0
-	POS = 4412.94 1000.00 -415.64
+	TYPE = 2
+	POS = 2274.12 1201.42 -309.46
+	ROT = 0.00 1.07 0.31
+	SCALE = 1.56 1.56 1.56
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 2462.03 1058.50 -349.79
+	ROT = 0.00 -2.80 0.25
+	SCALE = 1.39 1.39 1.39
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 7311.58 1416.50 221.56
+	ROT = 0.00 0.97 -0.38
+	SCALE = 2.13 2.13 2.13
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 7548.24 1246.36 143.60
+	ROT = 0.00 2.32 -0.19
+	SCALE = 1.90 1.90 1.90
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 7273.36 1245.85 103.18
 	ROT = 0.00 0.00 0.00
-END_MODELSET
-
-MODELSET
-	TYPE = 0
-	POS = 4837.89 1000.00 -289.08
-	ROT = 0.00 0.00 0.00
-END_MODELSET
-
-MODELSET
-	TYPE = 0
-	POS = 5958.07 500.00 -38.06
-	ROT = 0.00 0.00 0.00
-END_MODELSET
-
-MODELSET
-	TYPE = 0
-	POS = 7506.05 1200.00 -4106.12
-	ROT = 0.00 0.00 0.00
-END_MODELSET
-
-MODELSET
-	TYPE = 1
-	POS = 7311.73 552.88 63.01
-	ROT = 0.00 1.57 0.00
-END_MODELSET
-
-MODELSET
-	TYPE = 1
-	POS = 10853.31 645.06 143.08
-	ROT = 0.00 -0.35 -0.47
-END_MODELSET
-
-MODELSET
-	TYPE = 1
-	POS = 10132.19 818.90 0.00
-	ROT = 0.00 -0.16 0.00
-END_MODELSET
-
-MODELSET
-	TYPE = 1
-	POS = 9376.64 630.42 -22.53
-	ROT = 0.00 0.13 0.47
-END_MODELSET
-
-MODELSET
-	TYPE = 0
-	POS = 12070.89 700.79 474.91
-	ROT = 0.00 0.00 0.00
-END_MODELSET
-
-MODELSET
-	TYPE = 0
-	POS = 13376.14 644.46 825.51
-	ROT = 0.00 0.00 0.00
-END_MODELSET
-
-MODELSET
-	TYPE = 1
-	POS = 15014.59 648.54 621.58
-	ROT = 0.00 1.57 0.00
-END_MODELSET
-
-MODELSET
-	TYPE = 1
-	POS = 15426.13 649.73 333.42
-	ROT = 0.00 1.57 0.00
-END_MODELSET
-
-MODELSET
-	TYPE = 0
-	POS = 16571.91 801.26 9.29
-	ROT = 0.00 0.00 0.00
-END_MODELSET
-
-MODELSET
-	TYPE = 0
-	POS = 17302.00 1268.49 0.64
-	ROT = 0.00 0.00 0.00
-END_MODELSET
-
-MODELSET
-	TYPE = 0
-	POS = 18160.53 582.87 -15.85
-	ROT = 0.00 0.00 0.00
+	SCALE = 1.45 1.45 1.45
 END_MODELSET
 
 MODELSET
 	TYPE = 5
-	POS = -136.92 117.77 -563.60
-	ROT = 0.00 0.00 0.00
+	POS = 10455.15 1145.01 384.73
+	ROT = -0.09 -1.57 0.00
+	SCALE = 1.73 1.73 1.73
 END_MODELSET
 
 MODELSET
-	TYPE = 0
-	POS = 12635.18 0.00 -2066.65
-	ROT = 0.00 0.00 0.00
+	TYPE = 5
+	POS = 10383.62 1142.07 -584.95
+	ROT = -0.06 -1.51 0.03
+	SCALE = 1.74 1.74 1.74
+END_MODELSET
+
+MODELSET
+	TYPE = 5
+	POS = 9961.18 1184.97 -429.29
+	ROT = 0.00 -1.60 0.00
+	SCALE = 1.71 1.71 1.71
+END_MODELSET
+
+MODELSET
+	TYPE = 5
+	POS = 10019.65 1197.51 580.16
+	ROT = -0.03 -1.51 0.06
+	SCALE = 1.77 1.77 1.77
+END_MODELSET
+
+MODELSET
+	TYPE = 5
+	POS = 9579.28 1354.17 720.62
+	ROT = -0.16 -1.54 0.00
+	SCALE = 2.06 2.06 2.06
+END_MODELSET
+
+MODELSET
+	TYPE = 5
+	POS = 9540.30 1294.39 -414.49
+	ROT = -0.22 -1.70 0.00
+	SCALE = 1.78 1.78 1.78
+END_MODELSET
+
+MODELSET
+	TYPE = 5
+	POS = 10811.09 1033.06 -955.91
+	ROT = -0.13 -1.48 0.00
+	SCALE = 1.65 1.65 1.65
+END_MODELSET
+
+MODELSET
+	TYPE = 5
+	POS = 10841.68 1071.77 -70.39
+	ROT = -0.22 -1.54 0.00
+	SCALE = 1.58 1.58 1.58
+END_MODELSET
+
+MODELSET
+	TYPE = 5
+	POS = 10892.93 1116.54 859.23
+	ROT = -0.13 -1.60 0.03
+	SCALE = 1.63 1.63 1.63
+END_MODELSET
+
+MODELSET
+	TYPE = 5
+	POS = 11199.08 955.81 -636.30
+	ROT = -0.06 -1.61 -0.03
+	SCALE = 1.52 1.52 1.52
+END_MODELSET
+
+MODELSET
+	TYPE = 5
+	POS = 11272.50 944.44 219.36
+	ROT = 0.00 -1.63 0.00
+	SCALE = 1.65 1.65 1.65
 END_MODELSET
 
 

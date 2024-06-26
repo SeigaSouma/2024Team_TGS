@@ -1692,7 +1692,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "TEXTURE\\map_object\\kimono000.jpg";
+    "data\\TEXTURE\\map_object\\kimono000.jpg";
    }
   }
   Material {
@@ -1701,7 +1701,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "TEXTURE\\map_object\\kimono004.jpg";
+    "data\\TEXTURE\\map_object\\kimono004.jpg";
    }
   }
   Material {
@@ -1710,7 +1710,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "TEXTURE\\map_object\\kimono002.jpg";
+    "data\\TEXTURE\\map_object\\kimono002.jpg";
    }
   }
   Material {
@@ -1719,7 +1719,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "TEXTURE\\map_object\\kimono001.jpg";
+    "data\\TEXTURE\\map_object\\kimono001.jpg";
    }
   }
   Material {
@@ -1728,7 +1728,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "TEXTURE\\map_object\\kimono003.png";
+    "data\\TEXTURE\\map_object\\kimono003.png";
    }
   }
  }

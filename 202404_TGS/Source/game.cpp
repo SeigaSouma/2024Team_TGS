@@ -292,16 +292,10 @@ HRESULT CGame::Init()
 	CWaterField::Create(CWaterField::TYPE::TYPE_RIGHT);
 	CWaterField::Create(CWaterField::TYPE::TYPE_LEFT);*/
 
-
-	CCheckpoint::Create(1000.0f);
-	CCheckpoint::Create(2000.0f);
-	CCheckpoint::Create(3000.0f);
-	CCheckpoint::Create(4000.0f);
-	CCheckpoint::Create(5000.0f);
-	CCheckpoint::Create(6000.0f);
-	CCheckpoint::Create(7000.0f);
-	CCheckpoint::Create(8000.0f);
-	CCheckpoint::Create(9000.0f);
+	for (int i = 0; i < 10; i++)
+	{
+		CCheckpoint::Create((i + 1) * 2000.0f);
+	}
 
 	// チェックポイント通過リセット
 	CCheckpoint::ResetSaveID();
@@ -659,6 +653,17 @@ void CGame::ChangeEdit()
 			{
 				if (ImGui::RadioButton(items[i], &selectedItem, i))
 				{
+					if (i != 0)
+					{
+						// デバッグモード
+						m_pGameManager->SetType(CGameManager::SceneType::SCENE_DEBUG);
+					}
+					else
+					{
+						// デバッグモード
+						m_pGameManager->SetType(m_pGameManager->GetOldType());
+					}
+
 					// エディット終了
 					EditReset();
 					m_EditType = static_cast<EditType>(selectedItem);

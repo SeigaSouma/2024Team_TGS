@@ -156,7 +156,7 @@ void CMap_ObstacleManager::Save()
 		pObj = (*itr);
 
 		// áŠQ•¨î•ñŽæ“¾
-		MyLib::Vector3 pos = pObj->GetPosition(), rot = pObj->GetRotation();
+		MyLib::Vector3 pos = pObj->GetPosition(), rot = pObj->GetRotation(), scale = pObj->GetScale();
 		SObstacleInfo info = pObj->GetObstacleInfo();
 		std::string text = info.textFile;
 
@@ -168,6 +168,7 @@ void CMap_ObstacleManager::Save()
 		File << "\tTYPE = " << type << std::endl;
 		File << "\tPOS = " << std::fixed << std::setprecision(2) << pos.x << " " << pos.y << " " << pos.z << std::endl;
 		File << "\tROT = " << std::fixed << std::setprecision(2) << rot.x << " " << rot.y << " " << rot.z << std::endl;
+		File << "\tSCALE = " << std::fixed << std::setprecision(2) << scale.x << " " << scale.y << " " << scale.z << std::endl;
 		File << "END_MODELSET" << std::endl;
 		File << "" << std::endl;
 	}
@@ -312,7 +313,7 @@ void CMap_ObstacleManager::Load()
 
 			// “Ç‚Ýž‚Ýî•ñ
 			int type;
-			MyLib::Vector3 pos, rot;
+			MyLib::Vector3 pos, rot, scale(1.0f);
 
 			while (line.find("END_MODELSET") == std::string::npos)
 			{
@@ -358,6 +359,20 @@ void CMap_ObstacleManager::Load()
 						rot.x >> rot.y >> rot.z;	// Œü‚«
 					continue;
 				}
+
+				if (line.find("SCALE") != std::string::npos)
+				{// SCALE‚ÅŠg‘å—¦
+
+					// ƒXƒgƒŠ[ƒ€ì¬
+					std::istringstream lineStream(line);
+
+					// î•ñ“n‚·
+					lineStream >>
+						hoge >>
+						hoge >>						// 
+						scale.x >> scale.y >> scale.z;	// Šg‘å—¦
+					continue;
+				}
 			}
 
 			// ¶¬
@@ -366,6 +381,7 @@ void CMap_ObstacleManager::Load()
 				CMap_Obstacle* pObj = CMap_Obstacle::Create(m_ObstacleInfo[type]);
 				pObj->SetPosition(pos);
 				pObj->SetRotation(rot);
+				pObj->SetScale(scale);
 			}
 		}
 

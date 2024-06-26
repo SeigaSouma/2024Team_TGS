@@ -75,7 +75,6 @@ HRESULT CWaterStone::Init()
 	// 種類の設定
 	CObject::SetType(TYPE_OBJECTX);
 
-	m_StoneInfo.type = 0;
 	// 初期化処理
 	HRESULT hr = CObjectX::Init(m_vecModelFile[m_StoneInfo.type]);
 	if (FAILED(hr))
@@ -249,3 +248,15 @@ void CWaterStone::Draw()
 	CObjectX::Draw();
 }
 
+//==========================================================================
+// モデルの種類変更
+//==========================================================================
+void CWaterStone::ChangeModelType(int type)
+{
+	// Xファイルのデータ取得
+	CXLoad* pXLoad = CXLoad::GetInstance();
+
+	// Xファイルのロード
+	int modelIdx = pXLoad->XLoad(m_vecModelFile[type]);
+	BindXData(modelIdx);
+}
