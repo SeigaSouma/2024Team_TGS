@@ -45,6 +45,7 @@ public:
 		EDITTYPE_OBSTACLE,		// 障害物
 		EDITTYPE_COURSE,		// コース
 		EDITTYPE_WATERSTONE,	// 水中石
+		EDITTYPE_JUDGEZONE,		// 判定ゾーン
 		EDITTYPE_MAX
 	};
 

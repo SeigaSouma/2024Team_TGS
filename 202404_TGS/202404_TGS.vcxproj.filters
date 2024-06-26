@@ -560,6 +560,9 @@
     <ClCompile Include="Source\judgestatefunc.cpp">
       <Filter>judgezone</Filter>
     </ClCompile>
+    <ClCompile Include="Source\edit_judgezone.cpp">
+      <Filter>edit</Filter>
+    </ClCompile>
     <ClCompile Include="Source\map_ui.cpp">
       <Filter>map_ui</Filter>
     </ClCompile>
@@ -1032,6 +1035,9 @@
     </ClInclude>
     <ClInclude Include="Source\judgeobj.h">
       <Filter>judgezone</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\edit_judgezone.h">
+      <Filter>edit</Filter>
     </ClInclude>
     <ClInclude Include="Source\map_ui.h">
       <Filter>map_ui</Filter>

@@ -19,11 +19,14 @@
 class CJudgeZone
 {
 public:
-	// 始点終点構造体
-	struct SZone
+	// 判定ゾーン構造体
+	struct SJudgeZone
 	{
-		float start;	// 始点
-		float end;	// 終点
+		float start, end;	// 始点,終点
+		float borderHeight;
+
+		SJudgeZone() : start(0.0f), end(0.0f), borderHeight(0.0f) {}
+		SJudgeZone(float _start, float _end, float _border) : start(_start), end(_end), borderHeight(_border) {}
 	};
 
 	CJudgeZone();
@@ -42,12 +45,9 @@ public:
 	virtual CJudge::JUDGE Judge();
 
 	// 取得・設定
-	SZone GetZone() { return m_zone; }
-	void SetZone(const SZone zone) { m_zone = zone; }
-	void SetZone(const float start, const float end);
-	float GetBorder() { return m_borderHeight; }
-	void SetBorder(const float borderHeight) { m_borderHeight = borderHeight; }
-	void SetInfo(CJudge::BORDER border, CJudge::SJudgeInfo info) { m_aJudgeInfo[border] = info; }
+	SJudgeZone GetZone() { return m_zone; }
+	void SetZone(const SJudgeZone zone) { m_zone = zone; }
+	void SetInfo(CJudge::BORDER border, CJudge::SJudgeCondition info) { m_aJudgeInfo[border] = info; }
 	bool IsEnable() { return m_isEnable; }
 
 	//=============================
@@ -56,11 +56,10 @@ public:
 	static CJudgeZone* Create(const float start, const float end, const float borderHeight);	// 生成
 
 private:
-	SZone m_zone;
+	SJudgeZone m_zone;
 	CJudge* m_pJudge;
 	bool m_isEnable;
-	CJudge::SJudgeInfo m_aJudgeInfo[2];
-	float m_borderHeight;
+	CJudge::SJudgeCondition m_aJudgeInfo[2];
 };
 
 #endif
