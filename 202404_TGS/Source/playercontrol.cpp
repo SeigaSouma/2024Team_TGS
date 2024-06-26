@@ -441,8 +441,6 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	}
 #endif
 
-	static bool fall = true;
-
 	static float up = 8.3f, power = 9.0f;
 	//static float up = 8.3f, power = 6.8f;
 	//static float up = 2.5f, power = 2.0f;
@@ -608,10 +606,10 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 		// 高さの降下時間加算
 		m_fTimeDownHeight += CManager::GetInstance()->GetDeltaTime();
 
-		if (fall) 
+		if (m_bFall) 
 		{// 落下中
 
-			fall = false;
+			m_bFall = false;
 			pBaggage->SetForce(0.0f);
 
 			if (m_BressHandle != nullptr)
@@ -629,7 +627,6 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 				&m_BressHandle,
 				CMyEffekseer::EFKLABEL::EFKLABEL_BRESS,
 				d, 0.0f, 0.0f, DEFAULT_BRESSSCALE_EFFECT, true);
-
 
 			// SE再生
 			CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_BRESS_STREAM);
@@ -674,7 +671,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	else
 	{
 		// 降下状態
-		fall = true;
+		m_bFall = true;
 
 		// 高さの降下時間減算
 		m_fTimeDownHeight = 0.0f;
@@ -702,13 +699,12 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	// 落下状態更新
 	if (posBaggage.y <= MIN_HEIGHT)
 	{
-		fall = true;
+		m_bFall = true;
 	}
 
 	// 息エフェクト状態変更
-	if (fall && m_BressHandle != nullptr)
+	if (m_bFall && m_BressHandle != nullptr)
 	{
-		//CMyEffekseer::GetInstance()->Stop(m_BressHandle);
 		CMyEffekseer::GetInstance()->SetTrigger(*m_BressHandle, 0);
 
 		// SEストップ
@@ -840,6 +836,25 @@ bool CPlayerControlBaggage::EndCheck(CBaggage* pBaggage)
 	if (pBaggage->IsEnd()) { return false; }
 
 	return true;
+}
+
+//==========================================================================
+// エフェクト停止処理
+//==========================================================================
+void CPlayerControlBaggage::EffectStop()
+{
+	// 息が使用されている
+	if (m_BressHandle != nullptr)
+	{
+		// エフェクト停止
+		CMyEffekseer::GetInstance()->SetTrigger(*m_BressHandle, 0);
+
+		// SEストップ
+		CSound::GetInstance()->StopSound(CSound::LABEL::LABEL_SE_BRESS_STREAM);
+
+		m_fTimeDownHeight = 0.0f;
+		m_bFall = true;
+	}
 }
 
 //==========================================================================

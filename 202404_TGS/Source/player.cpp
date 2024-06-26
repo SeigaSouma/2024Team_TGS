@@ -209,6 +209,7 @@ HRESULT CPlayer::Init()
 	m_nCntState = 0;		// 状態遷移カウンター
 	m_bLandOld = true;		// 前回の着地状態
 	m_bMotionAutoSet = true;						// モーションの自動設定
+	m_sMotionFrag.bMove = true;
 
 	// キャラ作成
 	HRESULT hr = SetCharacter(CHARAFILE);
@@ -379,7 +380,9 @@ void CPlayer::Update()
 	Controll();
 
 	// モーションの設定処理
+	if (CGame::GetInstance()->GetGameManager()->IsControll()){
 	MotionSet();
+	}
 
 	// 状態更新
 	UpdateState();
@@ -494,6 +497,12 @@ void CPlayer::Controll()
 				}
 			}
 		}
+	}
+	else
+	{
+		// モーション取得
+		CMotion* pMotion = GetMotion();
+		pMotion->Set(MOTION_WALK, false);
 	}
 
 	// 位置取得
@@ -1302,6 +1311,12 @@ void CPlayer::DeadSetting(MyLib::HitResult_Character* result)
 
 	// 死んだ
 	result->isdeath = true;
+
+	// 空気エフェクトをリセットする
+	if (m_pControlBaggage)
+	{
+		m_pControlBaggage->EffectStop();
+	}
 }
 
 //==========================================================================
@@ -1753,8 +1768,13 @@ void CPlayer::ScreenReset()
 		m_pBaggage->Reset();
 	}
 
+	// カメラの状態を元に戻す
 	CCamera* pCamera = CManager::GetInstance()->GetCamera();
 	pCamera->SetStateCameraV(new CStateCameraV);
+
+	// モーションをリセットする
+	GetMotion()->ToggleFinish(true);
+	GetMotion()->Set(MOTION::MOTION_WALK, false);
 }
 
 //==========================================================================

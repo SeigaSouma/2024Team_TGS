@@ -22,10 +22,11 @@ class CJudge
 {
 public:
 	// ”»’èí—Ş—ñ‹“
-	enum JUDGETYPE
+	enum CONDITIONTYPE
 	{
 		TYPE_NONE = 0,
 		TYPE_HITNUM,
+		TYPE_MAX,
 	};
 
 	// ”»’è—ñ‹“
@@ -41,14 +42,15 @@ public:
 	// ã‰º
 	enum BORDER
 	{
-		UP = 0,
-		DOWN
+		TOP = 0,
+		UNDER,
+		MAX
 	};
 
 	// ”»’èî•ñ\‘¢‘Ì
-	struct SJudgeInfo
+	struct SJudgeCondition
 	{
-		JUDGETYPE type;
+		CONDITIONTYPE type;
 		std::map<CJudge::JUDGE, int> judgeParam;
 	};
 

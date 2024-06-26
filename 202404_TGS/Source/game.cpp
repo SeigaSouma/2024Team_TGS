@@ -317,6 +317,9 @@ HRESULT CGame::Init()
 	//=============================
 	m_pMapUI = CMapUI::Create();
 
+	pPlayer = playerList.GetData(0);
+	m_pMapUI->BindPlayer(pPlayer);
+
 	//=============================
 	// 水中石マネージャ
 	//=============================
@@ -586,12 +589,6 @@ void CGame::Update()
 
 #endif
 
-	// マップ更新処理
-	if (m_pMapUI != nullptr)
-	{
-		m_pMapUI->Update();
-	}
-
 	// シーンの更新
 	CScene::Update();
 }
@@ -648,7 +645,7 @@ void CGame::ChangeEdit()
 		}
 
 		// テキスト
-		static const char* items[] = { "OFF", "Map", "Obstacle", "Course", "WaterStone"};
+		static const char* items[] = { "OFF", "Map", "Obstacle", "Course", "WaterStone", "JudgeZone"};
 		int selectedItem = m_EditType;
 
 		// [グループ]エディット切り替え
