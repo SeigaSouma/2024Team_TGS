@@ -13,6 +13,7 @@
 #include "edit_obstacle.h"
 #include "edit_course.h"
 #include "edit_waterstone.h"
+#include "edit_judgezone.h"
 
 //==========================================================================
 // コンストラクタ
@@ -59,6 +60,10 @@ CEdit* CEdit::Create(CGame::EditType type)
 
 	case CGame::EditType::EDITTYPE_WATERSTONE:
 		pMarker = DEBUG_NEW CEdit_WaterStone;
+		break;
+
+	case CGame::EditType::EDITTYPE_JUDGEZONE:
+		pMarker = DEBUG_NEW CEdit_JudgeZone;
 		break;
 
 	default:

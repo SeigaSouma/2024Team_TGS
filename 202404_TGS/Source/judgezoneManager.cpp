@@ -15,6 +15,7 @@
 #include "spline.h"
 #include "objectBillboard.h"
 #include <map>
+#include <direct.h>
 
 //==========================================================================
 // 定数定義
@@ -28,6 +29,7 @@ namespace
 		{CJudge::JUDGE::JUDGE_CCC,"data\\TEXTURE\\judge_test_03.png"},
 		{CJudge::JUDGE::JUDGE_DDD,"data\\TEXTURE\\judge_test_04.png"},
 	};
+	const std::string TEXT_LINE = "#------------------------------------------------------------------------------";	// テキストのライン
 }
 CJudgeZoneManager* CJudgeZoneManager::m_ThisPtr = nullptr;
 
@@ -94,7 +96,7 @@ void CJudgeZoneManager::Check(float progress)
 	{
 		if ((*itr)->IsEnable())
 		{
-			CJudgeZone::SZone zone = (*itr)->GetZone();
+			CJudgeZone::SJudgeZone zone = (*itr)->GetZone();
 			if (progress >= zone.start && progress <= zone.end)
 			{//範囲内
 				(*itr)->Check();
@@ -114,7 +116,7 @@ void CJudgeZoneManager::Check(float progress)
 
 			//スタート
 			pos = MySpline::GetSplinePosition_NonLoop(pCource->GetVecPosition(), length * (*itr)->GetZone().start);
-			pos.y = (*itr)->GetBorder();
+			pos.y = (*itr)->GetZone().borderHeight;
 			CEffect3D::Create(
 				pos,
 				MyLib::Vector3(0.0f, 0.0f, 0.0f),
@@ -123,7 +125,7 @@ void CJudgeZoneManager::Check(float progress)
 
 			//終了
 			pos = MySpline::GetSplinePosition_NonLoop(pCource->GetVecPosition(), length * (*itr)->GetZone().end);
-			pos.y = (*itr)->GetBorder();
+			pos.y = (*itr)->GetZone().borderHeight;
 			CEffect3D::Create(
 				pos,
 				MyLib::Vector3(0.0f, 0.0f, 0.0f),
@@ -257,7 +259,7 @@ void CJudgeZoneManager::LoadZone(std::string path)
 			{// MODELSETで配置情報読み込み
 
 				// 読み込み情報
-				CJudgeZone::SZone zone = { 0.0f,1.0f };
+				CJudgeZone::SJudgeZone zone = CJudgeZone::SJudgeZone(0.0f, 1.0f, 0.0f);
 				float border = 0.0f;
 
 				while (line.find("END_ZONESET") == std::string::npos)
@@ -347,8 +349,8 @@ void CJudgeZoneManager::LoadZone(std::string path)
 	// 条件読み込み
 	if (pJudgeZone != nullptr)
 	{
-		pJudgeZone->SetInfo(CJudge::BORDER::UP, LoadCondition(aPath[CJudge::BORDER::UP]));
-		pJudgeZone->SetInfo(CJudge::BORDER::DOWN, LoadCondition(aPath[CJudge::BORDER::DOWN]));
+		pJudgeZone->SetInfo(CJudge::BORDER::TOP, LoadCondition(aPath[CJudge::BORDER::TOP]));
+		pJudgeZone->SetInfo(CJudge::BORDER::UNDER, LoadCondition(aPath[CJudge::BORDER::UNDER]));
 		m_zoneList.Regist(pJudgeZone);
 	}
 }
@@ -356,10 +358,10 @@ void CJudgeZoneManager::LoadZone(std::string path)
 //==========================================================================
 // 条件読み込み処理
 //==========================================================================
-CJudge::SJudgeInfo CJudgeZoneManager::LoadCondition(std::string path)
+CJudge::SJudgeCondition CJudgeZoneManager::LoadCondition(std::string path)
 {
-	CJudge::SJudgeInfo info;
-	info.type = CJudge::JUDGETYPE::TYPE_NONE;
+	CJudge::SJudgeCondition info;
+	info.type = CJudge::CONDITIONTYPE::TYPE_NONE;
 	info.judgeParam = 
 	{
 		{CJudge::JUDGE::JUDGE_AAA,-1},
@@ -403,7 +405,7 @@ CJudge::SJudgeInfo CJudgeZoneManager::LoadCondition(std::string path)
 							hoge >>		// ＝
 							num;		// 数値
 
-						info.type = static_cast<CJudge::JUDGETYPE>(num);
+						info.type = static_cast<CJudge::CONDITIONTYPE>(num);
 					}
 					if (line.find("JUDGE_AAA") != std::string::npos)
 					{// TYPEで配置物の種類
@@ -467,3 +469,133 @@ CJudge::SJudgeInfo CJudgeZoneManager::LoadCondition(std::string path)
 	}
 	return info;
 }
+
+//==========================================================================
+// 判定ゾーン書き込み処理
+//==========================================================================
+void CJudgeZoneManager::SaveZone(std::string path, CJudgeZone::SJudgeZone zoneinfo, CJudge::SJudgeCondition conditionUp, CJudge::SJudgeCondition conditionUnder)
+{
+	// ゾーンファイルパス分解
+	int path_Length = path.find_last_of("\\");
+	int name_Length = path.size() - path.find_last_of("\\");
+	std::string dirName = path.substr(0, path_Length + 1);
+	std::string fileName_ext = path.substr(path_Length + 1, name_Length + 1);
+	std::string filename = fileName_ext.substr(0, fileName_ext.find_last_of("."));
+
+	// 条件ファイルパス作成
+	std::string conditionPath_base = dirName + "genarate_condition\\" + filename;
+	std::string pathConditionUp, pathConditionUnder;
+	pathConditionUp = conditionPath_base + "_condition_Top.txt";
+	pathConditionUnder = conditionPath_base + "_condition_Under.txt";
+
+	// 条件ファイル書き出し
+	_mkdir((dirName + "genarate_condition").c_str());
+	if (!SaveCondition(pathConditionUp, conditionUp))
+	{
+		pathConditionUp = "<<< FAILED >>>";
+	}
+	if (!SaveCondition(pathConditionUnder, conditionUnder))
+	{
+		pathConditionUnder = "<<< FAILED >>>";
+	}
+
+	// ファイルを開く
+	std::ofstream File(path, std::ios_base::out);
+	if (!File.is_open()) {
+		return;
+	}
+
+	File << "#====================================================================================================" << std::endl;
+	File << "#" << std::endl;
+	File << "# 判定ゾーンスクリプトファイル [" << fileName_ext << "]" << std::endl;
+	File << "# Author : エディタ書き出し" << std::endl;
+	File << "#" << std::endl;
+	File << "#====================================================================================================" << std::endl;
+	File << "SCRIPT		# この行は絶対消さないこと！\n" << std::endl;
+	File << std::endl;
+	File << TEXT_LINE << std::endl;
+	File << "# 判定ゾーン情報" << std::endl;
+	File << "# START				: 判定開始地点（進行度割合表記, ここでどっちの条件にするか決定）" << std::endl;
+	File << "# END : 判定終了地点（進行度割合表記, ここで判定が出る）" << std::endl;
+	File << "# BORDER : 上と下の境界線の高さ" << std::endl;
+	File << "# CONDITION_TOP : 上の条件ファイルパス" << std::endl;
+	File << "# CONDITION_UNDER : 下の条件ファイルパス" << std::endl;
+	File << TEXT_LINE << std::endl;
+
+	{
+		// ゾーン情報設定
+		File << "ZONESET" << std::endl;
+
+		// 変数類
+		File << "START = " << zoneinfo.start << std::endl;
+		File << "END = " << zoneinfo.end << std::endl;
+		File << "BORDER = " << zoneinfo.borderHeight << std::endl;
+
+		// 条件ファイルパス
+		File << "CONDITION_TOP = " << pathConditionUp << std::endl;
+		File << "CONDITION_TOP = " << pathConditionUnder << std::endl;
+
+		// 終わり
+		File << "END_ZONESET" << std::endl;
+	}
+
+	// ファイルを閉じる
+	File << "\nEND_SCRIPT\t\t# この行は絶対消さないこと！" << std::endl;
+	File.close();
+}
+
+//==========================================================================
+// 判定条件書き込み処理
+//==========================================================================
+bool CJudgeZoneManager::SaveCondition(std::string path, CJudge::SJudgeCondition condition)
+{
+	// ファイルを開く
+	std::ofstream File(path, std::ios_base::out);
+	if (!File.is_open()) {
+		return false;
+	}
+
+	int path_Length = path.find_last_of("\\");
+	int name_Length = path.size() - path.find_last_of("\\");
+	std::string fileName_ext = path.substr(path_Length + 1, name_Length + 1);
+	std::string filename = fileName_ext.substr(0, fileName_ext.find_last_of("."));
+	File << "#====================================================================================================" << std::endl;
+	File << "#" << std::endl;
+	File << "# 判定条件スクリプトファイル [" << fileName_ext << "]" << std::endl;
+	File << "# Author : エディタ書き出し" << std::endl;
+	File << "#" << std::endl;
+	File << "#====================================================================================================" << std::endl;
+	File << "SCRIPT		# この行は絶対消さないこと！\n" << std::endl;
+	File << std::endl;
+	File << TEXT_LINE << std::endl;
+	File << "# 判定ゾーン情報" << std::endl;
+	File << "# TYPE		: 種類（0: 無条件, 1 : ぶつかった回数）" << std::endl;
+	File << "# JUDGE_xxx(AAA/BBB/CCC/DDD) : 条件を満たす数値（ -1以下で判定を使用しない）" << std::endl;
+	File << "#	TYPE = 0 : 何かしらの数値が入っている判定が適用。複数ある場合数値が大きい方が適用）" << std::endl;
+	File << "#	TYPE = 1 : ぶつかった回数（指定した数値以下でその判定になる）" << std::endl;
+	File << TEXT_LINE << std::endl;
+
+	{
+		// ゾーン情報設定
+		File << "CONDITIONSET" << std::endl;
+
+		// 種類
+		File << "TYPE = " << static_cast<int>(condition.type) << std::endl;
+
+		// 条件回数
+		File << "JUDGE_AAA = " << condition.judgeParam[CJudge::JUDGE::JUDGE_AAA] << std::endl;
+		File << "JUDGE_BBB = " << condition.judgeParam[CJudge::JUDGE::JUDGE_BBB] << std::endl;
+		File << "JUDGE_CCC = " << condition.judgeParam[CJudge::JUDGE::JUDGE_CCC] << std::endl;
+		File << "JUDGE_DDD = " << condition.judgeParam[CJudge::JUDGE::JUDGE_DDD] << std::endl;
+
+		// 終わり
+		File << "END_CONDITIONSET" << std::endl;
+	}
+
+	// ファイルを閉じる
+	File << "\nEND_SCRIPT\t\t# この行は絶対消さないこと！" << std::endl;
+	File.close();
+
+	return true;
+}
+

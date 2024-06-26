@@ -648,7 +648,7 @@ void CGame::ChangeEdit()
 		}
 
 		// テキスト
-		static const char* items[] = { "OFF", "Map", "Obstacle", "Course", "WaterStone"};
+		static const char* items[] = { "OFF", "Map", "Obstacle", "Course", "WaterStone", "JudgeZone"};
 		int selectedItem = m_EditType;
 
 		// [グループ]エディット切り替え

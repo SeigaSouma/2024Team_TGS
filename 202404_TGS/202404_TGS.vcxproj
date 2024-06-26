@@ -188,6 +188,7 @@
     <ClCompile Include="Source\edit.cpp" />
     <ClCompile Include="Source\edithandle.cpp" />
     <ClCompile Include="Source\edit_course.cpp" />
+    <ClCompile Include="Source\edit_judgezone.cpp" />
     <ClCompile Include="Source\edit_map.cpp" />
     <ClCompile Include="Source\edit_obstacle.cpp" />
     <ClCompile Include="Source\edit_waterstone.cpp" />
@@ -352,6 +353,7 @@
     <ClInclude Include="Source\edit.h" />
     <ClInclude Include="Source\edithandle.h" />
     <ClInclude Include="Source\edit_course.h" />
+    <ClInclude Include="Source\edit_judgezone.h" />
     <ClInclude Include="Source\edit_map.h" />
     <ClInclude Include="Source\edit_obstacle.h" />
     <ClInclude Include="Source\edit_waterstone.h" />

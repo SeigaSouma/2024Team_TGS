@@ -29,7 +29,7 @@ CJudgeZone::CJudgeZone()
 {
 	m_isEnable = true;
 	m_pJudge = nullptr;
-	m_borderHeight = 0.0f;
+	m_zone = CJudgeZone::SJudgeZone(0.0f, 0.0f, 0.0f);
 }
 
 //==========================================================================
@@ -74,8 +74,7 @@ CJudgeZone* CJudgeZone::Create(const float start, const float end, const float b
 	{
 		// èâä˙âªèàóù
 		pObj->Init();
-		pObj->SetZone(start, end);
-		pObj->SetBorder(borderHeight);
+		pObj->SetZone(CJudgeZone::SJudgeZone(start, end, borderHeight));
 	}
 
 	return pObj;
@@ -98,14 +97,14 @@ void CJudgeZone::Check()
 		baggageList.ListLoop(&pBaggage);
 
 		// è„Ç©â∫Ç©åàÇﬂÇÈ
-		CJudge::BORDER border = (pBaggage->GetPosition().y > m_borderHeight) ? CJudge::BORDER::UP : CJudge::BORDER::DOWN;
+		CJudge::BORDER border = (pBaggage->GetPosition().y > m_zone.borderHeight) ? CJudge::BORDER::TOP : CJudge::BORDER::UNDER;
 
 		// ê∂ê¨
-		if (m_aJudgeInfo[border].type == CJudge::JUDGETYPE::TYPE_NONE)
+		if (m_aJudgeInfo[border].type == CJudge::CONDITIONTYPE::TYPE_NONE)
 		{
 			m_pJudge = CJudge::Create(new CJudgeConditional_None(m_aJudgeInfo[border].judgeParam));
 		}
-		else if (m_aJudgeInfo[border].type == CJudge::JUDGETYPE::TYPE_HITNUM)
+		else if (m_aJudgeInfo[border].type == CJudge::CONDITIONTYPE::TYPE_HITNUM)
 		{
 			m_pJudge = CJudge::Create(new CJudgeConditional_HitNum(m_aJudgeInfo[border].judgeParam));
 		}
@@ -128,11 +127,3 @@ CJudge::JUDGE CJudgeZone::Judge()
 	return judge;
 }
 
-//==========================================================================
-// îªíËÉ]Å[Éìê›íËèàóù
-//==========================================================================
-void CJudgeZone::SetZone(const float start, const float end)
-{
-	m_zone.start = start;
-	m_zone.end = end;
-}
