@@ -82,6 +82,14 @@ HRESULT CJudgeZoneManager::Init()
 //==========================================================================
 void CJudgeZoneManager::Uninit()
 {
+	CListManager<CJudgeZone>::Iterator itr = m_zoneList.GetEnd();
+	while (m_zoneList.ListLoop(itr))
+	{
+		CJudgeZone* pJudgeZone = (*itr);
+
+		pJudgeZone->Uninit();
+	}
+
 	delete m_ThisPtr;
 	m_ThisPtr = nullptr;
 }

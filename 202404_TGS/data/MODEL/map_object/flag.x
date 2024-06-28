@@ -682,7 +682,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "data\\TEXTURE\\map_object\\flags\\Pharmacy.png";
+    "data\\TEXTURE\\map_object\\Pharmacy.png";
    }
   }
   Material {

@@ -50,6 +50,9 @@ HRESULT CJudge::Init()
 void CJudge::Uninit()
 {
 	delete m_pJudgeConditional;
+	m_pJudgeConditional = nullptr;
+
+	delete this;
 }
 
 //==========================================================================
