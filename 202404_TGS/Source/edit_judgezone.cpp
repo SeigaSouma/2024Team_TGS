@@ -99,7 +99,6 @@ void CEdit_JudgeZone::ApplyZone()
 		pJudgeZone->SetInfo(CJudge::BORDER::TOP, m_JudgeZoneData.conditionTop);
 		pJudgeZone->SetInfo(CJudge::BORDER::UNDER, m_JudgeZoneData.conditionTop);
 
-		CJudgeZoneManager::GetInstance()->Add(pJudgeZone);
 	}
 }
 

@@ -54,12 +54,14 @@ public:
 	// Ã“IŠÖ”
 	//=============================
 	static CJudgeZone* Create(const float start, const float end, const float borderHeight);	// ¶¬
+	static CListManager<CJudgeZone> GetListObj() { return m_List; }								// ƒŠƒXƒgæ“¾
 
 private:
 	SJudgeZone m_zone;
 	CJudge* m_pJudge;
 	bool m_isEnable;
 	CJudge::SJudgeCondition m_aJudgeInfo[2];
+	static CListManager<CJudgeZone> m_List;
 };
 
 #endif

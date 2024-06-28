@@ -473,6 +473,7 @@ void CGame::Update()
 	}
 
 
+#if _DEBUG
 
 	static float height = 50.0f, velocity = 2.0f, thickness = 20.0f;
 	static int life = 60;
@@ -538,7 +539,6 @@ void CGame::Update()
 	}
 
 
-#if _DEBUG
 
 	// エディット切り替え処理
 	ChangeEdit();

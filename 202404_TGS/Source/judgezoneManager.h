@@ -31,7 +31,6 @@ public:
 	// メンバ関数
 	//=============================
 	void Check(float progress);
-	void Add(CJudgeZone* zone) { m_zoneList.Regist(zone); }
 	void Release();		//無効化した判定ゾーンを破棄
 	void ReleaseAll();	//判定ゾーンをすべて破棄
 
@@ -48,7 +47,6 @@ public:
 	static CJudgeZoneManager* GetInstance() { return m_ThisPtr; }	// インスタンス取得
 
 private:
-	CListManager<CJudgeZone> m_zoneList;
 	static CJudgeZoneManager* m_ThisPtr;		// 自身のポインタ
 };
 

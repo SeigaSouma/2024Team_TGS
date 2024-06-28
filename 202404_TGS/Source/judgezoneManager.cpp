@@ -82,12 +82,25 @@ HRESULT CJudgeZoneManager::Init()
 //==========================================================================
 void CJudgeZoneManager::Uninit()
 {
-	CListManager<CJudgeZone>::Iterator itr = m_zoneList.GetEnd();
-	while (m_zoneList.ListLoop(itr))
-	{
-		CJudgeZone* pJudgeZone = (*itr);
+	std::list<CJudgeZone*> removeList;
 
-		pJudgeZone->Uninit();
+
+
+	// 障害物のリスト取得
+	CListManager<CJudgeZone> list = CJudgeZone::GetListObj();
+
+	// 先頭を保存
+	std::list<CJudgeZone*>::iterator itr = list.GetEnd();
+
+	CJudgeZone* pObj = nullptr;
+	while (list.ListLoop(itr))
+	{
+		removeList.push_back((*itr));
+	}
+
+	for (itr = removeList.begin(); itr != removeList.end(); itr++)
+	{
+		list.Uninit();
 	}
 
 	delete m_ThisPtr;
@@ -99,22 +112,28 @@ void CJudgeZoneManager::Uninit()
 //==========================================================================
 void CJudgeZoneManager::Check(float progress)
 {
-	CListManager<CJudgeZone>::Iterator itr = m_zoneList.GetEnd();
-	while (m_zoneList.ListLoop(itr))
+	// リスト取得
+	CListManager<CJudgeZone> list = CJudgeZone::GetListObj();
+	CListManager<CJudgeZone>::Iterator itr = list.GetEnd();
+	CJudgeZone* pObj = nullptr;
+
+	while (list.ListLoop(itr))
 	{
-		if ((*itr)->IsEnable())
+		pObj = (*itr);
+
+		if (pObj->IsEnable())
 		{
-			CJudgeZone::SJudgeZone zone = (*itr)->GetZone();
+			CJudgeZone::SJudgeZone zone = pObj->GetZone();
 			if (progress >= zone.start && progress <= zone.end)
 			{//範囲内
-				(*itr)->Check();
+				pObj->Check();
 			}
 			else if (progress > zone.end)
 			{//終了（判定）
-				CJudge::JUDGE judge = (*itr)->Judge();	//ここに判定が入ってる
+				CJudge::JUDGE judge = pObj->Judge();	//ここに判定が入ってる
 				CJudgeObj::Create(MyLib::Vector3(400.0f, 100.0f, 0.0f), judge);
 
-				(*itr)->Uninit();
+				pObj->Uninit();
 			}
 
 #ifdef _DEBUG
@@ -123,8 +142,8 @@ void CJudgeZoneManager::Check(float progress)
 			float length = pCource->GetCourceLength();
 
 			//スタート
-			pos = MySpline::GetSplinePosition_NonLoop(pCource->GetVecPosition(), length * (*itr)->GetZone().start);
-			pos.y = (*itr)->GetZone().borderHeight;
+			pos = MySpline::GetSplinePosition_NonLoop(pCource->GetVecPosition(), length * pObj->GetZone().start);
+			pos.y = pObj->GetZone().borderHeight;
 			CEffect3D::Create(
 				pos,
 				MyLib::Vector3(0.0f, 0.0f, 0.0f),
@@ -132,8 +151,8 @@ void CJudgeZoneManager::Check(float progress)
 				40.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
 
 			//終了
-			pos = MySpline::GetSplinePosition_NonLoop(pCource->GetVecPosition(), length * (*itr)->GetZone().end);
-			pos.y = (*itr)->GetZone().borderHeight;
+			pos = MySpline::GetSplinePosition_NonLoop(pCource->GetVecPosition(), length * pObj->GetZone().end);
+			pos.y = pObj->GetZone().borderHeight;
 			CEffect3D::Create(
 				pos,
 				MyLib::Vector3(0.0f, 0.0f, 0.0f),
@@ -153,10 +172,13 @@ void CJudgeZoneManager::Check(float progress)
 void CJudgeZoneManager::Release()
 {
 	std::list<CJudgeZone*> removeList;
-	std::list<CJudgeZone*>::iterator itr;
-	itr = m_zoneList.GetEnd();
+
+	CListManager<CJudgeZone> list = CJudgeZone::GetListObj();
+
+	std::list<CJudgeZone*>::iterator itr = list.GetEnd();
+	itr = list.GetEnd();
 	CJudgeZone* pObj = nullptr;
-	while (m_zoneList.ListLoop(itr))
+	while (list.ListLoop(itr))
 	{
 		if (!(*itr)->IsEnable())
 		{
@@ -166,7 +188,7 @@ void CJudgeZoneManager::Release()
 	
 	for (itr = removeList.begin(); itr != removeList.end(); itr++)
 	{
-		m_zoneList.Delete((*itr));
+		list.Delete((*itr));
 	}
 }
 
@@ -175,12 +197,14 @@ void CJudgeZoneManager::Release()
 //==========================================================================
 void CJudgeZoneManager::ReleaseAll()
 {
+	CListManager<CJudgeZone> list = CJudgeZone::GetListObj();
+	std::list<CJudgeZone*>::iterator itr = list.GetEnd();
+
 	CJudgeZone* pZone = nullptr;
-	while (m_zoneList.ListLoop(&pZone))
+	while (list.ListLoop(itr))
 	{
-		m_zoneList.Delete(pZone);	// リスト除外
+		pZone = (*itr);
 		pZone->Uninit();			// 終了
-		delete pZone;				// 破棄
 	}
 }
 
@@ -359,7 +383,6 @@ void CJudgeZoneManager::LoadZone(std::string path)
 	{
 		pJudgeZone->SetInfo(CJudge::BORDER::TOP, LoadCondition(aPath[CJudge::BORDER::TOP]));
 		pJudgeZone->SetInfo(CJudge::BORDER::UNDER, LoadCondition(aPath[CJudge::BORDER::UNDER]));
-		m_zoneList.Regist(pJudgeZone);
 	}
 }
 

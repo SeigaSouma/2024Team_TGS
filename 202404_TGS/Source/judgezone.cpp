@@ -16,6 +16,7 @@ namespace
 {
 	
 }
+CListManager<CJudgeZone> CJudgeZone::m_List = {};
 
 //**************************************************************************
 // 
@@ -45,6 +46,7 @@ CJudgeZone::~CJudgeZone()
 //==========================================================================
 HRESULT CJudgeZone::Init()
 {
+	m_List.Regist(this);
 	return S_OK;
 }
 
@@ -53,6 +55,7 @@ HRESULT CJudgeZone::Init()
 //==========================================================================
 void CJudgeZone::Uninit()
 {
+
 	if (m_pJudge != nullptr)
 	{
 		m_pJudge->Uninit();
@@ -60,6 +63,8 @@ void CJudgeZone::Uninit()
 	}
 
 	m_isEnable = false;
+
+	m_List.Delete(this);
 
 	delete this;
 }
