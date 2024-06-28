@@ -176,11 +176,13 @@ void CBaggage::Update()
 	MyLib::Vector3 posOrigin = GetOriginPosition();
 	MyLib::Vector3 pos = GetPosition();
 	MyLib::Vector3 move = GetMove();
+#ifdef _DEBUG
 	ImGui::DragFloat("weight", &m_fWeight, 0.1f, 0.0f, 0.0f, "%.2f");
 	ImGui::DragFloat("PITCH_RATIO", &PITCH_RATIO, 0.1f, 0.0f, 0.0f, "%.2f");
 	ImGui::DragFloat("PITCH_INER", &PITCH_INER, 0.1f, 0.0f, 0.0f, "%.2f");
 	ImGui::DragFloat("ROLL_FSTSPD", &ROLL_FSTSPD, 0.1f, 0.0f, 0.0f, "%.2f");
 	ImGui::DragFloat("ROLL_INER", &ROLL_INER, 0.1f, 0.0f, 0.0f, "%.2f");
+#endif
 
 	// ˆÊ’uXV
 	pos += move;
@@ -203,7 +205,9 @@ void CBaggage::Update()
 	move.y -= mylib_const::GRAVITY * m_fWeight;
 
 	static float limitMoveY = 30.0f;
+#ifdef _DEBUG
 	ImGui::DragFloat("Limit MoveY", &limitMoveY, 1.0f, 0.0f, 0.0f, "%.2f");
+#endif
 
 	if (move.y >= limitMoveY)
 	{
@@ -235,6 +239,7 @@ void CBaggage::Update()
 	SetPosition(pos);
 	SetMove(move);
 
+#ifdef _DEBUG
 	ImGui::Dummy(ImVec2(0.0f, 10.0f));
 	if (ImGui::TreeNode("Transform"))
 	{
@@ -274,6 +279,7 @@ void CBaggage::Update()
 		SetMove(0.0f);
 		ImGui::TreePop();
 	}
+#endif
 }
 
 //==========================================================================
