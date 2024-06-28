@@ -1037,7 +1037,6 @@ bool CPlayer::Collision(MyLib::Vector3 &pos, MyLib::Vector3 &move)
 		}
 	}
 
-
 	// Xƒtƒ@ƒCƒ‹‚Æ‚Ì”»’è
 	CStage *pStage = CGame::GetInstance()->GetStage();
 	if (pStage == nullptr)
@@ -1390,8 +1389,10 @@ void CPlayer::Bobbing()
 
 	fff += CManager::GetInstance()->GetDeltaTime();
 
+#if _DEBUG
 	ImGui::DragFloat("Bobbing Cycle", &cycle, 0.1f, 0.0f, 0.0f, "%.2f");
 	ImGui::DragFloat("Bobbing", &power, 0.1f, 0.0f, 0.0f, "%.2f");
+#endif
 
 	pos.y += sinf(D3DX_PI * (fff / cycle)) * power;
 	pos.y += commandheight;

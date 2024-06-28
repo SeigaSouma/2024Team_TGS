@@ -334,7 +334,7 @@ void CPlayerControlMove::Move(CPlayer* player)
 	static int block = 64;
 	static float blocksize = 4.7f;
 
-
+#if _DEBUG
 	ImGui::DragInt("INTERVAL", &m_nIntervalWaterRipple, 1);
 	ImGui::DragInt("BLOCK", &block, 1);
 	ImGui::DragFloat("BLOCK SIZE", &blocksize, 0.1f, 0.0f, 0.0f, "%.2f");
@@ -342,6 +342,7 @@ void CPlayerControlMove::Move(CPlayer* player)
 	ImGui::DragFloat("velocity", &velocity, 0.1f, 0.0f, 0.0f, "%.2f");
 	ImGui::DragFloat("thickness", &thickness, 1.0f, 0.0f, 0.0f, "%.2f");
 	ImGui::DragInt("life", &life, 1);
+#endif
 
 	bool bCreateRipple = false;	// 波紋生成フラグ
 
@@ -444,17 +445,22 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	static float up = 8.3f, power = 9.0f;
 	//static float up = 8.3f, power = 6.8f;
 	//static float up = 2.5f, power = 2.0f;
+#if _DEBUG
 	ImGui::DragFloat("up", &up, 0.1f, 0.0f, 0.0f, "%.2f");
 	ImGui::DragFloat("power", &power, 0.01f, 0.0f, 0.0f, "%.2f");
 
 	ImGui::DragFloat("Add Height", &ADD_HEIGHT, 1.0f, 0.0f, 0.0f, "%.2f");
+#endif
 
 	static float starttimeDownheight = 2.0f;	// 降下が始まるまでの時間
 	static float timeDownheight = 2.0f;			// 落ちきるまでの時間
 	static float ratioMinDownheight = 0.2f;		// 落ちきった時の再下底割合
+
+#if _DEBUG
 	ImGui::DragFloat("Start Time DownHeight", &starttimeDownheight, 0.05f, 0.0f, 0.0f, "%.2f");
 	ImGui::DragFloat("Time DownHeight", &timeDownheight, 0.05f, 0.0f, 0.0f, "%.2f");
 	ImGui::DragFloat("Ratio Min DownHeight", &ratioMinDownheight, 0.01f, 0.0f, 0.0f, "%.2f");	
+#endif
 
 	// 荷物の高さで割合設定
 	float ratio = (posBaggage.y - posBaggageOrigin.y) / LENGTH_COLLISIONHEIGHT;
@@ -748,6 +754,7 @@ void CPlayerControlBaggage::BressEffect(CPlayer* player, CBaggage* pBaggage)
 	// カラーエディット
 	static ImVec4 myColor = ImVec4(1.0f, 1.0, 1.0, 0.08235f); // RGBA
 
+#if _DEBUG
 	if (ImGui::TreeNode("Bress"))
 	{
 		ImGui::DragInt("CreateNum", &createIdx, 1);
@@ -763,6 +770,7 @@ void CPlayerControlBaggage::BressEffect(CPlayer* player, CBaggage* pBaggage)
 
 		ImGui::TreePop();
 	}
+#endif
 
 	if (m_fIntervalBress > m_fBressTimer)
 	{
@@ -957,8 +965,10 @@ float CPlayerControlSurfacing::Surfacing(CPlayer* player)
 		bUp = true;
 	}
 
+#if _DEBUG
 	ImGui::DragFloat("SurHeight", &MAX_SURHEIGHT, 0.1f, 0.0f, 0.0f, "%.2f");
 	ImGui::DragFloat("SurSpeed", &SURHEIGHT_VELOCITY, 0.1f, 0.0f, 0.0f, "%.2f");
+#endif
 
 
 	if (bUp) {	// 上昇

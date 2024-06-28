@@ -148,6 +148,7 @@ void CWaterStone::Update()
 	// カラーエディット
 	static ImVec4 myColor = ImVec4(0.658f, 0.658f, 1.0, 0.87f); // RGBA
 
+#if _DEBUG
 	if (ImGui::TreeNode("Stone Water"))
 	{
 		ImGui::DragInt("CreateNum", &createIdx, 1);
@@ -167,6 +168,7 @@ void CWaterStone::Update()
 
 		ImGui::TreePop();
 	}
+#endif
 
 	// スプラッシュ！
 	if (m_fIntervalSplash <= m_fSplashTimer)
