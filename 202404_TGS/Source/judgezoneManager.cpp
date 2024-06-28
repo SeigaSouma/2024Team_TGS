@@ -100,7 +100,7 @@ void CJudgeZoneManager::Uninit()
 
 	for (itr = removeList.begin(); itr != removeList.end(); itr++)
 	{
-		list.Uninit();
+		(*itr)->Uninit();
 	}
 
 	delete m_ThisPtr;
