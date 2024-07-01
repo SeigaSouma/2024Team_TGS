@@ -59,6 +59,7 @@ private:
 	//=============================
 	TYPE m_type;			// 種類
 	CMap_ObstacleManager::SObstacleInfo m_ObstacleInfo;	// 障害物情報
+	CMap_ObstacleManager::SObstacleInfo m_OriginObstacleInfo;	// 障害物情報
 	std::vector<CCollisionLine_Box*> m_pCollisionLineBox;	// 当たり判定ボックス
 	static CListManager<CMap_Obstacle> m_List;	// リスト
 

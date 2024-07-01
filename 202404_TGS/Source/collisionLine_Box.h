@@ -31,6 +31,7 @@ public:
 	void SetColor(const D3DXCOLOR& col);			// Fİ’è
 
 	void SetAABB(MyLib::AABB aabb, float scale = 1.0f);	// AAbBî•ñİ’è
+	MyLib::AABB GetAABB() { return m_AABB; }
 	void Kill();
 
 	static CCollisionLine_Box* Create(const MyLib::AABB& aabb, const D3DXCOLOR& col);

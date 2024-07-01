@@ -86,6 +86,8 @@ HRESULT CMap_Obstacle::Init()
 	}
 #endif
 
+	m_OriginObstacleInfo = m_ObstacleInfo;	// áŠQ•¨î•ñ
+
 	return S_OK;
 }
 
@@ -145,6 +147,8 @@ void CMap_Obstacle::Update()
 		box->SetPosition(collider.worldmtx.GetWorldPosition());
 		box->SetRotation(GetRotation());
 		box->SetAABB(MyLib::AABB(collider.vtxMin, collider.vtxMax), GetScale().x);
+	/*	collider.vtxMin = box->GetAABB().vtxMin;
+		collider.vtxMax = box->GetAABB().vtxMax;*/
 		i++;
 	}
 
