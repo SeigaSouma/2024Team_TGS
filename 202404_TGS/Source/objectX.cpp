@@ -31,7 +31,7 @@ int CObjectX::m_nNumAll = 0;	// 総数
 //==========================================================================
 // コンストラクタ
 //==========================================================================
-CObjectX::CObjectX(int nPriority) : CObject(nPriority)
+CObjectX::CObjectX(int nPriority, CObject::LAYER layer) : CObject(nPriority, layer)
 {
 	m_mtxWorld.Identity();							// ワールドマトリックス
 	m_scale = MyLib::Vector3(1.0f, 1.0f, 1.0f);		// スケール
@@ -183,7 +183,9 @@ CObjectX *CObjectX::Create(const std::string& file, const MyLib::Vector3& pos, c
 //==========================================================================
 // 生成処理
 //==========================================================================
-CObjectX *CObjectX::Create(int nIdxXFile, const MyLib::Vector3& pos, const MyLib::Vector3& rot, bool bShadow)
+CObjectX *CObjectX::Create(int nIdxXFile, const MyLib::Vector3& pos, const MyLib::Vector3& rot, bool bShadow,
+	int nPriority,
+	CObject::LAYER layer)
 {
 	// 生成用のオブジェクト
 	CObjectX *pObjectX = nullptr;
@@ -192,7 +194,7 @@ CObjectX *CObjectX::Create(int nIdxXFile, const MyLib::Vector3& pos, const MyLib
 	{// nullptrだったら
 
 		// メモリの確保
-		pObjectX = DEBUG_NEW CObjectX;
+		pObjectX = DEBUG_NEW CObjectX(nPriority, layer);
 
 		if (pObjectX != nullptr)
 		{// メモリの確保が出来ていたら

@@ -18,7 +18,7 @@ class CHandle_Scale : public CHandle
 {
 public:
 
-	CHandle_Scale(int nPriority = 4);
+	CHandle_Scale(int nPriority = 8);
 	~CHandle_Scale();
 
 	//  オーバーライド関数

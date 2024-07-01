@@ -26,7 +26,8 @@ CListManager<CMap_Obstacle> CMap_Obstacle::m_List = {};	// リスト
 //==========================================================================
 // コンストラクタ
 //==========================================================================
-CMap_Obstacle::CMap_Obstacle(int nPriority) : CObjectX(nPriority)
+CMap_Obstacle::CMap_Obstacle(int nPriority,
+	CObject::LAYER layer) : CObjectX(nPriority, layer)
 {
 	// 値のクリア
 }

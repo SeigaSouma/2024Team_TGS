@@ -1427,7 +1427,7 @@ void CEdit_Map::Regist(int idx, MyLib::Vector3 pos, MyLib::Vector3 rot, float sc
 	}
 
 	// ƒ^ƒCƒv‚Ì•¨‚ð¶¬
-	m_pObjX.back() = CObjectX::Create(m_nModelIdx[idx], pos, rot, bShadow);
+	m_pObjX.back() = CObjectX::Create(m_nModelIdx[idx], pos, rot, bShadow, mylib_const::PRIORITY_DEFAULT, CObject::LAYER::LAYER_MAP);
 	m_pObjX.back()->SetScale(scale);
 	m_pObjX.back()->SetType(CObject::TYPE_XFILE);
 	m_pObjX.back()->CreateCollisionBox();

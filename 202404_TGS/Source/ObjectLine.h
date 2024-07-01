@@ -30,7 +30,7 @@ public:
 		SLineInfo() : left(0.0f), right(0.0f), col(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f)) {}
 	};
 
-	CObjectLine(int nPriority = mylib_const::PRIORITY_DEF2D, const LAYER layer = LAYER::LAYER_LINE);
+	CObjectLine(int nPriority = 8, const LAYER layer = LAYER::LAYER_LINE);
 	virtual ~CObjectLine();
 
 	// オーバーライドされた関数

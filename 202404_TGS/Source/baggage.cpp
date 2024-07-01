@@ -268,12 +268,6 @@ void CBaggage::UpdateState()
 	// 状態更新
 	(this->*(m_StateFunc[m_state]))();
 
-	// 障害物との衝突判定
-	if (Hit())
-	{
-		m_velorot.x += ROLL_FSTSPD;	// 衝突したらロール軸に回転速度を与える
-	}
-
 }
 
 //==========================================================================
@@ -281,6 +275,12 @@ void CBaggage::UpdateState()
 //==========================================================================
 void CBaggage::StateNone()
 {
+	// 障害物との衝突判定
+	if (Hit())
+	{
+		m_velorot.x += ROLL_FSTSPD;	// 衝突したらロール軸に回転速度を与える
+	}
+
 	m_fStateTimer = 0.0f;
 }
 

@@ -40,7 +40,8 @@ public:
 #define MAX_MAT				(512)		// マテリアルサイズ
 #define MAX_TX				(96)		// テクスチャサイズ
 
-	CObjectX(int nPriority = mylib_const::PRIORITY_DEFAULT);
+	CObjectX(int nPriority = mylib_const::PRIORITY_DEFAULT,
+		CObject::LAYER layer = CObject::LAYER::LAYER_DEFAULT);
 	~CObjectX();
 
 	// オーバーライドされた関数
@@ -87,7 +88,13 @@ public:
 	static CObjectX *Create();
 	static CObjectX *Create(const std::string& file);
 	static CObjectX *Create(const std::string& file, const MyLib::Vector3& pos, const MyLib::Vector3& rot = 0.0f, bool bShadow = false);
-	static CObjectX *Create(int nIdxXFile, const MyLib::Vector3& pos, const MyLib::Vector3& rot = 0.0f, bool bShadow = false);
+	static CObjectX* Create(
+		int nIdxXFile,
+		const MyLib::Vector3& pos,
+		const MyLib::Vector3& rot = 0.0f,
+		bool bShadow = false,
+		int nPriority = mylib_const::PRIORITY_DEFAULT,
+		CObject::LAYER layer = CObject::LAYER::LAYER_DEFAULT);
 	CObjectX *GetObjectX();
 	static int GetNumAll();
 

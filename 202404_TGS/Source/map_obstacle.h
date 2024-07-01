@@ -20,7 +20,8 @@ class CMap_Obstacle : public CObjectX
 {
 public:
 
-	CMap_Obstacle(int nPriority = 5);
+	CMap_Obstacle(int nPriority = 5, 
+		CObject::LAYER layer = CObject::LAYER::LAYER_MAP);
 	~CMap_Obstacle();
 
 	//=============================

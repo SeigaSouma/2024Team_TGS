@@ -20,7 +20,7 @@ class CHandle_Move : public CHandle
 {
 public:
 
-	CHandle_Move(int nPriority = 4);
+	CHandle_Move(int nPriority = 8);
 	~CHandle_Move();
 
 	//  オーバーライド関数

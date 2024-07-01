@@ -57,7 +57,7 @@ public:
 	};
 
 
-	CHandle(int nPriority = 4, const LAYER layer = LAYER::LAYER_LINE);
+	CHandle(int nPriority = 8, const LAYER layer = LAYER::LAYER_LINE);
 	~CHandle();
 
 	//  オーバーライド関数
