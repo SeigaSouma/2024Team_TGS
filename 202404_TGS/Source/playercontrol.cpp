@@ -569,7 +569,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	}
 
 	// ˆÊ’uÝ’è
-	if (!pBaggage->IsAway())
+	if (pBaggage->GetState() != CBaggage::STATE::STATE_DEAD)
 	{
 		pBaggage->SetPosition(MyLib::Vector3(pos.x, posBaggage.y, pos.z));
 	}
