@@ -295,7 +295,7 @@ HRESULT CGame::Init()
 
 	for (int i = 0; i < 10; i++)
 	{
-		CCheckpoint::Create((i + 1) * 2000.0f);
+		CCheckpoint::Create((i + 1) * 2000.0f * 2);
 	}
 
 	// チェックポイント通過リセット
