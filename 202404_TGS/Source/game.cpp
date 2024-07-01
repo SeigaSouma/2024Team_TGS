@@ -76,6 +76,7 @@ CGame::CGame()
 	m_pBaggageManager = nullptr;	// 荷物マネージャ
 	m_pCourse = nullptr;			// コースのオブジェクト
 	m_pJudgeZoneManager = nullptr;	// 判定ゾーンマネージャ
+	m_pWaterStoneManager = nullptr;	// 水中石マネージャ
 	m_pMapUI = nullptr;				// マップUI
 }
 
@@ -179,12 +180,8 @@ HRESULT CGame::Init()
 
 	CManager::GetInstance()->GetCamera()->Reset(CScene::MODE_GAME);
 
-	//CObjectLine* pppp = CObjectLine::Create(MyLib::Vector3(0.0f, 3000.0f, 0.0f), MyLib::Vector3(0.0f, 10.0f, 0.0f), mylib_const::DEFAULT_COLOR);
-
 	// クリアの判定
 	SetEnableClear(true);
-
-	//CSample_Obj3D::Create();
 
 	m_pTimer = CTimer::Create();
 
@@ -195,9 +192,6 @@ HRESULT CGame::Init()
 	//=============================
 	m_pObstacleManager = CMap_ObstacleManager::Create();
 
-	/*CMyEffekseer::GetInstance()->SetEffect(
-		CMyEffekseer::EFKLABEL::EFKLABEL_RIVER_SAMPLE,
-		MyLib::Vector3(300.0f, 0.1f, 0.0f), MyLib::Vector3(0.0f, D3DX_PI, 0.0f), 0.0f, 30.0f, true);*/
 
 	//=============================
 	// コース作成
@@ -299,16 +293,10 @@ HRESULT CGame::Init()
 	CWaterField::Create(CWaterField::TYPE::TYPE_RIGHT);
 	CWaterField::Create(CWaterField::TYPE::TYPE_LEFT);*/
 
-
-	CCheckpoint::Create(1000.0f);
-	CCheckpoint::Create(2000.0f);
-	CCheckpoint::Create(3000.0f);
-	CCheckpoint::Create(4000.0f);
-	CCheckpoint::Create(5000.0f);
-	CCheckpoint::Create(6000.0f);
-	CCheckpoint::Create(7000.0f);
-	CCheckpoint::Create(8000.0f);
-	CCheckpoint::Create(9000.0f);
+	for (int i = 0; i < 10; i++)
+	{
+		CCheckpoint::Create((i + 1) * 2000.0f);
+	}
 
 	// チェックポイント通過リセット
 	CCheckpoint::ResetSaveID();
@@ -324,10 +312,18 @@ HRESULT CGame::Init()
 	//=============================
 	m_pMapUI = CMapUI::Create();
 
+	pPlayer = playerList.GetData(0);
+	m_pMapUI->BindPlayer(pPlayer);
+
 	//=============================
 	// 水中石マネージャ
 	//=============================
-	CWaterStone_Manager::Create();
+	m_pWaterStoneManager = CWaterStone_Manager::Create();
+
+	// BGM再生
+	CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_BGM_GAME);
+	CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_BGM_WATER_FLOW);
+
 	// 成功
 	return S_OK;
 }
@@ -425,6 +421,13 @@ void CGame::Uninit()
 		m_pJudgeZoneManager = nullptr;
 	}
 
+	// 水中石マネージャ
+	if (m_pWaterStoneManager != nullptr)
+	{
+		m_pWaterStoneManager->Uninit();
+		m_pWaterStoneManager = nullptr;
+	}
+
 	// マップUI
 	if (m_pMapUI != nullptr)
 	{
@@ -470,6 +473,7 @@ void CGame::Update()
 	}
 
 
+#if _DEBUG
 
 	static float height = 50.0f, velocity = 2.0f, thickness = 20.0f;
 	static int life = 60;
@@ -535,7 +539,6 @@ void CGame::Update()
 	}
 
 
-#if _DEBUG
 
 	// エディット切り替え処理
 	ChangeEdit();
@@ -587,12 +590,6 @@ void CGame::Update()
 	}
 
 #endif
-
-	// マップ更新処理
-	if (m_pMapUI != nullptr)
-	{
-		m_pMapUI->Update();
-	}
 
 	// シーンの更新
 	CScene::Update();
@@ -650,7 +647,7 @@ void CGame::ChangeEdit()
 		}
 
 		// テキスト
-		static const char* items[] = { "OFF", "Map", "Obstacle", "Course", "WaterStone"};
+		static const char* items[] = { "OFF", "Map", "Obstacle", "Course", "WaterStone", "JudgeZone"};
 		int selectedItem = m_EditType;
 
 		// [グループ]エディット切り替え
@@ -661,6 +658,17 @@ void CGame::ChangeEdit()
 			{
 				if (ImGui::RadioButton(items[i], &selectedItem, i))
 				{
+					if (i != 0)
+					{
+						// デバッグモード
+						m_pGameManager->SetType(CGameManager::SceneType::SCENE_DEBUG);
+					}
+					else
+					{
+						// デバッグモード
+						m_pGameManager->SetType(m_pGameManager->GetOldType());
+					}
+
 					// エディット終了
 					EditReset();
 					m_EditType = static_cast<EditType>(selectedItem);

@@ -808,8 +808,11 @@ void CCamera::SetCameraVGame()
 	{// í«è]ON
 		
 		// é©ìÆåXÇ´ÇÃåvéZèàóù
-		m_fAutoRot_Dest = (m_posR.y - 200.0f) / m_fDistance + m_rotOrigin.z;
-		m_rot.z += (m_fAutoRot_Dest - m_rot.z) * 0.2f;
+		if (CGame::GetInstance()->GetGameManager()->GetType() != CGameManager::SceneType::SCENE_DEBUG)
+		{
+			m_fAutoRot_Dest = (m_posR.y - 200.0f) / m_fDistance + m_rotOrigin.z;
+			m_rot.z += (m_fAutoRot_Dest - m_rot.z) * 0.2f;
+		}
 
 		// éãì_ÇÃë„ì¸èàóù
 		m_posVDest.x = m_posR.x + cosf(m_rot.z) * sinf(m_rot.y) * -m_fDistance;
@@ -841,7 +844,11 @@ void CCamera::SetCameraVGame()
 			m_fDiffHeightSave += m_fHeightMax - m_posV.y;
 		}
 
-		m_pStateCameraV->Distance(this);
+		// çÇÇ≥Ç…ÇÊÇÈãóó£ê›íË
+		if (CGame::GetInstance()->GetGameManager()->GetType() != CGameManager::SceneType::SCENE_DEBUG)
+		{
+			m_pStateCameraV->Distance(this);
+		}
 
 		// ï‚ê≥Ç∑ÇÈ
 		m_posV += (m_posVDest - m_posV) * (0.12f * MULTIPLY_POSV_CORRECTION);
@@ -973,9 +980,15 @@ void CCamera::SetCameraRGame()
 
 		// íçéãì_ÇÃë„ì¸èàóù
 		m_pStateCameraR->SetCameraR(this);
-		m_posRDest.y = m_AutoMovingPosR.y;
-		//m_posRDest.y = m_TargetPos.y;
-		//m_posRDest.y = fYcamera - m_fDiffHeight;
+
+		if (CGame::GetInstance()->GetGameManager()->GetType() == CGameManager::SceneType::SCENE_DEBUG)
+		{
+			m_posRDest = m_TargetPos;
+		}
+		else
+		{
+			m_posRDest.y = m_AutoMovingPosR.y;
+		}
 
 		// ï‚ê≥Ç∑ÇÈ
 		m_posR += (m_posRDest - m_posR) * (0.08f * MULTIPLY_POSR_CORRECTION);

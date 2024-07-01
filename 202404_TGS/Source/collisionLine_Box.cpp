@@ -207,10 +207,12 @@ void CCollisionLine_Box::SetColor(const D3DXCOLOR& col)
 //==========================================================================
 // AAbB情報設定
 //==========================================================================
-void CCollisionLine_Box::SetAABB(MyLib::AABB aabb)
+void CCollisionLine_Box::SetAABB(MyLib::AABB aabb, float scale)
 {
 	// 情報設定
 	m_AABB = aabb;
+	m_AABB.vtxMax *= scale;
+	m_AABB.vtxMin *= scale;
 
 	// ボックスの頂点
 	MyLib::Vector3 vtx[8];

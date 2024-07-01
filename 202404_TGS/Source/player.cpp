@@ -209,6 +209,7 @@ HRESULT CPlayer::Init()
 	m_nCntState = 0;		// 状態遷移カウンター
 	m_bLandOld = true;		// 前回の着地状態
 	m_bMotionAutoSet = true;						// モーションの自動設定
+	m_sMotionFrag.bMove = true;
 
 	// キャラ作成
 	HRESULT hr = SetCharacter(CHARAFILE);
@@ -379,7 +380,9 @@ void CPlayer::Update()
 	Controll();
 
 	// モーションの設定処理
+	if (CGame::GetInstance()->GetGameManager()->IsControll()){
 	MotionSet();
+	}
 
 	// 状態更新
 	UpdateState();
@@ -494,6 +497,12 @@ void CPlayer::Controll()
 				}
 			}
 		}
+	}
+	else
+	{
+		// モーション取得
+		CMotion* pMotion = GetMotion();
+		pMotion->Set(MOTION_WALK, false);
 	}
 
 	// 位置取得
@@ -620,10 +629,8 @@ void CPlayer::Controll()
 		CCollisionObject::Create(GetPosition(), mylib_const::DEFAULT_VECTOR3, 100000.0f, 3, 10000, CCollisionObject::TAG_PLAYER);
 	}
 
-	if (pInputKeyboard->GetRepeat(DIK_RIGHT, 4)){
-		//CManager::GetInstance()->GetSound()->PlaySound(CSound::LABEL_SE_NORMALATK_HIT2);
-		CManager::GetInstance()->GetSound()->PlaySound(CSound::LABEL::LABEL_SE_COUNTER_TURN, false);
-
+	if (pInputKeyboard->GetRepeat(DIK_RIGHT, 4))
+	{
 		CPlayer::Hit(10000);
 	}
 
@@ -631,14 +638,14 @@ void CPlayer::Controll()
 	if (pInputKeyboard->GetTrigger(DIK_UP))
 	{
 		fff += 0.1f;
-		CManager::GetInstance()->GetSound()->SetFrequency(CSound::LABEL_BGM_GAME, fff);
+		CSound::GetInstance()->SetFrequency(CSound::LABEL_BGM_GAME, fff);
 
 
 	}
 	if (pInputKeyboard->GetTrigger(DIK_DOWN))
 	{
 		fff -= 0.1f;
-		CManager::GetInstance()->GetSound()->SetFrequency(CSound::LABEL_BGM_GAME, fff);
+		CSound::GetInstance()->SetFrequency(CSound::LABEL_BGM_GAME, fff);
 	}
 
 	if (pInputKeyboard->GetPress(DIK_J))
@@ -829,22 +836,22 @@ void CPlayer::AttackAction(CMotion::AttackInfo ATKInfo, int nCntATK)
 	case MOTION::MOTION_WALK:
 		/*if (nCntATK == 0)
 		{
-			CManager::GetInstance()->GetSound()->PlaySound(CSound::LABEL_SE_WALK1);
+			CSound::GetInstance()->PlaySound(CSound::LABEL_SE_WALK1);
 		}
 		else{
 
-			CManager::GetInstance()->GetSound()->PlaySound(CSound::LABEL_SE_WALK2);
+			CSound::GetInstance()->PlaySound(CSound::LABEL_SE_WALK2);
 		}*/
 		break;
 
 	case MOTION::MOTION_DASH:
 		/*if (nCntATK == 0)
 		{
-			CManager::GetInstance()->GetSound()->PlaySound(CSound::LABEL_SE_DASH1);
+			CSound::GetInstance()->PlaySound(CSound::LABEL_SE_DASH1);
 		}
 		else {
 
-			CManager::GetInstance()->GetSound()->PlaySound(CSound::LABEL_SE_DASH2);
+			CSound::GetInstance()->PlaySound(CSound::LABEL_SE_DASH2);
 		}*/
 		break;
 
@@ -1030,7 +1037,6 @@ bool CPlayer::Collision(MyLib::Vector3 &pos, MyLib::Vector3 &move)
 		}
 	}
 
-
 	// Xファイルとの判定
 	CStage *pStage = CGame::GetInstance()->GetStage();
 	if (pStage == nullptr)
@@ -1178,6 +1184,11 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 
 	if (nLife <= camlife)
 	{
+		if (nLife == camlife)
+		{
+			CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_DROWN);
+		}
+
 		if (nLife % 4 == 0)
 		{
 			float ratioDest = 1.0f - static_cast<float>(nLife) / GetLifeOrigin();
@@ -1215,14 +1226,16 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 		}
 
 		// コントローラー振動させる
-		if (nLife == camlife) { pPad->SetVibMulti(0.0f); }
+		if (nLife == camlife) 
+		{ 
+			pPad->SetVibMulti(0.0f); 
+		}
 		pPad->SetEnableVibration();
 		pPad->SetVibMulti(pPad->GetVibMulti() + 0.02f);
 		pPad->SetVibration(CInputGamepad::VIBRATION_STATE::VIBRATION_STATE_DMG, 0);
 	}
 
 	nLife -= nValue;
-
 	UtilFunc::Transformation::Clamp(nLife, 0, GetLifeOrigin());
 
 	// 体力設定
@@ -1248,7 +1261,10 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 
 		// タイマーを停止
 		CTimer* pt = CGame::GetInstance()->GetTimer();
-		if (pt != nullptr) { pt->SetEnableAddTime(false); }
+		if (pt != nullptr) 
+		{ 
+			pt->SetEnableAddTime(false); 
+		}
 	}
 	else if (nLife <= camlife)
 	{
@@ -1294,6 +1310,12 @@ void CPlayer::DeadSetting(MyLib::HitResult_Character* result)
 
 	// 死んだ
 	result->isdeath = true;
+
+	// 空気エフェクトをリセットする
+	if (m_pControlBaggage)
+	{
+		m_pControlBaggage->EffectStop();
+	}
 }
 
 //==========================================================================
@@ -1338,7 +1360,7 @@ void CPlayer::UpdateDamageReciveTimer()
 
 		if (!m_sDamageInfo.bReceived)
 		{
-			CManager::GetInstance()->GetSound()->PlaySound(CSound::LABEL::LABEL_SE_WINGS);
+
 		}
 
 		// ダメージ受け付け判定
@@ -1367,8 +1389,10 @@ void CPlayer::Bobbing()
 
 	fff += CManager::GetInstance()->GetDeltaTime();
 
+#if _DEBUG
 	ImGui::DragFloat("Bobbing Cycle", &cycle, 0.1f, 0.0f, 0.0f, "%.2f");
 	ImGui::DragFloat("Bobbing", &power, 0.1f, 0.0f, 0.0f, "%.2f");
+#endif
 
 	pos.y += sinf(D3DX_PI * (fff / cycle)) * power;
 	pos.y += commandheight;
@@ -1745,8 +1769,13 @@ void CPlayer::ScreenReset()
 		m_pBaggage->Reset();
 	}
 
+	// カメラの状態を元に戻す
 	CCamera* pCamera = CManager::GetInstance()->GetCamera();
 	pCamera->SetStateCameraV(new CStateCameraV);
+
+	// モーションをリセットする
+	GetMotion()->ToggleFinish(true);
+	GetMotion()->Set(MOTION::MOTION_WALK, false);
 }
 
 //==========================================================================

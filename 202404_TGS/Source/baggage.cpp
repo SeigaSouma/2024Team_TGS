@@ -30,8 +30,23 @@ namespace
 	float DEVIATION_WIDTH = 300.0f;	// ぶれ幅
 	float DEVIATION_SPEED = 0.02f * D3DX_PI;	// ぶれ速度
 	float DEADANGLE_HIT = D3DX_PI * 0.2f;		// ヒット時の死亡判定
-	float TIME_DEADMOVE = 0.7f;					// 死亡時移動の時間
 }
+
+namespace StateTime
+{
+	const float DAMAGE = 0.2f;	// ダメージ
+	const float DEAD = 0.7f;	// 死亡
+}
+
+//==========================================================================
+// 関数ポインタ
+//==========================================================================
+CBaggage::STATE_FUNC CBaggage::m_StateFunc[] =
+{
+	&CBaggage::StateNone,	// なし
+	&CBaggage::StateDamage,	// ダメージ
+	&CBaggage::StateDead,	// 死亡
+};
 
 //==========================================================================
 // ブラー表現(マルチターゲットレンダリング)用定数定義
@@ -55,15 +70,15 @@ CListManager<CBaggage> CBaggage::m_List = {};	// リスト
 CBaggage::CBaggage(int nPriority) : CObjectQuaternion(nPriority)
 {
 	// 値のクリア
-	m_type = TYPE::TYPE_CLOTH;	// 種類
+	m_type = TYPE::TYPE_CLOTH;		// 種類
+	m_state = STATE::STATE_NONE;	// 状態
+	m_fStateTimer = 0.0f;			// 状態タイマー
 	m_fWeight = 0.0f;	// 重さ
 	m_bLand = false;	// 着地判定
-	m_bAway = false;	// 死亡判定
 	m_bEnd = false;		// 終了処理
 	m_velorot = MyLib::Vector3(0.0f, 0.0f, 0.0f);
 	m_baggageInfo = {};
 	m_fDeviation = 0.0f;
-	m_fDeadMoveTime = 0.0f;	// 死亡時の移動時間
 }
 
 //==========================================================================
@@ -155,20 +170,17 @@ void CBaggage::Update()
 		return;
 	}
 
+	// 親クラスの更新処理
 	CObjectQuaternion::Update();
 
-	// 障害物との衝突判定
-	if (!m_bAway &&
-		Hit())
-	{
-		m_velorot.x += ROLL_FSTSPD;	// 衝突したらロール軸に回転速度を与える
-	}
+
+	// 状態関数
+	UpdateState();
+
 
 	// 吹っ飛んだら終わり
-	if (m_bAway)
+	if (m_state == STATE::STATE_DEAD)
 	{
-		// 死亡時移動
-		DeadMove();
 		return;
 	}
 
@@ -176,11 +188,13 @@ void CBaggage::Update()
 	MyLib::Vector3 posOrigin = GetOriginPosition();
 	MyLib::Vector3 pos = GetPosition();
 	MyLib::Vector3 move = GetMove();
+#ifdef _DEBUG
 	ImGui::DragFloat("weight", &m_fWeight, 0.1f, 0.0f, 0.0f, "%.2f");
 	ImGui::DragFloat("PITCH_RATIO", &PITCH_RATIO, 0.1f, 0.0f, 0.0f, "%.2f");
 	ImGui::DragFloat("PITCH_INER", &PITCH_INER, 0.1f, 0.0f, 0.0f, "%.2f");
 	ImGui::DragFloat("ROLL_FSTSPD", &ROLL_FSTSPD, 0.1f, 0.0f, 0.0f, "%.2f");
 	ImGui::DragFloat("ROLL_INER", &ROLL_INER, 0.1f, 0.0f, 0.0f, "%.2f");
+#endif
 
 	// 位置更新
 	pos += move;
@@ -203,7 +217,9 @@ void CBaggage::Update()
 	move.y -= mylib_const::GRAVITY * m_fWeight;
 
 	static float limitMoveY = 30.0f;
+#ifdef _DEBUG
 	ImGui::DragFloat("Limit MoveY", &limitMoveY, 1.0f, 0.0f, 0.0f, "%.2f");
+#endif
 
 	if (move.y >= limitMoveY)
 	{
@@ -234,6 +250,94 @@ void CBaggage::Update()
 	// 情報設定
 	SetPosition(pos);
 	SetMove(move);
+
+#ifdef _DEBUG	// デバッグ時変形
+	DebugTransform();
+#endif
+}
+
+//==========================================================================
+// 状態更新
+//==========================================================================
+void CBaggage::UpdateState()
+{
+
+	// 状態タイマー
+	m_fStateTimer += CManager::GetInstance()->GetDeltaTime();
+
+	// 状態更新
+	(this->*(m_StateFunc[m_state]))();
+
+	// 障害物との衝突判定
+	if (Hit())
+	{
+		m_velorot.x += ROLL_FSTSPD;	// 衝突したらロール軸に回転速度を与える
+	}
+
+}
+
+//==========================================================================
+// なし
+//==========================================================================
+void CBaggage::StateNone()
+{
+	m_fStateTimer = 0.0f;
+}
+
+//==========================================================================
+// ダメージ
+//==========================================================================
+void CBaggage::StateDamage()
+{
+	if (StateTime::DAMAGE <= m_fStateTimer)
+	{
+		m_fStateTimer = 0.0f;
+		m_state = STATE::STATE_NONE;
+	}
+}
+
+//==========================================================================
+// 死亡
+//==========================================================================
+void CBaggage::StateDead()
+{
+	// カメラ情報取得
+	CCamera* pCamera = CManager::GetInstance()->GetCamera();
+	MyLib::Vector3 posV = pCamera->GetPositionVDest();
+	MyLib::Vector3 posR = pCamera->GetPositionRDest();
+	MyLib::Vector3 ray = (posR - posV).Normal();
+
+
+	MyLib::Vector3 pos = GetPosition();
+	MyLib::Vector3 posDest = posV + (200.0f * ray);
+
+	pos = UtilFunc::Correction::EasingEaseIn(m_posAwayStart, posDest, 0.0f, StateTime::DEAD, m_fStateTimer);
+
+	if (m_fStateTimer >= StateTime::DEAD)
+	{
+		pos = posDest;
+		if (!m_bEnd)
+		{
+			//// フィードバックエフェクトON
+			//CManager::GetInstance()->GetRenderer()->SetEnableDrawMultiScreen(
+			//	MULTITARGET::START_ALPHA,
+			//	MULTITARGET::START_MULTI,
+			//	MULTITARGET::START_TIMER);
+
+			// SE再生
+			CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_CRACK_GRASS);
+		}
+		m_bEnd = true;
+	}
+
+	SetPosition(pos);
+}
+
+//==========================================================================
+// デバッグ時変形
+//==========================================================================
+void CBaggage::DebugTransform()
+{
 
 	ImGui::Dummy(ImVec2(0.0f, 10.0f));
 	if (ImGui::TreeNode("Transform"))
@@ -269,48 +373,12 @@ void CBaggage::Update()
 			ImGui::DragFloat("z", &pos.z, POS_MOVE, 0.0f, 0.0f, "%.2f");
 		}
 		ImGui::PopID();
+
 		// 位置設定
 		SetPosition(pos);
 		SetMove(0.0f);
 		ImGui::TreePop();
 	}
-}
-
-//==========================================================================
-// 死亡時移動
-//==========================================================================
-void CBaggage::DeadMove()
-{
-	// 死亡時移動のタイマー加算
-	m_fDeadMoveTime += CManager::GetInstance()->GetDeltaTime();
-
-	CCamera* pCamera = CManager::GetInstance()->GetCamera();
-	MyLib::Vector3 posV = pCamera->GetPositionVDest();
-	MyLib::Vector3 posR = pCamera->GetPositionRDest();
-	MyLib::Vector3 ray = (posR - posV).Normal();
-
-
-	MyLib::Vector3 pos = GetPosition();
-	MyLib::Vector3 posDest = posV + (200.0f * ray);
-
-	pos = UtilFunc::Correction::EasingEaseIn(m_posAwayStart, posDest, 0.0f, TIME_DEADMOVE, m_fDeadMoveTime);
-
-	if (m_fDeadMoveTime >= TIME_DEADMOVE)
-	{
-		pos = posDest;
-		if (!m_bEnd)
-		{
-			//// フィードバックエフェクトON
-			//CManager::GetInstance()->GetRenderer()->SetEnableDrawMultiScreen(
-			//	MULTITARGET::START_ALPHA,
-			//	MULTITARGET::START_MULTI,
-			//	MULTITARGET::START_TIMER);
-		}
-		m_bEnd = true;
-	}
-
-	SetPosition(pos);
-
 }
 
 //==========================================================================
@@ -400,7 +468,9 @@ bool CBaggage::Hit()
 				if (bDead)
 				{
 					ImGui::Text("dead");
-					m_bAway = true;
+
+					// 死亡状態
+					m_state = STATE::STATE_DEAD;
 
 					MyLib::Vector3 hitmove = (MyPos - ObjPos) * 1.0f;
 					move.x += hitmove.x;
@@ -417,12 +487,18 @@ bool CBaggage::Hit()
 
 					move.y *= -1.0f;
 
+					// ダメージ
+					m_state = STATE::STATE_DAMAGE;
+
 					/*CMyEffekseer::GetInstance()->SetEffect(
 						CMyEffekseer::EFKLABEL::EFKLABEL_IMPACT,
 						GetWorldMtx().GetWorldPosition(), MyLib::Vector3(0.0f, 0.0f, 0.0f), 0.0f, 30.0f, true);*/
 					m_bHit = true;
 				}
 				SetMove(move);
+
+				// SE再生
+				CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_HIT);
 
 				return true;
 			}
@@ -440,9 +516,9 @@ void CBaggage::Reset()
 {
 	m_bHit = false;
 	m_bEnd = false;
-	m_bAway = false;
 	m_bLand = false;
 	m_velorot = MyLib::Vector3(0.0f, 0.0f, 0.0f);
 	m_fDeviation = 0.0f;
-	m_fDeadMoveTime = 0.0f;	// 死亡時の移動時間
+	m_fStateTimer = 0.0f;
+	m_state = STATE::STATE_NONE;
 }

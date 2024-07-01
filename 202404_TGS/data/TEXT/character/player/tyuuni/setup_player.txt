@@ -14,175 +14,129 @@ SCRIPT			# この行は絶対消さないこと！
 #------------------------------------------------------------------------------
 # モデル数
 #------------------------------------------------------------------------------
-NUM_MODEL = 17
+NUM_MODEL = 12
 
 #------------------------------------------------------------------------------
 # モデルファイル名
 #------------------------------------------------------------------------------
-MODEL_FILENAME = data/MODEL/tyuuni/00_waist.x		# [0]腰
-MODEL_FILENAME = data/MODEL/tyuuni/01_body.x		# [1]体
-MODEL_FILENAME = data/MODEL/tyuuni/02_head.x		# [2]頭
-MODEL_FILENAME = data/MODEL/tyuuni/03_hair.x		# [3]髪
-MODEL_FILENAME = data/MODEL/tyuuni/07_R_UParm.x		# [4]右上腕
-MODEL_FILENAME = data/MODEL/tyuuni/08_R_DWarm.x		# [5]右前腕
-MODEL_FILENAME = data/MODEL/tyuuni/09_R_hand.x		# [6]右手
-MODEL_FILENAME = data/MODEL/tyuuni/04_L_UParm.x		# [7]左上腕
-MODEL_FILENAME = data/MODEL/tyuuni/05_L_DWarm.x		# [8]左前腕
-MODEL_FILENAME = data/MODEL/tyuuni/06_L_hand.x		# [9]左手
-MODEL_FILENAME = data/MODEL/tyuuni/13_R_UPleg.x		# [10]右太もも
-MODEL_FILENAME = data/MODEL/tyuuni/14_R_DWleg.x		# [11]右脛
-MODEL_FILENAME = data/MODEL/tyuuni/15_R_foot.x		# [12]右足
-MODEL_FILENAME = data/MODEL/tyuuni/10_L_UPleg.x		# [13]左太もも
-MODEL_FILENAME = data/MODEL/tyuuni/11_L_DWleg.x		# [14]左脛
-MODEL_FILENAME = data/MODEL/tyuuni/12_L_foot.x		# [15]左足
-MODEL_FILENAME = data/MODEL/tyuuni/take_tutu.x			# [16]大剣
+MODEL_FILENAME = data/MODEL/ninja/00_hip.x			# [0]腰
+MODEL_FILENAME = data/MODEL/ninja/01_body.x			# [1]体
+MODEL_FILENAME = data/MODEL/ninja/02_head.x			# [2]頭
+MODEL_FILENAME = data/MODEL/ninja/03_R_arm.x		# [3]右上腕
+MODEL_FILENAME = data/MODEL/ninja/04_R_hand.x		# [4]右前腕
+MODEL_FILENAME = data/MODEL/ninja/05_L_arm.x		# [5]左上腕
+MODEL_FILENAME = data/MODEL/ninja/06_L_hand.x		# [6]左前腕
+MODEL_FILENAME = data/MODEL/ninja/07_R_tigh.x		# [7]右太もも
+MODEL_FILENAME = data/MODEL/ninja/08_R_leg.x		# [8]右脚
+MODEL_FILENAME = data/MODEL/ninja/09_L_tigh.x		# [9]左太もも
+MODEL_FILENAME = data/MODEL/ninja/10_L_leg.x		# [10]左脚
+MODEL_FILENAME = data/MODEL/ninja/take_tutu.x		# [11]竹筒
 
 #------------------------------------------------------------------------------
 # キャラクター情報
 #------------------------------------------------------------------------------
 CHARACTERSET
-	VELOCITY = 2.00
-	JUMP = 0.00		
-	RADIUS = 60.00		
-	HEIGHT = 0.00		
-	LIFE = 90	
+	VELOCITY = 2.00		# 移動量
+	JUMP = 0.00		# ジャンプ量
+	RADIUS = 60.00		# 半径
+	HEIGHT = 0.00		# 高さ
+	LIFE = 90		# 体力
 
 	PARTSSET						# [0]腰
 		INDEX = 0
 		PARENT = -1					# (親)NULL
-		POS = 0.0 -90.0 0.0
-		ROT = 0.0 0.0 0.0
+		POS = 0.00 -88.50 0.00
+		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
 
 	PARTSSET						# [1]体
 		INDEX = 1
-		PARENT = 0					# (親)
-		POS = 0.0 7.0 0.0
-		ROT = 0.0 0.0 0.0
+		PARENT = 0					# (親)腰
+		POS = 0.00 -0.38 3.00
+		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
 
 	PARTSSET						# [2]頭
 		INDEX = 2
 		PARENT = 1					# (親)体
-		POS = 0.0 53.0 0.0
-		ROT = 0.0 0.0 0.0
+		POS = 0.00 42.00 3.00
+		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
 
-	PARTSSET						# [3]髪
+	PARTSSET						# [3]右前腕
 		INDEX = 3
-		PARENT = 2					# (親)体
-		POS = 0.0 14.5 0.0
-		ROT = 0.0 0.0 0.0
+		PARENT = 1					# (親)体
+		POS = -11.00 32.50 -1.50
+		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
 
-	PARTSSET						# [4]左上腕
+	PARTSSET						# [4]右上腕
 		INDEX = 4
-		PARENT = 1					# (親)体
-		POS = -17.0 40.0 0.0
-		ROT = 0.0 0.0 0.0
+		PARENT = 3					# (親)右前腕
+		POS = -29.40 0.00 0.00
+		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
 
 	PARTSSET						# [5]左前腕
 		INDEX = 5
-		PARENT = 4					# (親)左上腕
-		POS = -27.5 0.0 0.0
-		ROT = 0.0 0.0 0.0
+		PARENT = 1					# (親)体
+		POS = 11.50 32.00 -3.00
+		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
 
-	PARTSSET						# [6]左手
+	PARTSSET						# [6]左上腕
 		INDEX = 6
 		PARENT = 5					# (親)左前腕
-		POS = -26.75 0.0 0.0
-		ROT = 0.0 0.0 0.0
+		POS = 30.55 0.30 0.00
+		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
 
-	PARTSSET						# [7]右上腕
+	PARTSSET						# [7]右太もも
 		INDEX = 7
-		PARENT = 1					# (親)体
-		POS = 17.0 40.0 0.0
-		ROT = 0.0 0.0 0.0
+		PARENT = 0					# (親)腰
+		POS = -9.50 -20.50 2.00
+		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
-	
-	PARTSSET						# [8]右前腕
+
+	PARTSSET						# [8]右脚
 		INDEX = 8
-		PARENT = 7					# (親)右上腕
-		POS = 27.5 0.0 0.0
-		ROT = 0.0 0.0 0.0
+		PARENT = 7					# (親)右太もも
+		POS = -1.00 -38.20 0.00
+		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
-	
-	PARTSSET						# [9]右手
+
+	PARTSSET						# [9]左太もも
 		INDEX = 9
-		PARENT = 8					# (親)右前腕
-		POS = 26.75 0.0 0.0
-		ROT = 0.0 0.0 0.0
+		PARENT = 0					# (親)腰
+		POS = 10.05 -20.00 2.00
+		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
-	
-	PARTSSET						# [10]左太もも
+
+	PARTSSET						# [10]左脚
 		INDEX = 10
-		PARENT = 0					# (親)腰
-		POS = -10.0 -4.5 0.0
-		ROT = 0.0 0.0 0.0
+		PARENT = 9					# (親)左太もも
+		POS = 1.00 -38.50 0.00
+		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
-	
-	PARTSSET						# [11]左ふくらはぎ
+
+	PARTSSET						# [11]武器
 		INDEX = 11
-		PARENT = 10					# (親)左太もも
-		POS = 0.0 -39.0 0.0
-		ROT = 0.0 0.0 0.0
+		PARENT = 4					# (親)右上腕
+		POS = -41.00 -10.50 8.50
+		ROT = -1.57 0.00 0.00
 		START = 1
 	END_PARTSSET
-	
-	PARTSSET						# [12]左足
-		INDEX = 12
-		PARENT = 11					# (親)左ふくらはぎ
-		POS = 0.0 -22.75 0.0
-		ROT = 0.0 0.0 0.0
-		START = 1
-	END_PARTSSET
-	
-	PARTSSET						# [13]右太もも
-		INDEX = 13
-		PARENT = 0					# (親)腰
-		POS = 10.0 -4.5 0.0
-		ROT = 0.0 0.0 0.0
-		START = 1
-	END_PARTSSET
-	
-	PARTSSET						# [14]右ふくらはぎ
-		INDEX = 14
-		PARENT = 13					# (親)右太もも
-		POS = 0.0 -39.0 0.0
-		ROT = 0.0 0.0 0.0
-		START = 1
-	END_PARTSSET
-	
-	PARTSSET						# [15]右足
-		INDEX = 15
-		PARENT = 14					# (親)左ふくらはぎ
-		POS = 0.0 -22.75 0.0
-		ROT = 0.0 0.0 0.0
-		START = 1
-	END_PARTSSET
-	
-	PARTSSET						# [16]武器
-		INDEX = 16
-		PARENT = 9					# (親)右手
-		POS = 13.0 0.0 15.0
-		ROT = 1.57 -3.14 0.0
-		START = 1
-	END_PARTSSET
-	
 END_CHARACTERSET
 
 

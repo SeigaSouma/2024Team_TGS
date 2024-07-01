@@ -54,9 +54,11 @@ public:
 	CPlayerControlBaggage() 
 	{
 		m_BressHandle = nullptr;
+		m_bFall = true;
 	}
 
 	virtual void Action(CPlayer* player, CBaggage* pBaggage);	// アクション
+	void EffectStop();	// エフェクト停止
 
 private:
 
@@ -81,6 +83,7 @@ private:
 	float m_fBressTimer = 0.0f;			// 息のタイマー
 	float m_fIntervalBress = 0.0f;		// 息のタイマー
 	bool m_bLandOld;					// 前回の着地情報
+	bool m_bFall;						// 落下しているかどうか
 };
 
 //=============================

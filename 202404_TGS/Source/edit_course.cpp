@@ -18,7 +18,8 @@
 namespace
 {
 	const MyLib::AABB AABB_LINE = MyLib::AABB(-25.0f, 25.0f);	// 辺のAABB
-
+	const D3DXCOLOR DEFAULT_COLOR = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);
+	const D3DXCOLOR SELECT_COLOR = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);
 }
 
 //==========================================================================
@@ -32,6 +33,7 @@ CEdit_Course::CEdit_Course()
 	m_bDrag = false;		// 掴み判定
 	m_bHoverWindow = false;	// マウスのウィンドウホバー判定
 	m_bSetMode = false;		// 設定モード判定
+	m_bAutoCreateMode = false;		// 自動生成判定
 }
 
 //==========================================================================
@@ -160,6 +162,9 @@ void CEdit_Course::ChangeMode()
 		// 操作判定リセット
 		m_bEdit = false;
 	}
+
+	// 自動生成
+	ImGui::Checkbox("Enable AutoCreateMode!!!", &m_bAutoCreateMode);
 }
 
 //==========================================================================
@@ -231,7 +236,7 @@ void CEdit_Course::SelectLine()
 			CCollisionLine_Box* pBox = pCourse->GetCollisionLineBox(i);
 			if (pBox == nullptr) continue;
 
-			pBox->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+			pBox->SetColor(DEFAULT_COLOR);
 		}
 	}
 }
@@ -298,10 +303,16 @@ void CEdit_Course::DragLine()
 		MyLib::Vector3 diffpos = pMouse->GetWorldDiffPosition();
 		segmentPos.x += diffpos.x;
 		segmentPos.z += diffpos.z;
+
+		if (m_bAutoCreateMode)
+		{
+			pCourse->ReCreateVtx();
+		}
 	}
 
 	// 頂点データ設定
 	pCourse->SetVecPosition(m_nEditIdx, segmentPos);
+	pCourse->GetCollisionLineBox(m_nEditIdx)->SetPosition(segmentPos);
 }
 
 //==========================================================================
@@ -321,7 +332,7 @@ void CEdit_Course::Transform()
 			CCollisionLine_Box* pBox = pCourse->GetCollisionLineBox(i);
 			if (pBox == nullptr) continue;
 
-			D3DXCOLOR col = (i == m_nEditIdx) ? D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f) : D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+			D3DXCOLOR col = (i == m_nEditIdx) ? SELECT_COLOR : DEFAULT_COLOR;
 			pBox->SetColor(col);
 		}
 	}

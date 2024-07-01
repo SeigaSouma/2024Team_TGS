@@ -11,7 +11,7 @@ TEXTURE_FILENAME = data\TEXTURE\sky\sky_02.jpg		# [0]
 #------------------------------------------------------------------------------
 # モデル数
 #------------------------------------------------------------------------------
-NUM_MODEL = 67
+NUM_MODEL = 72
 
 #------------------------------------------------------------------------------
 # モデルファイル名
@@ -83,6 +83,11 @@ MODEL_FILENAME = data\MODEL\map_object\sentou.x		# [63]
 MODEL_FILENAME = data\MODEL\map_object\souko.x		# [64]
 MODEL_FILENAME = data\MODEL\map_object\umagoya.x		# [65]
 MODEL_FILENAME = data\MODEL\map_object\big_boss_2nd.x		# [66]
+MODEL_FILENAME = data\MODEL\river_object\bush.x		# [67]
+MODEL_FILENAME = data\MODEL\river_object\crab.x		# [68]
+MODEL_FILENAME = data\MODEL\river_object\hat.x		# [69]
+MODEL_FILENAME = data\MODEL\river_object\rockman.x		# [70]
+MODEL_FILENAME = data\MODEL\river_object\ryohukaruma.x		# [71]
 
 #==============================================================================
 # 空情報
@@ -309,6 +314,46 @@ MODELSET
 	POS = 20935.63 302.27 5922.94
 	ROT = 0.00 0.00 0.00
 	SCALE = 1.68
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 68
+	POS = 3672.48 21.41 -846.57
+	ROT = 0.00 0.57 0.00
+	SCALE = 3.48
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 68
+	POS = 5615.91 15.50 187.52
+	ROT = 0.00 0.00 0.00
+	SCALE = 3.55
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 68
+	POS = 2227.07 3226.62 4826.18
+	ROT = -0.16 0.00 0.44
+	SCALE = 100.00
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 68
+	POS = 0.00 0.00 0.00
+	ROT = 0.00 0.00 0.00
+	SCALE = 1.00
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 68
+	POS = 0.00 0.00 0.00
+	ROT = 0.00 0.00 0.00
+	SCALE = 1.00
 	SHADOW = 1
 END_MODELSET
 

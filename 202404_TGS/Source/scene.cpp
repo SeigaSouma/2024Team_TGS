@@ -129,7 +129,6 @@ HRESULT CScene::Init()
 	//**********************************
 	// マップの生成
 	//**********************************
-	CEdit_Map_Release::Create(MAP_TEXT, CManager::BuildMode::MODE_RELEASE);
 #ifndef _DEBUG
 	CEdit_Map_Release::Create(MAP_TEXT, CManager::BuildMode::MODE_RELEASE);
 #endif
@@ -192,6 +191,9 @@ void CScene::ResetScene()
 	{// 失敗した場合
 		return;
 	}
+#ifndef _DEBUG
+	CEdit_Map_Release::Create(MAP_TEXT, CManager::BuildMode::MODE_RELEASE);
+#endif
 
 	// ボスステージの起伏生成
 	m_pObject3DMesh = CElevation::Create(ELEVATION_TEXT);

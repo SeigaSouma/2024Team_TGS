@@ -29,7 +29,6 @@ public:
 		SCENE_MAINCLEAR,		// メインクリア
 		SCENE_BEFOREBATTLE,		// 戦闘準備
 		SCENE_BATTLESTART,		// 戦闘開始
-		SCENE_ENHANCE,			// 強化
 		SCENE_SKILLTREE,		// スキルツリー
 		SCENE_BOSS,				// ボス
 		SCENE_TRANSITIONWAIT,	// 遷移待機
@@ -57,6 +56,7 @@ public:
 
 	void SetType(SceneType type);	// シーンの種類設定
 	SceneType GetType();		// シーンの種類取得
+	SceneType GetOldType() { return m_OldSceneType; }		// 前回のシーンの種類取得
 	void SetEnableRush() { m_bEndRush = true; }		// ラッシュの終了フラグを有効にする
 	bool IsRushEnd() { return m_bEndRush; }			// 終了のフラグ取得
 	void SetEnableControll(bool bControll) { m_bControll = bControll; }		// 操作フラグを切り替えする
@@ -76,7 +76,6 @@ protected:
 
 	// メンバ関数
 	virtual void SceneTransition();	// 遷移中
-	virtual void SceneEnhance();
 	virtual void SceneWaitAirPush();
 	virtual void SceneGoal();
 	virtual void ContainPlayerBaggage();
@@ -86,6 +85,7 @@ protected:
 
 	// メンバ変数
 	SceneType m_SceneType;	// シーンの種類
+	SceneType m_OldSceneType;	// シーンの種類
 	bool m_bEndRush;		// ラッシュが終了したか
 	bool m_bControll;		// 操作できるか
 	bool m_bEndNormalStage;	// 通常ステージが終了したか

@@ -18,7 +18,7 @@ class CCollisionLine_Box : public CObject
 {
 public:
 
-	CCollisionLine_Box(int nPriority = 3, const LAYER layer = LAYER::LAYER_LINE);
+	CCollisionLine_Box(int nPriority = mylib_const::PRIORITY_DEF2D, const LAYER layer = LAYER::LAYER_LINE);
 	~CCollisionLine_Box();
 
 	//  オーバーライド関数
@@ -30,7 +30,7 @@ public:
 
 	void SetColor(const D3DXCOLOR& col);			// 色設定
 
-	void SetAABB(MyLib::AABB aabb);	// AAbB情報設定
+	void SetAABB(MyLib::AABB aabb, float scale = 1.0f);	// AAbB情報設定
 	void Kill();
 
 	static CCollisionLine_Box* Create(const MyLib::AABB& aabb, const D3DXCOLOR& col);

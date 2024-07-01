@@ -153,7 +153,6 @@ void CStageClearText::StateExpansion()
 	{
 		m_fStateTimer = 0.0f;
 		m_state = STATE_EXPNONE;
-		CManager::GetInstance()->GetSound()->PlaySound(CSound::LABEL::LABEL_SE_BATTLESTART_CHARGE);
 		return;
 	}
 

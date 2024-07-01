@@ -47,6 +47,7 @@ CGameManager::CGameManager()
 {
 	// 値のクリア
 	m_SceneType = SCENE_MAIN;	// シーンの種類
+	m_OldSceneType = SCENE_MAIN;	// シーンの種類
 	m_bEndRush = false;			// ラッシュが終了したか
 	m_bControll = false;		// 操作できるか
 	m_bEndNormalStage = false;	// 通常ステージが終了したか
@@ -114,7 +115,7 @@ HRESULT CGameManager::Init()
 	m_SceneType = SceneType::SCENE_WAIT_AIRPUSH;	// シーンの種類 
 #endif
 
-
+	m_OldSceneType = m_SceneType;
 	return S_OK;
 }
 
@@ -160,11 +161,6 @@ void CGameManager::Update()
 
 	case SceneType::SCENE_BATTLESTART:
 		m_bControll = false;
-		break;
-
-	case CGameManager::SceneType::SCENE_ENHANCE:
-		m_bControll = true;
-		SceneEnhance();
 		break;
 
 	case SceneType::SCENE_SKILLTREE:	// スキルツリー
@@ -247,14 +243,8 @@ void CGameManager::SceneTransition()
 	{// 完了した瞬間
 
 		// BGMストップ
-		CManager::GetInstance()->GetSound()->StopSound();
-		if (m_nNowStage != 3)
-		{
-			CManager::GetInstance()->GetSound()->PlaySound(CSound::LABEL_BGM_GAME);
-		}
-		else {
-			CManager::GetInstance()->GetSound()->PlaySound(CSound::LABEL::LABEL_BGM_BOSS);
-		}
+		CSound::GetInstance()->StopSound();
+		CSound::GetInstance()->PlaySound(CSound::LABEL_BGM_GAME);
 
 		// ゲーム開始時のフラグ
 		m_bGameStart = true;
@@ -295,85 +285,6 @@ void CGameManager::SceneTransition()
 }
 
 //==========================================================================
-// 強化シーン
-//==========================================================================
-void CGameManager::SceneEnhance()
-{
-	// 遷移なしフェードの状態取得
-	CInstantFade::STATE fadestate = CManager::GetInstance()->GetInstantFade()->GetState();
-
-	if (fadestate != CInstantFade::STATE_FADECOMPLETION &&
-		m_bGameStart)
-	{// 完了してない
-		return;
-	}
-
-	// カメラリセット
-	CCamera* pCamera = CManager::GetInstance()->GetCamera();
-	if (pCamera != nullptr)
-	{
-		pCamera->Reset(CScene::MODE_GAME);
-		pCamera->SetStateCameraV(DEBUG_NEW CStateCameraV_Enhance());
-	}
-
-	// エフェクト全て停止
-	CMyEffekseer::GetInstance()->StopAll();
-
-	// ステージ加算
-	if (m_bGameStart)
-	{
-		AddNowStage();
-		if (m_bEndNormalStage)
-		{
-			return;
-		}
-	}
-
-	// ゲーム開始時のフラグ
-	m_bGameStart = true;
-
-
-	// BGMストップ
-	CManager::GetInstance()->GetSound()->StopSound();
-	CManager::GetInstance()->GetSound()->PlaySound(CSound::LABEL::LABEL_BGM_ENHANCE);
-	CManager::GetInstance()->GetSound()->PlaySound(CSound::LABEL::LABEL_BGM_ENHANCE_WIND);
-
-	// ステージ切り替え
-	CGame::GetInstance()->GetStage()->ChangeStage("data\\TEXT\\stage\\info.txt");
-
-	// マップ切り替え
-	MyMap::ChangeMap("data\\TEXT\\map\\map_enhance.txt");
-
-	// プレイヤー取得
-	CListManager<CPlayer> playerList = CPlayer::GetListObj();
-	CPlayer* pPlayer = nullptr;
-
-	// リストループ
-	while (playerList.ListLoop(&pPlayer))
-	{
-		pPlayer->SetPosition(0.0f);
-		pPlayer->SetLife(pPlayer->GetLifeOrigin());
-	}
-
-	// エフェクト全て停止
-	CMyEffekseer::GetInstance()->StopAll();
-
-	// ステージ名生成
-	CStageName::Create();
-
-	CLimitArea::sLimitEreaInfo info;
-	info.fMaxX = 600.0f;
-	info.fMaxZ = 1050.0f;
-	info.fMinX = -600.0f;
-	info.fMinZ = -1000.0f;
-	CLimitArea* pArea = CLimitArea::Create(info);
-	pArea->SetEnableDisp(false);
-
-	MyFog::SetFogparam(D3DXCOLOR(1.0f, 0.95f, 0.9f, 1.0f), info.fMaxZ, 3000.0f, D3DFOG_LINEAR);
-	MyFog::ToggleFogFrag(true);
-}
-
-//==========================================================================
 // 空気送り待ち
 //==========================================================================
 void CGameManager::SceneWaitAirPush()
@@ -387,7 +298,7 @@ void CGameManager::SceneWaitAirPush()
 		CInputKeyboard::GetInstance()->GetTrigger(DIK_RETURN))
 	{
 		pTimer->SetEnableAddTime(true);
-		m_SceneType = CGameManager::SceneType::SCENE_MAIN;
+		SetType(SceneType::SCENE_MAIN);
 	}
 	else if (pTimer != nullptr)
 	{
@@ -550,6 +461,7 @@ int CGameManager::GetNowStage()
 //==========================================================================
 void CGameManager::SetType(SceneType type)
 {
+	m_OldSceneType = m_SceneType;
 	m_SceneType = type;
 }
 

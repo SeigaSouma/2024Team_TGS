@@ -57,6 +57,7 @@ private:
 	bool m_bDrag;			// 掴み判定
 	bool m_bHoverWindow;	// マウスのウィンドウホバー判定
 	bool m_bSetMode;		// 設定モード判定
+	bool m_bAutoCreateMode;		// 自動生成判定
 };
 
 

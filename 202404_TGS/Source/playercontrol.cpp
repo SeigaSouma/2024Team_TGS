@@ -35,6 +35,8 @@ namespace
 	const float HEIGHT_MOVETIMER = (1.0f / 0.5f);	// 高さ変化遷移タイマー
 	const float COMMAND_HEIGHT = 200.0f;	// 高さ
 	float INTERVAL_BRESSEFFECT = 0.32f;	// 息出すまでの間隔
+	const float DEFAULT_BRESSSCALE_EFFECT = 90.0f;	// デフォの息エフェクトスケール
+	const float MIN_RATIO_HEIGHT_BRESS = 0.2f;	// 息の高さの最小割合
 }
 
 //==========================================================================
@@ -254,7 +256,7 @@ void CPlayerControlMove::Move(CPlayer* player)
 			pMotion->Set(CPlayer::MOTION::MOTION_JUMP);
 
 			// サウンド再生
-			CManager::GetInstance()->GetSound()->PlaySound(CSound::LABEL_SE_JUMP);
+			CSound::GetInstance()->PlaySound(CSound::LABEL_SE_JUMP);
 		}
 #endif
 
@@ -332,7 +334,7 @@ void CPlayerControlMove::Move(CPlayer* player)
 	static int block = 64;
 	static float blocksize = 4.7f;
 
-
+#if _DEBUG
 	ImGui::DragInt("INTERVAL", &m_nIntervalWaterRipple, 1);
 	ImGui::DragInt("BLOCK", &block, 1);
 	ImGui::DragFloat("BLOCK SIZE", &blocksize, 0.1f, 0.0f, 0.0f, "%.2f");
@@ -340,6 +342,7 @@ void CPlayerControlMove::Move(CPlayer* player)
 	ImGui::DragFloat("velocity", &velocity, 0.1f, 0.0f, 0.0f, "%.2f");
 	ImGui::DragFloat("thickness", &thickness, 1.0f, 0.0f, 0.0f, "%.2f");
 	ImGui::DragInt("life", &life, 1);
+#endif
 
 	bool bCreateRipple = false;	// 波紋生成フラグ
 
@@ -439,22 +442,25 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	}
 #endif
 
-	static bool fall = true;
-
 	static float up = 8.3f, power = 9.0f;
 	//static float up = 8.3f, power = 6.8f;
 	//static float up = 2.5f, power = 2.0f;
+#if _DEBUG
 	ImGui::DragFloat("up", &up, 0.1f, 0.0f, 0.0f, "%.2f");
 	ImGui::DragFloat("power", &power, 0.01f, 0.0f, 0.0f, "%.2f");
 
 	ImGui::DragFloat("Add Height", &ADD_HEIGHT, 1.0f, 0.0f, 0.0f, "%.2f");
+#endif
 
 	static float starttimeDownheight = 2.0f;	// 降下が始まるまでの時間
 	static float timeDownheight = 2.0f;			// 落ちきるまでの時間
 	static float ratioMinDownheight = 0.2f;		// 落ちきった時の再下底割合
+
+#if _DEBUG
 	ImGui::DragFloat("Start Time DownHeight", &starttimeDownheight, 0.05f, 0.0f, 0.0f, "%.2f");
 	ImGui::DragFloat("Time DownHeight", &timeDownheight, 0.05f, 0.0f, 0.0f, "%.2f");
 	ImGui::DragFloat("Ratio Min DownHeight", &ratioMinDownheight, 0.01f, 0.0f, 0.0f, "%.2f");	
+#endif
 
 	// 荷物の高さで割合設定
 	float ratio = (posBaggage.y - posBaggageOrigin.y) / LENGTH_COLLISIONHEIGHT;
@@ -527,6 +533,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 			// 前回が着地
 			if (m_bLandOld)
 			{
+				CSound::GetInstance()->StopSound(CSound::LABEL::LABEL_SE_DROWN);
 				float multi = 1.0f - static_cast<float>(player->GetLife()) / static_cast<float>(player->GetLifeOrigin());
 
 				// フィードバックエフェクトOFF
@@ -556,8 +563,13 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 		}
 	}
 
+	if (pInputKeyboard->GetTrigger(DIK_4))
+	{
+		CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_DROWN);
+	}
+
 	// 位置設定
-	if (!pBaggage->IsAway())
+	if (pBaggage->GetState() != CBaggage::STATE::STATE_DEAD)
 	{
 		pBaggage->SetPosition(MyLib::Vector3(pos.x, posBaggage.y, pos.z));
 	}
@@ -589,35 +601,41 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	}
 #endif
 	//=============================
-		// 息エフェクト
-		//=============================
+	// 息エフェクト
+	//=============================
 	BressEffect(player, pBaggage);
 	bool bKantsu = CollisionObstacle(player, pBaggage);
 	if (CInputKeyboard::GetInstance()->GetPress(DIK_RETURN) ||
 		pKeyConfigPad->GetPress(INGAME::ACT_AIR))
 	{
-		
 
 		// 高さの降下時間加算
 		m_fTimeDownHeight += CManager::GetInstance()->GetDeltaTime();
 
-		if (fall) 
+		if (m_bFall) 
 		{// 落下中
 
-			fall = false;
+			m_bFall = false;
 			pBaggage->SetForce(0.0f);
 
 			if (m_BressHandle != nullptr)
 			{
+				// SEストップ
+				CSound::GetInstance()->StopSound(CSound::LABEL::LABEL_SE_BRESS_STREAM);
+
 				CMyEffekseer::GetInstance()->SetTrigger(*m_BressHandle, 1);
 			}
 
+			// 息エフェクト生成
 			MyLib::Vector3 d = pos;
 			d.y = posBaggageOrigin.y;
 			CMyEffekseer::GetInstance()->SetEffect(
 				&m_BressHandle,
 				CMyEffekseer::EFKLABEL::EFKLABEL_BRESS,
-				d, 0.0f, 0.0f, 90.0f, true);
+				d, 0.0f, 0.0f, DEFAULT_BRESSSCALE_EFFECT, true);
+
+			// SE再生
+			CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_BRESS_STREAM);
 		}
 
 		// 息の加算計算
@@ -625,14 +643,18 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 		m_fHeight += ADD_HEIGHT + m_fHeightVelocity;
 		m_fHeight = UtilFunc::Transformation::Clamp(m_fHeight, MIN_HEIGHT, LENGTH_COLLISIONHEIGHT);
 
+		// 高さの割合
 		float ratio = m_fHeight / m_fMaxHeight;
-		ratio = UtilFunc::Transformation::Clamp(ratio, 0.2f, 1.0f);
+
+		// SEのピッチ変更
+		CSound::GetInstance()->SetFrequency(CSound::LABEL::LABEL_SE_BRESS_STREAM, 0.5f + ratio * 1.5f);
+
+		ratio = UtilFunc::Transformation::Clamp(ratio, MIN_RATIO_HEIGHT_BRESS, 1.0f);
 
 		// 振動
 		pInputGamepad->SetEnableVibration();
 		pInputGamepad->SetVibMulti(1.0f * ratio);
 		pInputGamepad->SetVibration(CInputGamepad::VIBRATION_STATE::VIBRATION_STATE_AIR, 0);
-		m_fMaxHeight;
 
 		if (posBaggage.y <= posBaggageOrigin.y + m_fHeight &&
 			posBaggage.x <= pos.x + range &&
@@ -655,7 +677,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	else
 	{
 		// 降下状態
-		fall = true;
+		m_bFall = true;
 
 		// 高さの降下時間減算
 		m_fTimeDownHeight = 0.0f;
@@ -680,16 +702,19 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 		m_fHeight = UtilFunc::Transformation::Clamp(m_fHeight, LENGTH_COLLISIONHEIGHT * ratioMinDownheight, LENGTH_COLLISIONHEIGHT);
 	}
 
-
+	// 落下状態更新
 	if (posBaggage.y <= MIN_HEIGHT)
 	{
-		fall = true;
+		m_bFall = true;
 	}
 
-	if (fall && m_BressHandle != nullptr)
+	// 息エフェクト状態変更
+	if (m_bFall && m_BressHandle != nullptr)
 	{
-		//CMyEffekseer::GetInstance()->Stop(m_BressHandle);
 		CMyEffekseer::GetInstance()->SetTrigger(*m_BressHandle, 0);
+
+		// SEストップ
+		CSound::GetInstance()->StopSound(CSound::LABEL::LABEL_SE_BRESS_STREAM);
 	}
 
 
@@ -699,13 +724,13 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	// 位置設定
 	if (m_BressHandle != nullptr)
 	{
-		CMyEffekseer::GetInstance()->SetPosition(*m_BressHandle, d);
+		// 高さの割合
+		float ratio = m_fHeight / m_fMaxHeight;
+		ratio = UtilFunc::Transformation::Clamp(ratio, MIN_RATIO_HEIGHT_BRESS, 1.0f);
 
-		//// デバッグ表示
-		//CManager::GetInstance()->GetDebugProc()->Print(
-		//	"------------------[プレイヤーの操作]------------------\n"
-		//	"移動中のエフェクト 【%d】\n"
-		//	, *m_BressHandle);
+		CMyEffekseer::GetInstance()->SetPosition(*m_BressHandle, d);
+		CMyEffekseer::GetInstance()->SetScale(*m_BressHandle, DEFAULT_BRESSSCALE_EFFECT * ratio);
+
 	}
 }
 
@@ -729,6 +754,7 @@ void CPlayerControlBaggage::BressEffect(CPlayer* player, CBaggage* pBaggage)
 	// カラーエディット
 	static ImVec4 myColor = ImVec4(1.0f, 1.0, 1.0, 0.08235f); // RGBA
 
+#if _DEBUG
 	if (ImGui::TreeNode("Bress"))
 	{
 		ImGui::DragInt("CreateNum", &createIdx, 1);
@@ -744,6 +770,7 @@ void CPlayerControlBaggage::BressEffect(CPlayer* player, CBaggage* pBaggage)
 
 		ImGui::TreePop();
 	}
+#endif
 
 	if (m_fIntervalBress > m_fBressTimer)
 	{
@@ -817,6 +844,25 @@ bool CPlayerControlBaggage::EndCheck(CBaggage* pBaggage)
 	if (pBaggage->IsEnd()) { return false; }
 
 	return true;
+}
+
+//==========================================================================
+// エフェクト停止処理
+//==========================================================================
+void CPlayerControlBaggage::EffectStop()
+{
+	// 息が使用されている
+	if (m_BressHandle != nullptr)
+	{
+		// エフェクト停止
+		CMyEffekseer::GetInstance()->SetTrigger(*m_BressHandle, 0);
+
+		// SEストップ
+		CSound::GetInstance()->StopSound(CSound::LABEL::LABEL_SE_BRESS_STREAM);
+
+		m_fTimeDownHeight = 0.0f;
+		m_bFall = true;
+	}
 }
 
 //==========================================================================
@@ -919,8 +965,10 @@ float CPlayerControlSurfacing::Surfacing(CPlayer* player)
 		bUp = true;
 	}
 
+#if _DEBUG
 	ImGui::DragFloat("SurHeight", &MAX_SURHEIGHT, 0.1f, 0.0f, 0.0f, "%.2f");
 	ImGui::DragFloat("SurSpeed", &SURHEIGHT_VELOCITY, 0.1f, 0.0f, 0.0f, "%.2f");
+#endif
 
 
 	if (bUp) {	// 上昇

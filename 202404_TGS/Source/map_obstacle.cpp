@@ -138,9 +138,12 @@ void CMap_Obstacle::Update()
 	int i = 0;
 	for (const auto& box : m_pCollisionLineBox)
 	{
-		m_ObstacleInfo.boxcolliders[i].TransformOffset(GetWorldMtx());
-		box->SetPosition(m_ObstacleInfo.boxcolliders[i].worldmtx.GetWorldPosition());
+		MyLib::Collider_BOX& collider = m_ObstacleInfo.boxcolliders[i];
+
+		collider.TransformOffset(GetWorldMtx());
+		box->SetPosition(collider.worldmtx.GetWorldPosition());
 		box->SetRotation(GetRotation());
+		box->SetAABB(MyLib::AABB(collider.vtxMin, collider.vtxMax), GetScale().x);
 		i++;
 	}
 

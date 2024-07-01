@@ -427,6 +427,18 @@ Effekseer::Matrix43 CMyEffekseer::GetMatrix(Effekseer::Handle handle)
 //==========================================================================
 void CMyEffekseer::SetScale(Effekseer::Handle handle, float scale)
 {
+	if (!efkManager->Exists(handle))
+	{// 再生終了
+		return;
+	}
+
+	// インデックス検索
+	std::vector<Effekseer::Handle>::iterator itr = std::find(m_Handle.begin(), m_Handle.end(), handle);
+	int idx = std::distance(m_Handle.begin(), itr);
+
+	// 位置情報設定
+	m_EffectObj[idx].scale = scale;
+
 	efkManager->SetScale(handle, scale, scale, scale);
 }
 

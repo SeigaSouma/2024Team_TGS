@@ -90,7 +90,7 @@ HRESULT CTitle::Init()
 {
 
 	// BGMÄ¶
-	CManager::GetInstance()->GetSound()->PlaySound(CSound::LABEL_BGM_TITLE);
+	CSound::GetInstance()->PlaySound(CSound::LABEL_BGM_TITLE);
 
 	// ‰Šú‰»ˆ—
 	if (FAILED(CScene::Init()))

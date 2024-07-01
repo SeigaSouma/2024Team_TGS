@@ -40,7 +40,7 @@ CHARACTERSET
 	JUMP = 0.00		# ƒWƒƒƒ“ƒv—Ê
 	RADIUS = 60.00		# ”¼Œa
 	HEIGHT = 0.00		# ‚‚³
-	LIFE = 5		# ‘Ì—Í
+	LIFE = 90		# ‘Ì—Í
 
 	PARTSSET						# [0]˜
 		INDEX = 0
