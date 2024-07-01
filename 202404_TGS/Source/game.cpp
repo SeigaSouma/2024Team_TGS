@@ -185,7 +185,7 @@ HRESULT CGame::Init()
 
 	m_pTimer = CTimer::Create();
 
-	CGoalflagX::Create(MyLib::Vector3(23000.0f,0.0f,0.0f));
+	CGoalflagX::Create(MyLib::Vector3(41000.0f,0.0f,0.0f));
 
 	//=============================
 	// 障害物マネージャ
