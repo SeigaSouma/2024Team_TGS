@@ -933,9 +933,14 @@ HRESULT CCourse::Load(const std::string& file)
 	File.close();
 
 #if 0
+	int i = 0;
 	for (auto& vvv : m_vecSegmentPosition)
 	{
-		vvv.x -= 5000.0f;
+		if (i != 0)
+		{
+			vvv.x *= 1.25f;
+		}
+		i++;
 	}
 	Save();
 #endif
