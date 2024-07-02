@@ -21,7 +21,7 @@
 
 namespace
 {
-	const float MULTIPLIY_DASH = 2.0f;		// ダッシュの倍率
+	const float MULTIPLIY_DASH = 1.5f;		// ダッシュの倍率
 	const float LENGTH_AUTOFACE = 200.0f;	// 自動で向く長さ
 	const float LENGTH_COLLISIONRANGE = 500.0f;		// 当たり判定する範囲の長さ
 	const float RATIO_COLLISIONRANGE = 0.3f;		// 範囲の長さの最小割合
@@ -217,6 +217,10 @@ void CPlayerControlMove::Move(CPlayer* player)
 			{
 				fMove *= 0.3f;
 				m_nIntervalAddRippleCounter = 2;
+			}
+			else
+			{
+				fMove *= 0.7f;
 			}
 			move.x += sinf(D3DX_PI * 0.5f + Camerarot.y) * (fMove * angle);
 			move.z += cosf(D3DX_PI * 0.5f + Camerarot.y) * (fMove * angle);
