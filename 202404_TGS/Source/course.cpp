@@ -942,7 +942,7 @@ HRESULT CCourse::Load(const std::string& file)
 		}
 		i++;
 	}
-	Save();
+	//Save();
 #endif
 
 	return S_OK;
