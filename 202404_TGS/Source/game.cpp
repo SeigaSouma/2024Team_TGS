@@ -293,9 +293,9 @@ HRESULT CGame::Init()
 	CWaterField::Create(CWaterField::TYPE::TYPE_RIGHT);
 	CWaterField::Create(CWaterField::TYPE::TYPE_LEFT);*/
 
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 20; i++)
 	{
-		CCheckpoint::Create((i + 1) * 2000.0f * 2);
+		CCheckpoint::Create((i + 1) * 1000.0f * 2);
 	}
 
 	// チェックポイント通過リセット
