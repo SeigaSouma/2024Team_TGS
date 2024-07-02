@@ -220,7 +220,7 @@ void CPlayerControlMove::Move(CPlayer* player)
 			}
 			else
 			{
-				fMove *= 0.7f;
+				fMove *= 0.5f;
 			}
 			move.x += sinf(D3DX_PI * 0.5f + Camerarot.y) * (fMove * angle);
 			move.z += cosf(D3DX_PI * 0.5f + Camerarot.y) * (fMove * angle);
