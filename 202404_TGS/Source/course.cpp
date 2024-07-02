@@ -27,7 +27,7 @@ namespace
 	const float HEIGHT_SINCURVE = 4.0f;	// サインカーブの高さ
 	const float SCROLL_VELOCITY = 10.0f;
 }
-const float CCourse::m_fCreateDistance = 200.0f;	// 生成間隔
+const float CCourse::m_fCreateDistance = 600.0f;	// 生成間隔
 
 //==========================================================================
 // コンストラクタ
@@ -932,6 +932,13 @@ HRESULT CCourse::Load(const std::string& file)
 	// ファイルを閉じる
 	File.close();
 
+#if 0
+	for (auto& vvv : m_vecSegmentPosition)
+	{
+		vvv *= 1.5f;
+	}
+	Save();
+#endif
 
 	return S_OK;
 }

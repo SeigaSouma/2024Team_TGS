@@ -185,7 +185,7 @@ HRESULT CGame::Init()
 
 	m_pTimer = CTimer::Create();
 
-	CGoalflagX::Create(MyLib::Vector3(48000.0f,0.0f,0.0f));
+	CGoalflagX::Create(MyLib::Vector3(65000.0f,0.0f, 4000.0f));
 
 	//=============================
 	// 障害物マネージャ
@@ -293,7 +293,7 @@ HRESULT CGame::Init()
 	CWaterField::Create(CWaterField::TYPE::TYPE_RIGHT);
 	CWaterField::Create(CWaterField::TYPE::TYPE_LEFT);*/
 
-	for (int i = 0; i < 20; i++)
+	for (int i = 0; i < 25; i++)
 	{
 		CCheckpoint::Create((i + 1) * 1000.0f * 2);
 	}
