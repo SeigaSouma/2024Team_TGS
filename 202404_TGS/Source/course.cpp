@@ -932,6 +932,7 @@ HRESULT CCourse::Load(const std::string& file)
 	// ƒtƒ@ƒCƒ‹‚ð•Â‚¶‚é
 	File.close();
 
+
 	return S_OK;
 }
 
