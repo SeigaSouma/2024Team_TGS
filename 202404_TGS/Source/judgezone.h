@@ -50,6 +50,8 @@ public:
 	void SetZone(const SJudgeZone zone) { m_zone = zone; }
 	void SetInfo(CJudge::BORDER border, CJudge::SJudgeCondition info) { m_aJudgeInfo[border] = info; }
 	bool IsEnable() { return m_isEnable; }
+	std::string GetPath() { return m_path; }
+	void SetPath(std::string path) { m_path = path; }
 
 	//=============================
 	// ê√ìIä÷êî
@@ -62,6 +64,7 @@ private:
 	CJudge* m_pJudge;
 	bool m_isEnable;
 	CJudge::SJudgeCondition m_aJudgeInfo[2];
+	std::string m_path;
 	static CListManager<CJudgeZone> m_List;
 };
 

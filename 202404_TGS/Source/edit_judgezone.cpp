@@ -139,37 +139,46 @@ void CEdit_JudgeZone::FileControl()
 {
 	ImGui::Dummy(ImVec2(0.0f, 10.0f));
 	CJudgeZoneManager* manager = CJudgeZoneManager::GetInstance();
-
 	float width = 150.0f;
-	ImGui::SetNextItemWidth(width);
-	if (ImGui::Button("Save & Apply"))
-	{
-		// 保存
+	
+	// リスト
+	ImGui::SeparatorText("List");
+	if (ImGui::Button("SaveList"))
+	{// 保存
 		OPENFILENAMEA filename = {};
 		char sFilePass[1024] = {};
-		// ファイル選択ダイアログの設定
-		filename.lStructSize = sizeof(OPENFILENAMEA);
-		filename.hwndOwner = NULL;
-		filename.lpstrFilter = "テキストファイル\0*.txt\0画像ファイル\0*.bmp;.jpg\0すべてのファイル\0.*\0\0";
-		filename.lpstrFile = sFilePass;
-		filename.nMaxFile = MAX_PATH;
-		filename.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY | OFN_NOCHANGEDIR;
+		filename = CreateOFN("\\data\\TEXT\\judgezonelist", sFilePass);
 
-
-		// カレントディレクトリを取得する
-		char szCurrentDir[MAX_PATH];
-		GetCurrentDirectoryA(MAX_PATH, szCurrentDir);
-
-		// "data"フォルダの絶対パスを求める
-		std::string strDataDir = szCurrentDir;
-		strDataDir += "\\data\\TEXT\\judgezone";
-
-		// 存在する場合は、lpstrInitialDirに指定する
-		if (GetFileAttributesA(strDataDir.c_str()) != INVALID_FILE_ATTRIBUTES)
+		// ファイル選択ダイアログを表示・セーブ
+		if (GetOpenFileNameA(&filename) && strcmp(&sFilePass[0], "") != 0)
 		{
-			filename.lpstrInitialDir = strDataDir.c_str();
+			manager->Save(sFilePass);
 		}
+	}
+	ImGui::SameLine();
 
+	if (ImGui::Button("LoadList"))
+	{// 読み込み
+		OPENFILENAMEA filename = {};
+		char sFilePass[1024] = {};
+		filename = CreateOFN("\\data\\TEXT\\judgezonelist", sFilePass);
+
+		// ファイル選択ダイアログを表示・ロード
+		if (GetOpenFileNameA(&filename) && strcmp(&sFilePass[0], "") != 0)
+		{
+			manager->ReleaseAll();
+			manager->Load(sFilePass);
+		}
+	}
+
+	// 単体
+	ImGui::SeparatorText("Single");
+	ImGui::SetNextItemWidth(width);
+	if (ImGui::Button("Save & Apply"))
+	{// 保存
+		OPENFILENAMEA filename = {};
+		char sFilePass[1024] = {};
+		filename = CreateOFN("\\data\\TEXT\\judgezone", sFilePass);
 
 		// ファイル選択ダイアログを表示・セーブ
 		if (GetOpenFileNameA(&filename) && strcmp(&sFilePass[0], "") != 0)
@@ -182,6 +191,7 @@ void CEdit_JudgeZone::FileControl()
 				CJudgeZone* pJudgeZone = CJudgeZone::Create(m_JudgeZoneData.zone.start, m_JudgeZoneData.zone.end, m_JudgeZoneData.zone.borderHeight);
 				pJudgeZone->SetInfo(CJudge::BORDER::TOP, m_JudgeZoneData.conditionTop);
 				pJudgeZone->SetInfo(CJudge::BORDER::UNDER, m_JudgeZoneData.conditionTop);
+				pJudgeZone->SetPath(sFilePass);
 			}
 		}
 	}
@@ -189,33 +199,10 @@ void CEdit_JudgeZone::FileControl()
 
 	ImGui::SetNextItemWidth(width);
 	if (ImGui::Button("Load"))
-	{
-		// 保存
+	{// 読み込み
 		OPENFILENAMEA filename = {};
 		char sFilePass[1024] = {};
-		// ファイル選択ダイアログの設定
-		filename.lStructSize = sizeof(OPENFILENAMEA);
-		filename.hwndOwner = NULL;
-		filename.lpstrFilter = "テキストファイル\0*.txt\0画像ファイル\0*.bmp;.jpg\0すべてのファイル\0.*\0\0";
-		filename.lpstrFile = sFilePass;
-		filename.nMaxFile = MAX_PATH;
-		filename.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY | OFN_NOCHANGEDIR;
-
-
-		// カレントディレクトリを取得する
-		char szCurrentDir[MAX_PATH];
-		GetCurrentDirectoryA(MAX_PATH, szCurrentDir);
-
-		// "data"フォルダの絶対パスを求める
-		std::string strDataDir = szCurrentDir;
-		strDataDir += "\\data\\TEXT\\judgezone";
-
-		// 存在する場合は、lpstrInitialDirに指定する
-		if (GetFileAttributesA(strDataDir.c_str()) != INVALID_FILE_ATTRIBUTES)
-		{
-			filename.lpstrInitialDir = strDataDir.c_str();
-		}
-
+		filename = CreateOFN("\\data\\TEXT\\judgezone", sFilePass);
 
 		// ファイル選択ダイアログを表示・ロード
 		if (GetOpenFileNameA(&filename) && strcmp(&sFilePass[0], "") != 0)
@@ -331,4 +318,36 @@ void CEdit_JudgeZone::SetCondition(CJudge::SJudgeCondition& condition, bool* pEn
 		condition.judgeParam[CJudge::JUDGE::JUDGE_DDD] = -1;
 	}
 	// =========DDD=========
+}
+
+//==========================================================================
+// ファイルを開くウィンドウに必要な情報生成
+//==========================================================================
+OPENFILENAMEA CEdit_JudgeZone::CreateOFN(std::string relativeDir, char* filePass)
+{
+	OPENFILENAMEA filename = {};
+	// ファイル選択ダイアログの設定
+	filename.lStructSize = sizeof(OPENFILENAMEA);
+	filename.hwndOwner = NULL;
+	filename.lpstrFilter = "テキストファイル\0*.txt\0画像ファイル\0*.bmp;.jpg\0すべてのファイル\0.*\0\0";
+	filename.lpstrFile = filePass;
+	filename.nMaxFile = MAX_PATH;
+	filename.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY | OFN_NOCHANGEDIR;
+
+
+	// カレントディレクトリを取得する
+	char szCurrentDir[MAX_PATH];
+	GetCurrentDirectoryA(MAX_PATH, szCurrentDir);
+
+	// "data"フォルダの絶対パスを求める
+	std::string strDataDir = szCurrentDir;
+	strDataDir += relativeDir;
+
+	// 存在する場合は、lpstrInitialDirに指定する
+	if (GetFileAttributesA(strDataDir.c_str()) != INVALID_FILE_ATTRIBUTES)
+	{
+		filename.lpstrInitialDir = strDataDir.c_str();
+	}
+
+	return filename;
 }
