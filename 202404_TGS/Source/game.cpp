@@ -50,6 +50,7 @@
 #include "waterstone.h"
 #include "map_ui.h"
 #include "waterstoneManager.h"
+#include "spline.h"
 
 //==========================================================================
 // 静的メンバ変数宣言
@@ -185,8 +186,6 @@ HRESULT CGame::Init()
 
 	m_pTimer = CTimer::Create();
 
-	CGoalflagX::Create(MyLib::Vector3(66000.0f,0.0f, 0.0f));
-
 	//=============================
 	// 障害物マネージャ
 	//=============================
@@ -297,6 +296,11 @@ HRESULT CGame::Init()
 
 	// チェックポイント通過リセット
 	CCheckpoint::ResetSaveID();
+
+	//=============================
+	// ゴール作成
+	//=============================
+	CGoalflagX::Create(60900.0f);
 
 	//=============================
 	// 判定ゾーンマネージャ

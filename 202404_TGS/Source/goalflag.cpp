@@ -10,6 +10,8 @@
 #include "player.h"
 #include "game.h"
 #include "stagecleartext.h"
+#include "spline.h"
+#include "course.h"
 
 //==========================================================================
 // ’è”’è‹`
@@ -54,7 +56,7 @@ CGoalflagX::~CGoalflagX()
 //==========================================================================
 // ¶¬ˆ—
 //==========================================================================
-CGoalflagX* CGoalflagX::Create(MyLib::Vector3 pos)
+CGoalflagX* CGoalflagX::Create(float fLength)
 {
 	// ƒƒ‚ƒŠ‚ÌŠm•Û
 	CGoalflagX* pObj = DEBUG_NEW CGoalflagX;
@@ -65,7 +67,7 @@ CGoalflagX* CGoalflagX::Create(MyLib::Vector3 pos)
 		pObj->Init();
 
 		// ˆÊ’uî•ñ‚¹‚Á‚Ä‚¤‚¢
-		pObj->SetPosition(pos);
+		pObj->SetPosition(MySpline::GetSplinePosition_NonLoop(CGame::GetInstance()->GetCourse()->GetVecPosition(), fLength));
 	}
 
 	return pObj;
