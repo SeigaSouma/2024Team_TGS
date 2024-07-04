@@ -199,6 +199,7 @@
     <ClCompile Include="Source\gamemanager.cpp" />
     <ClCompile Include="Source\game_pressenter.cpp" />
     <ClCompile Include="Source\game_tutorial.cpp" />
+    <ClCompile Include="Source\glassclush.cpp" />
     <ClCompile Include="Source\goalflag.cpp" />
     <ClCompile Include="Source\handle_Move.cpp" />
     <ClCompile Include="Source\handle_Scale.cpp" />
@@ -365,6 +366,7 @@
     <ClInclude Include="Source\gamemanager.h" />
     <ClInclude Include="Source\game_pressenter.h" />
     <ClInclude Include="Source\game_tutorial.h" />
+    <ClInclude Include="Source\glassclush.h" />
     <ClInclude Include="Source\goalflag.h" />
     <ClInclude Include="Source\handle_Move.h" />
     <ClInclude Include="Source\handle_Scale.h" />
