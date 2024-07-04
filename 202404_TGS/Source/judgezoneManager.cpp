@@ -82,27 +82,7 @@ HRESULT CJudgeZoneManager::Init()
 //==========================================================================
 void CJudgeZoneManager::Uninit()
 {
-	std::list<CJudgeZone*> removeList;
-
-
-
-	// 障害物のリスト取得
-	CListManager<CJudgeZone> list = CJudgeZone::GetListObj();
-
-	// 先頭を保存
-	std::list<CJudgeZone*>::iterator itr = list.GetEnd();
-
-	CJudgeZone* pObj = nullptr;
-	while (list.ListLoop(itr))
-	{
-		removeList.push_back((*itr));
-	}
-
-	for (itr = removeList.begin(); itr != removeList.end(); itr++)
-	{
-		(*itr)->Uninit();
-	}
-
+	ReleaseAll();
 	delete m_ThisPtr;
 	m_ThisPtr = nullptr;
 }
@@ -112,28 +92,23 @@ void CJudgeZoneManager::Uninit()
 //==========================================================================
 void CJudgeZoneManager::Check(float progress)
 {
-	// リスト取得
 	CListManager<CJudgeZone> list = CJudgeZone::GetListObj();
 	CListManager<CJudgeZone>::Iterator itr = list.GetEnd();
-	CJudgeZone* pObj = nullptr;
-
 	while (list.ListLoop(itr))
 	{
-		pObj = (*itr);
-
-		if (pObj->IsEnable())
+		if ((*itr)->IsEnable())
 		{
-			CJudgeZone::SJudgeZone zone = pObj->GetZone();
+			CJudgeZone::SJudgeZone zone = (*itr)->GetZone();
 			if (progress >= zone.start && progress <= zone.end)
 			{//範囲内
-				pObj->Check();
+				(*itr)->Check();
 			}
 			else if (progress > zone.end)
 			{//終了（判定）
-				CJudge::JUDGE judge = pObj->Judge();	//ここに判定が入ってる
+				CJudge::JUDGE judge = (*itr)->Judge();	//ここに判定が入ってる
 				CJudgeObj::Create(MyLib::Vector3(400.0f, 100.0f, 0.0f), judge);
 
-				pObj->Uninit();
+				(*itr)->Uninit();
 			}
 
 #ifdef _DEBUG
@@ -142,8 +117,8 @@ void CJudgeZoneManager::Check(float progress)
 			float length = pCource->GetCourceLength();
 
 			//スタート
-			pos = MySpline::GetSplinePosition_NonLoop(pCource->GetVecPosition(), length * pObj->GetZone().start);
-			pos.y = pObj->GetZone().borderHeight;
+			pos = MySpline::GetSplinePosition_NonLoop(pCource->GetVecPosition(), length * (*itr)->GetZone().start);
+			pos.y = (*itr)->GetZone().borderHeight;
 			CEffect3D::Create(
 				pos,
 				MyLib::Vector3(0.0f, 0.0f, 0.0f),
@@ -151,8 +126,8 @@ void CJudgeZoneManager::Check(float progress)
 				40.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
 
 			//終了
-			pos = MySpline::GetSplinePosition_NonLoop(pCource->GetVecPosition(), length * pObj->GetZone().end);
-			pos.y = pObj->GetZone().borderHeight;
+			pos = MySpline::GetSplinePosition_NonLoop(pCource->GetVecPosition(), length * (*itr)->GetZone().end);
+			pos.y = (*itr)->GetZone().borderHeight;
 			CEffect3D::Create(
 				pos,
 				MyLib::Vector3(0.0f, 0.0f, 0.0f),
@@ -171,11 +146,9 @@ void CJudgeZoneManager::Check(float progress)
 //==========================================================================
 void CJudgeZoneManager::Release()
 {
-	std::list<CJudgeZone*> removeList;
-
 	CListManager<CJudgeZone> list = CJudgeZone::GetListObj();
-
-	std::list<CJudgeZone*>::iterator itr = list.GetEnd();
+	std::list<CJudgeZone*> removeList;
+	std::list<CJudgeZone*>::iterator itr;
 	itr = list.GetEnd();
 	CJudgeZone* pObj = nullptr;
 	while (list.ListLoop(itr))
@@ -188,6 +161,7 @@ void CJudgeZoneManager::Release()
 	
 	for (itr = removeList.begin(); itr != removeList.end(); itr++)
 	{
+		(*itr)->Uninit();
 		list.Delete((*itr));
 	}
 }
@@ -198,12 +172,9 @@ void CJudgeZoneManager::Release()
 void CJudgeZoneManager::ReleaseAll()
 {
 	CListManager<CJudgeZone> list = CJudgeZone::GetListObj();
-	std::list<CJudgeZone*>::iterator itr = list.GetEnd();
-
 	CJudgeZone* pZone = nullptr;
-	while (list.ListLoop(itr))
+	while (list.ListLoop(&pZone))
 	{
-		pZone = (*itr);
 		pZone->Uninit();			// 終了
 	}
 }
@@ -381,8 +352,11 @@ void CJudgeZoneManager::LoadZone(std::string path)
 	// 条件読み込み
 	if (pJudgeZone != nullptr)
 	{
+		CListManager<CJudgeZone> list = CJudgeZone::GetListObj();
+
 		pJudgeZone->SetInfo(CJudge::BORDER::TOP, LoadCondition(aPath[CJudge::BORDER::TOP]));
 		pJudgeZone->SetInfo(CJudge::BORDER::UNDER, LoadCondition(aPath[CJudge::BORDER::UNDER]));
+		list.Regist(pJudgeZone);
 	}
 }
 
@@ -514,13 +488,13 @@ void CJudgeZoneManager::SaveZone(std::string path, CJudgeZone::SJudgeZone zonein
 	std::string filename = fileName_ext.substr(0, fileName_ext.find_last_of("."));
 
 	// 条件ファイルパス作成
-	std::string conditionPath_base = dirName + "genarate_condition\\" + filename;
+	std::string conditionPath_base = "data\\TEXT\\judgecondition\\" + filename;
 	std::string pathConditionUp, pathConditionUnder;
 	pathConditionUp = conditionPath_base + "_condition_Top.txt";
 	pathConditionUnder = conditionPath_base + "_condition_Under.txt";
 
 	// 条件ファイル書き出し
-	_mkdir((dirName + "genarate_condition").c_str());
+	_mkdir("data\\TEXT\\judgecondition");
 	if (!SaveCondition(pathConditionUp, conditionUp))
 	{
 		pathConditionUp = "<<< FAILED >>>";
