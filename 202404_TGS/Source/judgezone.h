@@ -46,6 +46,7 @@ public:
 
 	// éÊìæÅEê›íË
 	SJudgeZone GetZone() { return m_zone; }
+	CJudge::SJudgeCondition GetInfo(CJudge::BORDER border) { return m_aJudgeInfo[border]; }
 	void SetZone(const SJudgeZone zone) { m_zone = zone; }
 	void SetInfo(CJudge::BORDER border, CJudge::SJudgeCondition info) { m_aJudgeInfo[border] = info; }
 	bool IsEnable() { return m_isEnable; }
