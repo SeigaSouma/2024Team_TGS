@@ -170,3 +170,57 @@ void CCheckpoint::SetLength(const float length)
 	MyLib::Vector3 pos = MySpline::GetSplinePosition_NonLoop(CGame::GetInstance()->GetCourse()->GetVecPosition(), m_fLength);
 	SetPosition(pos);
 }
+
+//==========================================================================
+// チェックポイントファイル読み込み
+//==========================================================================
+void CCheckpoint::Load(const std::string filename)
+{
+	// ファイルを開く
+	std::ifstream File(filename);
+	if (!File.is_open()) {
+		return;
+	}
+
+	float length = 0.0f;
+
+	// コメント用
+	std::string hoge;
+
+	// データ読み込み
+	std::string line;
+	while (std::getline(File, line))
+	{
+		// コメントはスキップ
+		if (line.empty() ||
+			line[0] == '#')
+		{
+			continue;
+		}
+
+		if (line.find("SET_LENGTH") != std::string::npos)
+		{// TYPEで配置物の種類
+
+			// ストリーム作成
+			std::istringstream lineStream(line);
+
+			// 情報渡す
+			lineStream >>
+				hoge >>
+				hoge >>	// ＝
+				length;	// 配置物の種類
+
+			CCheckpoint::Create(length);
+
+			continue;
+		}
+
+		if (line.find("END_SCRIPT") != std::string::npos)
+		{
+			break;
+		}
+	}
+
+	// ファイルを閉じる
+	File.close();
+}
