@@ -44,7 +44,7 @@ public:
 	//=============================
 	// Ã“IŠÖ”
 	//=============================
-	static CGoalflagX* Create(MyLib::Vector3 pos);
+	static CGoalflagX* Create(float fLength);
 	static CListManager<CGoalflagX> GetListObj() { return m_List; }	// ƒŠƒXƒgæ“¾
 
 private:

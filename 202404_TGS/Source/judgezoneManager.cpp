@@ -354,6 +354,7 @@ void CJudgeZoneManager::LoadZone(std::string path)
 	{
 		CListManager<CJudgeZone> list = CJudgeZone::GetListObj();
 
+		pJudgeZone->SetPath(path);
 		pJudgeZone->SetInfo(CJudge::BORDER::TOP, LoadCondition(aPath[CJudge::BORDER::TOP]));
 		pJudgeZone->SetInfo(CJudge::BORDER::UNDER, LoadCondition(aPath[CJudge::BORDER::UNDER]));
 		list.Regist(pJudgeZone);
@@ -473,6 +474,47 @@ CJudge::SJudgeCondition CJudgeZoneManager::LoadCondition(std::string path)
 		File.close();
 	}
 	return info;
+}
+
+//==========================================================================
+// 判定ゾーンリスト書き込み処理
+//==========================================================================
+void CJudgeZoneManager::Save(std::string path)
+{
+	// ファイルを開く
+	std::ofstream File(path, std::ios_base::out);
+	if (!File.is_open()) {
+		return;
+	}
+
+	int path_Length = path.find_last_of("\\");
+	int name_Length = path.size() - path.find_last_of("\\");
+	std::string fileName_ext = path.substr(path_Length + 1, name_Length + 1);
+	std::string filename = fileName_ext.substr(0, fileName_ext.find_last_of("."));
+	File << "#====================================================================================================" << std::endl;
+	File << "#" << std::endl;
+	File << "# 判定ゾーンリストスクリプトファイル [" << fileName_ext << "]" << std::endl;
+	File << "# Author : エディタ書き出し" << std::endl;
+	File << "#" << std::endl;
+	File << "#====================================================================================================" << std::endl;
+	File << "SCRIPT		# この行は絶対消さないこと！\n" << std::endl;
+	File << std::endl;
+	File << TEXT_LINE << std::endl;
+	File << "# 判定ゾーンパス情報" << std::endl;
+	File << "# USEZONE	: 使用する判定ゾーンのファイルパス" << std::endl;
+	File << TEXT_LINE << std::endl;
+
+	CListManager<CJudgeZone> list = CJudgeZone::GetListObj();
+	auto itr = list.GetEnd();
+	while(list.ListLoop(itr))
+	{
+		// ゾーン単体のパス書き出し
+		File << "USEZONE = " << (*itr)->GetPath() << std::endl;
+	}
+
+	// ファイルを閉じる
+	File << "\nEND_SCRIPT\t\t# この行は絶対消さないこと！" << std::endl;
+	File.close();
 }
 
 //==========================================================================

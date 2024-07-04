@@ -47,6 +47,7 @@ private:
 	void FileControl();		// ファイル操作
 	void SetJudgeZone();	// 判定ゾーン設定
 	void SetCondition(CJudge::SJudgeCondition& condition,bool* pEnable, CJudge::CONDITIONTYPE& conditionType);
+	OPENFILENAMEA CreateOFN(std::string relativeDir, char* filePass);
 
 	CJudgeZone* m_pSelectZone;
 	SJudgeZoneData m_JudgeZoneData;			// 判定ゾーン情報

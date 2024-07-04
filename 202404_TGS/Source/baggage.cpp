@@ -11,6 +11,7 @@
 #include "camera.h"
 #include "map_obstacle.h"
 #include "renderer.h"
+#include "glassclush.h"
 
 //==========================================================================
 // ’è”’è‹`
@@ -326,6 +327,8 @@ void CBaggage::StateDead()
 
 			// SEÄ¶
 			CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_CRACK_GRASS);
+
+			CGlassclush::Create();
 		}
 		m_bEnd = true;
 	}
