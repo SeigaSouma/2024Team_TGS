@@ -521,6 +521,8 @@ void CPlayer::Controll()
 	m_fMoveLength += move.x;
 	newPosition = MySpline::GetSplinePosition_NonLoop(CGame::GetInstance()->GetCourse()->GetVecPosition(), m_fMoveLength);
 
+	CManager::GetInstance()->GetDebugProc()->Print("ƒvƒŒƒCƒ„[ˆÚ“®‹——£[ %f ]\n", m_fMoveLength);
+
 	// Œü‚«æ“¾
 	MyLib::Vector3 rot = GetRotation();
 
