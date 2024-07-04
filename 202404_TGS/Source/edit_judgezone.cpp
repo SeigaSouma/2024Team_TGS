@@ -33,6 +33,7 @@ CEdit_JudgeZone::CEdit_JudgeZone()
 	}
 	m_JudgeZoneData.conditionTop.type = CJudge::CONDITIONTYPE::TYPE_NONE;
 	m_JudgeZoneData.conditionUnder.type = CJudge::CONDITIONTYPE::TYPE_NONE;
+	m_pSelectZone = nullptr;
 }
 
 //==========================================================================
@@ -70,8 +71,8 @@ void CEdit_JudgeZone::Update()
 	ImGuiHoveredFlags frag = 128;
 	m_bHoverWindow = ImGui::IsWindowHovered(frag);
 
-	// 設定ゾーンの適用
-	ApplyZone();
+	// ゾーン選択
+	SelectZone();
 
 	// ファイル操作
 	FileControl();
@@ -81,24 +82,53 @@ void CEdit_JudgeZone::Update()
 }
 
 //==========================================================================
-// 設定ゾーンの適用
+// ゾーン選択
 //==========================================================================
-void CEdit_JudgeZone::ApplyZone()
+void CEdit_JudgeZone::SelectZone()
 {
-	// ボタン押されてなかったら終了
-	if (!ImGui::Button("Apply")) return;
+	std::map<std::string, CJudgeZone*> item;
 
-	// 既存の再設定か新規作成か
-	if (false)
-	{// 既存の再設定
+	CListManager<CJudgeZone> list = CJudgeZone::GetListObj();
+	auto itr = list.GetEnd();
 
+	// 既存表示
+	int cnt = 0;
+	while (list.ListLoop(itr))
+	{
+		CJudgeZone::SJudgeZone zone = (*itr)->GetZone();
+		std::string str = "<" + std::to_string(zone.start) + "~" + std::to_string(zone.end) + ">";
+		item.insert(std::pair<std::string, CJudgeZone*>(str, (*itr)));
+		cnt++;
 	}
-	else
-	{// 新規作成
-		CJudgeZone* pJudgeZone = CJudgeZone::Create(m_JudgeZoneData.zone.start, m_JudgeZoneData.zone.end, m_JudgeZoneData.zone.borderHeight);
-		pJudgeZone->SetInfo(CJudge::BORDER::TOP, m_JudgeZoneData.conditionTop);
-		pJudgeZone->SetInfo(CJudge::BORDER::UNDER, m_JudgeZoneData.conditionTop);
 
+	// 新規
+	item.insert(std::pair<std::string, CJudgeZone*>("<Create>", nullptr));
+
+	// リスト表示
+	static std::string strSelect = "<Create>";
+	if (ImGui::BeginCombo("Edit Zone", strSelect.c_str()))
+	{
+		for (auto itrDisp = item.begin(); itrDisp != item.end(); itrDisp++)
+		{
+			bool isSelect = (strSelect == (*itrDisp).first);
+			if (ImGui::Selectable((*itrDisp).first.c_str(), isSelect))
+			{
+				strSelect = (*itrDisp).first;
+			}
+			cnt++;
+		}
+		ImGui::EndCombo();
+	}
+
+	// オブジェクト選択
+	m_pSelectZone = item[strSelect];
+
+	//選択しているゾーンがあるなら取得
+	if (m_pSelectZone != nullptr)
+	{
+		m_JudgeZoneData.zone = m_pSelectZone->GetZone();
+		m_pSelectZone->SetInfo(CJudge::BORDER::TOP, m_JudgeZoneData.conditionTop);
+		m_pSelectZone->SetInfo(CJudge::BORDER::UNDER, m_JudgeZoneData.conditionUnder);
 	}
 }
 
@@ -112,23 +142,86 @@ void CEdit_JudgeZone::FileControl()
 
 	float width = 150.0f;
 	ImGui::SetNextItemWidth(width);
-	if (ImGui::Button("Save"))
+	if (ImGui::Button("Save & Apply"))
 	{
-		manager->SaveZone("data\\TEXT\\judgezone\\temphogehoge.txt", m_JudgeZoneData.zone, m_JudgeZoneData.conditionTop, m_JudgeZoneData.conditionUnder);
-	}
-	ImGui::SameLine();
+		// 保存
+		OPENFILENAMEA filename = {};
+		char sFilePass[1024] = {};
+		// ファイル選択ダイアログの設定
+		filename.lStructSize = sizeof(OPENFILENAMEA);
+		filename.hwndOwner = NULL;
+		filename.lpstrFilter = "テキストファイル\0*.txt\0画像ファイル\0*.bmp;.jpg\0すべてのファイル\0.*\0\0";
+		filename.lpstrFile = sFilePass;
+		filename.nMaxFile = MAX_PATH;
+		filename.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY | OFN_NOCHANGEDIR;
 
-	ImGui::SetNextItemWidth(width);
-	if (ImGui::Button("Save_as"))
-	{
-		//manager->SaveZone();
+
+		// カレントディレクトリを取得する
+		char szCurrentDir[MAX_PATH];
+		GetCurrentDirectoryA(MAX_PATH, szCurrentDir);
+
+		// "data"フォルダの絶対パスを求める
+		std::string strDataDir = szCurrentDir;
+		strDataDir += "\\data\\TEXT\\judgezone";
+
+		// 存在する場合は、lpstrInitialDirに指定する
+		if (GetFileAttributesA(strDataDir.c_str()) != INVALID_FILE_ATTRIBUTES)
+		{
+			filename.lpstrInitialDir = strDataDir.c_str();
+		}
+
+
+		// ファイル選択ダイアログを表示・セーブ
+		if (GetOpenFileNameA(&filename) && strcmp(&sFilePass[0], "") != 0)
+		{
+			manager->SaveZone(sFilePass, m_JudgeZoneData.zone, m_JudgeZoneData.conditionTop, m_JudgeZoneData.conditionUnder);
+
+			// 新規なら生成
+			if (m_pSelectZone == nullptr)
+			{
+				CJudgeZone* pJudgeZone = CJudgeZone::Create(m_JudgeZoneData.zone.start, m_JudgeZoneData.zone.end, m_JudgeZoneData.zone.borderHeight);
+				pJudgeZone->SetInfo(CJudge::BORDER::TOP, m_JudgeZoneData.conditionTop);
+				pJudgeZone->SetInfo(CJudge::BORDER::UNDER, m_JudgeZoneData.conditionTop);
+			}
+		}
 	}
 	ImGui::SameLine();
 
 	ImGui::SetNextItemWidth(width);
 	if (ImGui::Button("Load"))
 	{
-		//manager->LoadZone();
+		// 保存
+		OPENFILENAMEA filename = {};
+		char sFilePass[1024] = {};
+		// ファイル選択ダイアログの設定
+		filename.lStructSize = sizeof(OPENFILENAMEA);
+		filename.hwndOwner = NULL;
+		filename.lpstrFilter = "テキストファイル\0*.txt\0画像ファイル\0*.bmp;.jpg\0すべてのファイル\0.*\0\0";
+		filename.lpstrFile = sFilePass;
+		filename.nMaxFile = MAX_PATH;
+		filename.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY | OFN_NOCHANGEDIR;
+
+
+		// カレントディレクトリを取得する
+		char szCurrentDir[MAX_PATH];
+		GetCurrentDirectoryA(MAX_PATH, szCurrentDir);
+
+		// "data"フォルダの絶対パスを求める
+		std::string strDataDir = szCurrentDir;
+		strDataDir += "\\data\\TEXT\\judgezone";
+
+		// 存在する場合は、lpstrInitialDirに指定する
+		if (GetFileAttributesA(strDataDir.c_str()) != INVALID_FILE_ATTRIBUTES)
+		{
+			filename.lpstrInitialDir = strDataDir.c_str();
+		}
+
+
+		// ファイル選択ダイアログを表示・ロード
+		if (GetOpenFileNameA(&filename) && strcmp(&sFilePass[0], "") != 0)
+		{
+			manager->LoadZone(sFilePass);
+		}
 	}
 }
 
@@ -157,6 +250,14 @@ void CEdit_JudgeZone::SetJudgeZone()
 		}
 
 		ImGui::TreePop();
+	}
+
+	//選択しているゾーンがあるなら設定
+	if (m_pSelectZone != nullptr)
+	{
+		m_pSelectZone->SetZone(m_JudgeZoneData.zone);
+		m_pSelectZone->SetInfo(CJudge::BORDER::TOP, m_JudgeZoneData.conditionTop);
+		m_pSelectZone->SetInfo(CJudge::BORDER::UNDER, m_JudgeZoneData.conditionUnder);
 	}
 }
 

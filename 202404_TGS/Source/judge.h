@@ -52,6 +52,9 @@ public:
 	{
 		CONDITIONTYPE type;
 		std::map<CJudge::JUDGE, int> judgeParam;
+
+		SJudgeCondition() : type(CONDITIONTYPE::TYPE_NONE) {}
+		SJudgeCondition(CONDITIONTYPE _type) : type(_type){}
 	};
 
 	CJudge();
