@@ -37,6 +37,7 @@ public:
 	void Load(std::string path);
 	void LoadZone(std::string path);
 	CJudge::SJudgeCondition LoadCondition(std::string path);
+	void Save(std::string path);
 	void SaveZone(std::string path, CJudgeZone::SJudgeZone zoneinfo, CJudge::SJudgeCondition conditionUp, CJudge::SJudgeCondition conditionUnder);
 	bool SaveCondition(std::string path, CJudge::SJudgeCondition condition);
 
