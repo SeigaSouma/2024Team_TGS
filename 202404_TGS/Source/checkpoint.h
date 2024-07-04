@@ -36,6 +36,7 @@ public:
 	// 静的関数
 	//=============================
 	static CCheckpoint* Create(const float length);
+	static void Load(const std::string filename);
 	static int GetSaveID() { return m_nSaveID; }	// セーブID取得
 	static void ResetSaveID() { m_nSaveID = -1; }	// セーブIDリセット
 	static CListManager<CCheckpoint> GetListObj() { return m_List; }	// リスト取得
