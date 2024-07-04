@@ -625,6 +625,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 			m_bFall = false;
 			pBaggage->SetForce(0.0f);
 
+
 			if (m_BressHandle != nullptr)
 			{
 				// SEƒXƒgƒbƒv
@@ -689,7 +690,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 		// ‚‚³‚Ì~‰ºŽžŠÔ‰ÁŽZ
 		m_fTimeDownHeight -= CManager::GetInstance()->GetDeltaTime() * 2.0f;
 
-		//m_fHeight -= ADD_HEIGHT * 2.0f;
+		m_fHeight -= ADD_HEIGHT * 2.0f;
 		m_fHeightVelocity += (m_fHeightVelocity - HEIGHT_VELOCITY) * 0.1f;
 		m_fHeightVelocity = UtilFunc::Transformation::Clamp(m_fHeightVelocity, 0.0f, HEIGHT_VELOCITY);
 	}
@@ -701,12 +702,23 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	m_fHeight = UtilFunc::Transformation::Clamp(m_fHeight, MIN_HEIGHT, LENGTH_COLLISIONHEIGHT);
 
 	// ‘§‚Ì“Í‚­Å‘å‚Ì‚‚³‚ª~‰º‚µ‚Ä‚¢‚­
-	//if (m_fTimeDownHeight >= starttimeDownheight)
+	if (m_fTimeDownHeight >= starttimeDownheight)
 	{
 		float timeratio = (m_fTimeDownHeight - starttimeDownheight) / timeDownheight;
 		timeratio = UtilFunc::Transformation::Clamp(timeratio, 0.0f, 1.0f);
-		m_fHeight = (1.0f - timeratio) * LENGTH_COLLISIONHEIGHT;
-		m_fHeight = UtilFunc::Transformation::Clamp(m_fHeight, LENGTH_COLLISIONHEIGHT * ratioMinDownheight, LENGTH_COLLISIONHEIGHT);
+
+
+		float height = (1.0f - timeratio) * LENGTH_COLLISIONHEIGHT;
+		height = UtilFunc::Transformation::Clamp(height, LENGTH_COLLISIONHEIGHT * ratioMinDownheight, LENGTH_COLLISIONHEIGHT);
+
+		if (m_bFall && m_fHeight <= height)
+		{
+			m_fHeight = height;
+		}
+		else if (!m_bFall)
+		{
+			m_fHeight = height;
+		}
 	}
 
 	// —Ž‰ºó‘ÔXV
