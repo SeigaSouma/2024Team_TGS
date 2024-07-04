@@ -170,6 +170,7 @@ void CWaterStone::Update()
 	}
 #endif
 
+#ifndef _DEBUG
 	// スプラッシュ！
 	if (m_fIntervalSplash <= m_fSplashTimer)
 	{
@@ -237,6 +238,7 @@ void CWaterStone::Update()
 		// しぶきタイマー
 		m_fSplashTimer = 0.0f;
 	}
+#endif
 
 	m_StoneInfo.pos = GetPosition();
 }

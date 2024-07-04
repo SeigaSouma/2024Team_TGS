@@ -266,6 +266,7 @@
     <ClCompile Include="Source\pause.cpp" />
     <ClCompile Include="Source\pause_game.cpp" />
     <ClCompile Include="Source\pause_tutorial.cpp" />
+    <ClCompile Include="Source\people.cpp" />
     <ClCompile Include="Source\pickupguide.cpp" />
     <ClCompile Include="Source\player.cpp" />
     <ClCompile Include="Source\playercontrol.cpp" />
@@ -431,6 +432,7 @@
     <ClInclude Include="Source\pause.h" />
     <ClInclude Include="Source\pause_game.h" />
     <ClInclude Include="Source\pause_tutorial.h" />
+    <ClInclude Include="Source\people.h" />
     <ClInclude Include="Source\pickupguide.h" />
     <ClInclude Include="Source\player.h" />
     <ClInclude Include="Source\playercontrol.h" />
