@@ -12,6 +12,7 @@
 #include "waterfield.h"
 #include "stonewall.h"
 #include "stonewall_front.h"
+#include "map_block.h"
 
 //==========================================================================
 // 定数定義
@@ -202,10 +203,14 @@ void CCourseManager::Load()
 
 	// ランダム選出されたブロックに付随する、チェックポイント、障害物の生成
 	// Blockの読み込み(障害物、チェックポイント)
+	CMapBlock::Create();
 
-
-
-	// pBlock->Set(0, start位置);
+	int i = 0;
+	for (const auto& pos : segmentpos)
+	{
+		// pBlock->Set(i, pos[0]);
+		i++;
+	}
 	//この中で障害物、チェックポイント
 
 

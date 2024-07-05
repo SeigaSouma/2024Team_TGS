@@ -34,6 +34,9 @@ public:
 
 	// 入出力
 	void Save();	// セーブ
+	CListManager<CMap_Obstacle> GetObstacleList() { return m_ObstacleList; }
+	CListManager<CCheckpoint> GetCheckpointList() { return m_CheckpointList; }
+
 
 	//=============================
 	// 静的関数
@@ -41,7 +44,7 @@ public:
 	static CListManager<CMapBlock>* Create();	// 生成
 	static void Kill();	// 開放
 	static CListManager<CMapBlock>* GetList() { m_List; }
-
+	
 private:
 
 	//=============================
