@@ -110,8 +110,13 @@ void CCourseManager::Save()
 	}
 
 	std::vector<std::vector<MyLib::Vector3>> savedata = m_vecAllSegmentPos;
-	savedata.erase(savedata.begin());
-	savedata.pop_back();
+
+	// それぞれのブロックの最初と最後消す
+	for (auto& data : savedata)
+	{
+		data.erase(data.begin());
+		data.pop_back();
+	}
 
 
 	// データをバイナリファイルに書き出す
@@ -185,7 +190,10 @@ void CCourseManager::Load()
 
 
 	// ランダム選出されたブロックに付随する、チェックポイント、障害物の生成
+	// Blockの読み込み(障害物、チェックポイント)
 
+	// pBlock->Set(0, start位置);
+	//この中で障害物、チェックポイント
 
 
 	//=============================
