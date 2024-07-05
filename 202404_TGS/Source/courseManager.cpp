@@ -222,7 +222,7 @@ void CCourseManager::Load()
 
 		if (pBlock != nullptr)
 		{
-			pBlock->Set(pos);
+			pBlock->Set(pos, 1.0f);
 		}
 
 		i++;
