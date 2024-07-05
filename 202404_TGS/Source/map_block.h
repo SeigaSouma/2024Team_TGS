@@ -34,6 +34,7 @@ public:
 
 	// 入出力
 	void Save();	// セーブ
+	void Set(int nIdx, const MyLib::Vector3& startpos);
 	CListManager<CMap_Obstacle> GetObstacleList() { return m_ObstacleList; }
 	CListManager<CCheckpoint> GetCheckpointList() { return m_CheckpointList; }
 
