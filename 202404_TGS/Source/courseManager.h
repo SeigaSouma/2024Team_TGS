@@ -9,6 +9,7 @@
 #define _COURSEMANAGER_H_		// 二重インクルード防止
 
 #include "listmanager.h"
+class CMapBlock;
 
 //==========================================================================
 // クラス定義
@@ -42,6 +43,7 @@ public:
 	void SetSegmentPos(const std::vector<std::vector<MyLib::Vector3>>& vec) { m_vecAllSegmentPos = vec; }
 	void SetSegmentPos(const std::vector<MyLib::Vector3>& vec, int idx) { m_vecAllSegmentPos[idx] = vec; }
 	int GetSegmentSize() { return static_cast<int>(m_vecAllSegmentPos.size()); }	// 基点のサイズ
+
 
 	//=============================
 	// 静的関数

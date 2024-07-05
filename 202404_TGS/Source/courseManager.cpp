@@ -7,6 +7,7 @@
 #include "courseManager.h"
 #include "manager.h"
 #include "calculation.h"
+#include "game.h"
 
 #include "course.h"
 #include "waterfield.h"
@@ -200,6 +201,13 @@ void CCourseManager::Load()
 		start = segmentpos.back();
 	}
 
+	//=============================
+	// コース作成
+	//=============================
+	CCourse* pCourse = CCourse::Create("data\\TEXT\\map\\course.bin");
+	pCourse->SetVecPosition(segmentpos);
+	pCourse->Reset();
+	CGame::GetInstance()->SetCource(pCourse);
 
 	// ランダム選出されたブロックに付随する、チェックポイント、障害物の生成
 	// Blockの読み込み(障害物、チェックポイント)
@@ -213,13 +221,6 @@ void CCourseManager::Load()
 	}
 	//この中で障害物、チェックポイント
 
-
-	//=============================
-	// コース作成
-	//=============================
-	CCourse* pCourse = CCourse::Create("data\\TEXT\\map\\course.bin");
-	pCourse->SetVecPosition(segmentpos);
-	pCourse->Reset();
 
 	//=============================
 	// 石垣(奥)

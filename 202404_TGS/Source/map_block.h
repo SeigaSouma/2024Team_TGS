@@ -45,7 +45,7 @@ public:
 	//=============================
 	static CListManager<CMapBlock>* Create();	// ¶¬
 	static void Kill();	// ŠJ•ú
-	static CListManager<CMapBlock> GetList() { m_List; }
+	static CListManager<CMapBlock> GetList() { return m_List; }
 	
 private:
 

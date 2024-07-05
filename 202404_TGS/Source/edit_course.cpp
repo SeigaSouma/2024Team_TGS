@@ -31,6 +31,7 @@ CEdit_Course::CEdit_Course()
 {
 	// 値のクリア
 	m_nCourseEditIdx = 0;		// 操作するインデックス番号
+	m_nCheckPointEditIdx = 0;	// 操作するインデックス番号
 	m_nVtxEditIdx = 0;			// 操作するインデックス番号
 	m_bEdit = false;		// 操作中判定
 	m_bDrag = false;		// 掴み判定
@@ -155,6 +156,34 @@ void CEdit_Course::ChangeEditCourse()
 		std::vector<MyLib::Vector3> vecpos = pCourceManager->GetSegmentPos(m_nCourseEditIdx);
 		pCourse->SetVecPosition(vecpos);
 		pCourse->ReCreateVtx();
+	}
+}
+
+//==========================================================================
+// チェックポイント編集
+//==========================================================================
+void CEdit_Course::TransCheckPoint()
+{
+	ImGui::Dummy(ImVec2(0.0f, 10.0f));
+	if (ImGui::TreeNode("Transform"))
+	{
+		CCourse* pCourse = CGame::GetInstance()->GetCourse();
+		if (pCourse == nullptr) return;
+
+		// コースマネージャ取得
+		CCourseManager* pCourceManager = CCourseManager::GetInstance();
+		if (pCourceManager == nullptr) return;
+
+		// チェックポイントのリスト取得
+		CListManager<CCheckpoint> checkpointList = CMapBlock::GetList().GetData(m_nCourseEditIdx)->GetCheckpointList();
+		int checkpointSize = checkpointList.GetNumAll() - 1;
+
+		if (ImGui::SliderInt("Course Edit Idx", &m_nCheckPointEditIdx, 0, checkpointSize))
+		{
+
+		}
+
+
 	}
 }
 
