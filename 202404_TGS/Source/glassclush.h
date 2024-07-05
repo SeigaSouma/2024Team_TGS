@@ -27,7 +27,7 @@ public:
 		STATE_MAX
 	};
 
-	CGlassclush(int nPriority = 7);
+	CGlassclush(int nPriority = 3);
 	~CGlassclush();
 
 	//=============================
@@ -42,6 +42,8 @@ public:
 	// 静的関数
 	//=============================
 	static CGlassclush* Create();
+	static CGlassclush* GetInstance() { return m_ThisPtr; }	// インスタンス取得
+	static void Kill();
 
 private:
 
@@ -60,7 +62,7 @@ private:
 	State m_state;			// 状態
 
 	// その他変数
-
+	static CGlassclush* m_ThisPtr;		// 自身のポインタ
 };
 
 
