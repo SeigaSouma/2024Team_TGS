@@ -12,6 +12,7 @@
 #include "map_obstacle.h"
 #include "camera.h"
 #include "spline.h"
+#include "map_block.h"
 
 //==========================================================================
 // 定数定義
@@ -30,6 +31,7 @@ CEdit_Course::CEdit_Course()
 {
 	// 値のクリア
 	m_nCourseEditIdx = 0;		// 操作するインデックス番号
+	m_nCheckPointEditIdx = 0;	// 操作するインデックス番号
 	m_nVtxEditIdx = 0;			// 操作するインデックス番号
 	m_bEdit = false;		// 操作中判定
 	m_bDrag = false;		// 掴み判定
@@ -143,12 +145,49 @@ void CEdit_Course::ChangeEditCourse()
 	CCourse* pCourse = CGame::GetInstance()->GetCourse();
 	if (pCourse == nullptr) return;
 
-	if (ImGui::SliderInt("Course Edit Idx", &m_nCourseEditIdx, 0, 1))
-	{
-		std::vector<MyLib::Vector3> vecpos = CCourseManager::GetInstance()->GetSegmentPos(m_nCourseEditIdx);
-		pCourse->SetVecPosition(vecpos);
+	// コースマネージャ取得
+	CCourseManager* pCourceManager = CCourseManager::GetInstance();
+	if (pCourceManager == nullptr) return;
 
+	// 基点の数
+	int segmentSize = pCourceManager->GetSegmentSize() - 1;
+	if (ImGui::SliderInt("Course Edit Idx", &m_nCourseEditIdx, 0, segmentSize))
+	{
+		std::vector<MyLib::Vector3> vecpos = pCourceManager->GetSegmentPos(m_nCourseEditIdx);
+		pCourse->SetVecPosition(vecpos);
 		pCourse->ReCreateVtx();
+
+		m_nCheckPointEditIdx = 0;	// チェックポイントのインデックスリセット
+	}
+}
+
+//==========================================================================
+// チェックポイント編集
+//==========================================================================
+void CEdit_Course::TransCheckPoint()
+{
+	ImGui::Dummy(ImVec2(0.0f, 10.0f));
+	if (ImGui::TreeNode("Transform"))
+	{
+		CCourse* pCourse = CGame::GetInstance()->GetCourse();
+		if (pCourse == nullptr) return;
+
+		// コースマネージャ取得
+		CCourseManager* pCourceManager = CCourseManager::GetInstance();
+		if (pCourceManager == nullptr) return;
+
+		// チェックポイントのリスト取得
+		CListManager<CCheckpoint> checkpointList = CMapBlock::GetList().GetData(m_nCourseEditIdx)->GetCheckpointList();
+		int checkpointSize = checkpointList.GetNumAll() - 1;
+
+		if (ImGui::SliderInt("Checkpoint Edit Idx", &m_nCheckPointEditIdx, 0, checkpointSize))
+		{
+
+		}
+
+		CCheckpoint* pCheckPoint = checkpointList.GetData(m_nCheckPointEditIdx);
+		//ImGui::DragFloat("x", &editpos.x, POS_MOVE, 0.0f, 0.0f, "%.2f");
+
 	}
 }
 

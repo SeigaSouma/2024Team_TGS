@@ -51,6 +51,7 @@
 #include "map_ui.h"
 #include "waterstoneManager.h"
 #include "spline.h"
+#include "courseManager.h"
 
 //==========================================================================
 // 静的メンバ変数宣言
@@ -191,6 +192,11 @@ HRESULT CGame::Init()
 	//=============================
 	m_pObstacleManager = CMap_ObstacleManager::Create();
 
+
+	//=============================
+	// コースマネージャ
+	//=============================
+	CCourseManager::Create();
 
 	//=============================
 	// コース作成

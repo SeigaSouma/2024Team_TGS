@@ -65,6 +65,7 @@ public:
 	CTimer *GetTimer() { return m_pTimer; }	// タイマー取得
 	CStage *GetStage();
 	CGameManager *GetGameManager();
+	void SetCource(CCourse* pCource) { m_pCourse = pCource; }	// コース設定
 	CCourse* GetCourse() { return m_pCourse; }					// コースのオブジェクト取得
 	void SetEnableClear(bool bClear) { m_clear = bClear; }		// クリアのフラグ
 	bool IsClearFrag() { return m_clear; }						// クリアフラグの取得
