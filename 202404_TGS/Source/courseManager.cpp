@@ -218,18 +218,15 @@ void CCourseManager::Load()
 	int i = 0;
 	for (const auto& pos : segmentpos)
 	{
-		// pBlock->Set(i, pos[0]);
 		CMapBlock* pBlock = CMapBlock::GetList().GetData(i);
 
 		if (pBlock != nullptr)
 		{
-			pBlock->Set(pos, 1.0f);
+			pBlock->Set(pos, CCourseManager::GetBlockLength() * i);
 		}
 
 		i++;
 	}
-
-	// CCourseManager::GetBlockLength() * i
 
 
 	//この中で障害物、チェックポイント
