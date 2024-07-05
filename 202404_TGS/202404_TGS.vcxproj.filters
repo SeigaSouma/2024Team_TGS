@@ -111,6 +111,9 @@
     <Filter Include="direction">
       <UniqueIdentifier>{bcb387e5-91a8-4710-89c2-85baea526e16}</UniqueIdentifier>
     </Filter>
+    <Filter Include="map\block">
+      <UniqueIdentifier>{c87c2e42-68a2-4d0b-8740-3c215e412e7a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\ballast.cpp">
@@ -586,6 +589,9 @@
     </ClCompile>
     <ClCompile Include="Source\courseManager.cpp">
       <Filter>map\course</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\map_block.cpp">
+      <Filter>map\block</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1071,6 +1077,9 @@
     </ClInclude>
     <ClInclude Include="Source\courseManager.h">
       <Filter>map\course</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\map_block.h">
+      <Filter>map\block</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
