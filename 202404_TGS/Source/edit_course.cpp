@@ -143,11 +143,16 @@ void CEdit_Course::ChangeEditCourse()
 	CCourse* pCourse = CGame::GetInstance()->GetCourse();
 	if (pCourse == nullptr) return;
 
-	if (ImGui::SliderInt("Course Edit Idx", &m_nCourseEditIdx, 0, 1))
-	{
-		std::vector<MyLib::Vector3> vecpos = CCourseManager::GetInstance()->GetSegmentPos(m_nCourseEditIdx);
-		pCourse->SetVecPosition(vecpos);
+	// コースマネージャ取得
+	CCourseManager* pCourceManager = CCourseManager::GetInstance();
+	if (pCourceManager == nullptr) return;
 
+	// 基点の数
+	int segmentSize = pCourceManager->GetSegmentSize() - 1;
+	if (ImGui::SliderInt("Course Edit Idx", &m_nCourseEditIdx, 0, segmentSize))
+	{
+		std::vector<MyLib::Vector3> vecpos = pCourceManager->GetSegmentPos(m_nCourseEditIdx);
+		pCourse->SetVecPosition(vecpos);
 		pCourse->ReCreateVtx();
 	}
 }

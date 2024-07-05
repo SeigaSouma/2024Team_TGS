@@ -17,6 +17,8 @@ namespace
 	const std::string TEXTURE_SAMPLE = "data\\TEXTURE\\result\\grass_crush.png";	// テクスチャのファイル
 }
 
+CGlassclush *CGlassclush::m_ThisPtr = nullptr;
+
 //==========================================================================
 // コンストラクタ
 //==========================================================================
@@ -34,20 +36,35 @@ CGlassclush::~CGlassclush()
 }
 
 //==========================================================================
+// 削除
+//==========================================================================
+void CGlassclush::Kill()
+{
+	if (m_ThisPtr != nullptr)
+	{
+		m_ThisPtr->Uninit();
+		m_ThisPtr = nullptr;
+	}
+}
+
+//==========================================================================
 // 生成処理
 //==========================================================================
 CGlassclush* CGlassclush::Create()
 {
-	// メモリの確保
-	CGlassclush* pObj = DEBUG_NEW CGlassclush;
-
-	if (pObj != nullptr)
+	if (m_ThisPtr == nullptr)
 	{
-		// 初期化処理
-		pObj->Init();
+		// メモリの確保
+		m_ThisPtr = DEBUG_NEW CGlassclush;
+
+		if (m_ThisPtr != nullptr)
+		{
+			// 初期化処理
+			m_ThisPtr->Init();
+		}
 	}
 
-	return pObj;
+	return m_ThisPtr;
 }
 
 //==========================================================================
@@ -72,9 +89,11 @@ HRESULT CGlassclush::Init()
 #else	// 縦幅を元にサイズ設定
 	size = UtilFunc::Transformation::AdjustSizeByWidth(size, 240.0f);
 #endif
-	SetSize(size);
+	SetSize(D3DXVECTOR2(640.0f,360.0f));
 	SetSizeOrigin(size);
+	SetPosition(MyLib::Vector3(640.0f,360.0f,0.0f));
 
+	SetAlpha(0.0f);
 
 	// 位置、向き設定は必要があれば追加
 
@@ -91,6 +110,8 @@ void CGlassclush::Uninit()
 {
 	// 終了処理
 	CObject2D::Uninit();
+
+	m_ThisPtr = nullptr;
 }
 
 //==========================================================================
@@ -98,6 +119,17 @@ void CGlassclush::Uninit()
 //==========================================================================
 void CGlassclush::Update()
 {
+	float alpha = GetAlpha();
+
+	alpha += 0.1f;
+
+	SetAlpha(alpha);
+
+	if (alpha >= 1.0f)
+	{
+		SetAlpha(1.0f);
+	}
+
 	// 更新処理
 	CObject2D::Update();
 }

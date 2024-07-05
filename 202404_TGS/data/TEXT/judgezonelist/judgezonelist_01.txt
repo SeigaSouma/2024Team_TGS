@@ -15,5 +15,6 @@ USEZONE = data\TEXT\judgezone\judgezone_01.txt
 USEZONE = data\TEXT\judgezone\judgezone_02.txt
 USEZONE = data\TEXT\judgezone\judgezone_03.txt
 USEZONE = data\TEXT\judgezone\judgezone_04.txt
+USEZONE = C:\Users\student\Source\Repos\SeigaSouma\2024Team_TGS\202404_TGS\data\TEXT\judgezone\judgezone_05.txt
 
 END_SCRIPT		# Ç±ÇÃçsÇÕê‚ëŒè¡Ç≥Ç»Ç¢Ç±Ç∆ÅI

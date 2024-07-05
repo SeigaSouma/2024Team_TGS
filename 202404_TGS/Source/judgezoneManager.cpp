@@ -580,7 +580,7 @@ void CJudgeZoneManager::SaveZone(std::string path, CJudgeZone::SJudgeZone zonein
 
 		// 条件ファイルパス
 		File << "CONDITION_TOP = " << pathConditionUp << std::endl;
-		File << "CONDITION_TOP = " << pathConditionUnder << std::endl;
+		File << "CONDITION_UNDER = " << pathConditionUnder << std::endl;
 
 		// 終わり
 		File << "END_ZONESET" << std::endl;
