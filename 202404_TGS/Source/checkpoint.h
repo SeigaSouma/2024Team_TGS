@@ -31,6 +31,7 @@ public:
 	// メンバ関数
 	void Kill();		// 削除
 	float GetLength() { return m_fLength; }	// 距離取得
+	void SetLength(const float length);	// 距離設定
 
 	//=============================
 	// 静的関数
@@ -50,7 +51,6 @@ private:
 	//=============================
 	// メンバ関数
 	//=============================
-	void SetLength(const float length);	// 距離設定
 
 	//=============================
 	// メンバ変数

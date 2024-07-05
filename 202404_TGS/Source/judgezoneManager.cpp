@@ -106,7 +106,9 @@ void CJudgeZoneManager::Check(float progress)
 			else if (progress > zone.end)
 			{//終了（判定）
 				CJudge::JUDGE judge = (*itr)->Judge();	//ここに判定が入ってる
-				CJudgeObj::Create(MyLib::Vector3(400.0f, 100.0f, 0.0f), judge);
+				CJudgeObj* pObj	= CJudgeObj::Create(MyLib::Vector3(400.0f, 100.0f, 0.0f), judge);
+				pObj->SetSize(D3DXVECTOR2(256.0f, 72.0f));
+				pObj->SetSizeOrigin(D3DXVECTOR2(192.0f, 54.0f));
 
 				(*itr)->Uninit();
 			}
@@ -580,7 +582,7 @@ void CJudgeZoneManager::SaveZone(std::string path, CJudgeZone::SJudgeZone zonein
 
 		// 条件ファイルパス
 		File << "CONDITION_TOP = " << pathConditionUp << std::endl;
-		File << "CONDITION_TOP = " << pathConditionUnder << std::endl;
+		File << "CONDITION_UNDER = " << pathConditionUnder << std::endl;
 
 		// 終わり
 		File << "END_ZONESET" << std::endl;
