@@ -205,12 +205,15 @@ void CCourseManager::Load()
 	// Blockの読み込み(障害物、チェックポイント)
 	CMapBlock::Create();
 
+	// 距離にあわせた配置を行う
 	int i = 0;
 	for (const auto& pos : segmentpos)
 	{
 		// pBlock->Set(i, pos[0]);
+		CMapBlock::GetList().GetData(i)->Set(pos);
 		i++;
 	}
+
 	//この中で障害物、チェックポイント
 
 
