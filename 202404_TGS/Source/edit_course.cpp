@@ -12,6 +12,8 @@
 #include "map_obstacle.h"
 #include "camera.h"
 #include "spline.h"
+#include "map_obstacle.h"
+#include "checkpoint.h"
 #include "map_block.h"
 
 //==========================================================================
@@ -32,6 +34,7 @@ CEdit_Course::CEdit_Course()
 	// 値のクリア
 	m_nCourseEditIdx = 0;		// 操作するインデックス番号
 	m_nCheckPointEditIdx = 0;	// 操作するインデックス番号
+	m_nObstacleEditIdx = 0;		// 操作するインデックス番号
 	m_nVtxEditIdx = 0;			// 操作するインデックス番号
 	m_bEdit = false;		// 操作中判定
 	m_bDrag = false;		// 掴み判定
@@ -77,6 +80,9 @@ void CEdit_Course::Update()
 
 	// 編集するコース変更
 	ChangeEditCourse();
+
+	// チェックポイント編集
+	TransCheckPoint();
 	
 	// ファイル操作
 	FileControl();
@@ -141,7 +147,6 @@ void CEdit_Course::FileControl()
 //==========================================================================
 void CEdit_Course::ChangeEditCourse()
 {
-
 	CCourse* pCourse = CGame::GetInstance()->GetCourse();
 	if (pCourse == nullptr) return;
 
@@ -167,7 +172,7 @@ void CEdit_Course::ChangeEditCourse()
 void CEdit_Course::TransCheckPoint()
 {
 	ImGui::Dummy(ImVec2(0.0f, 10.0f));
-	if (ImGui::TreeNode("Transform"))
+	if (ImGui::TreeNode("CheckPoint"))
 	{
 		CCourse* pCourse = CGame::GetInstance()->GetCourse();
 		if (pCourse == nullptr) return;
@@ -176,18 +181,83 @@ void CEdit_Course::TransCheckPoint()
 		CCourseManager* pCourceManager = CCourseManager::GetInstance();
 		if (pCourceManager == nullptr) return;
 
+		// セーブ
+		float width = 150.0f;
+		ImGui::SetNextItemWidth(width);
+		if (ImGui::Button("Save"))
+		{
+			// 追加
+		}
+		ImGui::SameLine();
+
+
 		// チェックポイントのリスト取得
 		CListManager<CCheckpoint> checkpointList = CMapBlock::GetList().GetData(m_nCourseEditIdx)->GetCheckpointList();
 		int checkpointSize = checkpointList.GetNumAll() - 1;
 
+		ImGui::SetNextItemWidth(width);
 		if (ImGui::SliderInt("Checkpoint Edit Idx", &m_nCheckPointEditIdx, 0, checkpointSize))
 		{
 
 		}
 
+		// チェックポイントの情報取得
 		CCheckpoint* pCheckPoint = checkpointList.GetData(m_nCheckPointEditIdx);
-		//ImGui::DragFloat("x", &editpos.x, POS_MOVE, 0.0f, 0.0f, "%.2f");
+		float length = pCheckPoint->GetLength();
 
+		ImGui::DragFloat("Length", &length, 1.0f, 0.0f, 0.0f, "%.2f");
+		pCheckPoint->SetLength(length);
+
+		ImGui::TreePop();
+	}
+}
+
+//==========================================================================
+// 障害物編集
+//==========================================================================
+void CEdit_Course::TransObstacle()
+{
+	ImGui::Dummy(ImVec2(0.0f, 10.0f));
+	if (ImGui::TreeNode("Obstacle"))
+	{
+		CCourse* pCourse = CGame::GetInstance()->GetCourse();
+		if (pCourse == nullptr) return;
+
+		// コースマネージャ取得
+		CCourseManager* pCourceManager = CCourseManager::GetInstance();
+		if (pCourceManager == nullptr) return;
+
+		// セーブ
+		float width = 150.0f;
+		ImGui::SetNextItemWidth(width);
+		if (ImGui::Button("Save"))
+		{
+			// 追加
+		}
+		ImGui::SameLine();
+
+
+		// 障害物のリスト取得
+		CListManager<CMap_Obstacle> obstacleList = CMapBlock::GetList().GetData(m_nCourseEditIdx)->GetObstacleList();
+		int checkpointSize = obstacleList.GetNumAll() - 1;
+
+		ImGui::SetNextItemWidth(width);
+		if (ImGui::SliderInt("Obstacle Edit Idx", &m_nObstacleEditIdx, 0, checkpointSize))
+		{
+
+		}
+
+		// 情報の位置取得
+		/*CCheckpoint* pCheckPoint = checkpointList.GetData(m_nCheckPointEditIdx);
+		float length = pCheckPoint->GetLength();*/
+		MyLib::Vector3 pos;
+
+		ImGui::DragFloat3("pos", (float*)&pos, 1.0f, 0.0f, 0.0f, "%.2f");
+
+		// 設定
+
+
+		ImGui::TreePop();
 	}
 }
 
