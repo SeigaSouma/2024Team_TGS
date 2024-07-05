@@ -167,8 +167,8 @@ void CCheckpoint::SetLength(const float length)
 	m_fLength = length;
 
 	// À•W‚ðÝ’è
-	MyLib::Vector3 pos = MySpline::GetSplinePosition_NonLoop(CGame::GetInstance()->GetCourse()->GetVecPosition(), m_fLength);
-	SetPosition(pos);
+	//MyLib::Vector3 pos = MySpline::GetSplinePosition_NonLoop(CGame::GetInstance()->GetCourse()->GetVecPosition(), m_fLength);
+	//SetPosition(pos);
 }
 
 //==========================================================================

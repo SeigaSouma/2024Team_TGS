@@ -210,7 +210,13 @@ void CCourseManager::Load()
 	for (const auto& pos : segmentpos)
 	{
 		// pBlock->Set(i, pos[0]);
-		CMapBlock::GetList().GetData(i)->Set(pos);
+		CMapBlock* pBlock = CMapBlock::GetList().GetData(i);
+
+		if (pBlock != nullptr)
+		{
+			pBlock->Set(pos);
+		}
+
 		i++;
 	}
 
