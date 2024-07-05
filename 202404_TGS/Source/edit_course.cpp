@@ -5,6 +5,7 @@
 // 
 //=============================================================================
 #include "edit_course.h"
+#include "courseManager.h"
 #include "course.h"
 #include "manager.h"
 #include "calculation.h"
@@ -28,7 +29,8 @@ namespace
 CEdit_Course::CEdit_Course()
 {
 	// 値のクリア
-	m_nEditIdx = 0;			// 操作するインデックス番号
+	m_nCourseEditIdx = 0;		// 操作するインデックス番号
+	m_nVtxEditIdx = 0;			// 操作するインデックス番号
 	m_bEdit = false;		// 操作中判定
 	m_bDrag = false;		// 掴み判定
 	m_bHoverWindow = false;	// マウスのウィンドウホバー判定
@@ -71,6 +73,9 @@ void CEdit_Course::Update()
 	ImGuiHoveredFlags frag = 128;
 	m_bHoverWindow = ImGui::IsWindowHovered(frag);
 
+	// 編集するコース変更
+	ChangeEditCourse();
+	
 	// ファイル操作
 	FileControl();
 
@@ -126,6 +131,24 @@ void CEdit_Course::FileControl()
 	if (ImGui::Button("Load"))
 	{
 
+	}
+}
+
+//==========================================================================
+// 編集するコース変更
+//==========================================================================
+void CEdit_Course::ChangeEditCourse()
+{
+
+	CCourse* pCourse = CGame::GetInstance()->GetCourse();
+	if (pCourse == nullptr) return;
+
+	if (ImGui::SliderInt("Course Edit Idx", &m_nCourseEditIdx, 0, 1))
+	{
+		std::vector<MyLib::Vector3> vecpos = CCourseManager::GetInstance()->GetSegmentPos(m_nCourseEditIdx);
+		pCourse->SetVecPosition(vecpos);
+
+		pCourse->ReCreateVtx();
 	}
 }
 
@@ -222,7 +245,7 @@ void CEdit_Course::SelectLine()
 			{// 重なり && 左クリック
 
 				// 操作する辺保存
-				m_nEditIdx = i;
+				m_nVtxEditIdx = i;
 
 				m_bEdit = true;
 				break;
@@ -253,7 +276,7 @@ void CEdit_Course::DragLine()
 	if (m_bSetMode) return;	// セットモードは終わり
 
 	// 辺情報取得
-	MyLib::Vector3 segmentPos = pCourse->GetVecPosition(m_nEditIdx);
+	MyLib::Vector3 segmentPos = pCourse->GetVecPosition(m_nVtxEditIdx);
 	MyLib::Vector3 coursepos = pCourse->GetPosition();
 
 	// マウス情報
@@ -311,8 +334,8 @@ void CEdit_Course::DragLine()
 	}
 
 	// 頂点データ設定
-	pCourse->SetVecPosition(m_nEditIdx, segmentPos);
-	pCourse->GetCollisionLineBox(m_nEditIdx)->SetPosition(segmentPos);
+	pCourse->SetVecPosition(m_nVtxEditIdx, segmentPos);
+	pCourse->GetCollisionLineBox(m_nVtxEditIdx)->SetPosition(segmentPos);
 }
 
 //==========================================================================
@@ -332,13 +355,13 @@ void CEdit_Course::Transform()
 			CCollisionLine_Box* pBox = pCourse->GetCollisionLineBox(i);
 			if (pBox == nullptr) continue;
 
-			D3DXCOLOR col = (i == m_nEditIdx) ? SELECT_COLOR : DEFAULT_COLOR;
+			D3DXCOLOR col = (i == m_nVtxEditIdx) ? SELECT_COLOR : DEFAULT_COLOR;
 			pBox->SetColor(col);
 		}
 	}
 
 	// 操作する辺の情報
-	MyLib::Vector3 editpos = pCourse->GetVecPosition(m_nEditIdx);
+	MyLib::Vector3 editpos = pCourse->GetVecPosition(m_nVtxEditIdx);
 
 	ImGui::Dummy(ImVec2(0.0f, 10.0f));
 	if (ImGui::TreeNode("Transform"))
@@ -354,7 +377,7 @@ void CEdit_Course::Transform()
 			return;
 		}
 
-		ImGui::Text("NowEdit : [ %d ]", m_nEditIdx);
+		ImGui::Text("NowEdit : [ %d ]", m_nVtxEditIdx);
 		ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
 		// リセット
@@ -452,7 +475,7 @@ void CEdit_Course::Transform()
 	}
 
 	// ライン情報設定
-	pCourse->SetVecPosition(m_nEditIdx, editpos);
+	pCourse->SetVecPosition(m_nVtxEditIdx, editpos);
 }
 
 //==========================================================================

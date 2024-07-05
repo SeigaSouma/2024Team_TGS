@@ -182,6 +182,7 @@
     <ClCompile Include="Source\course.cpp" />
     <ClCompile Include="Source\command.cpp" />
     <ClCompile Include="Source\command_group.cpp" />
+    <ClCompile Include="Source\courseManager.cpp" />
     <ClCompile Include="Source\damagepoint.cpp" />
     <ClCompile Include="Source\debugproc.cpp" />
     <ClCompile Include="Source\debug_bressrange.cpp" />
@@ -349,6 +350,7 @@
     <ClInclude Include="Source\constans.h" />
     <ClInclude Include="Source\convert.h" />
     <ClInclude Include="Source\course.h" />
+    <ClInclude Include="Source\courseManager.h" />
     <ClInclude Include="Source\damagepoint.h" />
     <ClInclude Include="Source\debugproc.h" />
     <ClInclude Include="Source\debug_bressrange.h" />

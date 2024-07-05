@@ -584,6 +584,9 @@
     <ClCompile Include="Source\glassclush.cpp">
       <Filter>direction</Filter>
     </ClCompile>
+    <ClCompile Include="Source\courseManager.cpp">
+      <Filter>map\course</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ballast.h">
@@ -1065,6 +1068,9 @@
     </ClInclude>
     <ClInclude Include="Source\glassclush.h">
       <Filter>direction</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\courseManager.h">
+      <Filter>map\course</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

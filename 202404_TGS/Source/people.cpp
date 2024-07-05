@@ -27,10 +27,14 @@ namespace
 {
 	const float PLAYER_SERCH = 800.0f;	// プレイヤー探索範囲
 	const float CHACE_DISTABCE = 50.0f;	// 追い掛ける時の間隔
-	const float TIME_DMG = static_cast<float>(10) / static_cast<float>(mylib_const::DEFAULT_FPS);	// ダメージ時間
-	const float TIME_DEAD = static_cast<float>(40) / static_cast<float>(mylib_const::DEFAULT_FPS);	// 死亡時間
-	const float TIME_DOWN = static_cast<float>(150) / static_cast<float>(mylib_const::DEFAULT_FPS);	// ダウン時間
-	const float TIME_FADEOUT = static_cast<float>(30) / static_cast<float>(mylib_const::DEFAULT_FPS);	// 死亡時間
+}
+
+namespace STATE_TIME
+{
+	const float DMG = static_cast<float>(10) / static_cast<float>(mylib_const::DEFAULT_FPS);	// ダメージ時間
+	const float DEAD = static_cast<float>(40) / static_cast<float>(mylib_const::DEFAULT_FPS);	// 死亡時間
+	const float DOWN = static_cast<float>(150) / static_cast<float>(mylib_const::DEFAULT_FPS);	// ダウン時間
+	const float FADEOUT = 0.6f;	// 死亡時間
 }
 
 //==========================================================================
@@ -133,7 +137,7 @@ HRESULT CPeople::Init()
 	m_fStateTime = 0.0f;			// 状態遷移カウンター
 
 	// 種類の設定
-	SetType(TYPE_ENEMY);
+	SetType(CObject::TYPE::TYPE_ENEMY);
 
 	// 向き設定
 	SetRotation(MyLib::Vector3(0.0f, 0.0f, 0.0f));
@@ -351,6 +355,9 @@ void CPeople::UpdateState()
 	// 色設定
 	m_mMatcol = D3DXCOLOR(1.0f, 1.0f, 1.0f, m_mMatcol.a);
 
+	// 状態遷移カウンター加算
+	m_fStateTime += CManager::GetInstance()->GetDeltaTime();
+
 	// 状態更新
 	(this->*(m_StateFunc[m_state]))();
 }
@@ -360,17 +367,9 @@ void CPeople::UpdateState()
 //==========================================================================
 void CPeople::StateNone()
 {
-	
 	// 色設定
 	m_mMatcol = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-
-	// 状態遷移カウンター減算
-	m_fStateTime -= CManager::GetInstance()->GetDeltaTime();
-
-	if (m_fStateTime <= 0)
-	{// 遷移カウンターが0になったら
-		m_fStateTime = 0;
-	}
+	m_fStateTime = 0.0f;
 }
 
 //==========================================================================
@@ -378,17 +377,19 @@ void CPeople::StateNone()
 //==========================================================================
 void CPeople::StateFadeOut()
 {
-	
 	// 色設定
-	m_mMatcol.a = m_fStateTime / TIME_FADEOUT;
+	m_mMatcol.a = 1.0f - m_fStateTime / STATE_TIME::FADEOUT;
 
-	if (m_fStateTime <= 0.0f)
+	if (m_fStateTime >= STATE_TIME::FADEOUT)
 	{
-		// 敵の終了処理
+		// 終了処理
 		Kill();
 		Uninit();
 		return;
 	}
+
+
+
 }
 
 
