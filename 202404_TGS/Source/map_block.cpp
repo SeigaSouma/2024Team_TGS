@@ -293,7 +293,7 @@ void CMapBlock::ObstacleLoad(std::ifstream* pFile)
 //==========================================================================
 // îzíuà íuê›íË
 //==========================================================================
-void CMapBlock::Set(int nIdx, const MyLib::Vector3& startpos)
+void CMapBlock::Set(const MyLib::Vector3& startpos)
 {
-
+	
 }
