@@ -16,6 +16,5 @@ USEZONE = data\TEXT\judgezone\judgezone_02.txt
 USEZONE = data\TEXT\judgezone\judgezone_03.txt
 USEZONE = data\TEXT\judgezone\judgezone_04.txt
 USEZONE = data\TEXT\judgezone\judgezone_05.txt
-USEZONE = data\TEXT\judgezone\judgezone_test.txt
 
 END_SCRIPT		# Ç±ÇÃçsÇÕê‚ëŒè¡Ç≥Ç»Ç¢Ç±Ç∆ÅI

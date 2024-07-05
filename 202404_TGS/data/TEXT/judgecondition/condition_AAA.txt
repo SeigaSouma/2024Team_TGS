@@ -15,7 +15,7 @@ SCRIPT			# この行は絶対消さないこと！
 #------------------------------------------------------------------
 CONDITIONSET
 	TYPE = 0
-	JUDGE_BBB = 1
+	JUDGE_AAA = 1
 END_CONDITIONSET
 
 END_SCRIPT		# この行は絶対消さないこと！
