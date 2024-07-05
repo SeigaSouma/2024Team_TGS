@@ -20,6 +20,8 @@ namespace
 		const float TIME_APPEAR = 1.0f;		// 出現時間
 		const float TIME_WAIT = 0.4f;		// 待ち時間
 		const float TIME_FADEOUT = 0.6f;	// フェードアウト時間
+		const int LAP_NUM = 4;				// 回転する回数
+		const float INCLINATION_ANGLE = D3DX_PI / 8;	// 傾ける角度
 	}
 	namespace Judge_BBB
 	{
@@ -89,9 +91,14 @@ void CJudgeStateFunc_AAA::StateAppear()
 	float ratio = stateTime / Judge_AAA::TIME_APPEAR;
 	D3DXVECTOR2 size = pObj->GetSize();
 	D3DXVECTOR2 sizeOrigin = pObj->GetSizeOrigin();
-	size.x = UtilFunc::Correction::EasingEaseIn(0.0f, sizeOrigin.x * 1.6f, ratio);
-	size.y = UtilFunc::Correction::EasingEaseIn(0.0f, sizeOrigin.y * 1.6f, ratio);
+	size.x = UtilFunc::Correction::EasingEaseIn(0.0f, sizeOrigin.x, ratio);
+	size.y = UtilFunc::Correction::EasingEaseIn(0.0f, sizeOrigin.y, ratio);
 	pObj->SetSize(size);
+
+	// 回転
+	float angle = (Judge_AAA::LAP_NUM * 2 * D3DX_PI) * ratio;
+	UtilFunc::Transformation::RotNormalize(angle);
+	pObj->SetRotation(MyLib::Vector3(0.0f, 0.0f, angle));
 }
 
 //==========================================================================
@@ -106,6 +113,8 @@ void CJudgeStateFunc_AAA::StateWait()
 		SetState(STATE_FADEOUT);
 		return;
 	}
+	CJudgeObj* pObj = GetObj();
+	pObj->SetRotation(MyLib::Vector3(0.0f, 0.0f, 0.0f));
 }
 
 //==========================================================================
@@ -125,8 +134,13 @@ void CJudgeStateFunc_AAA::StateFadeOut()
 		return;
 	}
 
-	// 不透明度設定
-	pObj->SetAlpha(1.0f - stateTime / Judge_AAA::TIME_FADEOUT);
+	// サイズ設定
+	float ratio = stateTime / Judge_BBB::TIME_FADEOUT;
+	D3DXVECTOR2 size = pObj->GetSize();
+	D3DXVECTOR2 sizeOrigin = pObj->GetSizeOrigin();
+	size.x = UtilFunc::Correction::EasingEaseIn(sizeOrigin.x, 0.0f, ratio);
+	size.y = UtilFunc::Correction::EasingEaseIn(sizeOrigin.y, 0.0f, ratio);
+	pObj->SetSize(size);
 }
 
 //**************************************************************************
@@ -274,6 +288,7 @@ void CJudgeStateFunc_DDD::StateAppear()
 
 	// 不透明度設定
 	CJudgeObj* pObj = GetObj();
+	pObj->SetSize(pObj->GetSizeOrigin());
 	pObj->SetAlpha(stateTime / Judge_DDD::TIME_APPEAR);
 }
 
