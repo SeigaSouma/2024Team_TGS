@@ -25,6 +25,7 @@ namespace
 
 }
 CCourseManager* CCourseManager::m_ThisPtr = nullptr;	// 自身のポインタ
+const float CCourseManager::m_fBlockLength = 2000.0f;	// ブロックの長さ
 
 //==========================================================================
 // コンストラクタ
@@ -227,6 +228,9 @@ void CCourseManager::Load()
 
 		i++;
 	}
+
+	// CCourseManager::GetBlockLength() * i
+
 
 	//この中で障害物、チェックポイント
 
