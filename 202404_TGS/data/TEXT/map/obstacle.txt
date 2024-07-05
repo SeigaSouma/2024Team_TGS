@@ -11,6 +11,8 @@ TEXT_FILENAME = data\\TEXT\\mapobstacle\\washing\\setup.txt		# [6]
 TEXT_FILENAME = data\\TEXT\\mapobstacle\\woodleaf\\setup.txt		# [7]
 TEXT_FILENAME = data\\TEXT\\mapobstacle\\ship\\setup.txt		# [8]
 TEXT_FILENAME = data\\TEXT\\mapobstacle\\torie\\setup.txt		# [9]
+TEXT_FILENAME = data\\TEXT\\mapobstacle\\kinobridg\\setup.txt		# [10]
+TEXT_FILENAME = data\\TEXT\\mapobstacle\\waterfance\\setup.txt		# [11]
 
 #------------------------------------------------------------------------------
  ƒ‚ƒfƒ‹‚Ì”z’u
