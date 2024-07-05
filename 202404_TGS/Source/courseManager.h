@@ -50,6 +50,7 @@ public:
 	//=============================
 	static CCourseManager* Create();	// 生成
 	static CCourseManager* GetInstance() { return m_ThisPtr; }	// インスタンス取得
+	static const float GetBlockLength() { return m_fBlockLength; }	// ブロックの長さ取得
 private:
 
 	//=============================
@@ -57,6 +58,7 @@ private:
 	//=============================
 	std::vector<std::vector<MyLib::Vector3>> m_vecAllSegmentPos;	// 全ての起点の位置
 	static CCourseManager* m_ThisPtr;		// 自身のポインタ
+	static const float m_fBlockLength;	// ブロックの長さ
 };
 
 

@@ -156,6 +156,8 @@ void CEdit_Course::ChangeEditCourse()
 		std::vector<MyLib::Vector3> vecpos = pCourceManager->GetSegmentPos(m_nCourseEditIdx);
 		pCourse->SetVecPosition(vecpos);
 		pCourse->ReCreateVtx();
+
+		m_nCheckPointEditIdx = 0;	// チェックポイントのインデックスリセット
 	}
 }
 
@@ -178,11 +180,13 @@ void CEdit_Course::TransCheckPoint()
 		CListManager<CCheckpoint> checkpointList = CMapBlock::GetList().GetData(m_nCourseEditIdx)->GetCheckpointList();
 		int checkpointSize = checkpointList.GetNumAll() - 1;
 
-		if (ImGui::SliderInt("Course Edit Idx", &m_nCheckPointEditIdx, 0, checkpointSize))
+		if (ImGui::SliderInt("Checkpoint Edit Idx", &m_nCheckPointEditIdx, 0, checkpointSize))
 		{
 
 		}
 
+		CCheckpoint* pCheckPoint = checkpointList.GetData(m_nCheckPointEditIdx);
+		//ImGui::DragFloat("x", &editpos.x, POS_MOVE, 0.0f, 0.0f, "%.2f");
 
 	}
 }
