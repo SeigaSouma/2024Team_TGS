@@ -42,7 +42,8 @@ private:
 	};
 
 	// メンバ関数
-	void FileControl();		// ファイル操作
+	void FileControl();			// ファイル操作
+	void TransCheckPoint();		// 
 	void ChangeEditCourse();	// 編集するコース変更
 	void SelectLine();		// ライン選択
 	void DragLine();		// ライン掴み

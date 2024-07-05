@@ -12,6 +12,7 @@
 #include "map_obstacle.h"
 #include "camera.h"
 #include "spline.h"
+#include "map_block.h"
 
 //==========================================================================
 // ’è”’è‹`
