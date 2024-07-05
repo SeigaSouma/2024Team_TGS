@@ -293,7 +293,15 @@ void CMapBlock::ObstacleLoad(std::ifstream* pFile)
 //==========================================================================
 // 配置位置設定
 //==========================================================================
-void CMapBlock::Set(int nIdx, const MyLib::Vector3& startpos)
+void CMapBlock::Set(const MyLib::Vector3& startpos)
 {
+	// オブジェクトの再配置
+	std::list<CMap_Obstacle*>::iterator itr = m_ObstacleList.GetEnd();
+	CMap_Obstacle* pObj = nullptr;
 
+	while (m_ObstacleList.ListLoop(itr))
+	{
+		pObj = (*itr);
+		pObj->SetPosition(pObj->GetPosition() + startpos);
+	}
 }
