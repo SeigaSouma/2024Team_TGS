@@ -150,8 +150,8 @@ void CJudgeStateFunc_BBB::StateAppear()
 	float ratio = stateTime / Judge_BBB::TIME_APPEAR;
 	D3DXVECTOR2 size = pObj->GetSize();
 	D3DXVECTOR2 sizeOrigin = pObj->GetSizeOrigin();
-	size.x = UtilFunc::Correction::EasingEaseIn(0.0f, sizeOrigin.x * 1.6f, ratio);
-	size.y = UtilFunc::Correction::EasingEaseIn(0.0f, sizeOrigin.y * 1.6f, ratio);
+	size.x = UtilFunc::Correction::EasingEaseIn(0.0f, sizeOrigin.x, ratio);
+	size.y = UtilFunc::Correction::EasingEaseIn(0.0f, sizeOrigin.y, ratio);
 	pObj->SetSize(size);
 }
 
@@ -186,8 +186,13 @@ void CJudgeStateFunc_BBB::StateFadeOut()
 		return;
 	}
 
-	// 不透明度設定
-	pObj->SetAlpha(1.0f - stateTime / Judge_BBB::TIME_FADEOUT);
+	// サイズ設定
+	float ratio = stateTime / Judge_BBB::TIME_FADEOUT;
+	D3DXVECTOR2 size = pObj->GetSize();
+	D3DXVECTOR2 sizeOrigin = pObj->GetSizeOrigin();
+	size.x = UtilFunc::Correction::EasingEaseIn(sizeOrigin.x, 0.0f, ratio);
+	size.y = UtilFunc::Correction::EasingEaseIn(sizeOrigin.y, 0.0f, ratio);
+	pObj->SetSize(size);
 }
 
 //**************************************************************************
