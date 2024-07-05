@@ -288,6 +288,7 @@ void CJudgeStateFunc_DDD::StateAppear()
 
 	// •s“§–¾“xÝ’è
 	CJudgeObj* pObj = GetObj();
+	pObj->SetSize(pObj->GetSizeOrigin());
 	pObj->SetAlpha(stateTime / Judge_DDD::TIME_APPEAR);
 }
 
