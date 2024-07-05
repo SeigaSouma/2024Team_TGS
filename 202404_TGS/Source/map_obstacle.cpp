@@ -147,8 +147,6 @@ void CMap_Obstacle::Update()
 		box->SetPosition(collider.worldmtx.GetWorldPosition());
 		box->SetRotation(GetRotation());
 		box->SetAABB(MyLib::AABB(collider.vtxMin, collider.vtxMax), GetScale().x);
-	/*	collider.vtxMin = box->GetAABB().vtxMin;
-		collider.vtxMax = box->GetAABB().vtxMax;*/
 		i++;
 	}
 

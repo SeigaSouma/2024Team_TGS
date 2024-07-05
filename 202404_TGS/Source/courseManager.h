@@ -41,6 +41,7 @@ public:
 	std::vector<MyLib::Vector3> GetSegmentPos(int idx) { return m_vecAllSegmentPos[idx]; }
 	void SetSegmentPos(const std::vector<std::vector<MyLib::Vector3>>& vec) { m_vecAllSegmentPos = vec; }
 	void SetSegmentPos(const std::vector<MyLib::Vector3>& vec, int idx) { m_vecAllSegmentPos[idx] = vec; }
+	int GetSegmentSize() { return static_cast<int>(m_vecAllSegmentPos.size()); }	// 基点のサイズ
 
 	//=============================
 	// 静的関数

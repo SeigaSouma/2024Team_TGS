@@ -45,6 +45,7 @@
 
 // 使用クラス
 #include "playercontrol.h"
+#include "glassclush.h"
 
 //==========================================================================
 // 定数定義
@@ -1778,6 +1779,7 @@ void CPlayer::ScreenReset()
 	// モーションをリセットする
 	GetMotion()->ToggleFinish(true);
 	GetMotion()->Set(MOTION::MOTION_WALK, false);
+	CGlassclush::Kill();
 }
 
 //==========================================================================

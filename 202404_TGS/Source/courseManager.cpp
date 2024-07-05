@@ -12,6 +12,7 @@
 #include "waterfield.h"
 #include "stonewall.h"
 #include "stonewall_front.h"
+#include "map_block.h"
 
 //==========================================================================
 // 定数定義
@@ -116,11 +117,10 @@ void CCourseManager::Save()
 	{
 		data.erase(data.begin());
 		data.pop_back();
+
+		// データをバイナリファイルに書き出す
+		File.write(reinterpret_cast<char*>(data.data()), data.size() * sizeof(MyLib::Vector3));
 	}
-
-
-	// データをバイナリファイルに書き出す
-	File.write(reinterpret_cast<char*>(savedata.data()), savedata.size() * sizeof(MyLib::Vector3));
 
 	// ファイルを閉じる
 	File.close();
@@ -139,6 +139,16 @@ void CCourseManager::Load()
 	std::ifstream File(FILENAME, std::ios::binary);
 	if (!File.is_open()) {
 		// 例外処理
+
+		m_vecAllSegmentPos.emplace_back();
+
+		m_vecAllSegmentPos[0].push_back({ 0.0f, 0.0f, 0.0f });
+		m_vecAllSegmentPos[0].push_back({ 0.0f, 0.0f, 0.0f });
+		m_vecAllSegmentPos[0].push_back({ 0.0f, 0.0f, 500.0f });
+		m_vecAllSegmentPos[0].push_back({ 0.0f, 0.0f, 1000.0f });
+		m_vecAllSegmentPos[0].push_back({ 0.0f, 0.0f, 1800.0f });
+		m_vecAllSegmentPos[0].push_back({ 0.0f, 0.0f, 1800.0f });
+		Save();
 		return;
 	}
 
@@ -154,10 +164,12 @@ void CCourseManager::Load()
 	size_t numVectors = fileSize / structSize;
 
 	// ベクトルの配列を用意
-	m_vecAllSegmentPos.resize(numVectors);
+	m_vecAllSegmentPos.clear();
+	m_vecAllSegmentPos.emplace_back(std::vector<MyLib::Vector3>(numVectors));
+
 
 	// ファイルからデータを読み込む
-	File.read(reinterpret_cast<char*>(m_vecAllSegmentPos.data()), fileSize);
+	File.read(reinterpret_cast<char*>(m_vecAllSegmentPos[0].data()), fileSize);
 
 	// ファイルを閉じる
 	File.close();
@@ -167,7 +179,7 @@ void CCourseManager::Load()
 	//=============================
 	// ランダム選出
 	//=============================
-	int segmentSize = static_cast<int>(m_vecAllSegmentPos.size());
+	int segmentSize = static_cast<int>(m_vecAllSegmentPos.size()) - 1;
 	
 	std::vector<int> randIdx;
 	for (int i = 0; i < NUM_CHUNK; i++)
@@ -191,8 +203,14 @@ void CCourseManager::Load()
 
 	// ランダム選出されたブロックに付随する、チェックポイント、障害物の生成
 	// Blockの読み込み(障害物、チェックポイント)
+	CMapBlock::Create();
 
-	// pBlock->Set(0, start位置);
+	int i = 0;
+	for (const auto& pos : segmentpos)
+	{
+		// pBlock->Set(i, pos[0]);
+		i++;
+	}
 	//この中で障害物、チェックポイント
 
 
