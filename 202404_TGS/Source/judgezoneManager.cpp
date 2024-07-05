@@ -106,7 +106,9 @@ void CJudgeZoneManager::Check(float progress)
 			else if (progress > zone.end)
 			{//I—¹i”»’èj
 				CJudge::JUDGE judge = (*itr)->Judge();	//‚±‚±‚É”»’è‚ª“ü‚Á‚Ä‚é
-				CJudgeObj::Create(MyLib::Vector3(400.0f, 100.0f, 0.0f), judge);
+				CJudgeObj* pObj	= CJudgeObj::Create(MyLib::Vector3(400.0f, 100.0f, 0.0f), judge);
+				pObj->SetSize(D3DXVECTOR2(256.0f, 72.0f));
+				pObj->SetSizeOrigin(D3DXVECTOR2(192.0f, 54.0f));
 
 				(*itr)->Uninit();
 			}
