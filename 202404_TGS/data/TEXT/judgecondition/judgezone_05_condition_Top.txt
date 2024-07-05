@@ -1,6 +1,6 @@
 #====================================================================================================
 #
-# 判定条件スクリプトファイル [temphogehoge_condition_Under.txt]
+# 判定条件スクリプトファイル [judgezone_05_condition_Top.txt]
 # Author : エディタ書き出し
 #
 #====================================================================================================
@@ -18,8 +18,8 @@ CONDITIONSET
 TYPE = 0
 JUDGE_AAA = -1
 JUDGE_BBB = -1
-JUDGE_CCC = -1
-JUDGE_DDD = 1
+JUDGE_CCC = 1
+JUDGE_DDD = -1
 END_CONDITIONSET
 
 END_SCRIPT		# この行は絶対消さないこと！
