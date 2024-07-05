@@ -293,8 +293,21 @@ void CMapBlock::ObstacleLoad(std::ifstream* pFile)
 //==========================================================================
 // 配置位置設定
 //==========================================================================
-void CMapBlock::Set(const MyLib::Vector3& startpos)
+void CMapBlock::Set(const MyLib::Vector3& startpos, float startlength)
 {
+	// チェックポイントの再配置
+	{
+		std::list<CCheckpoint*>::iterator itr = m_CheckpointList.GetEnd();
+		CCheckpoint* pObj = nullptr;
+
+		while (m_CheckpointList.ListLoop(itr))
+		{
+			pObj = (*itr);
+			pObj->SetLength(pObj->GetLength() + startlength);
+		}
+	}
+
+
 	// オブジェクトの再配置
 	std::list<CMap_Obstacle*>::iterator itr = m_ObstacleList.GetEnd();
 	CMap_Obstacle* pObj = nullptr;
