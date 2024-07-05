@@ -289,3 +289,11 @@ void CMapBlock::ObstacleLoad(std::ifstream* pFile)
 		m_ObstacleList.Regist(pObj);
 	}
 }
+
+//==========================================================================
+// îzíuà íuê›íË
+//==========================================================================
+void CMapBlock::Set(int nIdx, const MyLib::Vector3& startpos)
+{
+
+}
