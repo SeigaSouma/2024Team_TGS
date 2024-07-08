@@ -11,6 +11,7 @@
 #include "game.h"
 #include "spline.h"
 #include "course.h"
+#include "timer.h"
 
 //==========================================================================
 // 定数定義
@@ -35,6 +36,8 @@ CCheckpoint::CCheckpoint(int nPriority) : CObjectX(nPriority)
 	// 値のクリア
 	m_fStateTime = 0.0f;	// 状態カウンター
 	m_fLength = 0.0f;
+	m_fPassedTime = 0.0f;
+	m_bIsPassed = false;
 }
 
 //==========================================================================
@@ -127,6 +130,12 @@ void CCheckpoint::Kill()
 //==========================================================================
 void CCheckpoint::Update()
 {
+	// 通過済みなら処理しない
+	if (m_bIsPassed)
+	{
+		return;
+	}
+
 	// 位置情報取得
 	float playerlen = 0.0f;
 
@@ -144,7 +153,12 @@ void CCheckpoint::Update()
 
 		if (m_nSaveID < m_MyIndex)
 		{
+			// ID保存
 			m_nSaveID = m_MyIndex;
+
+			// 通過した時間を保存
+			m_fPassedTime = CTimer::GetInstance()->GetTime();
+			m_bIsPassed = true;
 		}
 	}
 }
