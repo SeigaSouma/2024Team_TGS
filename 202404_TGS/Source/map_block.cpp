@@ -273,7 +273,7 @@ void CMapBlockInfo::Load(std::ifstream* pFile)
 			lineStream >>
 				hoge >>
 				hoge >>	// 
-				m_nLevel;	// ”z’u•¨‚Ìí—Ş
+				m_nLevel;	// “ïˆÕ“x‚Ìİ’è
 
 			continue;
 		}
