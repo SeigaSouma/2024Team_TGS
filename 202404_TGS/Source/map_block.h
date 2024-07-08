@@ -17,6 +17,36 @@ class CMap_Obstacle;
 //==========================================================================
 // クラス定義
 //==========================================================================
+// マップブロック配置情報まとめクラス
+class CMapBlockInfo
+{
+public:
+	// 構造体情報
+	struct SObsacleInfo
+	{
+		MyLib::Vector3 pos;		// 座標
+		MyLib::Vector3 rot;		// 向き
+		MyLib::Vector3 scale;	// スケール
+		int nType;				// モデル種類
+
+		// コンストラクタ
+		SObsacleInfo() : pos(0.0f), rot(0.0f), scale(1.0f), nType(0) {}
+	};
+
+	HRESULT Init();
+	void Uninit();
+	void Load(std::ifstream* pFile);	// ロード
+	void ObstacleLoad(std::ifstream* pFile); // 障害物読み込み
+	std::vector<SObsacleInfo> GetObstacleInfo() { return m_ObstacleList; }
+	std::vector<float> GetCheckpointInfo() { return m_CheckpointList; }
+
+private:
+
+	// 配置情報リスト
+	std::vector<SObsacleInfo> m_ObstacleList;	// 障害物
+	std::vector<float> m_CheckpointList;	// チェックポイント
+};
+
 // マップブロック管理クラス
 class CMapBlock
 {
@@ -35,7 +65,7 @@ public:
 	// 入出力
 	void Save();	// セーブ
 	
-	void Set(const MyLib::Vector3& startpos, float startlength);
+	void Set(const int Idx, const MyLib::Vector3& startpos, float startlength);
 	CListManager<CMap_Obstacle> GetObstacleList() { return m_ObstacleList; }
 	CListManager<CCheckpoint> GetCheckpointList() { return m_CheckpointList; }
 
@@ -43,7 +73,7 @@ public:
 	//=============================
 	// 静的関数
 	//=============================
-	static CListManager<CMapBlock>* Create();	// 生成
+	static CListManager<CMapBlockInfo>* Load();	// 読み込み
 	static void Kill();	// 開放
 	static CListManager<CMapBlock> GetList() { return m_List; }
 	
@@ -52,13 +82,12 @@ private:
 	//=============================
 	// メンバ関数
 	//=============================
-	void Load(std::ifstream* pFile);	// ロード
-	void ObstacleLoad(std::ifstream* pFile); // 障害物読み込み
 
 	//=============================
 	// メンバ変数
 	//=============================
 	static CListManager<CMapBlock> m_List;	// リスト
+	static CListManager<CMapBlockInfo> m_InfoList;	// 配置情報リスト
 
 	// 配置情報リスト
 	CListManager<CMap_Obstacle> m_ObstacleList = {};	// 障害物
