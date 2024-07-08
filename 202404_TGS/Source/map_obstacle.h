@@ -18,6 +18,13 @@
 // マップの障害物クラス
 class CMap_Obstacle : public CObjectX
 {
+private:
+
+	enum T
+	{
+		SAKANA = 12,
+	};
+
 public:
 
 	CMap_Obstacle(int nPriority = 5, 
@@ -44,7 +51,7 @@ public:
 	//=============================
 	// 静的関数
 	//=============================
-	static CMap_Obstacle *Create(const CMap_ObstacleManager::SObstacleInfo& info);	// 生成処理
+	static CMap_Obstacle *Create(const CMap_ObstacleManager::SObstacleInfo& info, const bool bChange = true);	// 生成処理
 	static CListManager<CMap_Obstacle> GetListObj() { return m_List; }				// リスト取得
 
 private:
