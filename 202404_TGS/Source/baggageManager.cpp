@@ -123,6 +123,7 @@ void CBaggageManager::Save()
 		File << "# WEIGHT : 重さ" << std::endl;
 		File << "# WIDTH : 振れ幅" << std::endl;
 		File << "# CYCLE : 周期（ラジアン単位）" << std::endl;
+		File << "# LIFE : 体力" << std::endl;
 		File << TEXT_LINE << std::endl;
 
 		// 情報設定
@@ -133,6 +134,7 @@ void CBaggageManager::Save()
 			File << "WEIGHT = " << info.weight << std::endl;
 			File << "WIDTH = " << info.width << std::endl;
 			File << "CYCLE = " << info.cycle << std::endl;
+			File << "LIFE = " << info.life << std::endl;
 			File << "END_BAGGAGESET" << std::endl;
 			File << "\n" << std::endl;
 		}
@@ -222,6 +224,18 @@ void CBaggageManager::Load()
 							hoge >>
 							hoge >>		// ＝
 							info.cycle;	// 周期
+					}
+					else if (line.find("LIFE") != std::string::npos)
+					{// LIFEで体力
+
+						// ストリーム作成
+						std::istringstream lineStream(line);
+
+						// 情報渡す
+						lineStream >>
+							hoge >>
+							hoge >>		// ＝
+							info.life;	// 周期
 					}
 				}
 

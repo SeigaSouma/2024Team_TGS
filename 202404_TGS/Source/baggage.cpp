@@ -80,6 +80,7 @@ CBaggage::CBaggage(int nPriority) : CObjectQuaternion(nPriority)
 	m_velorot = MyLib::Vector3(0.0f, 0.0f, 0.0f);
 	m_baggageInfo = {};
 	m_fDeviation = 0.0f;
+	m_nLife = 0;
 }
 
 //==========================================================================
@@ -131,6 +132,7 @@ HRESULT CBaggage::Init()
 
 	// パラメータ設定
 	m_fWeight = 1.8f;
+	m_nLife = m_baggageInfo.life;
 
 	CreateCollisionBox();
 	SetState(CObjectX::STATE::STATE_EDIT);
@@ -280,6 +282,17 @@ void CBaggage::StateNone()
 	if (Hit())
 	{
 		m_velorot.x += ROLL_FSTSPD;	// 衝突したらロール軸に回転速度を与える
+		m_nLife--;
+
+		if (m_nLife <= 0)
+		{
+			// 死亡状態
+			m_state = STATE::STATE_DEAD;
+
+			// 吹っ飛びスタート地点
+			m_posAwayStart = GetPosition();
+			SetForce(0.0f);
+		}
 	}
 
 	m_fStateTimer = 0.0f;
@@ -524,4 +537,5 @@ void CBaggage::Reset()
 	m_fDeviation = 0.0f;
 	m_fStateTimer = 0.0f;
 	m_state = STATE::STATE_NONE;
+	m_nLife = m_baggageInfo.life;
 }
