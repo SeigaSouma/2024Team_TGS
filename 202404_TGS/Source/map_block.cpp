@@ -193,6 +193,22 @@ void CMapBlock::Set(const int Idx, const MyLib::Vector3& startpos, float startle
 }
 
 //==========================================================================
+// コンストラクタ
+//==========================================================================
+CMapBlockInfo::CMapBlockInfo()
+{
+	m_nLevel = 0;
+}
+
+//==========================================================================
+// デストラクタ
+//==========================================================================
+CMapBlockInfo::~CMapBlockInfo()
+{
+
+}
+
+//==========================================================================
 // 初期化処理
 //==========================================================================
 HRESULT CMapBlockInfo::Init()
@@ -243,6 +259,21 @@ void CMapBlockInfo::Load(std::ifstream* pFile)
 
 			// 生成して管理
 			m_CheckpointList.push_back(length);
+
+			continue;
+		}
+
+		if (line.find("LEVELSET") != std::string::npos)
+		{// 難易度設定
+
+			// ストリーム作成
+			std::istringstream lineStream(line);
+
+			// 情報渡す
+			lineStream >>
+				hoge >>
+				hoge >>	// ＝
+				m_nLevel;	// 配置物の種類
 
 			continue;
 		}

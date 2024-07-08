@@ -33,6 +33,9 @@ public:
 		SObsacleInfo() : pos(0.0f), rot(0.0f), scale(1.0f), nType(0) {}
 	};
 
+	CMapBlockInfo();
+	~CMapBlockInfo();
+
 	HRESULT Init();
 	void Uninit();
 	void Load(std::ifstream* pFile);	// ロード
@@ -45,6 +48,7 @@ private:
 	// 配置情報リスト
 	std::vector<SObsacleInfo> m_ObstacleList;	// 障害物
 	std::vector<float> m_CheckpointList;	// チェックポイント
+	int m_nLevel;
 };
 
 // マップブロック管理クラス
