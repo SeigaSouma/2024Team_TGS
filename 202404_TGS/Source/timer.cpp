@@ -154,27 +154,7 @@ void CTimer::Update()
 	m_fTime += CManager::GetInstance()->GetDeltaTime();
 
 	// タイマーを分、秒、ミリ秒に変換
-	int time[3];
-	time[2] = static_cast<int>(m_fTime / 60);
-	time[1] = static_cast<int>(m_fTime) % 60;
-	time[0] = static_cast<int>((m_fTime - static_cast<int>(m_fTime)) * 1000);
-	time[0] /= 10;
-
-	for (int i = 0; i < 3; i++)
-	{
-		if (m_pClearTime[i] == nullptr){
-			continue;
-		}
-
-		// 値の設定
-		m_pClearTime[i]->SetValue(time[i]);
-
-		// 位置設定
-		MyLib::Vector3 pos = m_pos;
-		pos.x -= DSTANCE_TIMER * i;
-		m_pClearTime[i]->SetPosition(pos);
-	}
-
+	ApplyTimer();
 }
 
 //==========================================================================
@@ -195,9 +175,46 @@ void CTimer::StateGoal()
 }
 
 //==========================================================================
+// タイマー反映
+//==========================================================================
+void CTimer::ApplyTimer()
+{
+	// タイマーを分、秒、ミリ秒に変換
+	int time[3];
+	time[2] = static_cast<int>(m_fTime / 60);
+	time[1] = static_cast<int>(m_fTime) % 60;
+	time[0] = static_cast<int>((m_fTime - static_cast<int>(m_fTime)) * 1000);
+	time[0] /= 10;
+
+	for (int i = 0; i < 3; i++)
+	{
+		if (m_pClearTime[i] == nullptr) {
+			continue;
+		}
+
+		// 値の設定
+		m_pClearTime[i]->SetValue(time[i]);
+
+		// 位置設定
+		MyLib::Vector3 pos = m_pos;
+		pos.x -= DSTANCE_TIMER * i;
+		m_pClearTime[i]->SetPosition(pos);
+	}
+}
+
+//==========================================================================
 // 描画処理
 //==========================================================================
 void CTimer::Draw()
 {
 
+}
+
+//==========================================================================
+// タイマー設定と反映
+//==========================================================================
+void CTimer::SetTime(const float time)
+{
+	m_fTime = time;
+	ApplyTimer();
 }

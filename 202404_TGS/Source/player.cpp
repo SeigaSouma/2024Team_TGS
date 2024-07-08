@@ -953,10 +953,14 @@ void CPlayer::ReaspawnCheckPoint()
 		// 位置取得
 		pos = pCheckPoint->GetPosition();
 		fLength = pCheckPoint->GetLength();
+
+		// タイマー戻す
+		CTimer::GetInstance()->SetTime(pCheckPoint->GetPassedTime());
 	}
 	else // チェックポイント未通過
 	{
 		pos = MySpline::GetSplinePosition_NonLoop(CGame::GetInstance()->GetCourse()->GetVecPosition(), 0);
+		CTimer::GetInstance()->SetTime(0.0f);
 	}
 
 	SetPosition(pos);
