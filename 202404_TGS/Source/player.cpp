@@ -1780,6 +1780,9 @@ void CPlayer::ScreenReset()
 	GetMotion()->ToggleFinish(true);
 	GetMotion()->Set(MOTION::MOTION_WALK, false);
 	CGlassclush::Kill();
+
+	// ‰×•¨ƒŠƒZƒbƒg
+	m_pControlBaggage->Reset(this, m_pBaggage);
 }
 
 //==========================================================================
