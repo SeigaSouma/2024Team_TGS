@@ -38,12 +38,15 @@ public:
 	void Save();	// セーブ
 	void Load();	// ロード
 
+	// 基点情報
 	std::vector<std::vector<MyLib::Vector3>> GetSegmentPos() { return m_vecAllSegmentPos; }
 	std::vector<MyLib::Vector3> GetSegmentPos(int idx) { return m_vecAllSegmentPos[idx]; }
 	void SetSegmentPos(const std::vector<std::vector<MyLib::Vector3>>& vec) { m_vecAllSegmentPos = vec; }
 	void SetSegmentPos(const std::vector<MyLib::Vector3>& vec, int idx) { m_vecAllSegmentPos[idx] = vec; }
 	int GetSegmentSize() { return static_cast<int>(m_vecAllSegmentPos.size()); }	// 基点のサイズ
-
+	void AddSegmentPos();	// 基点追加
+	void SubSegmentPos();	// 基点削除
+	void SubSegmentPos(int idx);	// 基点削除
 
 	//=============================
 	// 静的関数
