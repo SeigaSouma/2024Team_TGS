@@ -596,7 +596,7 @@
     <ClCompile Include="Source\map_block.cpp">
       <Filter>map\block</Filter>
     </ClCompile>
-    <ClCompile Include="Source\obstacle_fish.cpp">
+    <ClCompile Include="Source\obstacle_fisharch.cpp">
       <Filter>map\obstacle</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1087,7 +1087,7 @@
     <ClInclude Include="Source\map_block.h">
       <Filter>map\block</Filter>
     </ClInclude>
-    <ClInclude Include="Source\obstacle_fish.h">
+    <ClInclude Include="Source\obstacle_fisharch.h">
       <Filter>map\obstacle</Filter>
     </ClInclude>
   </ItemGroup>
