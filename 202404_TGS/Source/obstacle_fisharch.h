@@ -33,7 +33,7 @@ public:
 	//=============================
 	// ÉÅÉìÉoä÷êî
 	//=============================
-	CObstacle_FishArch* Create(const CMap_ObstacleManager::SObstacleInfo& info);
+	static CObstacle_FishArch* Create(const CMap_ObstacleManager::SObstacleInfo& info);
 	
 
 	//=============================

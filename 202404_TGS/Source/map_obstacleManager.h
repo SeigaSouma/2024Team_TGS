@@ -38,8 +38,9 @@ public:
 		std::string modelFile;		// モデルファイル
 		std::string colliderFile;	// コライダーファイル
 		std::vector<MyLib::Collider_BOX> boxcolliders;	// BOXコライダー
+		int type;					// 種類
 		
-		SObstacleInfo() : setup(), modelFile(), colliderFile(), boxcolliders() {}
+		SObstacleInfo() : setup(), modelFile(), colliderFile(), boxcolliders(), type(0) {}
 
 		// JSONからの読み込み
 		void from_json(const json& j)

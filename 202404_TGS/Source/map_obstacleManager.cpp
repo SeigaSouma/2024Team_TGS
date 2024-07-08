@@ -526,6 +526,7 @@ void CMap_ObstacleManager::LoadInfo(const std::string& file)
 	}
 
 	// î•ñ’Ç‰Á
+	obstacleInfo.type = m_ObstacleInfo.size();
 	m_ObstacleInfo.push_back(obstacleInfo);
 
 	// ƒtƒ@ƒCƒ‹‚ğ•Â‚¶‚é
