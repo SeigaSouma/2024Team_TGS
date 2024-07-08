@@ -23,6 +23,7 @@ namespace
 // 静的メンバ変数宣言
 //==========================================================================
 CListManager<CMapBlock> CMapBlock::m_List = {};
+CListManager<CMapBlockInfo> CMapBlock::m_InfoList = {};
 
 //==========================================================================
 // コンストラクタ
@@ -43,16 +44,16 @@ CMapBlock::~CMapBlock()
 //==========================================================================
 // 生成処理
 //==========================================================================
-CListManager<CMapBlock>* CMapBlock::Create()
+CListManager<CMapBlockInfo>* CMapBlock::Load()
 {
-	if (m_List.GetNumAll() > 0) {
-		return &m_List;
+	if (m_InfoList.GetNumAll() > 0) {
+		return &m_InfoList;
 	}
 
 	// ファイルを開く
 	std::ifstream File(FILENAME);
 	if (!File.is_open()) {
-		return &m_List;
+		return &m_InfoList;
 	}
 
 	// コメント用
@@ -76,9 +77,10 @@ CListManager<CMapBlock>* CMapBlock::Create()
 		{// MODELSETで配置情報読み込み
 
 			// 生成してリストの管理下に
-			CMapBlock* pBlock = new CMapBlock;
+			CMapBlockInfo* pBlock = new CMapBlockInfo;
+			pBlock->Init();
 			pBlock->Load(&File);
-			m_List.Regist(pBlock);
+			m_InfoList.Regist(pBlock);
 		}
 
 		if (line.find("END_SCRIPT") != std::string::npos)
@@ -90,7 +92,7 @@ CListManager<CMapBlock>* CMapBlock::Create()
 	// ファイルを閉じる
 	File.close();
 
-	return &m_List;
+	return &m_InfoList;
 }
 
 //==========================================================================
@@ -98,6 +100,9 @@ CListManager<CMapBlock>* CMapBlock::Create()
 //==========================================================================
 HRESULT CMapBlock::Init()
 {
+	m_InfoList.Init();
+	m_CheckpointList.Init();
+
 	return S_OK;
 }
 
@@ -156,9 +161,61 @@ void CMapBlock::Save()
 }
 
 //==========================================================================
+// 配置位置設定
+//==========================================================================
+void CMapBlock::Set(const int Idx, const MyLib::Vector3& startpos, float startlength)
+{
+	CMapBlockInfo* pInfo = m_InfoList.GetData(Idx);
+
+	// オブジェクトの配置
+	{
+		CMap_ObstacleManager* pManager = CMap_ObstacleManager::GetInstance();
+
+		for (const auto& it : pInfo->GetObstacleInfo())
+		{
+			CMap_Obstacle* pObj = CMap_Obstacle::Create(pManager->GetObstacleInfo(it.nType));
+			pObj->SetPosition(it.pos + startpos);
+			pObj->SetRotation(it.rot);
+			pObj->SetScale(it.scale);
+		}
+	}
+
+	// チェックポイントの配置
+	{
+		for (const auto& it : pInfo->GetCheckpointInfo())
+		{
+			CCheckpoint* p = CCheckpoint::Create(it + startlength);
+			m_CheckpointList.Regist(p);
+		}
+	}
+
+	m_List.Regist(this);
+}
+
+//==========================================================================
+// 初期化処理
+//==========================================================================
+HRESULT CMapBlockInfo::Init()
+{
+	m_CheckpointList.clear();
+	m_ObstacleList.clear();
+
+	return S_OK;
+}
+
+//==========================================================================
+// 終了処理
+//==========================================================================
+void CMapBlockInfo::Uninit()
+{
+	m_CheckpointList.clear();
+	m_ObstacleList.clear();
+}
+
+//==========================================================================
 // ロード
 //==========================================================================
-void CMapBlock::Load(std::ifstream* pFile)
+void CMapBlockInfo::Load(std::ifstream* pFile)
 {
 	// コメント用
 	std::string hoge;
@@ -185,18 +242,17 @@ void CMapBlock::Load(std::ifstream* pFile)
 				length;	// 配置物の種類
 
 			// 生成して管理
-			CCheckpoint* pCheck = CCheckpoint::Create(length);
-			m_CheckpointList.Regist(pCheck);
+			m_CheckpointList.push_back(length);
 
 			continue;
 		}
 
 		if (line.find("MODELSET") != std::string::npos)
 		{// POSで位置
-			
+
 			// 障害物情報読み込み
 			ObstacleLoad(pFile);
-			
+
 			continue;
 		}
 	}
@@ -205,7 +261,7 @@ void CMapBlock::Load(std::ifstream* pFile)
 //==========================================================================
 // 障害物読み込み
 //==========================================================================
-void CMapBlock::ObstacleLoad(std::ifstream* pFile)
+void CMapBlockInfo::ObstacleLoad(std::ifstream* pFile)
 {
 	// 読み込み情報
 	int type;
@@ -282,39 +338,11 @@ void CMapBlock::ObstacleLoad(std::ifstream* pFile)
 	// 生成
 	if (type < static_cast<int>(pManager->GetObstacleInfo().size()))
 	{
-		CMap_Obstacle* pObj = CMap_Obstacle::Create(pManager->GetObstacleInfo(type));
-		pObj->SetPosition(pos);
-		pObj->SetRotation(rot);
-		pObj->SetScale(scale);
-		m_ObstacleList.Regist(pObj);
-	}
-}
-
-//==========================================================================
-// 配置位置設定
-//==========================================================================
-void CMapBlock::Set(const MyLib::Vector3& startpos, float startlength)
-{
-	// チェックポイントの再配置
-	{
-		std::list<CCheckpoint*>::iterator itr = m_CheckpointList.GetEnd();
-		CCheckpoint* pObj = nullptr;
-
-		while (m_CheckpointList.ListLoop(itr))
-		{
-			pObj = (*itr);
-			pObj->SetLength(pObj->GetLength() + startlength);
-		}
-	}
-
-
-	// オブジェクトの再配置
-	std::list<CMap_Obstacle*>::iterator itr = m_ObstacleList.GetEnd();
-	CMap_Obstacle* pObj = nullptr;
-
-	while (m_ObstacleList.ListLoop(itr))
-	{
-		pObj = (*itr);
-		pObj->SetPosition(pObj->GetPosition() + startpos);
+		SObsacleInfo info;
+		info.pos = pos;
+		info.rot = rot;
+		info.scale = scale;
+		info.nType = type;
+		m_ObstacleList.push_back(info);
 	}
 }

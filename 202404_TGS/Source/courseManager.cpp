@@ -192,6 +192,7 @@ void CCourseManager::Load()
 	// 一本のコースにする
 	std::vector<MyLib::Vector3> segmentpos;	// 基点の位置
 	MyLib::Vector3 start;
+	std::vector<MyLib::Vector3> vecstart;	// 基点の位置
 
 	for (const auto& idx : randIdx)
 	{
@@ -200,6 +201,7 @@ void CCourseManager::Load()
 			segmentpos.push_back(start + pos);
 		}
 		start = segmentpos.back();
+		vecstart.push_back(start);
 	}
 
 	//=============================
@@ -212,20 +214,17 @@ void CCourseManager::Load()
 
 	// ランダム選出されたブロックに付随する、チェックポイント、障害物の生成
 	// Blockの読み込み(障害物、チェックポイント)
-	CMapBlock::Create();
+	CMapBlock::Load();
 
 	// 距離にあわせた配置を行う
-	int i = 0;
-	for (const auto& pos : segmentpos)
+	for (int i = 0; i < NUM_CHUNK; i++)
 	{
-		CMapBlock* pBlock = CMapBlock::GetList().GetData(i);
+		CMapBlock* pBlock = new CMapBlock;
 
 		if (pBlock != nullptr)
 		{
-			pBlock->Set(pos, CCourseManager::GetBlockLength() * i);
+			pBlock->Set(randIdx[i], vecstart[i], CCourseManager::GetBlockLength() * i);
 		}
-
-		i++;
 	}
 
 

@@ -237,7 +237,7 @@ HRESULT CPlayer::Init()
 
 	MyLib::Vector3 pos = GetPosition();
 	m_pBaggage->SetPosition(m_posCylinder);
-	m_pBaggage->SetOriginPosition(m_pBaggage->GetPosition());
+	m_pBaggage->SetOriginPosition(MyLib::Vector3(0.0f, m_posCylinder.y, 0.0f));
 
 	return S_OK;
 }
@@ -504,6 +504,9 @@ void CPlayer::Controll()
 		// モーション取得
 		CMotion* pMotion = GetMotion();
 		pMotion->Set(MOTION_WALK, false);
+		// 荷物リセット
+		m_pBaggage->SetOriginPosition(MyLib::Vector3(0.0f, m_posCylinder.y, 0.0f));
+		m_pControlBaggage->Reset(this, m_pBaggage);
 	}
 
 	// 位置取得
@@ -1780,6 +1783,9 @@ void CPlayer::ScreenReset()
 	GetMotion()->ToggleFinish(true);
 	GetMotion()->Set(MOTION::MOTION_WALK, false);
 	CGlassclush::Kill();
+
+	// 荷物リセット
+	m_pControlBaggage->Reset(this, m_pBaggage);
 }
 
 //==========================================================================

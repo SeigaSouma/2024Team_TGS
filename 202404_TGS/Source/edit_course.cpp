@@ -164,6 +164,27 @@ void CEdit_Course::ChangeEditCourse()
 
 		m_nCheckPointEditIdx = 0;	// チェックポイントのインデックスリセット
 	}
+
+
+	// 総数変更
+	ImGui::AlignTextToFramePadding();
+	ImGui::Text("Change Coolider Num:");
+	ImGui::SameLine();
+	if (ImGui::ArrowButton("##left", ImGuiDir_Left))
+	{
+		pCourceManager;
+	}
+	ImGui::SameLine(0.0f);
+	if (ImGui::ArrowButton("##right", ImGuiDir_Right))
+	{
+		pCourceManager;
+	}
+	ImGui::SameLine();
+
+	// サイズ
+	segmentSize = pCourceManager->GetSegmentSize();
+	ImGui::Text("%d", segmentSize);
+
 }
 
 //==========================================================================

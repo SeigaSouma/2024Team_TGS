@@ -48,8 +48,9 @@ public:
 		float weight;		// 重さ
 		float width;		// ぶれ幅
 		float cycle;		// 周期
+		int life;			// 体力
 
-		SBaggageInfo() : path(""), weight(0.0f), width(0.0f), cycle(0.0f) {}
+		SBaggageInfo() : path(""), weight(0.0f), width(0.0f), cycle(0.0f), life(0) {}
 	};
 
 	CBaggage(int nPriority = 4);
@@ -123,6 +124,7 @@ private:
 	bool m_bHit;				// 障害物衝突判定
 	bool m_bEnd;				// 終了判定
 	SBaggageInfo m_baggageInfo;
+	int m_nLife;				// 体力
 	float m_fDeviation;
 	static CListManager<CBaggage> m_List;	// リスト
 };
