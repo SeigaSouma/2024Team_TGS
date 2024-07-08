@@ -36,7 +36,7 @@ namespace
 	const float DISTANCE_TO_CHUNCK = 3000.0f;	// チャンク同士の間隔
 }
 CCourseManager* CCourseManager::m_ThisPtr = nullptr;	// 自身のポインタ
-const float CCourseManager::m_fBlockLength = 2000.0f;	// ブロックの長さ
+const float CCourseManager::m_fBlockLength = 9000.0f;	// ブロックの長さ
 
 //==========================================================================
 // コンストラクタ

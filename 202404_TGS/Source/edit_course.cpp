@@ -108,13 +108,6 @@ void CEdit_Course::Update()
 	// 最初と最後変形
 	TransformBeginEnd();
 
-	
-	//CCourseManager* pCourceManager = CCourseManager::GetInstance();
-
-	//std::vector<MyLib::Vector3> vecpos = pCourceManager->GetSegmentPos(m_nCourseEditIdx);
-	//TransformBeginEnd(&vecpos);
-	//pCourse->SetVecPosition(vecpos);
-	//pCourceManager->SetSegmentPos(vecpos, m_nCourseEditIdx);
 }
 
 //==========================================================================
@@ -125,20 +118,24 @@ void CEdit_Course::FileControl()
 	CCourse* pCourse = CGame::GetInstance()->GetCourse();
 	if (pCourse == nullptr) return;
 
+	// コースマネージャ取得
+	CCourseManager* pCourceManager = CCourseManager::GetInstance();
+	if (pCourceManager == nullptr) return;
+
 	ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
 	float width = 150.0f;
 	ImGui::SetNextItemWidth(width);
 	if (ImGui::Button("Save"))
 	{
-		pCourse->Save();
+		pCourceManager->Save();
 	}
 	ImGui::SameLine();
 
 	ImGui::SetNextItemWidth(width);
 	if (ImGui::Button("Save_as"))
 	{
-		pCourse->Save();
+		pCourceManager->Save();
 	}
 	ImGui::SameLine();
 
@@ -168,7 +165,6 @@ void CEdit_Course::ChangeEditCourse()
 		std::vector<MyLib::Vector3> vecpos = pCourceManager->GetSegmentPos(m_nCourseEditIdx);
 		pCourse->SetVecPosition(vecpos);
 		pCourse->ReCreateVtx();
-		pCourse->AddPosition(MyLib::Vector3(3500.0f, 0.0f, 0.0f));
 
 		m_nCheckPointEditIdx = 0;	// チェックポイントのインデックスリセット
 	}
@@ -220,10 +216,33 @@ void CEdit_Course::TransCheckPoint()
 		ImGui::SameLine();
 
 
-		// チェックポイントのリスト取得
-		CListManager<CCheckpoint> checkpointList = CMapBlock::GetList().GetData(m_nCourseEditIdx)->GetCheckpointList();
-		int checkpointSize = checkpointList.GetNumAll() - 1;
 
+		// チェックポイントのリスト取得
+		std::vector<float> vecCheckpoint = CMapBlock::GetInfoList().GetData(m_nCourseEditIdx)->GetCheckpointInfo();
+		int checkpointSize = vecCheckpoint.size() - 1;
+
+
+		// 総数変更
+		ImGui::AlignTextToFramePadding();
+		ImGui::Text("Change Coolider Num:");
+		ImGui::SameLine();
+		if (ImGui::ArrowButton("##left", ImGuiDir_Left) &&
+			static_cast<int>(vecCheckpoint.size()) > 1)
+		{
+			vecCheckpoint.pop_back();
+		}
+		ImGui::SameLine(0.0f);
+		if (ImGui::ArrowButton("##right", ImGuiDir_Right))
+		{
+			vecCheckpoint.push_back(0.0f);
+		}
+		ImGui::SameLine();
+
+		// サイズ
+		ImGui::Text("%d", checkpointSize + 1);
+
+
+		// 操作する対象切り替え
 		ImGui::SetNextItemWidth(width);
 		if (ImGui::SliderInt("Checkpoint Edit Idx", &m_nCheckPointEditIdx, 0, checkpointSize))
 		{
@@ -231,11 +250,11 @@ void CEdit_Course::TransCheckPoint()
 		}
 
 		// チェックポイントの情報取得
-		CCheckpoint* pCheckPoint = checkpointList.GetData(m_nCheckPointEditIdx);
-		float length = pCheckPoint->GetLength();
+		//CCheckpoint* pCheckPoint = checkpointList.GetData(m_nCheckPointEditIdx);
+		float length = vecCheckpoint[m_nCheckPointEditIdx];
 
 		ImGui::DragFloat("Length", &length, 1.0f, 0.0f, 0.0f, "%.2f");
-		pCheckPoint->SetLength(length);
+		//pCheckPoint->SetLength(length);
 
 		ImGui::TreePop();
 	}
