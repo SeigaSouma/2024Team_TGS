@@ -42,6 +42,7 @@ public:
 	void Draw();
 
 	float GetTime() { return m_fTime; }	// ŠÔæ“¾
+	void SetTime(const float time);
 	void SetEnableAddTime(bool frag) { m_bAddTime = frag; }	// ŠÔ‰ÁZƒtƒ‰ƒOİ’è
 
 	CTimer::eState GetState() { return m_state; }
@@ -60,6 +61,7 @@ private:
 	//=============================
 	void StateWait();
 	void StateGoal();
+	void ApplyTimer();
 
 	//=============================
 	// ƒƒ“ƒo•Ï”

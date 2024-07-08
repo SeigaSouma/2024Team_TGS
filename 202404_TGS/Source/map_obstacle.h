@@ -35,10 +35,11 @@ public:
 	//=============================
 	// メンバ関数
 	//=============================
-	void Kill();	// 削除
+	virtual void Kill();	// 削除
 	void Save();	// セーブ
 	void Load();	// ロード
 	CMap_ObstacleManager::SObstacleInfo GetObstacleInfo() { return m_ObstacleInfo; }	// 障害物情報取得
+	void SetObstacleInfo(const CMap_ObstacleManager::SObstacleInfo& info) { m_ObstacleInfo = info; }	// 障害物情報設定
 
 	//=============================
 	// 静的関数

@@ -23,9 +23,20 @@ namespace
 	const std::string FILENAME = "data\\TEXT\\map\\chunkdata.bin";
 	const int NUM_CHUNK = 5;	// チャンクの数
 
+	const std::vector<MyLib::Vector3> DEFAULT_SEGMENTPOS =
+	{
+		{ 0.0f, 0.0f, 0.0f },
+		{ 0.0f, 0.0f, 0.0f },
+		{ 2500.0f, 0.0f, 0.0f },
+		{ 5000.0f, 0.0f, 0.0f },
+		{ 7500.0f, 0.0f, 0.0f },
+		{ 9000.0f, 0.0f, 0.0f },
+		{ 9000.0f, 0.0f, 0.0f },
+	};
+	const float DISTANCE_TO_CHUNCK = 3000.0f;	// チャンク同士の間隔
 }
 CCourseManager* CCourseManager::m_ThisPtr = nullptr;	// 自身のポインタ
-const float CCourseManager::m_fBlockLength = 2000.0f;	// ブロックの長さ
+const float CCourseManager::m_fBlockLength = 9000.0f;	// ブロックの長さ
 
 //==========================================================================
 // コンストラクタ
@@ -144,12 +155,10 @@ void CCourseManager::Load()
 
 		m_vecAllSegmentPos.emplace_back();
 
-		m_vecAllSegmentPos[0].push_back({ 0.0f, 0.0f, 0.0f });
-		m_vecAllSegmentPos[0].push_back({ 0.0f, 0.0f, 0.0f });
-		m_vecAllSegmentPos[0].push_back({ 0.0f, 0.0f, 500.0f });
-		m_vecAllSegmentPos[0].push_back({ 0.0f, 0.0f, 1000.0f });
-		m_vecAllSegmentPos[0].push_back({ 0.0f, 0.0f, 1800.0f });
-		m_vecAllSegmentPos[0].push_back({ 0.0f, 0.0f, 1800.0f });
+		m_vecAllSegmentPos[0] = DEFAULT_SEGMENTPOS;
+		m_vecAllSegmentPos[0].insert(m_vecAllSegmentPos[0].begin(), MyLib::Vector3(0.0f, 0.0f, 0.0f));
+		m_vecAllSegmentPos[0].push_back(DEFAULT_SEGMENTPOS.back());
+
 		Save();
 		return;
 	}
@@ -307,3 +316,35 @@ void CCourseManager::Load()
 
 }
 
+//==========================================================================
+// 基点追加
+//==========================================================================
+void CCourseManager::AddSegmentPos()
+{
+	m_vecAllSegmentPos.emplace_back();
+	m_vecAllSegmentPos.back() = DEFAULT_SEGMENTPOS;
+}
+
+//==========================================================================
+// 基点削除
+//==========================================================================
+void CCourseManager::SubSegmentPos()
+{
+	if (static_cast<int>(m_vecAllSegmentPos.size()) < 1) return;
+	m_vecAllSegmentPos.pop_back();
+}
+
+//==========================================================================
+// 基点削除
+//==========================================================================
+void CCourseManager::SubSegmentPos(int idx)
+{
+	if (static_cast<int>(m_vecAllSegmentPos.size()) < 1) return;
+
+	if (static_cast<int>(m_vecAllSegmentPos.size()) <= idx) return;
+
+	std::vector<std::vector<MyLib::Vector3>>::iterator itr = m_vecAllSegmentPos.begin();
+	std::advance(itr, idx);
+	m_vecAllSegmentPos.erase(itr);
+
+}

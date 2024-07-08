@@ -32,6 +32,7 @@ public:
 	void Kill();		// 削除
 	float GetLength() { return m_fLength; }	// 距離取得
 	void SetLength(const float length);	// 距離設定
+	float GetPassedTime() { return m_fPassedTime; }
 
 	//=============================
 	// 静的関数
@@ -57,6 +58,8 @@ private:
 	//=============================
 	float m_fStateTime;				// 状態カウンター
 	float m_fLength;				// 距離
+	float m_fPassedTime;			// 通過したときの時間
+	bool m_bIsPassed;				// 通過したかどうか
 	static CListManager<CCheckpoint> m_List;	// リスト
 
 	static int m_nAll;		// 総数

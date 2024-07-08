@@ -866,6 +866,16 @@ bool CPlayerControlBaggage::EndCheck(CBaggage* pBaggage)
 }
 
 //==========================================================================
+// 初期状態に戻す処理
+//==========================================================================
+void CPlayerControlBaggage::Reset(CPlayer* player, CBaggage* pBaggage)
+{
+	MyLib::Vector3 pos = player->GetPosition();
+	MyLib::Vector3 posBaggageOrigin = pBaggage->GetOriginPosition();
+	pBaggage->SetPosition(MyLib::Vector3(pos.x, posBaggageOrigin.y, pos.z));
+}
+
+//==========================================================================
 // エフェクト停止処理
 //==========================================================================
 void CPlayerControlBaggage::EffectStop()

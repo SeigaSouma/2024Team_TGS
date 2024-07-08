@@ -237,7 +237,7 @@ HRESULT CPlayer::Init()
 
 	MyLib::Vector3 pos = GetPosition();
 	m_pBaggage->SetPosition(m_posCylinder);
-	m_pBaggage->SetOriginPosition(m_pBaggage->GetPosition());
+	m_pBaggage->SetOriginPosition(MyLib::Vector3(0.0f, m_posCylinder.y, 0.0f));
 
 	return S_OK;
 }
@@ -504,6 +504,9 @@ void CPlayer::Controll()
 		// モーション取得
 		CMotion* pMotion = GetMotion();
 		pMotion->Set(MOTION_WALK, false);
+		// 荷物リセット
+		m_pBaggage->SetOriginPosition(MyLib::Vector3(0.0f, m_posCylinder.y, 0.0f));
+		m_pControlBaggage->Reset(this, m_pBaggage);
 	}
 
 	// 位置取得
@@ -950,10 +953,14 @@ void CPlayer::ReaspawnCheckPoint()
 		// 位置取得
 		pos = pCheckPoint->GetPosition();
 		fLength = pCheckPoint->GetLength();
+
+		// タイマー戻す
+		CTimer::GetInstance()->SetTime(pCheckPoint->GetPassedTime());
 	}
 	else // チェックポイント未通過
 	{
 		pos = MySpline::GetSplinePosition_NonLoop(CGame::GetInstance()->GetCourse()->GetVecPosition(), 0);
+		CTimer::GetInstance()->SetTime(0.0f);
 	}
 
 	SetPosition(pos);
@@ -1780,6 +1787,9 @@ void CPlayer::ScreenReset()
 	GetMotion()->ToggleFinish(true);
 	GetMotion()->Set(MOTION::MOTION_WALK, false);
 	CGlassclush::Kill();
+
+	// 荷物リセット
+	m_pControlBaggage->Reset(this, m_pBaggage);
 }
 
 //==========================================================================
