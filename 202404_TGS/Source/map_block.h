@@ -80,7 +80,8 @@ public:
 	static CListManager<CMapBlockInfo>* Load();	// 読み込み
 	static void Kill();	// 開放
 	static CListManager<CMapBlock> GetList() { return m_List; }
-	
+	static CListManager<CMapBlockInfo> GetInfoList() { return m_InfoList; }	// 配置情報リスト取得
+
 private:
 
 	//=============================
