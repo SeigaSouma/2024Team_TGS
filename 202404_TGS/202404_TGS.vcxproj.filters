@@ -114,6 +114,9 @@
     <Filter Include="map\block">
       <UniqueIdentifier>{c87c2e42-68a2-4d0b-8740-3c215e412e7a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="map\obstacle">
+      <UniqueIdentifier>{217adfda-8342-44ff-91fb-d739b9a6849f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\ballast.cpp">
@@ -592,6 +595,9 @@
     </ClCompile>
     <ClCompile Include="Source\map_block.cpp">
       <Filter>map\block</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\obstacle_fisharch.cpp">
+      <Filter>map\obstacle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1080,6 +1086,9 @@
     </ClInclude>
     <ClInclude Include="Source\map_block.h">
       <Filter>map\block</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\obstacle_fisharch.h">
+      <Filter>map\obstacle</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

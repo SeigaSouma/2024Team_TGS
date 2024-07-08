@@ -108,6 +108,13 @@ void CEdit_Course::Update()
 	// 最初と最後変形
 	TransformBeginEnd();
 
+	
+	//CCourseManager* pCourceManager = CCourseManager::GetInstance();
+
+	//std::vector<MyLib::Vector3> vecpos = pCourceManager->GetSegmentPos(m_nCourseEditIdx);
+	//TransformBeginEnd(&vecpos);
+	//pCourse->SetVecPosition(vecpos);
+	//pCourceManager->SetSegmentPos(vecpos, m_nCourseEditIdx);
 }
 
 //==========================================================================
@@ -161,6 +168,7 @@ void CEdit_Course::ChangeEditCourse()
 		std::vector<MyLib::Vector3> vecpos = pCourceManager->GetSegmentPos(m_nCourseEditIdx);
 		pCourse->SetVecPosition(vecpos);
 		pCourse->ReCreateVtx();
+		pCourse->AddPosition(MyLib::Vector3(3500.0f, 0.0f, 0.0f));
 
 		m_nCheckPointEditIdx = 0;	// チェックポイントのインデックスリセット
 	}
@@ -172,12 +180,12 @@ void CEdit_Course::ChangeEditCourse()
 	ImGui::SameLine();
 	if (ImGui::ArrowButton("##left", ImGuiDir_Left))
 	{
-		pCourceManager;
+		pCourceManager->SubSegmentPos();
 	}
 	ImGui::SameLine(0.0f);
 	if (ImGui::ArrowButton("##right", ImGuiDir_Right))
 	{
-		pCourceManager;
+		pCourceManager->AddSegmentPos();
 	}
 	ImGui::SameLine();
 
@@ -355,8 +363,9 @@ void CEdit_Course::SelectLine()
 		int i = 0;
 		for (const auto& vtxpos : vecSegmentPos)
 		{
-			if (i == 0 || i == vecSegmentPos.size() - 1)
-			{
+			if (i == 0 || i == 1 ||
+				i == vecSegmentPos.size() - 2 || i == vecSegmentPos.size() - 1)
+			{// 最初と最後は選べない
 				i++;
 				continue;
 			}
@@ -405,9 +414,19 @@ void CEdit_Course::DragLine()
 	if (!m_bEdit) return;
 	if (m_bSetMode) return;	// セットモードは終わり
 
+	// コースマネージャ取得
+	CCourseManager* pCourceManager = CCourseManager::GetInstance();
+	if (pCourceManager == nullptr) return;
+
+
+	// セグメント位置
+	std::vector<MyLib::Vector3> vecsegmentPos = pCourceManager->GetSegmentPos(m_nCourseEditIdx);
+
 	// 辺情報取得
-	MyLib::Vector3 segmentPos = pCourse->GetVecPosition(m_nVtxEditIdx);
-	MyLib::Vector3 coursepos = pCourse->GetPosition();
+	MyLib::Vector3 segmentPos = vecsegmentPos[m_nVtxEditIdx];
+	MyLib::Vector3 coursepos = 0.0f;
+
+
 
 	// マウス情報
 	CInputMouse* pMouse = CInputMouse::GetInstance();
@@ -463,8 +482,12 @@ void CEdit_Course::DragLine()
 		}
 	}
 
-	// 頂点データ設定
-	pCourse->SetVecPosition(m_nVtxEditIdx, segmentPos);
+	// コースの位置
+	pCourse->SetVecPosition(vecsegmentPos);
+
+	// セグメント位置
+	vecsegmentPos[m_nVtxEditIdx] = segmentPos;
+	pCourceManager->SetSegmentPos(vecsegmentPos, m_nCourseEditIdx);
 	pCourse->GetCollisionLineBox(m_nVtxEditIdx)->SetPosition(segmentPos);
 }
 
@@ -685,5 +708,40 @@ void CEdit_Course::TransformBeginEnd()
 	segmentPos[(segmentPos.size() - 1)] = end;
 
 	pCourse->SetVecPosition(segmentPos);
+	pCourse->GetCollisionLineBox(0)->SetPosition(begin);
+	pCourse->GetCollisionLineBox((segmentPos.size() - 1))->SetPosition(end);
 }
 
+//==========================================================================
+// 最初と最後変形
+//==========================================================================
+void CEdit_Course::TransformBeginEnd(std::vector<MyLib::Vector3>* pVecpos)
+{
+
+	// 辺情報取得
+	std::vector<MyLib::Vector3> segmentPos = *pVecpos;
+
+	// 最初と最後、逆方向に少し出す
+	MyLib::Vector3 begin, end;
+	float angle = 0.0f;
+
+	// 最初
+	angle = segmentPos[2].AngleXZ(segmentPos[1]);
+	begin = MyLib::Vector3(
+		segmentPos[1].x + sinf(angle) * -10.0f,
+		segmentPos[1].y,
+		segmentPos[1].z + cosf(angle) * -10.0f);
+
+	// 最後
+	int endIdx = (segmentPos.size() - 1) - 1;
+	angle = segmentPos[endIdx].AngleXZ(segmentPos[endIdx - 1]);
+	end = MyLib::Vector3(
+		segmentPos[endIdx].x + sinf(angle) * 10.0f,
+		segmentPos[endIdx].y,
+		segmentPos[endIdx].z + cosf(angle) * 10.0f);
+
+	segmentPos[0] = begin;
+	segmentPos[(segmentPos.size() - 1)] = end;
+
+	*pVecpos = segmentPos;
+}
