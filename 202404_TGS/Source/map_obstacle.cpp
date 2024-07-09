@@ -124,7 +124,7 @@ void CMap_Obstacle::Kill()
 	m_List.Delete(this);
 
 	// I—¹ˆ—
-	CObjectX::Uninit();
+	CObjectX::Kill();
 }
 
 //==========================================================================

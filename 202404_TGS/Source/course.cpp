@@ -627,6 +627,15 @@ void CCourse::Update()
 #endif
 
 
+	for (const auto& pos : m_vecSegmentPosition)
+	{
+		CEffect3D::Create(
+			pos + GetPosition(),
+			0.0f,
+			D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f),
+			80.0f, 2, CEffect3D::MOVEEFFECT::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+	}
+
 	// ’¸“_À•W
 	SetVtx();
 }
@@ -764,6 +773,8 @@ void CCourse::SetVtxPosition()
 	MyLib::Vector3 fieldpos = GetPosition();
 	for (const auto& vtx : m_vecSegmentPosition)
 	{
+		if (m_pCollisionLineBox.empty()) break;
+
 		MyLib::Vector3 setpos = vtx + fieldpos;
 		m_pCollisionLineBox[i]->SetPosition(setpos);
 		i++;
