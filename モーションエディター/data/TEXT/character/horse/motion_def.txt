@@ -65,7 +65,7 @@ MOTIONSET
 	KEYSET			# --- << KEY : 1 / 2 >> ---
 		FRAME = 30
 		PARTS	# ----- [ 0 ] -----
-			ROT = 0.00 0.00 0.00
+			ROT = -0.05 0.00 0.00
 			POS = 0.00 0.00 0.00
 			SCALE = 1.00 1.00 1.00
 		END_PARTS
