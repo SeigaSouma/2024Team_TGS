@@ -361,6 +361,28 @@ void CGameManager::ContainPlayerBaggage()
 }
 
 //==========================================================================
+// カメラが常に横を向くようにする
+//==========================================================================
+void CGameManager::TurnAway()
+{
+	// カメラ取得
+	CCamera* pCamera = CManager::GetInstance()->GetCamera();
+
+	// プレイヤー取得
+	CListManager<CPlayer> playerList = CPlayer::GetListObj();
+	CPlayer* pPlayer = nullptr;
+	playerList.ListLoop(&pPlayer);
+
+	// 移動方向から角度算出
+	MyLib::Vector3 vecMove = pPlayer->GetMove().Normal();
+	MyLib::Vector3 vecDef = MyLib::Vector3(1.0f, 0.0f, 0.0f);
+	float angle = vecDef.AngleXZ(vecMove);
+	
+	// 角度設定
+	pCamera->SetRotation(pCamera->GetOriginRotation() + MyLib::Vector3(0.0f, angle, 0.0f));
+}
+
+//==========================================================================
 // 判定ゾーン確認
 //==========================================================================
 void CGameManager::CheckJudgeZone()

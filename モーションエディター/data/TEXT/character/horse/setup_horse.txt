@@ -1,6 +1,6 @@
 #====================================================================================================
 #
-# 『階層モデル』スクリプトファイル [setup_fish.txt]
+# 『階層モデル』スクリプトファイル [setup_player.txt]
 # Author : 相馬 靜雅
 #
 #====================================================================================================
@@ -14,15 +14,20 @@ SCRIPT			# この行は絶対消さないこと！
 #------------------------------------------------------------------------------
 # モデル数
 #------------------------------------------------------------------------------
-NUM_MODEL = 2
+NUM_MODEL = 5
 
 #------------------------------------------------------------------------------
 # モデルファイル名
 #------------------------------------------------------------------------------
-MODEL_FILENAME = data/MODEL/fish/fishhead.x		# [0]魚の頭
-MODEL_FILENAME = data/MODEL/fish/fishtale.x		# [1]魚の尻尾
+MODEL_FILENAME = data/MODEL/horse/horse_body.x		# [0]腰
+MODEL_FILENAME = data/MODEL/horse/horse_BL_leg.x	# [1]体
+MODEL_FILENAME = data/MODEL/horse/horse_BR_leg.x	# [2]頭
+MODEL_FILENAME = data/MODEL/horse/horse_FL_leg.x	# [3]頭
+MODEL_FILENAME = data/MODEL/horse/horse_FR_leg.x	# [4]頭
 
-
+#------------------------------------------------------------------------------
+# キャラクター情報
+#------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 # キャラクター情報
 #------------------------------------------------------------------------------
@@ -35,14 +40,14 @@ CHARACTERSET
 
 	VELOCITY = 2.00		# 移動量
 	JUMP = 0.00		# ジャンプ量
-	RADIUS = 100.00		# 半径
+	RADIUS = 60.00		# 半径
 	HEIGHT = 0.00		# 高さ
 	LIFE = 5		# 体力
 
 	PARTSSET
 		INDEX = 0
 		PARENT = -1
-		POS = 0.00 0.00 0.00
+		POS = 0.00 57.00 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
@@ -50,7 +55,31 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 1
 		PARENT = 0
-		POS = 0.00 0.00 0.20
+		POS = 12.01 6.50 42.00
+		ROT = 0.00 0.00 0.00
+		START = 1
+	END_PARTSSET
+
+	PARTSSET
+		INDEX = 2
+		PARENT = 0
+		POS = -11.97 5.50 41.00
+		ROT = 0.00 0.00 0.00
+		START = 1
+	END_PARTSSET
+
+	PARTSSET
+		INDEX = 3
+		PARENT = 0
+		POS = 10.50 -7.50 -42.00
+		ROT = 0.00 0.00 0.00
+		START = 1
+	END_PARTSSET
+
+	PARTSSET
+		INDEX = 4
+		PARENT = 0
+		POS = -12.00 -4.50 -42.50
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
@@ -62,7 +91,7 @@ END_CHARACTERSET
 # コライダー情報
 #
 #==============================================================================
-COLLIDER_FILENAME = data/TEXT/character/fish/sphere_collider.json
+COLLIDER_FILENAME = data/TEXT/character/bird/sphere_collider.json
 
 #==============================================================================
 #
@@ -77,5 +106,6 @@ NUM_MOTION = 1
 #------------------------------------------------------------------------------
 # モデルファイル名
 #------------------------------------------------------------------------------
-MOTION_FILENAME = data/TEXT/character/fish/motion_def.txt			# [0]デフォルト
+MOTION_FILENAME = data/TEXT/character/horse/motion_def.txt			# [0]デフォルト
+
 END_SCRIPT		# この行は絶対消さないこと！

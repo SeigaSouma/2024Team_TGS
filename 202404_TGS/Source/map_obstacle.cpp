@@ -9,6 +9,7 @@
 #include "calculation.h"
 #include "game.h"
 #include "collisionLine_Box.h"
+#include "obstacle_fisharch.h"
 
 //==========================================================================
 // íËêîíËã`
@@ -43,10 +44,28 @@ CMap_Obstacle::~CMap_Obstacle()
 //==========================================================================
 // ê∂ê¨èàóù
 //==========================================================================
-CMap_Obstacle *CMap_Obstacle::Create(const CMap_ObstacleManager::SObstacleInfo& info)
+CMap_Obstacle *CMap_Obstacle::Create(const CMap_ObstacleManager::SObstacleInfo& info, const bool bChange)
 {
+	CMap_Obstacle* pObj = nullptr;
 	// ÉÅÉÇÉäÇÃämï€
-	CMap_Obstacle* pObj = DEBUG_NEW CMap_Obstacle;
+	if (bChange)	// èWçáÇ≈ê∂ê¨Ç∑ÇÈÇ©î€Ç©
+	{
+		switch (info.type)
+		{
+		case T::SAKANA:
+
+			pObj = CObstacle_FishArch::Create(info);
+			break;
+
+		default:
+
+			pObj = DEBUG_NEW CMap_Obstacle;
+			break;
+		}
+	}
+	else {
+		pObj = DEBUG_NEW CMap_Obstacle;
+	}
 
 	if (pObj != nullptr)
 	{
