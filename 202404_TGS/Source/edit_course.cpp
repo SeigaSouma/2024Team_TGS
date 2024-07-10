@@ -41,6 +41,7 @@ CEdit_Course::CEdit_Course()
 	m_bHoverWindow = false;	// マウスのウィンドウホバー判定
 	m_bSetMode = false;		// 設定モード判定
 	m_bAutoCreateMode = false;		// 自動生成判定
+	m_pEditObstacle = nullptr;	// 障害物エディター
 }
 
 //==========================================================================
@@ -57,6 +58,8 @@ CEdit_Course::~CEdit_Course()
 HRESULT CEdit_Course::Init()
 {
 
+	// 障害物エディター
+	m_pEditObstacle = CEdit::Create(CGame::EditType::EDITTYPE_OBSTACLE);
 	return S_OK;
 }
 
@@ -108,6 +111,9 @@ void CEdit_Course::Update()
 	// 最初と最後変形
 	TransformBeginEnd();
 
+	// 障害物エディット
+	ObstacleEdit();
+
 }
 
 //==========================================================================
@@ -128,6 +134,7 @@ void CEdit_Course::FileControl()
 	ImGui::SetNextItemWidth(width);
 	if (ImGui::Button("Save"))
 	{
+		SaveObstacle();
 		pCourceManager->Save();
 	}
 	ImGui::SameLine();
@@ -162,7 +169,13 @@ void CEdit_Course::ChangeEditCourse()
 	int segmentSize = pCourceManager->GetSegmentSize() - 1;
 	if (ImGui::SliderInt("Course Edit Idx", &m_nCourseEditIdx, 0, segmentSize))
 	{
+		// 障害物リセット
+		ResetObstacle();
+
 		std::vector<MyLib::Vector3> vecpos = pCourceManager->GetSegmentPos(m_nCourseEditIdx);
+		vecpos.insert(vecpos.begin(), 0.0f);
+		vecpos.push_back(MyLib::Vector3(CCourseManager::GetBlockLength(), 0.0f, 0.0f));
+
 		pCourse->SetVecPosition(vecpos);
 		pCourse->ReCreateVtx();
 
@@ -177,11 +190,19 @@ void CEdit_Course::ChangeEditCourse()
 	if (ImGui::ArrowButton("##left", ImGuiDir_Left))
 	{
 		pCourceManager->SubSegmentPos();
+		
+		CMapBlock::GetInfoList().Delete(CMapBlock::GetInfoList().GetData(CMapBlock::GetInfoList().GetNumAll() - 1));
+
 	}
 	ImGui::SameLine(0.0f);
 	if (ImGui::ArrowButton("##right", ImGuiDir_Right))
 	{
 		pCourceManager->AddSegmentPos();
+
+		// 生成してリストの管理下に
+		CMapBlockInfo* pBlock = new CMapBlockInfo;
+		pBlock->Init();
+		CMapBlock::GetInfoListPtr()->Regist(pBlock);
 	}
 	ImGui::SameLine();
 
@@ -206,25 +227,15 @@ void CEdit_Course::TransCheckPoint()
 		CCourseManager* pCourceManager = CCourseManager::GetInstance();
 		if (pCourceManager == nullptr) return;
 
-		// セーブ
 		float width = 150.0f;
-		ImGui::SetNextItemWidth(width);
-		if (ImGui::Button("Save"))
-		{
-			// 追加
-		}
-		ImGui::SameLine();
-
-
 
 		// チェックポイントのリスト取得
 		std::vector<float> vecCheckpoint = CMapBlock::GetInfoList().GetData(m_nCourseEditIdx)->GetCheckpointInfo();
 		int checkpointSize = vecCheckpoint.size() - 1;
 
-
 		// 総数変更
 		ImGui::AlignTextToFramePadding();
-		ImGui::Text("Change Coolider Num:");
+		ImGui::Text("Change Checkpoint Num:");
 		ImGui::SameLine();
 		if (ImGui::ArrowButton("##left", ImGuiDir_Left) &&
 			static_cast<int>(vecCheckpoint.size()) > 1)
@@ -242,6 +253,14 @@ void CEdit_Course::TransCheckPoint()
 		ImGui::Text("%d", checkpointSize + 1);
 
 
+		// 例外処理
+		if (vecCheckpoint.empty())
+		{
+			ImGui::TreePop();
+			return;
+		}
+
+
 		// 操作する対象切り替え
 		ImGui::SetNextItemWidth(width);
 		if (ImGui::SliderInt("Checkpoint Edit Idx", &m_nCheckPointEditIdx, 0, checkpointSize))
@@ -249,12 +268,24 @@ void CEdit_Course::TransCheckPoint()
 
 		}
 
-		// チェックポイントの情報取得
-		//CCheckpoint* pCheckPoint = checkpointList.GetData(m_nCheckPointEditIdx);
-		float length = vecCheckpoint[m_nCheckPointEditIdx];
+		if (!vecCheckpoint.empty())
+		{
+			ImGui::DragFloat("Length", &vecCheckpoint[m_nCheckPointEditIdx], 1.0f, 0.0f, 0.0f, "%.2f");
+		}
 
-		ImGui::DragFloat("Length", &length, 1.0f, 0.0f, 0.0f, "%.2f");
-		//pCheckPoint->SetLength(length);
+		// チェックポイントのリスト設定
+		CMapBlock::GetInfoList().GetData(m_nCourseEditIdx)->SetCheckpointInfo(vecCheckpoint);
+
+		for (const auto& len : vecCheckpoint)
+		{
+			MyLib::Vector3 pos = MySpline::GetSplinePosition_NonLoop(CGame::GetInstance()->GetCourse()->GetVecPosition(), len);
+
+			CEffect3D::Create(
+				pos,
+				0.0f,
+				D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f),
+				80.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+		}
 
 		ImGui::TreePop();
 	}
@@ -691,6 +722,110 @@ void CEdit_Course::AddPoint()
 		pCourse->SetVecPosition(vecSegmentPos);
 		pCourse->ReCreateVtx();
 	}
+}
+
+//==========================================================================
+// 障害物エディット
+//==========================================================================
+void CEdit_Course::ObstacleEdit()
+{
+	ImGui::Dummy(ImVec2(0.0f, 10.0f));
+	if (ImGui::TreeNode("ObstacleEdit"))
+	{
+		// 障害物エディット更新
+		m_pEditObstacle->Update();
+
+		ImGui::TreePop();
+	}
+}
+
+//==========================================================================
+// 障害物リセット
+//==========================================================================
+void CEdit_Course::ResetObstacle()
+{
+
+	// 障害物マネージャ取得
+	CMap_ObstacleManager* pObstacleMgr = CMap_ObstacleManager::GetInstance();
+
+	// 障害物のリスト取得
+	CListManager<CMap_Obstacle> list = CMap_Obstacle::GetListObj();
+
+	// 先頭を保存
+	std::list<CMap_Obstacle*>::iterator itr = list.GetEnd();
+	CMap_Obstacle* pObj = nullptr;
+
+	while (list.ListLoop(itr))
+	{
+		CMap_Obstacle* pObj = *itr;
+		pObj->Kill();
+	}
+
+	// 障害物のリスト取得
+	std::vector<CMapBlockInfo::SObsacleInfo> obstacleInfo = CMapBlock::GetInfoList().GetData(m_nCourseEditIdx)->GetObstacleInfo();
+
+
+	// 障害物情報
+	std::vector<CMap_ObstacleManager::SObstacleInfo> vecInfo = pObstacleMgr->GetObstacleInfo();
+	CMap_ObstacleManager::SObstacleInfo info;
+	for (int i = 0; i < static_cast<int>(obstacleInfo.size()); i++)
+	{
+		// ブロックの障害物情報
+		CMapBlockInfo::SObsacleInfo blockinfo = obstacleInfo[i];
+
+		info = vecInfo[blockinfo.nType];
+
+		CMap_Obstacle* pObj = CMap_Obstacle::Create(info);
+		pObj->SetPosition(blockinfo.pos);
+		pObj->SetRotation(blockinfo.rot);
+		pObj->SetScale(blockinfo.scale);
+		pObj->CalWorldMtx();
+	}
+
+}
+
+//==========================================================================
+// 障害物セーブ
+//==========================================================================
+void CEdit_Course::SaveObstacle()
+{
+	
+
+	// 障害物のリスト取得
+	CListManager<CMap_Obstacle> list = CMap_Obstacle::GetListObj();
+
+	// 先頭を保存
+	std::list<CMap_Obstacle*>::iterator itr = list.GetEnd();
+	CMap_Obstacle* pObj = nullptr;
+
+	std::vector<CMapBlockInfo::SObsacleInfo> savedate;
+
+	while (list.ListLoop(itr))
+	{
+		CMap_Obstacle* pObj = *itr;
+
+
+		// 障害物マネージャ取得
+		CMap_ObstacleManager* pObstacleMgr = CMap_ObstacleManager::GetInstance();
+		std::vector<CMap_ObstacleManager::SObstacleInfo> vecObstacleMgrInfo = pObstacleMgr->GetObstacleInfo();
+
+		// 障害物情報取得
+		MyLib::Vector3 pos = pObj->GetPosition(), rot = pObj->GetRotation(), scale = pObj->GetScale();
+		CMap_ObstacleManager::SObstacleInfo info = pObj->GetObstacleInfo();
+		std::string text = info.textFile;
+
+		// 種類割り出し
+		const auto& obItr = std::find_if(vecObstacleMgrInfo.begin(), vecObstacleMgrInfo.end(),
+			[&text](const CMap_ObstacleManager::SObstacleInfo& string) {return string.textFile == text; });
+		int type = (obItr - vecObstacleMgrInfo.begin());
+
+
+		// セーブ情報追加
+		savedate.push_back(CMapBlockInfo::SObsacleInfo(pos, rot, scale, type));
+	}
+
+	// 障害物のリスト設定
+	CMapBlock::GetInfoList().GetData(m_nCourseEditIdx)->SetObstacleInfo(savedate);
 }
 
 //==========================================================================

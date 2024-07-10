@@ -106,6 +106,6 @@ NUM_MOTION = 1
 #------------------------------------------------------------------------------
 # モデルファイル名
 #------------------------------------------------------------------------------
-MOTION_FILENAME = data/TEXT/character/bird/motion_def.txt			# [0]デフォルト
+MOTION_FILENAME = data/TEXT/character/horse/motion_def.txt			# [0]デフォルト
 
 END_SCRIPT		# この行は絶対消さないこと！
