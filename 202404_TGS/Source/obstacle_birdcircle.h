@@ -93,6 +93,7 @@ private:
 	// ƒƒ“ƒo•Ï”
 	//=============================
 	std::vector<BirdInfo> m_BirdList;	// ’¹‚ÌƒŠƒXƒg
+	MyLib::Vector3 m_rot;	// Œü‚«
 	Info m_Info;	// î•ñ
 };
 

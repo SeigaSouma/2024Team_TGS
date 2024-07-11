@@ -45,7 +45,7 @@ CMap_Obstacle::~CMap_Obstacle()
 //==========================================================================
 // ¶¬ˆ—
 //==========================================================================
-CMap_Obstacle *CMap_Obstacle::Create(const CMap_ObstacleManager::SObstacleInfo& info, const bool bChange)
+CMap_Obstacle *CMap_Obstacle::Create(const CMap_ObstacleManager::SObstacleInfo& info, const bool bChange, const bool bSave)
 {
 	CMap_Obstacle* pObj = nullptr;
 	// ƒƒ‚ƒŠ‚ÌŠm•Û
@@ -76,6 +76,7 @@ CMap_Obstacle *CMap_Obstacle::Create(const CMap_ObstacleManager::SObstacleInfo& 
 	if (pObj != nullptr)
 	{
 		pObj->m_ObstacleInfo = info;
+		pObj->m_bSave = bSave;
 
 		// ‰Šú‰»ˆ—
 		pObj->Init();
