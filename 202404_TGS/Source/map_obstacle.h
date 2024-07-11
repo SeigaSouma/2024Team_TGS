@@ -22,7 +22,8 @@ private:
 
 	enum T
 	{
-		SAKANA = 12,
+		SAKANA = 12,	// ‹›
+		BIRD = 13,		// ’¹
 	};
 
 public:
