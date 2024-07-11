@@ -25,13 +25,13 @@ namespace
 
 	const std::vector<MyLib::Vector3> DEFAULT_SEGMENTPOS =
 	{
-		{ 0.0f, 0.0f, 0.0f },
+		//{ 0.0f, 0.0f, 0.0f },
 		{ 0.0f, 0.0f, 0.0f },
 		{ 2500.0f, 0.0f, 0.0f },
 		{ 5000.0f, 0.0f, 0.0f },
 		{ 7500.0f, 0.0f, 0.0f },
 		{ 9000.0f, 0.0f, 0.0f },
-		{ 9000.0f, 0.0f, 0.0f },
+		//{ 9000.0f, 0.0f, 0.0f },
 	};
 	const float DISTANCE_TO_CHUNCK = 3000.0f;	// チャンク同士の間隔
 }
@@ -125,18 +125,34 @@ void CCourseManager::Save()
 
 	std::vector<std::vector<MyLib::Vector3>> savedata = m_vecAllSegmentPos;
 
+	// 外側ベクトルのサイズを書き込む
+	size_t outer_size = savedata.size();
+	File.write(reinterpret_cast<const char*>(&outer_size), sizeof(outer_size));
+
 	// それぞれのブロックの最初と最後消す
 	for (auto& data : savedata)
 	{
-		data.erase(data.begin());
-		data.pop_back();
+		/*data.erase(data.begin());
+		data.pop_back();*/
 
-		// データをバイナリファイルに書き出す
-		File.write(reinterpret_cast<char*>(data.data()), data.size() * sizeof(MyLib::Vector3));
+		// データの個数を計算
+		size_t vecSize = data.size();
+
+		// ベクトルのサイズをセーブ
+		File.write(reinterpret_cast<const char*>(&vecSize), sizeof(vecSize));
+
+		// ベクトル内の要素をセーブ
+		File.write(reinterpret_cast<const char*>(data.data()), vecSize * sizeof(MyLib::Vector3));
 	}
 
 	// ファイルを閉じる
 	File.close();
+
+	// チェックポイント保存
+	CMapBlock::SaveBin_CheckPoint();
+
+	// 障害物保存
+	CMapBlock::SaveBin_Obstacle();
 }
 
 //==========================================================================
@@ -156,36 +172,41 @@ void CCourseManager::Load()
 		m_vecAllSegmentPos.emplace_back();
 
 		m_vecAllSegmentPos[0] = DEFAULT_SEGMENTPOS;
-		m_vecAllSegmentPos[0].insert(m_vecAllSegmentPos[0].begin(), MyLib::Vector3(0.0f, 0.0f, 0.0f));
-		m_vecAllSegmentPos[0].push_back(DEFAULT_SEGMENTPOS.back());
+		/*m_vecAllSegmentPos[0].insert(m_vecAllSegmentPos[0].begin(), MyLib::Vector3(0.0f, 0.0f, 0.0f));
+		m_vecAllSegmentPos[0].push_back(DEFAULT_SEGMENTPOS.back());*/
 
 		Save();
 		return;
 	}
 
-	// 構造体のサイズを取得
-	std::streamsize structSize = sizeof(MyLib::Vector3);
-
-	// ファイルの末尾までデータを読み込む
-	File.seekg(0, std::ios::end);
-	std::streampos fileSize = File.tellg();
-	File.seekg(0, std::ios::beg);
-
-	// データの個数を計算
-	size_t numVectors = fileSize / structSize;
-
-	// ベクトルの配列を用意
-	m_vecAllSegmentPos.clear();
-	m_vecAllSegmentPos.emplace_back(std::vector<MyLib::Vector3>(numVectors));
 
 
-	// ファイルからデータを読み込む
-	File.read(reinterpret_cast<char*>(m_vecAllSegmentPos[0].data()), fileSize);
+	// まず、外側のベクトルのサイズを読み込む
+	size_t outer_size;
+	File.read(reinterpret_cast<char*>(&outer_size), sizeof(outer_size));
+
+
+	std::vector<std::vector<MyLib::Vector3>> loaddata(outer_size);
+
+	// 各内側のベクトルに対してデータを読み込む
+	for (auto& inner_vector : loaddata)
+	{
+		// 内側のベクトルのサイズを読み込む
+		size_t inner_size;
+		File.read(reinterpret_cast<char*>(&inner_size), sizeof(inner_size));
+
+		inner_vector.resize(inner_size);
+
+		// データ読み込み
+		File.read(reinterpret_cast<char*>(inner_vector.data()), inner_size * sizeof(MyLib::Vector3));
+	}
 
 	// ファイルを閉じる
 	File.close();
 
 
+	// ロード情報コピー
+	m_vecAllSegmentPos = loaddata;
 
 	//=============================
 	// ランダム選出
@@ -202,6 +223,7 @@ void CCourseManager::Load()
 	std::vector<MyLib::Vector3> segmentpos;	// 基点の位置
 	MyLib::Vector3 start;
 	std::vector<MyLib::Vector3> vecstart;	// 基点の位置
+	vecstart.push_back(0.0f);
 
 	for (const auto& idx : randIdx)
 	{
@@ -209,6 +231,10 @@ void CCourseManager::Load()
 		{
 			segmentpos.push_back(start + pos);
 		}
+
+		// 間隔追加
+		segmentpos.push_back(segmentpos.back() + MyLib::Vector3(DISTANCE_TO_CHUNCK, 0.0f, 0.0f));
+
 		start = segmentpos.back();
 		vecstart.push_back(start);
 	}
@@ -218,7 +244,7 @@ void CCourseManager::Load()
 	//=============================
 	CCourse* pCourse = CCourse::Create("data\\TEXT\\map\\course.bin");
 	pCourse->SetVecPosition(segmentpos);
-	pCourse->Reset();
+	pCourse->ReCreateVtx();
 	CGame::GetInstance()->SetCource(pCourse);
 
 	// ランダム選出されたブロックに付随する、チェックポイント、障害物の生成

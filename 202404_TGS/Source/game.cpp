@@ -198,6 +198,7 @@ HRESULT CGame::Init()
 	//=============================
 	CCourseManager::Create();
 
+#if 0
 	//=============================
 	// コース作成
 	//=============================
@@ -286,7 +287,7 @@ HRESULT CGame::Init()
 	// 石垣の頂上に頂点をそろえる
 	pTownFieldFront->SetVecVtxPosition(pStoneWall_Front->GetVecTopPosition());
 	pTownFieldFront->BindVtxPosition();
-
+#endif
 
 
 	//=============================

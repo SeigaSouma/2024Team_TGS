@@ -41,7 +41,9 @@ private:
 		float width;		// 幅
 	};
 
+	//=============================
 	// メンバ関数
+	//=============================
 	void FileControl();			// ファイル操作
 	void TransCheckPoint();		// チェックポイント編集
 	void TransObstacle();		// 障害物編集
@@ -55,6 +57,13 @@ private:
 	void TransformBeginEnd(std::vector<MyLib::Vector3>* pVecpos);	// 最初と最後変形
 	void AddPoint();		// 地点追加
 
+	void ObstacleEdit();	// 障害物エディット
+	void ResetObstacle();	// 障害物リセット
+	void SaveObstacle();	// 障害物セーブ
+
+	//=============================
+	// メンバ変数
+	//=============================
 	LineData m_lineData;	// 辺情報
 	int m_nCourseEditIdx;	// 操作するインデックス番号
 	int m_nCheckPointEditIdx;	// 操作するインデックス番号
@@ -64,7 +73,8 @@ private:
 	bool m_bDrag;			// 掴み判定
 	bool m_bHoverWindow;	// マウスのウィンドウホバー判定
 	bool m_bSetMode;		// 設定モード判定
-	bool m_bAutoCreateMode;		// 自動生成判定
+	bool m_bAutoCreateMode;	// 自動生成判定
+	CEdit* m_pEditObstacle;	// 障害物エディター
 };
 
 
