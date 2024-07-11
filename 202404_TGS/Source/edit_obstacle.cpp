@@ -326,8 +326,12 @@ void CEdit_Obstacle_Arrangment::Update()
 		{
 			// ˆÊ’uÝ’è
 			boxcollider.TransformOffset(pObj->GetWorldMtx());
-			m_pCollisionLineBox[i]->SetPosition(boxcollider.GetMtx().GetWorldPosition());
-			m_pCollisionLineBox[i]->SetRotation(pObj->GetRotation());
+
+			if (m_pCollisionLineBox.size() > i)
+			{
+				m_pCollisionLineBox[i]->SetPosition(boxcollider.GetMtx().GetWorldPosition());
+				m_pCollisionLineBox[i]->SetRotation(pObj->GetRotation());
+			}
 			i++;
 		}
 	}

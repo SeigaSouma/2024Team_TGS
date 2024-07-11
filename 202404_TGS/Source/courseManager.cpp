@@ -21,19 +21,18 @@
 namespace
 {
 	const std::string FILENAME = "data\\TEXT\\map\\chunkdata.bin";
-	const int NUM_CHUNK = 1;	// チャンクの数
+	const int NUM_CHUNK = 5;	// チャンクの数
 
 	const std::vector<MyLib::Vector3> DEFAULT_SEGMENTPOS =
 	{
 		//{ 0.0f, 0.0f, 0.0f },
 		{ 0.0f, 0.0f, 0.0f },
-		{ 2500.0f, 0.0f, 0.0f },
-		{ 5000.0f, 0.0f, 0.0f },
-		{ 7500.0f, 0.0f, 0.0f },
-		{ 9000.0f, 0.0f, 0.0f },
+		{ 4000.0f, 0.0f, 0.0f },
+		{ 8000.0f, 0.0f, 0.0f },
+		{ 12000.0f, 0.0f, 0.0f },
 		//{ 9000.0f, 0.0f, 0.0f },
 	};
-	const float DISTANCE_TO_CHUNCK = 3000.0f;	// チャンク同士の間隔
+	const float DISTANCE_TO_CHUNCK = 1500.0f;	// チャンク同士の間隔
 }
 CCourseManager* CCourseManager::m_ThisPtr = nullptr;	// 自身のポインタ
 const float CCourseManager::m_fBlockLength = 9000.0f;	// ブロックの長さ
@@ -235,7 +234,7 @@ void CCourseManager::Load()
 		// 間隔追加
 		segmentpos.push_back(segmentpos.back() + MyLib::Vector3(DISTANCE_TO_CHUNCK, 0.0f, 0.0f));
 
-		start = segmentpos.back();
+		start = segmentpos.back() + MyLib::Vector3(DISTANCE_TO_CHUNCK, 0.0f, 0.0f);
 		vecstart.push_back(start);
 	}
 

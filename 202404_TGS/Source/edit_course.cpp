@@ -173,11 +173,12 @@ void CEdit_Course::ChangeEditCourse()
 		ResetObstacle();
 
 		std::vector<MyLib::Vector3> vecpos = pCourceManager->GetSegmentPos(m_nCourseEditIdx);
-		vecpos.insert(vecpos.begin(), 0.0f);
-		vecpos.push_back(MyLib::Vector3(CCourseManager::GetBlockLength(), 0.0f, 0.0f));
+		vecpos.insert(vecpos.begin(), MyLib::Vector3(-10.0f, 0.0f, 0.0f));
+		vecpos.push_back(vecpos.back() + MyLib::Vector3(10.0f, 0.0f, 0.0f));
 
 		pCourse->SetVecPosition(vecpos);
 		pCourse->ReCreateVtx();
+		pCourse->SetPosition(MyLib::Vector3(0.0f, 600.0f, 0.0f));
 
 		m_nCheckPointEditIdx = 0;	// チェックポイントのインデックスリセット
 	}
@@ -354,6 +355,7 @@ void CEdit_Course::ChangeLineNum()
 	if (ImGui::Button("Re : Create", imageSize))
 	{
 		pCourse->ReCreateVtx();
+		pCourse->SetPosition(MyLib::Vector3(0.0f, 600.0f, 0.0f));
 	}
 
 }
@@ -470,11 +472,11 @@ void CEdit_Course::DragLine()
 
 
 	// セグメント位置
-	std::vector<MyLib::Vector3> vecsegmentPos = pCourceManager->GetSegmentPos(m_nCourseEditIdx);
+	std::vector<MyLib::Vector3> vecsegmentPos = pCourse->GetVecPosition();
 
 	// 辺情報取得
 	MyLib::Vector3 segmentPos = vecsegmentPos[m_nVtxEditIdx];
-	MyLib::Vector3 coursepos = 0.0f;
+	MyLib::Vector3 coursepos = pCourse->GetPosition();
 
 
 
@@ -532,11 +534,12 @@ void CEdit_Course::DragLine()
 		}
 	}
 
+	// セグメント位置
+	vecsegmentPos[m_nVtxEditIdx] = segmentPos;
+
 	// コースの位置
 	pCourse->SetVecPosition(vecsegmentPos);
 
-	// セグメント位置
-	vecsegmentPos[m_nVtxEditIdx] = segmentPos;
 	pCourceManager->SetSegmentPos(vecsegmentPos, m_nCourseEditIdx);
 	pCourse->GetCollisionLineBox(m_nVtxEditIdx)->SetPosition(segmentPos);
 }
