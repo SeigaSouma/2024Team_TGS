@@ -93,6 +93,7 @@ private:
 	//=============================
 	std::vector<FishInfo> m_FishList;	// ‹›‚ÌƒŠƒXƒg
 	Info m_Info;	// ‰Â•Ïî•ñ
+	float m_fRot;	// ‰ñ“]Œü‚«
 };
 
 

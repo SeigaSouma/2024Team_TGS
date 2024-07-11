@@ -807,6 +807,10 @@ void CEdit_Course::SaveObstacle()
 	{
 		CMap_Obstacle* pObj = *itr;
 
+		if (!pObj->GetSave())
+		{
+			continue;
+		}
 
 		// 障害物マネージャ取得
 		CMap_ObstacleManager* pObstacleMgr = CMap_ObstacleManager::GetInstance();

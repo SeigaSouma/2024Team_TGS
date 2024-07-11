@@ -75,7 +75,7 @@ HRESULT CObstacle_BirdCircle::Init()
 	{
 		BirdInfo info;
 		info.nIdx = i;
-		info.pBird = CMap_Obstacle::Create(GetObstacleInfo(), false);
+		info.pBird = CMap_Obstacle::Create(GetObstacleInfo(), false, false);
 		rot.y = (i * BIRD_ROT) * (D3DX_PI * 2);
 		UtilFunc::Transformation::RotNormalize(rot.y);
 		info.pBird->SetRotation(rot);
@@ -136,12 +136,11 @@ void CObstacle_BirdCircle::Kill()
 void CObstacle_BirdCircle::Update()
 {
 	// 回転(yは向き、xは移動に使用)
-	MyLib::Vector3 rot = GetRotation();
-	rot.y += m_Info.fRotSpeed;
-	rot.x -= m_Info.fRotSpeed;
-	UtilFunc::Transformation::RotNormalize(rot.y);
-	UtilFunc::Transformation::RotNormalize(rot.x);
-	SetRotation(rot);
+	m_rot.y += m_Info.fRotSpeed;
+	m_rot.x -= m_Info.fRotSpeed;
+	UtilFunc::Transformation::RotNormalize(m_rot.y);
+	UtilFunc::Transformation::RotNormalize(m_rot.x);
+	SetRotation(m_rot);
 
 	// 距離設定
 	SetNowLength();
@@ -192,12 +191,10 @@ void CObstacle_BirdCircle::ControllBird()
 
 		// 向きとオフセット設定
 		{
-			rot.y = GetRotation().y + (D3DX_PI * 2) * (BIRD_ROT * it.nIdx);
+			rot.y = m_rot.y + (D3DX_PI * 2) * (BIRD_ROT * it.nIdx);
 			UtilFunc::Transformation::RotNormalize(rot.y);
 			it.pBird->SetRotation(rot);
 			SetBirdOffSet(it);
-
-			CManager::GetInstance()->GetDebugProc()->Print("角度 [ %f ]\n", rot.y);
 		}
 	}
 }
@@ -208,8 +205,8 @@ void CObstacle_BirdCircle::ControllBird()
 void CObstacle_BirdCircle::SetBirdOffSet(BirdInfo& info)
 {
 	// 自身の存在する向きを取得
-	MyLib::Vector3 rot = GetRotation();
-	rot.x = GetRotation().x + (info.nIdx * BIRD_ROT) * (-D3DX_PI * 2);
+	MyLib::Vector3 rot = m_rot;
+	rot.x = m_rot.x + (info.nIdx * BIRD_ROT) * (-D3DX_PI * 2);
 	UtilFunc::Transformation::RotNormalize(rot.y);
 
 	// 割合を求める
@@ -227,7 +224,7 @@ void CObstacle_BirdCircle::SetBirdOffSet(BirdInfo& info)
 void CObstacle_BirdCircle::SetNowLength()
 {
 	// 本体の向きをから加算距離を設定
-	MyLib::Vector3 rot = GetRotation();
+	MyLib::Vector3 rot = m_rot;
 	float rate = sinf(rot.x);
 	m_Info.fNowLength = m_Info.fDefLength + (m_Info.fPlusLength * rate);
 }

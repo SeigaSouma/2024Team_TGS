@@ -34,6 +34,7 @@ CObstacle_FishArch::CObstacle_FishArch(int nPriority,
 {
 	// 値のクリア
 	m_FishList.clear();
+	m_fRot = 0.0f;
 }
 
 //==========================================================================
@@ -68,15 +69,17 @@ HRESULT CObstacle_FishArch::Init()
 	CMap_Obstacle::GetListObj().Regist(this);
 	MyLib::Vector3 rot;
 	
-	// 種類の設定
-	CObject::SetType(TYPE_OBJECTX);
+#if 1
+	CMap_Obstacle::Init();
+#endif
+
 
 	// 魚を生成する
 	for (int i = 0; i < NUM_FISH; i++)
 	{
 		FishInfo info;
 		info.nIdx = i;
-		info.pFish = CMap_Obstacle::Create(GetObstacleInfo(), false);
+		info.pFish = CMap_Obstacle::Create(GetObstacleInfo(), false, false);
 		rot.x = (i * FISH_ROT) * (D3DX_PI * 2);
 		UtilFunc::Transformation::RotNormalize(rot.x);
 		info.pFish->SetRotation(rot);
@@ -137,13 +140,14 @@ void CObstacle_FishArch::Kill()
 void CObstacle_FishArch::Update()
 {
 	// 回転
-	MyLib::Vector3 rot = GetRotation();
-	rot.x += m_Info.fRotSpeed;
-	UtilFunc::Transformation::RotNormalize(rot.x);
-	SetRotation(rot);
+	m_fRot += m_Info.fRotSpeed;
+	UtilFunc::Transformation::RotNormalize(m_fRot);
 
 	// 高さ設定
 	SetNowHeight();
+
+	// マトリックス設定
+	CalWorldMtx();
 
 	// 魚の更新
 	ControllFish();
@@ -195,12 +199,11 @@ void CObstacle_FishArch::ControllFish()
 
 		// 向きとオフセット設定
 		{	
-			rot.x = GetRotation().x + (D3DX_PI * 2) * (FISH_ROT * it.nIdx);
+			rot.x = m_fRot + (D3DX_PI * 2) * (FISH_ROT * it.nIdx);
+			rot.y = GetRotation().y;
 			UtilFunc::Transformation::RotNormalize(rot.x);
 			it.pFish->SetRotation(rot);
 			SetFishOffSet(it);
-
-			CManager::GetInstance()->GetDebugProc()->Print("角度 [ %f ]\n", rot.x);
 		}
 	}
 }
@@ -210,17 +213,17 @@ void CObstacle_FishArch::ControllFish()
 //==========================================================================
 void CObstacle_FishArch::SetFishOffSet(FishInfo& info)
 {
-	MyLib::Vector3 rot = GetRotation();
-	rot.x += (D3DX_PI * 2) * (FISH_ROT * info.nIdx);
-	UtilFunc::Transformation::RotNormalize(rot.x);
+	float rot = m_fRot;
+	rot += (D3DX_PI * 2) * (FISH_ROT * info.nIdx);
+	UtilFunc::Transformation::RotNormalize(rot);
 
 	// 割合を求める
-	float rate = rot.x;
+	float rate = rot;
 
 	rate = fabsf(fabsf(rate) / D3DX_PI - 1.0f);
 
-	info.offset.z = sinf(rot.x) * FISHDEFAULT::WIDTH;
-	info.offset.y = cosf(rot.x) * m_Info.fNowHeight;
+	info.offset.z = sinf(rot) * FISHDEFAULT::WIDTH;
+	info.offset.y = cosf(rot) * m_Info.fNowHeight;
 }
 
 //==========================================================================
@@ -240,7 +243,6 @@ void CObstacle_FishArch::SetInfo(const float fDefHeight, const float fPlusHeight
 void CObstacle_FishArch::SetNowHeight()
 {
 	// 本体の向きをから加算距離を設定
-	MyLib::Vector3 rot = GetRotation();
-	float rate = sinf(rot.x);
+	float rate = sinf(m_fRot);
 	m_Info.fNowHeight = m_Info.fDefHeight + (m_Info.fPlusHeight * rate);
 }
