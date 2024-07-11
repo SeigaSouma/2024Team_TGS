@@ -14,10 +14,16 @@
 namespace
 {
 	const int NUM_FISH = (10);				// 魚の総数
-	const float ROTATE_SPEED = (0.02f);		// 回転速度
 	const float FISH_ROT = (1.0f / NUM_FISH);	// 1魚辺りの角度割合
+}
+
+// デフォルト情報
+namespace FISHDEFAULT
+{
+	const float ROTATE_SPEED = (0.02f);		// 回転速度
 	const float WIDTH = (750.0f);			// 中心からの距離
 	const float HEIGHT = (1500.0f);			// 変化する距離
+	const float PLUS_HEIGHT = (0.0f);		// 加算高さ
 }
 
 //==========================================================================
@@ -79,6 +85,12 @@ HRESULT CObstacle_FishArch::Init()
 		m_FishList.push_back(info);
 	}
 
+	// 初期値設定
+	m_Info.fDefHeight = FISHDEFAULT::HEIGHT;
+	m_Info.fPlusHeight = FISHDEFAULT::PLUS_HEIGHT;
+	m_Info.fRotSpeed = FISHDEFAULT::ROTATE_SPEED;
+	m_Info.fNowHeight = FISHDEFAULT::HEIGHT;
+
 	return S_OK;
 }
 
@@ -126,9 +138,12 @@ void CObstacle_FishArch::Update()
 {
 	// 回転
 	MyLib::Vector3 rot = GetRotation();
-	rot.x += ROTATE_SPEED;
+	rot.x += m_Info.fRotSpeed;
 	UtilFunc::Transformation::RotNormalize(rot.x);
 	SetRotation(rot);
+
+	// 高さ設定
+	SetNowHeight();
 
 	// 魚の更新
 	ControllFish();
@@ -204,6 +219,28 @@ void CObstacle_FishArch::SetFishOffSet(FishInfo& info)
 
 	rate = fabsf(fabsf(rate) / D3DX_PI - 1.0f);
 
-	info.offset.z = sinf(rot.x) * WIDTH;
-	info.offset.y = cosf(rot.x) * HEIGHT;
+	info.offset.z = sinf(rot.x) * FISHDEFAULT::WIDTH;
+	info.offset.y = cosf(rot.x) * m_Info.fNowHeight;
+}
+
+//==========================================================================
+// 可変情報設定
+//==========================================================================
+void CObstacle_FishArch::SetInfo(const float fDefHeight, const float fPlusHeight, const float fRotSpd)
+{
+	// 値の設定
+	m_Info.fDefHeight = fDefHeight;
+	m_Info.fPlusHeight = fPlusHeight;
+	m_Info.fRotSpeed = fRotSpd;
+}
+
+//==========================================================================
+// 現在の距離設定
+//==========================================================================
+void CObstacle_FishArch::SetNowHeight()
+{
+	// 本体の向きをから加算距離を設定
+	MyLib::Vector3 rot = GetRotation();
+	float rate = sinf(rot.x);
+	m_Info.fNowHeight = m_Info.fDefHeight + (m_Info.fPlusHeight * rate);
 }
