@@ -27,6 +27,7 @@
 #include "baggage.h"
 #include "course.h"
 #include "judgezoneManager.h"
+#include "spline.h"
 
 //==========================================================================
 // ’è”’è‹`
@@ -140,6 +141,7 @@ void CGameManager::Update()
 		m_bControll = true;
 		CheckJudgeZone();
 		ContainPlayerBaggage();
+		TurnAway();
 		break;
 
 	case CGameManager::SceneType::SCENE_MAINCLEAR:
@@ -374,12 +376,22 @@ void CGameManager::TurnAway()
 	playerList.ListLoop(&pPlayer);
 
 	// ˆÚ“®•ûŒü‚©‚çŠp“xŽZo
-	MyLib::Vector3 vecMove = pPlayer->GetMove().Normal();
-	MyLib::Vector3 vecDef = MyLib::Vector3(1.0f, 0.0f, 0.0f);
-	float angle = vecDef.AngleXZ(vecMove);
-	
+	float moveLength = pPlayer->GetMoveLength();
+	MyLib::Vector3 posDest = MySpline::GetSplinePosition_NonLoop(CGame::GetInstance()->GetCourse()->GetVecPosition(), moveLength + 1.0f);
+	MyLib::Vector3 vecMove = (posDest - pPlayer->GetPosition());	// XYZ‚ÌƒxƒNƒgƒ‹ì¬
+	vecMove.y = 0.0f;			// Y‚Í‚¢‚ç‚È‚¢‚Ì‚ÅÁ‚·
+	vecMove = vecMove.Normal();	// ³‹K‰»
+
+	// Šp“xŒvŽZ
+	float angle = acosf(MyLib::Vector3(1.0f, 0.0f, 0.0f).Dot(vecMove));
+	if (vecMove.z > 0.0f)
+	{
+		angle *= -1;
+	}
+
 	// Šp“xÝ’è
-	pCamera->SetRotation(pCamera->GetOriginRotation() + MyLib::Vector3(0.0f, angle, 0.0f));
+	MyLib::Vector3 rot = pCamera->GetRotation();
+	pCamera->SetRotation(MyLib::Vector3(rot.x, angle + pCamera->GetOriginRotation().y, rot.z));
 }
 
 //==========================================================================
