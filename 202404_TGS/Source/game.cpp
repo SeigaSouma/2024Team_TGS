@@ -77,6 +77,7 @@ CGame::CGame()
 	m_pObstacleManager = nullptr;	// 障害物マネージャ
 	m_pBaggageManager = nullptr;	// 荷物マネージャ
 	m_pCourse = nullptr;			// コースのオブジェクト
+	m_pCourseManager = nullptr;		// コースマネージャのオブジェクト
 	m_pJudgeZoneManager = nullptr;	// 判定ゾーンマネージャ
 	m_pWaterStoneManager = nullptr;	// 水中石マネージャ
 	m_pMapUI = nullptr;				// マップUI
@@ -196,7 +197,7 @@ HRESULT CGame::Init()
 	//=============================
 	// コースマネージャ
 	//=============================
-	CCourseManager::Create();
+	m_pCourseManager = CCourseManager::Create();
 
 #if 0
 	//=============================
@@ -434,6 +435,13 @@ void CGame::Uninit()
 	{
 		m_pWaterStoneManager->Uninit();
 		m_pWaterStoneManager = nullptr;
+	}
+
+	// コースマネージャ
+	if (m_pCourseManager != nullptr)
+	{
+		m_pCourseManager->Uninit();
+		m_pCourseManager = nullptr;
 	}
 
 	// マップUI
