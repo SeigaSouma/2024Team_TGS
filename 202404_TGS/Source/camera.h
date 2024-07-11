@@ -77,7 +77,7 @@ public:
 
 	void SetRotation(const MyLib::Vector3 rot);	// 向き設定
 	MyLib::Vector3 GetRotation() const;			// 向き取得
-	void SetOriginRotation(const MyLib::Vector3 rot) { m_rotOrigin = rot; }	// 元の向き設定
+	void SetOriginRotation(const MyLib::Vector3 rot);	// 元の向き設定
 	MyLib::Vector3 GetOriginRotation() const { return m_rotOrigin; }		// 元の向き取得
 	MyLib::Vector3 GetPositionV() const;		// カメラの位置取得
 	MyLib::Vector3 GetPositionR() const;		// カメラの注視点取得
