@@ -10,6 +10,7 @@
 #include "game.h"
 #include "collisionLine_Box.h"
 #include "obstacle_fisharch.h"
+#include "obstacle_birdcircle.h"
 
 //==========================================================================
 // íËêîíËã`
@@ -55,6 +56,11 @@ CMap_Obstacle *CMap_Obstacle::Create(const CMap_ObstacleManager::SObstacleInfo& 
 		case T::SAKANA:
 
 			pObj = CObstacle_FishArch::Create(info);
+			break;
+
+		case T::BIRD:
+
+			pObj = CObstacle_BirdCircle::Create(info);
 			break;
 
 		default:

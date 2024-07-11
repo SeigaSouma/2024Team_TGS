@@ -599,6 +599,9 @@
     <ClCompile Include="Source\obstacle_fisharch.cpp">
       <Filter>map\obstacle</Filter>
     </ClCompile>
+    <ClCompile Include="Source\obstacle_birdcircle.cpp">
+      <Filter>map\obstacle</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ballast.h">
@@ -1088,6 +1091,9 @@
       <Filter>map\block</Filter>
     </ClInclude>
     <ClInclude Include="Source\obstacle_fisharch.h">
+      <Filter>map\obstacle</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\obstacle_birdcircle.h">
       <Filter>map\obstacle</Filter>
     </ClInclude>
   </ItemGroup>
