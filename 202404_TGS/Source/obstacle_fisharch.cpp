@@ -13,7 +13,7 @@
 //==========================================================================
 namespace
 {
-	const int NUM_FISH = (5);				// 魚の総数
+	const int NUM_FISH = (10);				// 魚の総数
 	const float ROTATE_SPEED = (0.02f);		// 回転速度
 	const float FISH_ROT = (1.0f / NUM_FISH);	// 1魚辺りの角度割合
 	const float WIDTH = (750.0f);			// 中心からの距離
@@ -180,7 +180,7 @@ void CObstacle_FishArch::ControllFish()
 
 		// 向きとオフセット設定
 		{	
-			rot.x = (D3DX_PI * 2) * (FISH_ROT * it.nIdx);
+			rot.x = GetRotation().x + (D3DX_PI * 2) * (FISH_ROT * it.nIdx);
 			UtilFunc::Transformation::RotNormalize(rot.x);
 			it.pFish->SetRotation(rot);
 			SetFishOffSet(it);

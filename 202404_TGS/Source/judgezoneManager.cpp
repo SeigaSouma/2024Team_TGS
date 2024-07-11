@@ -138,6 +138,34 @@ void CJudgeZoneManager::Check(float progress)
 #endif // _DEBUG
 		}
 	}
+
+#ifdef _DEBUG
+	// 表示用ボタン
+	if (ImGui::Button("DispObj_AAA"))
+	{
+		CJudgeObj* pObj = CJudgeObj::Create(MyLib::Vector3(400.0f, 100.0f, 0.0f), CJudge::JUDGE::JUDGE_AAA);
+		pObj->SetSize(D3DXVECTOR2(256.0f, 72.0f));
+		pObj->SetSizeOrigin(D3DXVECTOR2(192.0f, 54.0f));
+	}
+	if (ImGui::Button("DispObj_BBB"))
+	{
+		CJudgeObj* pObj = CJudgeObj::Create(MyLib::Vector3(400.0f, 100.0f, 0.0f), CJudge::JUDGE::JUDGE_BBB);
+		pObj->SetSize(D3DXVECTOR2(256.0f, 72.0f));
+		pObj->SetSizeOrigin(D3DXVECTOR2(192.0f, 54.0f));
+	}
+	if (ImGui::Button("DispObj_CCC"))
+	{
+		CJudgeObj* pObj = CJudgeObj::Create(MyLib::Vector3(400.0f, 100.0f, 0.0f), CJudge::JUDGE::JUDGE_CCC);
+		pObj->SetSize(D3DXVECTOR2(256.0f, 72.0f));
+		pObj->SetSizeOrigin(D3DXVECTOR2(192.0f, 54.0f));
+	}
+	if (ImGui::Button("DispObj_DDD"))
+	{
+		CJudgeObj* pObj = CJudgeObj::Create(MyLib::Vector3(400.0f, 100.0f, 0.0f), CJudge::JUDGE::JUDGE_DDD);
+		pObj->SetSize(D3DXVECTOR2(256.0f, 72.0f));
+		pObj->SetSizeOrigin(D3DXVECTOR2(192.0f, 54.0f));
+	}
+#endif
 	
 	// 無効化したゾーン破棄
 	Release();

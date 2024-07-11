@@ -522,7 +522,7 @@ void CPlayer::Controll()
 	newPosition.z += move.z;
 
 	// 移動距離加算
-	m_fMoveLength += move.x;
+	m_fMoveLength += fabsf(move.x) + fabsf(move.z);
 	newPosition = MySpline::GetSplinePosition_NonLoop(CGame::GetInstance()->GetCourse()->GetVecPosition(), m_fMoveLength);
 
 	CManager::GetInstance()->GetDebugProc()->Print("プレイヤー移動距離[ %f ]\n", m_fMoveLength);
@@ -530,8 +530,10 @@ void CPlayer::Controll()
 	// 向き取得
 	MyLib::Vector3 rot = GetRotation();
 
-	sakiPos.x = newPosition.x + sinf(D3DX_PI + rot.y) * GetRadius();
-	sakiPos.z = newPosition.z + cosf(D3DX_PI + rot.y) * GetRadius();
+	//sakiPos.x = newPosition.x + sinf(D3DX_PI + rot.y) * GetRadius();
+	//sakiPos.z = newPosition.z + cosf(D3DX_PI + rot.y) * GetRadius();
+	sakiPos.x = newPosition.x;
+	sakiPos.z = newPosition.z;
 
 	// 現在と目標の差分を求める
 	float fRotDiff = GetRotDest() - rot.y;
