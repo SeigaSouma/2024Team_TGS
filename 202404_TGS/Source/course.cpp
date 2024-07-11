@@ -263,6 +263,9 @@ void CCourse::Reset()
 		m_pCollisionLineBox.push_back(CCollisionLine_Box::Create(aabb, D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f)));
 	}
 
+	// í∏ì_ç¿ïWåvéZ
+	SetVtxPosition();
+	SetPosition(MyLib::Vector3(0.0f, HEIGHT_SINCURVE, 0.0f));
 }
 
 //==========================================================================
