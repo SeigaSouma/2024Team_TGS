@@ -15,6 +15,20 @@
 // マップの障害物クラス
 class CObstacle_FishArch : public CMap_Obstacle
 {
+private:
+
+	// 魚情報構造体
+	struct FishInfo
+	{
+		MyLib::Vector3 offset;	// 設定位置
+		CMap_Obstacle* pFish;	// 障害物
+		float fLength;			// 距離
+		int nIdx;
+
+		// コンストラクタ
+		FishInfo() : offset(), pFish(nullptr), fLength(0.0f), nIdx(0) {}
+	};
+
 public:
 
 	CObstacle_FishArch(int nPriority = 5,
@@ -47,13 +61,15 @@ private:
 	// メンバ関数
 	//=============================
 	// その他
+	void ControllFish();	// 管理している魚の設定
+	void SetFishOffSet(FishInfo& info);	// 魚のオフセット設定
+
 
 	//=============================
 	// メンバ変数
 	//=============================
 	CMap_ObstacleManager::SObstacleInfo m_Info;	// 使用する魚の情報
-	std::vector<CMap_Obstacle> m_FishList;	// 魚のリスト
-
+	std::vector<FishInfo> m_FishList;	// 魚のリスト
 };
 
 

@@ -31,6 +31,8 @@ public:
 
 		// コンストラクタ
 		SObsacleInfo() : pos(0.0f), rot(0.0f), scale(1.0f), nType(0) {}
+		SObsacleInfo(const MyLib::Vector3& _pos, const MyLib::Vector3& _rot, const MyLib::Vector3& _scale, int _type) : 
+			pos(_pos), rot(_rot), scale(_scale), nType(_type) {}
 	};
 
 	CMapBlockInfo();
@@ -38,9 +40,12 @@ public:
 
 	HRESULT Init();
 	void Uninit();
+	void SaveBin();	// セーブ
 	void Load(std::ifstream* pFile);	// ロード
 	void ObstacleLoad(std::ifstream* pFile); // 障害物読み込み
+	void SetObstacleInfo(const std::vector<SObsacleInfo>& info) { m_ObstacleList = info; }
 	std::vector<SObsacleInfo> GetObstacleInfo() { return m_ObstacleList; }
+	void SetCheckpointInfo(const std::vector<float>& list) { m_CheckpointList = list; }
 	std::vector<float> GetCheckpointInfo() { return m_CheckpointList; }
 
 private:
@@ -67,26 +72,35 @@ public:
 	virtual void Update();
 
 	// 入出力
-	void Save();	// セーブ
 	
 	void Set(const int Idx, const MyLib::Vector3& startpos, float startlength);
 	CListManager<CMap_Obstacle> GetObstacleList() { return m_ObstacleList; }
 	CListManager<CCheckpoint> GetCheckpointList() { return m_CheckpointList; }
 
+	void AddInfo();	// 情報追加
+	void SubInfo();	// 情報削除
 
 	//=============================
 	// 静的関数
 	//=============================
 	static CListManager<CMapBlockInfo>* Load();	// 読み込み
+	static void SaveBin();	// セーブ
+	static void SaveBin_CheckPoint();	// チェックポイントセーブ
+	static void SaveBin_Obstacle();		// 障害物セーブ
+	static void LoadBin();	// ロード
 	static void Kill();	// 開放
 	static CListManager<CMapBlock> GetList() { return m_List; }
+	static void SetInfoList(const CListManager<CMapBlockInfo>& info) { m_InfoList = info; }	// 配置情報リスト取得
 	static CListManager<CMapBlockInfo> GetInfoList() { return m_InfoList; }	// 配置情報リスト取得
+	static CListManager<CMapBlockInfo>* GetInfoListPtr() { return &m_InfoList; }	// 配置情報リスト取得
 
 private:
 
 	//=============================
 	// メンバ関数
 	//=============================
+	static std::vector<std::vector<float>> LoadBin_CheckPoint();	// チェックポイント読み込み
+	static std::vector<std::vector<CMapBlockInfo::SObsacleInfo>> LoadBin_Obstacle();	// 障害物読み込み
 
 	//=============================
 	// メンバ変数
