@@ -1,11 +1,11 @@
 //=============================================================================
 // 
-//  アーチ状の魚障害物ヘッダー [obstacle_fisharch.h]
+//  円形で回転する鳥障害物ヘッダー [obstacle_birdcircle.h]
 //  Author : Ibuki Okusada
 // 
 //=============================================================================
-#ifndef _OBSTACLE_FISHARCH_H_
-#define _OBSTACLE_FISHARCH_H_		// 二重インクルード防止
+#ifndef _OBSTACLE_BIRDCIRCLE_H_
+#define _OBSTACLE_BIRDCIRCLE_H_		// 二重インクルード防止
 
 #include "map_obstacle.h"
 
@@ -13,39 +13,39 @@
 // クラス定義
 //==========================================================================
 // マップの障害物クラス
-class CObstacle_FishArch : public CMap_Obstacle
+class CObstacle_BirdCircle : public CMap_Obstacle
 {
 private:
 
 	// 魚情報構造体
-	struct FishInfo
+	struct BirdInfo
 	{
 		MyLib::Vector3 offset;	// 設定位置
-		CMap_Obstacle* pFish;	// 障害物
+		CMap_Obstacle* pBird;	// 障害物
 		float fLength;			// 距離
 		int nIdx;
 
 		// コンストラクタ
-		FishInfo() : offset(), pFish(nullptr), fLength(0.0f), nIdx(0) {}
+		BirdInfo() : offset(), pBird(nullptr), fLength(0.0f), nIdx(0) {}
 	};
 
 	// 本体の可変情報
 	struct Info
 	{
-		float fDefHeight;	// デフォルト高さ
-		float fPlusHeight;	// 追加で伸びる高さ
+		float fDefLength;	// デフォルト距離
+		float fPlusLength;	// 追加で伸びる距離
 		float fRotSpeed;	// 回転速度
-		float fNowHeight;	// 現在の高さ
+		float fNowLength;	// 現在の距離
 
 		// コンストラクタ
-		Info() : fDefHeight(0.0f), fPlusHeight(0.0f), fRotSpeed(0.0f), fNowHeight(0.0f) {}
+		Info() : fDefLength(0.0f), fPlusLength(0.0f), fRotSpeed(0.0f), fNowLength(0.0f) {}
 	};
 
 public:
 
-	CObstacle_FishArch(int nPriority = 5,
+	CObstacle_BirdCircle(int nPriority = 5,
 		CObject::LAYER layer = CObject::LAYER::LAYER_MAP);
-	~CObstacle_FishArch();
+	~CObstacle_BirdCircle();
 
 	//=============================
 	// オーバーライド関数
@@ -59,23 +59,23 @@ public:
 	//=============================
 	// メンバ関数
 	//=============================
-	void SetDefHeight(const float fHeight) { m_Info.fDefHeight = fHeight; }
-	void SetPlusHeight(const float fHeight) { m_Info.fPlusHeight = fHeight; }
+	void SetDefLength(const float fLength) { m_Info.fDefLength = fLength; }
+	void SetPlusLength(const float fLength) { m_Info.fPlusLength = fLength; }
 	void SetRotSpeed(const float fRotSpeed) { m_Info.fRotSpeed = fRotSpeed; }
 
 	/**
 	@brief	可変情報の設定
-	@param	fDefHeight	[in]	基本の高さ
-	@param	fPlusHeight	[in]	変化する高さ
+	@param	fDefLen		[in]	基本の距離
+	@param	fPlusLen	[in]	変化距離
 	@param	fRotSpd		[in]	回転速度
 	@return	void
 	*/
-	void SetInfo(const float fDefHeight, const float fPlusHeight, const float fRotSpd);	
+	void SetInfo(const float fDefLen, const float fPlusLen, const float fRotSpd);
 
 	//=============================
 	// 静的関数
 	//=============================
-	static CObstacle_FishArch* Create(const CMap_ObstacleManager::SObstacleInfo& info);
+	static CObstacle_BirdCircle* Create(const CMap_ObstacleManager::SObstacleInfo& info);
 
 private:
 
@@ -84,16 +84,17 @@ private:
 	// メンバ関数
 	//=============================
 	// その他
-	void ControllFish();	// 管理している魚の設定
-	void SetFishOffSet(FishInfo& info);	// 魚のオフセット設定
-	void SetNowHeight();	// 距離設定
+	void ControllBird();	// 管理している魚の設定
+	void SetBirdOffSet(BirdInfo& info);	// 魚のオフセット設定
+	void SetNowLength();	// 距離設定
+
 
 	//=============================
 	// メンバ変数
 	//=============================
-	std::vector<FishInfo> m_FishList;	// 魚のリスト
-	Info m_Info;	// 可変情報
-	float m_fRot;	// 回転向き
+	std::vector<BirdInfo> m_BirdList;	// 鳥のリスト
+	MyLib::Vector3 m_rot;	// 向き
+	Info m_Info;	// 情報
 };
 
 

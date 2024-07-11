@@ -24,6 +24,7 @@ namespace
 	const MyLib::AABB AABB_LINE = MyLib::AABB(-25.0f, 25.0f);	// 辺のAABB
 	const D3DXCOLOR DEFAULT_COLOR = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);
 	const D3DXCOLOR SELECT_COLOR = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);
+	const MyLib::Vector3 UP = MyLib::Vector3(0.0f, 0.0f, 0.0f);
 }
 
 //==========================================================================
@@ -178,7 +179,6 @@ void CEdit_Course::ChangeEditCourse()
 
 		pCourse->SetVecPosition(vecpos);
 		pCourse->ReCreateVtx();
-		pCourse->SetPosition(MyLib::Vector3(0.0f, 600.0f, 0.0f));
 
 		m_nCheckPointEditIdx = 0;	// チェックポイントのインデックスリセット
 	}
@@ -280,6 +280,7 @@ void CEdit_Course::TransCheckPoint()
 		for (const auto& len : vecCheckpoint)
 		{
 			MyLib::Vector3 pos = MySpline::GetSplinePosition_NonLoop(CGame::GetInstance()->GetCourse()->GetVecPosition(), len);
+			pos += UP;
 
 			CEffect3D::Create(
 				pos,
@@ -355,7 +356,6 @@ void CEdit_Course::ChangeLineNum()
 	if (ImGui::Button("Re : Create", imageSize))
 	{
 		pCourse->ReCreateVtx();
-		pCourse->SetPosition(MyLib::Vector3(0.0f, 600.0f, 0.0f));
 	}
 
 }
@@ -807,6 +807,10 @@ void CEdit_Course::SaveObstacle()
 	{
 		CMap_Obstacle* pObj = *itr;
 
+		if (!pObj->GetSave())
+		{
+			continue;
+		}
 
 		// 障害物マネージャ取得
 		CMap_ObstacleManager* pObstacleMgr = CMap_ObstacleManager::GetInstance();

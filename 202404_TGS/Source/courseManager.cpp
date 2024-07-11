@@ -264,7 +264,7 @@ void CCourseManager::Load()
 
 	//この中で障害物、チェックポイント
 
-
+#if 0
 	//=============================
 	// 石垣(奥)
 	//=============================
@@ -338,7 +338,7 @@ void CCourseManager::Load()
 	// 石垣の頂上に頂点をそろえる
 	pTownFieldFront->SetVecVtxPosition(pStoneWall_Front->GetVecTopPosition());
 	pTownFieldFront->BindVtxPosition();
-
+#endif
 }
 
 //==========================================================================
