@@ -27,6 +27,7 @@
 #include "baggage.h"
 #include "course.h"
 #include "judgezoneManager.h"
+#include "peoplemanager.h"
 #include "spline.h"
 
 //==========================================================================
@@ -39,6 +40,14 @@ namespace
 	const float POSR_Y_PULL_SCREEN_POS = 210.0f;	// カメラが引き始めるスクリーン座標
 	const float POSR_Y_APPROACH_SCREEN_POS = SCREEN_HEIGHT * 0.5f;	// カメラが近づき始めるスクリーン座標
 	const float POSR_YDEST_BAGGTOPLAYER_RATIO = 0.4f;	// 荷物とプレイヤー距離の割合（posRYDest）
+
+	const int CHANGE_BASEPOINT[] =	// ポイント変更する基準
+	{
+		40,	// AAA
+		20,	// BBB
+		10,	// CCC
+		1,	// DDD
+	};
 }
 
 //==========================================================================
@@ -55,6 +64,7 @@ CGameManager::CGameManager()
 	m_bGameStart = false;		// ゲーム開始時のフラグ
 	m_nNowStage = 0;			// 現在のステージ
 	m_nNumStage = 0;			// ステージの総数
+	m_nEvaluationPoint = 0;		// 評価ポイント
 	m_fCameraLengthOld = 0;		// 前のカメラの距離
 	m_fPosRY = 0.0f;
 }
@@ -200,12 +210,25 @@ void CGameManager::Update()
 	}
 
 
+	for (int i = 0; i < CJudge::JUDGE::JUDGE_MAX; i++)
+	{
+		if (m_nEvaluationPoint >= CHANGE_BASEPOINT[i])
+		{
+			CPeopleManager::GetInstance()->SetRank(static_cast<CJudge::JUDGE>(i));
+			break;
+		}
+
+		CPeopleManager::GetInstance()->SetRank(CJudge::JUDGE::JUDGE_MAX);
+	}
+
+
 	// テキストの描画
 	CManager::GetInstance()->GetDebugProc()->Print(
 		"---------------- ゲームマネージャ情報 ----------------\n"
 		"【モード】[%d]\n"
 		"【ステージ】[%d]\n"
-		, m_SceneType, m_nNowStage);
+		"【評価ポイント】[%d]\n"
+		, m_SceneType, m_nNowStage, m_nEvaluationPoint);
 }
 
 //==========================================================================
