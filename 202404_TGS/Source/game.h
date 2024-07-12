@@ -29,6 +29,7 @@ class CCourse;
 class CCourseManager;
 class CJudgeZoneManager;
 class CWaterStone_Manager;
+class CPeopleManager;
 class CMapUI;
 
 //==========================================================================
@@ -103,6 +104,7 @@ protected:
 	CCourseManager* m_pCourseManager;		// コースマネージャのオブジェクト
 	CJudgeZoneManager* m_pJudgeZoneManager;	// 判定ゾーンマネージャ
 	CWaterStone_Manager* m_pWaterStoneManager;	// 水中石マネージャ
+	CPeopleManager* m_pPeopleManager;			// 人マネージャ
 	CMapUI* m_pMapUI;						// マップUI
 	bool m_bEdit;				// エディットの判定
 	bool m_clear; // クリア判定
