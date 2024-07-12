@@ -204,6 +204,7 @@ void CObstacle_FishArch::ControllFish()
 			UtilFunc::Transformation::RotNormalize(rot.x);
 			it.pFish->SetRotation(rot);
 			SetFishOffSet(it);
+			it.pFish->SetScale(GetScale());
 		}
 	}
 }
