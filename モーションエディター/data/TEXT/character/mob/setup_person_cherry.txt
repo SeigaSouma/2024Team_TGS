@@ -137,7 +137,7 @@ COLLIDER_FILENAME = data/TEXT/character/bird/sphere_collider.json
 #------------------------------------------------------------------------------
 # モーション数
 #------------------------------------------------------------------------------
-NUM_MOTION = 4
+NUM_MOTION = 5
 
 #------------------------------------------------------------------------------
 # モデルファイル名
@@ -145,6 +145,8 @@ NUM_MOTION = 4
 MOTION_FILENAME = data/TEXT/character/mob/motion_def.txt			# [0]デフォルト
 MOTION_FILENAME = data/TEXT/character/mob/motion_walk.txt			# [1]歩く
 MOTION_FILENAME = data/TEXT/character/mob/motion_byebye.txt			# [2]バイバイ
-MOTION_FILENAME = data/TEXT/character/mob/motion_dance.txt			# [2]ダンス
+MOTION_FILENAME = data/TEXT/character/mob/motion_dance.txt			# [3]ダンス
+MOTION_FILENAME = data/TEXT/character/mob/motion_jump.txt			# [4]ジャンプ
+
 
 END_SCRIPT		# この行は絶対消さないこと！
