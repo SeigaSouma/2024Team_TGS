@@ -127,7 +127,7 @@ HRESULT CPeople::Init()
 	CMotion* pMotion = GetMotion();
 	if (pMotion != nullptr)
 	{
-		pMotion->Set(UtilFunc::Transformation::Random(0, pMotion->GetNumAll()));
+		pMotion->Set(UtilFunc::Transformation::Random(0, pMotion->GetNumMotion() - 1));
 	}
 
 	return S_OK;
