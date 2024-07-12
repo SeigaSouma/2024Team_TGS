@@ -127,7 +127,7 @@ HRESULT CPeople::Init()
 	CMotion* pMotion = GetMotion();
 	if (pMotion != nullptr)
 	{
-		pMotion->Set(1);
+		pMotion->Set(UtilFunc::Transformation::Random(0, pMotion->GetNumMotion() - 1));
 	}
 
 	return S_OK;
@@ -271,26 +271,15 @@ void CPeople::Collision()
 		m_sMotionFrag.bMove = false;
 	}
 
-	// 高さ取得
-	bool bLand = false;
-	float fHeight = CGame::GetInstance()->GetElevation()->GetHeight(pos, &bLand);
-
-	if (fHeight > pos.y)
+	if (300.0f < pos.y)
 	{// 地面の方が自分より高かったら
 
 		// 地面の高さに補正
-		pos.y = fHeight;
-
-		if (bLand == true)
-		{// 着地してたら
-
-			// 着地時処理
-			ProcessLanding();
-
-			// ジャンプ使用可能にする
-			move.y = 0.0f;
-			m_sMotionFrag.bJump = false;
-		}
+		pos.y = 300.0f;
+		
+		// ジャンプ使用可能にする
+		move.y = 0.0f;
+		m_sMotionFrag.bJump = false;
 	}
 
 	// 位置設定
@@ -379,6 +368,8 @@ void CPeople::StateFadeOut()
 //==========================================================================
 void CPeople::LimitArea()
 {
+	return;
+
 	// 自身の値を取得
 	MyLib::Vector3 pos = GetPosition();
 
