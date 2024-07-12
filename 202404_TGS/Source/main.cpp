@@ -71,6 +71,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hInstancePrev, LPSTR lpCmbLine
 	DWORD dwFrameCount;						// フレームカウント
 	DWORD dwFPSLastTime;					// 最後にFPSを計測した時刻
 
+
+	// 乱数の種を設定
+	srand((unsigned int)time(0));
+
 	// マネージャの生成
 	CManager *pManager = nullptr;
 

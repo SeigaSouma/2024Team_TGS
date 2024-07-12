@@ -110,10 +110,6 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindow)
 
 	// レンダラーステート設定
 	ResetRendererState();
-	
-
-	// 乱数の種を設定
-	srand((unsigned int)time(0));
 
 
 	// マルチターゲットレンダラーの初期化
