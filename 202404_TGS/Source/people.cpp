@@ -31,9 +31,6 @@ namespace
 
 namespace STATE_TIME
 {
-	const float DMG = static_cast<float>(10) / static_cast<float>(mylib_const::DEFAULT_FPS);	// ダメージ時間
-	const float DEAD = static_cast<float>(40) / static_cast<float>(mylib_const::DEFAULT_FPS);	// 死亡時間
-	const float DOWN = static_cast<float>(150) / static_cast<float>(mylib_const::DEFAULT_FPS);	// ダウン時間
 	const float FADEOUT = 0.6f;	// 死亡時間
 }
 
@@ -43,7 +40,8 @@ namespace STATE_TIME
 // 状態関数
 CPeople::STATE_FUNC CPeople::m_StateFunc[] =
 {
-	&CPeople::StateNone,		// なし
+	&CPeople::StateNone,	// なし
+	&CPeople::StateFadeIn,	// フェードイン
 	&CPeople::StateFadeOut,	// フェードアウト
 };
 
@@ -58,7 +56,6 @@ CListManager<CPeople> CPeople::m_List = {};	// リスト
 CPeople::CPeople(int nPriority) : CObjectChara(nPriority)
 {
 	// 値のクリア
-	m_type = TYPE::TYPE_NORMAL;	// 種類
 	m_state = STATE::STATE_NONE;	// 状態
 	m_Oldstate = m_state;	// 前回の状態
 	m_mMatcol = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);	// マテリアルの色
@@ -81,32 +78,13 @@ CPeople::~CPeople()
 //==========================================================================
 // 生成処理
 //==========================================================================
-CPeople* CPeople::Create(const std::string& pFileName, MyLib::Vector3 pos, TYPE type)
+CPeople* CPeople::Create(const std::string& pFileName, MyLib::Vector3 pos)
 {
-	// 生成用のオブジェクト
-	CPeople* pPeople = nullptr;
-
 	// メモリの確保
-	switch (type)
-	{
-	case TYPE_NORMAL:
-		pPeople = DEBUG_NEW CPeople;
-		break;
-
-	case TYPE_HORSE:
-		//pPeople = DEBUG_NEW CPeople;
-		break;
-
-	default:
-		return nullptr;
-		break;
-	}
+	CPeople* pPeople = DEBUG_NEW CPeople;
 
 	if (pPeople != nullptr)
 	{// メモリの確保が出来ていたら
-
-		// 種類
-		pPeople->m_type = type;
 
 		// 位置設定
 		pPeople->SetPosition(pos);
@@ -132,8 +110,8 @@ CPeople* CPeople::Create(const std::string& pFileName, MyLib::Vector3 pos, TYPE 
 HRESULT CPeople::Init()
 {
 	// 各種変数の初期化
-	m_state = STATE_NONE;	// 状態
-	m_Oldstate = STATE_NONE;
+	m_state = STATE::STATE_FADEIN;	// 状態
+	m_Oldstate = m_state;
 	m_fStateTime = 0.0f;			// 状態遷移カウンター
 
 	// 種類の設定
@@ -149,7 +127,7 @@ HRESULT CPeople::Init()
 	CMotion* pMotion = GetMotion();
 	if (pMotion != nullptr)
 	{
-		pMotion->Set(MOTION_DEF);
+		pMotion->Set(UtilFunc::Transformation::Random(0, pMotion->GetNumAll()));
 	}
 
 	return S_OK;
@@ -364,6 +342,21 @@ void CPeople::StateNone()
 }
 
 //==========================================================================
+// フェードイン
+//==========================================================================
+void CPeople::StateFadeIn()
+{
+	// 色設定
+	m_mMatcol.a = m_fStateTime / STATE_TIME::FADEOUT;
+
+	if (m_fStateTime >= STATE_TIME::FADEOUT)
+	{
+		m_state = STATE::STATE_NONE;
+		return;
+	}
+}
+
+//==========================================================================
 // フェードアウト
 //==========================================================================
 void CPeople::StateFadeOut()
@@ -473,7 +466,7 @@ void CPeople::AttackInDicision(CMotion::AttackInfo* pATKInfo, int nCntATK)
 //==========================================================================
 void CPeople::Draw()
 {
-	if (m_state == STATE_FADEOUT)
+	if (m_state == STATE_FADEOUT || m_state == STATE::STATE_FADEIN)
 	{
 		CObjectChara::Draw(m_mMatcol.a);
 	}
@@ -496,13 +489,3 @@ void CPeople::SetState(STATE state)
 {
 	m_state = state;
 }
-
-//==========================================================================
-// 敵の情報取得
-//==========================================================================
-CPeople *CPeople::GetPeople()
-{
-	// 自分自身のポインタを取得
-	return this;
-}
-

@@ -69,6 +69,11 @@ public:
 
 	void GameClearSettings();	// ゲームクリア時の設定
 	void GameResultSettings();	// ゲームリザルトの設定
+
+	// 評価関連
+	void AddEvaluationPoint(int point) { m_nEvaluationPoint += point; }	// ポイント加算
+
+
 	static CGameManager *Create(CScene::MODE mode);	// 生成処理
 
 
@@ -93,6 +98,7 @@ protected:
 	bool m_bGameStart;		// ゲーム開始時のフラグ
 	int m_nNowStage;		// 現在のステージ
 	int m_nNumStage;		// ステージの総数
+	int m_nEvaluationPoint;	// 評価ポイント
 	float m_fCameraLengthOld;	// 前のカメラの距離
 	float m_fPosRY;			// プレイヤーと荷物を画面内に収めるときに使うposRのY座標
 };

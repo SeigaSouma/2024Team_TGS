@@ -30,6 +30,13 @@ namespace
 		{CJudge::JUDGE::JUDGE_DDD,"data\\TEXTURE\\judge_test_04.png"},
 	};
 	const std::string TEXT_LINE = "#------------------------------------------------------------------------------";	// テキストのライン
+	const int ADDPOINT[] =
+	{
+		15,	// AAA
+		5,	// BBB
+		-5,	// CCC
+		-10,// DDD
+	};
 }
 CJudgeZoneManager* CJudgeZoneManager::m_ThisPtr = nullptr;
 
@@ -106,6 +113,11 @@ void CJudgeZoneManager::Check(float progress)
 			else if (progress > zone.end)
 			{//終了（判定）
 				CJudge::JUDGE judge = (*itr)->Judge();	//ここに判定が入ってる
+
+				// ポイント加算
+				CGame::GetInstance()->GetGameManager()->AddEvaluationPoint(ADDPOINT[judge]);
+
+				// 評価ごとのUI生成
 				CJudgeObj* pObj	= CJudgeObj::Create(MyLib::Vector3(400.0f, 100.0f, 0.0f), judge);
 				pObj->SetSize(D3DXVECTOR2(256.0f, 72.0f));
 				pObj->SetSizeOrigin(D3DXVECTOR2(192.0f, 54.0f));
@@ -146,24 +158,36 @@ void CJudgeZoneManager::Check(float progress)
 		CJudgeObj* pObj = CJudgeObj::Create(MyLib::Vector3(400.0f, 100.0f, 0.0f), CJudge::JUDGE::JUDGE_AAA);
 		pObj->SetSize(D3DXVECTOR2(256.0f, 72.0f));
 		pObj->SetSizeOrigin(D3DXVECTOR2(192.0f, 54.0f));
+
+		// ポイント加算
+		CGame::GetInstance()->GetGameManager()->AddEvaluationPoint(ADDPOINT[CJudge::JUDGE::JUDGE_AAA]);
 	}
 	if (ImGui::Button("DispObj_BBB"))
 	{
 		CJudgeObj* pObj = CJudgeObj::Create(MyLib::Vector3(400.0f, 100.0f, 0.0f), CJudge::JUDGE::JUDGE_BBB);
 		pObj->SetSize(D3DXVECTOR2(256.0f, 72.0f));
 		pObj->SetSizeOrigin(D3DXVECTOR2(192.0f, 54.0f));
+
+		// ポイント加算
+		CGame::GetInstance()->GetGameManager()->AddEvaluationPoint(ADDPOINT[CJudge::JUDGE::JUDGE_BBB]);
 	}
 	if (ImGui::Button("DispObj_CCC"))
 	{
 		CJudgeObj* pObj = CJudgeObj::Create(MyLib::Vector3(400.0f, 100.0f, 0.0f), CJudge::JUDGE::JUDGE_CCC);
 		pObj->SetSize(D3DXVECTOR2(256.0f, 72.0f));
 		pObj->SetSizeOrigin(D3DXVECTOR2(192.0f, 54.0f));
+
+		// ポイント加算
+		CGame::GetInstance()->GetGameManager()->AddEvaluationPoint(ADDPOINT[CJudge::JUDGE::JUDGE_CCC]);
 	}
 	if (ImGui::Button("DispObj_DDD"))
 	{
 		CJudgeObj* pObj = CJudgeObj::Create(MyLib::Vector3(400.0f, 100.0f, 0.0f), CJudge::JUDGE::JUDGE_DDD);
 		pObj->SetSize(D3DXVECTOR2(256.0f, 72.0f));
 		pObj->SetSizeOrigin(D3DXVECTOR2(192.0f, 54.0f));
+
+		// ポイント加算
+		CGame::GetInstance()->GetGameManager()->AddEvaluationPoint(ADDPOINT[CJudge::JUDGE::JUDGE_DDD]);
 	}
 #endif
 	

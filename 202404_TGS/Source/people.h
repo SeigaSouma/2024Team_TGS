@@ -23,18 +23,11 @@ class CPeople : public CObjectChara
 {
 public:
 	
-	// 敵種類
-	enum TYPE
-	{
-		TYPE_NORMAL = 0,	// 通常
-		TYPE_HORSE,			// ウマ
-		TYPE_MAX
-	};
-
 	// 状態列挙
 	enum STATE
 	{
 		STATE_NONE = 0,		// なにもない
+		STATE_FADEIN,		// フェードイン
 		STATE_FADEOUT,		// フェードアウト
 		STATE_MAX
 	};
@@ -67,12 +60,9 @@ public:
 	void SetMotion(int motionIdx);	// モーションの設定
 
 	HRESULT RoadText(const char *pFileName);
-	CPeople *GetPeople();
-	TYPE GetType() { return m_type; }	// 種類取得
-
 
 	static CListManager<CPeople> GetListObj() { return m_List; }	// リスト取得
-	static CPeople* Create(const std::string& pFileName, MyLib::Vector3 pos, TYPE type = TYPE_NORMAL);
+	static CPeople* Create(const std::string& pFileName, MyLib::Vector3 pos);
 
 protected:
 
@@ -95,6 +85,7 @@ protected:
 	//=============================
 	// 状態更新系
 	virtual void StateNone();		// 何もない状態
+	virtual void StateFadeIn();		// フェードイン
 	virtual void StateFadeOut();	// フェードアウト
 
 	// その他関数
@@ -128,7 +119,6 @@ private:
 	//=============================
 	// メンバ変数
 	//=============================
-	TYPE m_type;			// 種類
 	CShadow *m_pShadow;			// 影の情報
 	static CListManager<CPeople> m_List;	// リスト
 };

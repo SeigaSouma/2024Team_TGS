@@ -1,0 +1,107 @@
+#===================================================================================================
+#
+# 『人のマネージャ』スクリプトファイル [manager.txt]
+# Author : 相馬 靜雅
+#
+#===================================================================================================
+SCRIPT			# この行は絶対消さないこと！
+
+#------------------------------------------------------------------
+# キャラクターファイル名
+#------------------------------------------------------------------
+MOTION_FILENAME = data/TEXT/character/enemy/gorira/setup_gorira.txt			# [0]ボス
+MOTION_FILENAME = data/TEXT/character/enemy/stonegolem/setup_stonegolem.txt	# [1]ストーンゴーレム
+MOTION_FILENAME = data/TEXT/character/enemy/gobelin/setup_gobelin.txt		# [2]ゴブリン
+MOTION_FILENAME = data/TEXT/character/enemy/practice/setup_practice.txt		# [3]練習敵
+MOTION_FILENAME = data/TEXT/character/enemy/practice/setup_practice.txt		# [4]練習敵(攻撃)
+MOTION_FILENAME = data/TEXT/character/enemy/practice/setup_practice.txt		# [5]練習敵(強攻撃)
+
+#===================================================================================================
+# 群情報
+#===================================================================================================
+#------------------------------------------------------------------
+# [0] サンプル
+#------------------------------------------------------------------
+PATTERNSET
+	
+	RANK = 0
+	
+	PEOPLESET
+		TYPE = 0
+		POS = 0.00 0.00 0.00
+	END_PEOPLESET
+	
+	PEOPLESET
+		TYPE = 0
+		POS = 0.00 0.00 200.00
+	END_PEOPLESET
+	
+	PEOPLESET
+		TYPE = 0
+		POS = 0.00 0.00 -200.00
+	END_PEOPLESET
+	
+	PEOPLESET
+		TYPE = 0
+		POS = 200.00 0.00 0.00
+	END_PEOPLESET
+	
+END_PATTERNSET
+
+#------------------------------------------------------------------
+# [0] サンプル
+#------------------------------------------------------------------
+PATTERNSET
+	
+	RANK = 1
+	
+	PEOPLESET
+		TYPE = 0
+		POS = 0.00 0.00 0.00
+	END_PEOPLESET
+	
+	PEOPLESET
+		TYPE = 0
+		POS = 0.00 0.00 200.00
+	END_PEOPLESET
+	
+	PEOPLESET
+		TYPE = 0
+		POS = 0.00 0.00 -200.00
+	END_PEOPLESET
+	
+END_PATTERNSET
+
+#------------------------------------------------------------------
+# [0] サンプル
+#------------------------------------------------------------------
+PATTERNSET
+	
+	RANK = 2
+	
+	PEOPLESET
+		TYPE = 0
+		POS = 0.00 0.00 0.00
+	END_PEOPLESET
+	
+	PEOPLESET
+		TYPE = 0
+		POS = 0.00 0.00 200.00
+	END_PEOPLESET
+	
+END_PATTERNSET
+
+#------------------------------------------------------------------
+# [0] サンプル
+#------------------------------------------------------------------
+PATTERNSET
+	
+	RANK = 3
+	
+	PEOPLESET
+		TYPE = 0
+		POS = 0.00 0.00 0.00
+	END_PEOPLESET
+END_PATTERNSET
+
+END_SCRIPT		# この行は絶対消さないこと！

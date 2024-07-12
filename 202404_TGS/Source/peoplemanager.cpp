@@ -1,23 +1,27 @@
 //=============================================================================
 // 
-//  敵のマネージャ処理 [peoplemanager.cpp]
+//  人のマネージャ処理 [peoplemanager.cpp]
 //  Author : 相馬靜雅
 // 
 //=============================================================================
-#include "debugproc.h"
 #include "peoplemanager.h"
 #include "people.h"
 #include "calculation.h"
 #include "manager.h"
-#include "game.h"
+#include "debugproc.h"
 
 //==========================================================================
 // 定数定義
 //==========================================================================
 namespace
 {
-	const std::string FILENAME = "data\\TEXT\\people\\peoplemanager.text";
+	const std::string FILENAME = "data\\TEXT\\people\\manager.txt";
+	const float SPAWN_DISTANCE = 600.0f;		// 湧き距離間隔
+	const float SPAWN_ALL_LENGTH = 80000.0f;	// 出現する全ての長さ
+
+	
 }
+CPeopleManager* CPeopleManager::m_ThisPtr = nullptr;				// 自身のポインタ
 
 //==========================================================================
 // コンストラクタ
@@ -25,8 +29,11 @@ namespace
 CPeopleManager::CPeopleManager()
 {
 	// 値のクリア
+	m_Rank = CJudge::JUDGE::JUDGE_MAX;	// 現在のランク
+	m_OldRank = CJudge::JUDGE::JUDGE_MAX;		// 前回のランク
 	m_vecPattern.clear();			// 配置パターン
 	m_vecMotionFileName.clear();	// モーションファイル名
+	m_PatternByRank;			// 配置パターン
 }
 
 //==========================================================================
@@ -42,27 +49,22 @@ CPeopleManager::~CPeopleManager()
 //==========================================================================
 CPeopleManager* CPeopleManager::Create()
 {
-	// メモリ確保
-	CPeopleManager* pModel = DEBUG_NEW CPeopleManager;
+	if (m_ThisPtr != nullptr) return m_ThisPtr;
 
-	if (pModel != nullptr)
+	// メモリ確保
+	m_ThisPtr = DEBUG_NEW CPeopleManager;
+
+	if (m_ThisPtr != nullptr)
 	{
 		// 初期化処理
-		HRESULT hr = pModel->ReadText(FILENAME);
-		if (FAILED(hr))
-		{
-			return nullptr;
-		}
-
-		// 初期化処理
-		hr = pModel->Init();
+		HRESULT hr = m_ThisPtr->Init();
 		if (FAILED(hr))
 		{
 			return nullptr;
 		}
 	}
 
-	return pModel;
+	return m_ThisPtr;
 }
 
 //==========================================================================
@@ -70,7 +72,12 @@ CPeopleManager* CPeopleManager::Create()
 //==========================================================================
 HRESULT CPeopleManager::Init()
 {
-
+	// ファイル読み込み
+	HRESULT hr = ReadText(FILENAME);
+	if (FAILED(hr))
+	{
+		return E_FAIL;
+	}
 	return S_OK;
 }
 
@@ -79,7 +86,8 @@ HRESULT CPeopleManager::Init()
 //==========================================================================
 void CPeopleManager::Uninit()
 {
-	
+	delete m_ThisPtr;
+	m_ThisPtr = nullptr;
 }
 
 //==========================================================================
@@ -87,43 +95,95 @@ void CPeopleManager::Uninit()
 //==========================================================================
 void CPeopleManager::Update()
 {
-	
+
+	// 評価ごとに人数増やす
+	if (m_Rank != m_OldRank)
+	{
+		SetByRank();
+	}
+
+	// 前回のランク
+	m_OldRank = m_Rank;
 }
 
 //==========================================================================
-// 敵配置
+// ランクごとのセット処理
+//==========================================================================
+void CPeopleManager::SetByRank()
+{
+	// 障害物のリスト取得
+	CListManager<CPeople> list = CPeople::GetListObj();
+
+	// 先頭を保存
+	std::list<CPeople*>::iterator itr = list.GetEnd();
+	CPeople* pObj = nullptr;
+
+	// 全員フェードアウト
+	while (list.ListLoop(itr))
+	{
+		pObj = *itr;
+
+		pObj->SetState(CPeople::STATE::STATE_FADEOUT);
+	}
+
+	if (m_Rank == CJudge::JUDGE::JUDGE_MAX)
+	{// 最低ランク
+		return;
+	}
+
+
+	MyLib::Vector3 pos = MyLib::Vector3(0.0f, 300.0f, 500.0f);
+	MyLib::Vector3 spawnpos = pos;
+	MyLib::Vector3 rot = MyLib::Vector3(0.0f, D3DX_PI * 0.5f, 0.0f);
+	int type = 0, patternNum = static_cast<int>(m_PatternByRank[m_Rank].size());
+
+
+	for (float len = 0.0f; len <= SPAWN_ALL_LENGTH; len += SPAWN_DISTANCE)
+	{
+		type = rand() % patternNum;
+
+		// 位置リセット
+		spawnpos = pos;
+		spawnpos.x += len;
+		spawnpos.z += UtilFunc::Transformation::Random(-50, 50) * 10.0f;
+		spawnpos.z += UtilFunc::Transformation::Random(-50, 50);
+
+		SetPeople(spawnpos, rot, type);
+	}
+}
+
+//==========================================================================
+// 人配置
 //==========================================================================
 void CPeopleManager::SetPeople(MyLib::Vector3 pos, MyLib::Vector3 rot, int nPattern)
 {
-	SPattern NowPattern = m_vecPattern[nPattern];
-	int nNumSpawn = NowPattern.nNumEnemy;	// スポーンする数
-	CPeople* pEnemy = nullptr;
+	SPattern NowPattern = m_PatternByRank[m_Rank][nPattern];
+	int nNumSpawn = NowPattern.nNum;	// スポーンする数
+	CPeople* pPeople = nullptr;
 
-	for (const auto& data : NowPattern.enemydata)
+	for (const auto& data : NowPattern.data)
 	{
 		// スポーン時の向きを掛け合わせる
 		MyLib::Vector3 spawnPos = pos;
 
-		// 拠点の位置分加算
+		// スポーン位置分加算
 		spawnPos += data.pos;
 
-		// 敵の生成
-		pEnemy = CPeople::Create(
+		// 生成
+		pPeople = CPeople::Create(
 			m_vecMotionFileName[data.nType],	// ファイル名
-			spawnPos,							// 位置
-			(CPeople::TYPE)data.nType);			// 種類
+			spawnPos);							// 位置
 
-		if (pEnemy == nullptr)
+		if (pPeople == nullptr)
 		{
-			delete pEnemy;
+			delete pPeople;
 			break;
 		}
 
 		// 向き設定
-		pEnemy->SetRotation(rot);
-		pEnemy->SetRotDest(rot.y);
+		pPeople->SetRotation(rot);
+		pPeople->SetRotDest(rot.y);
 	}
-
 	
 }
 
@@ -141,6 +201,8 @@ HRESULT CPeopleManager::ReadText(const std::string& filename)
 	// コメント用
 	std::string hoge;
 	std::string charaFile;
+	m_vecMotionFileName.clear();
+
 
 	// データ読み込み
 	std::string line;
@@ -157,8 +219,8 @@ HRESULT CPeopleManager::ReadText(const std::string& filename)
 		std::istringstream lineStream(line);
 
 
-		if (line.find("MODEL_FILENAME") != std::string::npos)
-		{// MODEL_FILENAMEでモデル名読み込み
+		if (line.find("MOTION_FILENAME") != std::string::npos)
+		{// MOTION_FILENAMEでモーションファイル名読み込み
 
 			// ストリーム作成
 			std::istringstream lineStream(line);
@@ -168,61 +230,92 @@ HRESULT CPeopleManager::ReadText(const std::string& filename)
 				hoge >>		// ＝
 				hoge >>		// ＝
 				charaFile;	// モデルファイル名
+
+			// モーションファイル追加
+			m_vecMotionFileName.push_back(charaFile);
 			continue;
 		}
 
-		if (line.find("COLLIDER_FILENAME") != std::string::npos)
-		{// COLLIDER_FILENAMEでコライダー読み込み
+		if (line.find("PATTERNSET") != std::string::npos)
+		{// PATTERNSETでパターン読み込み
 
-			// ストリーム作成
-			std::istringstream lineStream(line);
+			// パターン追加
+			m_vecPattern.emplace_back();
 
-			//// 情報渡す
-			//lineStream >>
-			//	hoge >>
-			//	hoge >>			// ＝
-			//	obstacleInfo.colliderFile;	// コライダー名
+			int rank = 0;
+
+			while (line.find("END_PATTERNSET") == std::string::npos)
+			{
+				std::getline(File, line);
 
 
-			
-			continue;
-		}
+				if (line.find("RANK") != std::string::npos)
+				{// キャラの種類
 
-		//if (line.find("SETUP") != std::string::npos)
-		//{// SETUPで情報読み込み
+					// ストリーム作成
+					std::istringstream lineStream(line);
 
-		//	while (line.find("END_SETUP") == std::string::npos)
-		//	{
-		//		std::getline(File, line);
-		//		if (line.find("IS_AIR") != std::string::npos)
-		//		{// IS_AIRで空気貫通読み込み
+					// 情報渡す
+					lineStream >>
+						hoge >>
+						hoge >>	// ＝
+						rank;	// ランク
 
-		//			// ストリーム作成
-		//			std::istringstream lineStream(line);
+					m_vecPattern.back().nRank = rank;
+					continue;
+				}
 
-		//			// 情報渡す
-		//			lineStream >>
-		//				hoge >>
-		//				hoge >>	// ＝
-		//				obstacleInfo.setup.isAir;	// 空気貫通
-		//			continue;
-		//		}
 
-		//		if (line.find("IS_MOVE") != std::string::npos)
-		//		{// IS_MOVEで動き読み込み
+				if (line.find("PEOPLESET") != std::string::npos)
+				{// PEOPLESETでパターン読み込み
 
-		//			// ストリーム作成
-		//			std::istringstream lineStream(line);
+					// 読み込みデータ
+					SPeopleData data;
+					data.nType = 0;
 
-		//			// 情報渡す
-		//			lineStream >>
-		//				hoge >>
-		//				hoge >>	// ＝
-		//				obstacleInfo.setup.isMove;	// 動き
-		//			continue;
-		//		}
-		//	}
-		//}
+					while (line.find("END_PEOPLESET") == std::string::npos)
+					{
+						std::getline(File, line);
+
+						if (line.find("TYPE") != std::string::npos)
+						{// キャラの種類
+
+							// ストリーム作成
+							std::istringstream lineStream(line);
+
+							// 情報渡す
+							lineStream >>
+								hoge >>
+								hoge >>	// ＝
+								data.nType;	// キャラの種類
+							continue;
+						}
+
+						if (line.find("POS") != std::string::npos)
+						{// POSで位置
+
+							// ストリーム作成
+							std::istringstream lineStream(line);
+
+							// 情報渡す
+							lineStream >>
+								hoge >>
+								hoge >>						// ＝
+								data.pos.x >> data.pos.y >> data.pos.z;	// 位置
+							continue;
+						}
+					}
+
+					// データ追加
+					m_vecPattern.back().data.push_back(data);
+
+				}// END_PEOPLESET
+			}
+
+			// 人の数
+			m_vecPattern.back().nNum = m_vecPattern.back().data.size();
+
+		}// END_PATTERNSET
 
 		if (line.find("END_SCRIPT") != std::string::npos)
 		{
@@ -230,8 +323,15 @@ HRESULT CPeopleManager::ReadText(const std::string& filename)
 		}
 	}
 
-
 	// ファイルを閉じる
 	File.close();
+
+	// ランク別パターン
+	for (const auto& pattern : m_vecPattern)
+	{
+		m_PatternByRank[pattern.nRank].push_back(pattern);
+	}
+
+
 	return S_OK;
 }
