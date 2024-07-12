@@ -81,7 +81,7 @@ CPeople::~CPeople()
 //==========================================================================
 // 生成処理
 //==========================================================================
-CPeople* CPeople::Create(const char* pFileName, MyLib::Vector3 pos, TYPE type)
+CPeople* CPeople::Create(const std::string& pFileName, MyLib::Vector3 pos, TYPE type)
 {
 	// 生成用のオブジェクト
 	CPeople* pPeople = nullptr;
@@ -90,7 +90,7 @@ CPeople* CPeople::Create(const char* pFileName, MyLib::Vector3 pos, TYPE type)
 	switch (type)
 	{
 	case TYPE_NORMAL:
-		//pPeople = DEBUG_NEW CPeople;
+		pPeople = DEBUG_NEW CPeople;
 		break;
 
 	case TYPE_HORSE:
@@ -113,7 +113,7 @@ CPeople* CPeople::Create(const char* pFileName, MyLib::Vector3 pos, TYPE type)
 		pPeople->CObject::SetOriginPosition(pos);
 
 		// テキスト読み込み
-		HRESULT hr = pPeople->RoadText(pFileName);
+		HRESULT hr = pPeople->RoadText(pFileName.c_str());
 		if (FAILED(hr))
 		{// 失敗していたら
 			return nullptr;
@@ -229,9 +229,6 @@ void CPeople::Update()
 		return;
 	}
 
-	// モーションの設定処理
-	MotionSet();
-
 	// 状態更新
 	UpdateState();
 
@@ -318,12 +315,6 @@ void CPeople::Collision()
 		}
 	}
 
-
-	if (pos.y <= -800.0f)
-	{
-		pos.y = -800.0f;
-	}
-
 	// 位置設定
 	SetPosition(pos);
 
@@ -387,9 +378,6 @@ void CPeople::StateFadeOut()
 		Uninit();
 		return;
 	}
-
-
-
 }
 
 

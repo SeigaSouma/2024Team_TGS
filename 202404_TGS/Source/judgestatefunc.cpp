@@ -31,9 +31,10 @@ namespace
 	}
 	namespace Judge_CCC
 	{
-		const float TIME_APPEAR = 1.0f;		// 出現時間
-		const float TIME_WAIT = 0.4f;		// 待ち時間
-		const float TIME_FADEOUT = 0.6f;	// フェードアウト時間
+		const float TIME_APPEAR = 0.85f;		// 出現時間
+		const float TIME_WAIT = 0.3f;		// 待ち時間
+		const float TIME_FADEOUT = 0.85f;	// フェードアウト時間
+		const float APPEAR_SIZE = 0.8f;		// 出現時の拡大率
 	}
 	namespace Judge_DDD
 	{
@@ -164,8 +165,8 @@ void CJudgeStateFunc_BBB::StateAppear()
 	float ratio = stateTime / Judge_BBB::TIME_APPEAR;
 	D3DXVECTOR2 size = pObj->GetSize();
 	D3DXVECTOR2 sizeOrigin = pObj->GetSizeOrigin();
-	size.x = UtilFunc::Correction::EasingEaseIn(0.0f, sizeOrigin.x, ratio);
-	size.y = UtilFunc::Correction::EasingEaseIn(0.0f, sizeOrigin.y, ratio);
+	size.x = UtilFunc::Correction::EasingEaseOut(0.0f, sizeOrigin.x, ratio);
+	size.y = UtilFunc::Correction::EasingEaseOut(0.0f, sizeOrigin.y, ratio);
 	pObj->SetSize(size);
 }
 
@@ -227,12 +228,17 @@ void CJudgeStateFunc_CCC::StateAppear()
 
 	// サイズ設定
 	CJudgeObj* pObj = GetObj();
+	pObj->SetSize(pObj->GetSizeOrigin());
+	float alpha = UtilFunc::Correction::EasingEaseIn(0.0f, 1.0f, stateTime / Judge_DDD::TIME_APPEAR);
+	pObj->SetAlpha(alpha);
+
+	/*CJudgeObj* pObj = GetObj();
 	float ratio = stateTime / Judge_CCC::TIME_APPEAR;
 	D3DXVECTOR2 size = pObj->GetSize();
 	D3DXVECTOR2 sizeOrigin = pObj->GetSizeOrigin();
 	size.x = UtilFunc::Correction::EasingEaseIn(0.0f, sizeOrigin.x, ratio);
 	size.y = UtilFunc::Correction::EasingEaseIn(0.0f, sizeOrigin.y, ratio);
-	pObj->SetSize(size);
+	pObj->SetSize(size);*/
 }
 
 //==========================================================================
@@ -266,8 +272,16 @@ void CJudgeStateFunc_CCC::StateFadeOut()
 		return;
 	}
 
+	// サイズ設定
+	float ratio = stateTime / Judge_CCC::TIME_FADEOUT;
+	D3DXVECTOR2 size = pObj->GetSize();
+	D3DXVECTOR2 sizeOrigin = pObj->GetSizeOrigin();
+	size.y = UtilFunc::Correction::EasingEaseIn(sizeOrigin.y, 0.0f, ratio);
+	pObj->SetSize(size);
+
 	// 不透明度設定
-	pObj->SetAlpha(1.0f - stateTime / Judge_CCC::TIME_FADEOUT);
+	/*float alpha = UtilFunc::Correction::EasingEaseOut(1.0f, 0.0f, stateTime / Judge_CCC::TIME_FADEOUT);
+	pObj->SetAlpha(alpha);*/
 }
 
 //**************************************************************************
@@ -289,7 +303,8 @@ void CJudgeStateFunc_DDD::StateAppear()
 	// 不透明度設定
 	CJudgeObj* pObj = GetObj();
 	pObj->SetSize(pObj->GetSizeOrigin());
-	pObj->SetAlpha(stateTime / Judge_DDD::TIME_APPEAR);
+	float alpha = UtilFunc::Correction::EasingEaseIn(0.0f, 1.0f, stateTime / Judge_DDD::TIME_APPEAR);
+	pObj->SetAlpha(alpha);
 }
 
 //==========================================================================
@@ -330,5 +345,7 @@ void CJudgeStateFunc_DDD::StateFadeOut()
 	}
 
 	// 不透明度設定
-	pObj->SetAlpha(1.0f - stateTime / Judge_DDD::TIME_FADEOUT);
+	float alpha = UtilFunc::Correction::EasingEaseOut(1.0f, 0.0f, stateTime / Judge_DDD::TIME_FADEOUT);
+	pObj->SetAlpha(alpha);
+	//pObj->SetAlpha(1.0f - stateTime / Judge_DDD::TIME_FADEOUT);
 }

@@ -43,13 +43,6 @@ public:
 	{
 		MOTION_DEF = 0,			// ニュートラル
 		MOTION_WALK,			// 移動
-		MOTION_ATTACK_NORMAL,	// 通常攻撃
-		MOTION_ATTACK_STRONG,	// 強攻撃
-		MOTION_DMG,				// ダメージ
-		MOTION_DOWN,			// ダウン
-		MOTION_RETURNDOWN,		// ダウン
-		MOTION_KNOCKBACK,		// やられ
-		MOTION_FADEOUT,			// フェードアウト
 		MOTION_MAX
 	};
 
@@ -79,7 +72,7 @@ public:
 
 
 	static CListManager<CPeople> GetListObj() { return m_List; }	// リスト取得
-	static CPeople* Create(const char* pFileName, MyLib::Vector3 pos, TYPE type = TYPE_NORMAL);
+	static CPeople* Create(const std::string& pFileName, MyLib::Vector3 pos, TYPE type = TYPE_NORMAL);
 
 protected:
 
@@ -130,7 +123,6 @@ private:
 
 	void UpdateState();					// 状態更新処理
 	void Collision();					// 当たり判定
-	virtual void MotionSet() = 0;		// モーションの設定
 	void LimitArea(); // 大人の壁判定
 
 	//=============================

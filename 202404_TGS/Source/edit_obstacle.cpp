@@ -168,25 +168,6 @@ void CEdit_Obstacle_Arrangment::Update()
 	static int saveselect = 0;
 	float width = 150.0f;
 
-	ImGui::SetNextItemWidth(width);
-	if (ImGui::Button("Save"))
-	{
-		pObstacleMgr->Save();
-	}
-	ImGui::SameLine();
-
-	ImGui::SetNextItemWidth(width);
-	if (ImGui::Button("Save_as"))
-	{
-		pObstacleMgr->Save();
-	}
-	ImGui::SameLine();
-
-	ImGui::SetNextItemWidth(width);
-	if (ImGui::Button("Load"))
-	{
-
-	}
 
 
 	// ウィンドウのマウスホバー判定
