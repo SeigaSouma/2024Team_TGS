@@ -1,24 +1,23 @@
 //=============================================================================
 // 
-//  マップの障害物ヘッダー [map_obstacle.h]
-//  Author : 相馬靜雅
+//  マップのモーションする障害物ヘッダー [map_obstacle_motion.h]
+//  Author : 石原颯馬
 // 
 //=============================================================================
 
-#ifndef _MAP_OBSTACLE_H_
-#define _MAP_OBSTACLE_H_		// 二重インクルード防止
+#ifndef _MAP_OBSTACLE_MOTION_H_
+#define _MAP_OBSTACLE_MOTION_H_		// 二重インクルード防止
 
-#include "object.h"
-#include "objectX.h"
+#include "objectChara.h"
+#include "map_obstacle.h"
 #include "listmanager.h"
 #include "map_obstacleManager.h"
-#include "collisionLine_Box.h"
 
 //==========================================================================
 // クラス定義
 //==========================================================================
 // マップの障害物クラス
-class CMap_Obstacle : public CObject
+class CMap_Obstacle_Motion : public CMap_Obstacle
 {
 private:
 
@@ -30,9 +29,9 @@ private:
 
 public:
 
-	CMap_Obstacle(int nPriority = 5, 
+	CMap_Obstacle_Motion(int nPriority = 5,
 		CObject::LAYER layer = CObject::LAYER::LAYER_MAP);
-	~CMap_Obstacle();
+	~CMap_Obstacle_Motion();
 
 	//=============================
 	// オーバーライド関数
@@ -46,28 +45,20 @@ public:
 	// メンバ関数
 	//=============================
 	virtual void Kill();	// 削除
-	void Save();	// セーブ
-	void Load();	// ロード
 	bool GetSave() { return m_bSave; }
-	void SetSave(const bool bSave) { m_bSave = bSave; }
 	CMap_ObstacleManager::SObstacleInfo GetObstacleInfo() { return m_ObstacleInfo; }	// 障害物情報取得
 	void SetObstacleInfo(const CMap_ObstacleManager::SObstacleInfo& info) { m_ObstacleInfo = info; }	// 障害物情報設定
-	virtual MyLib::Matrix GetWorldMtx() { return MyLib::Matrix(); }
-	virtual MyLib::Vector3 GetScale() { return MyLib::Vector3(1.0f, 1.0f, 1.0f); }
-	virtual void CalWorldMtx() {}
-	virtual void SetPosition(const MyLib::Vector3& pos) { CObject::SetPosition(pos); }		// 位置設定
-	virtual void SetRotation(const MyLib::Vector3& rot) { CObject::SetRotation(rot); }		// 向き設定
-	virtual void SetScale(const MyLib::Vector3 scale) {}		// サイズ設定
-	virtual MyLib::Vector3 GetVtxMin() { return m_vtxMin; };			// 頂点の最小値取得
-	virtual MyLib::Vector3 GetVtxMax() { return m_vtxMax; };			// 頂点の最大値取得
-	virtual void SetState(CObjectX::STATE state){}
-	std::vector<CCollisionLine_Box*> GetCollisionLineBox() { return m_pCollisionLineBox; }
+	virtual MyLib::Matrix GetWorldMtx() override { return m_pChara->GetWorldMtx(); }
+	virtual void SetPosition(const MyLib::Vector3& pos) override;		// 位置設定
+	virtual void SetRotation(const MyLib::Vector3& rot) override;		// 向き設定
+	virtual void SetScale(const MyLib::Vector3 scale)  override {}		// サイズ設定
+	virtual void CalWorldMtx() override { m_pChara->CalWorldMtx(); }
 
 	//=============================
 	// 静的関数
 	//=============================
-	static CMap_Obstacle *Create(const CMap_ObstacleManager::SObstacleInfo& info, const bool bChange = true, const bool bSave = true);	// 生成処理
-	static CListManager<CMap_Obstacle> GetListObj() { return m_List; }				// リスト取得
+	static CMap_Obstacle_Motion *Create(const CMap_ObstacleManager::SObstacleInfo& info, const bool bChange = true, const bool bSave = true);	// 生成処理
+	static CListManager<CMap_Obstacle_Motion> GetListObj() { return m_List; }				// リスト取得
 
 private:
 
@@ -76,17 +67,14 @@ private:
 	// メンバ関数
 	//=============================
 	// その他
-	void CalVtxMinMax();
 
 	//=============================
 	// メンバ変数
 	//=============================
-	TYPE m_type;			// 種類
 	CMap_ObstacleManager::SObstacleInfo m_ObstacleInfo;	// 障害物情報
 	CMap_ObstacleManager::SObstacleInfo m_OriginObstacleInfo;	// 障害物情報
-	std::vector<CCollisionLine_Box*> m_pCollisionLineBox;	// 当たり判定ボックス
-	MyLib::Vector3 m_vtxMin, m_vtxMax;
-	static CListManager<CMap_Obstacle> m_List;	// リスト
+	CObjectChara* m_pChara;
+	static CListManager<CMap_Obstacle_Motion> m_List;	// リスト
 	bool m_bSave;			// 保存するかどうか
 
 };

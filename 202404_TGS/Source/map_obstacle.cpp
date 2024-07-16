@@ -9,6 +9,8 @@
 #include "calculation.h"
 #include "game.h"
 #include "collisionLine_Box.h"
+#include "map_obstacle_obj.h"
+#include "map_obstacle_motion.h"
 #include "obstacle_fisharch.h"
 #include "obstacle_birdcircle.h"
 
@@ -29,7 +31,7 @@ CListManager<CMap_Obstacle> CMap_Obstacle::m_List = {};	// リスト
 // コンストラクタ
 //==========================================================================
 CMap_Obstacle::CMap_Obstacle(int nPriority,
-	CObject::LAYER layer) : CObjectX(nPriority, layer)
+	CObject::LAYER layer) : CObject(nPriority, layer)
 {
 	// 値のクリア
 }
@@ -65,12 +67,28 @@ CMap_Obstacle *CMap_Obstacle::Create(const CMap_ObstacleManager::SObstacleInfo& 
 
 		default:
 
-			pObj = DEBUG_NEW CMap_Obstacle;
+			pObj = CMap_Obstacle_Object::Create(info,bChange,bSave);
 			break;
 		}
 	}
 	else {
-		pObj = DEBUG_NEW CMap_Obstacle;
+		switch (info.type)
+		{
+		case T::SAKANA:
+
+			pObj = CMap_Obstacle_Motion::Create(info);
+			break;
+
+		case T::BIRD:
+
+			pObj = CMap_Obstacle_Motion::Create(info);
+			break;
+
+		default:
+
+			pObj = CMap_Obstacle_Object::Create(info, bChange, bSave);
+			break;
+		}
 	}
 
 	if (pObj != nullptr)
@@ -96,12 +114,7 @@ HRESULT CMap_Obstacle::Init()
 	// 種類の設定
 	CObject::SetType(TYPE_OBJECTX);
 
-	// 初期化処理
-	HRESULT hr = CObjectX::Init(m_ObstacleInfo.modelFile);
-	if (FAILED(hr))
-	{
-		return E_FAIL;
-	}
+	m_OriginObstacleInfo = m_ObstacleInfo;	// 障害物情報
 
 #if _DEBUG
 
@@ -110,9 +123,11 @@ HRESULT CMap_Obstacle::Init()
 		CCollisionLine_Box* pBox = CCollisionLine_Box::Create(MyLib::AABB(box.vtxMin, box.vtxMax), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));	// 当たり判定ボックス
 		m_pCollisionLineBox.push_back(pBox);
 	}
+
 #endif
 
-	m_OriginObstacleInfo = m_ObstacleInfo;	// 障害物情報
+	// 頂点大小計算
+	CalVtxMinMax();
 
 	return S_OK;
 }
@@ -131,8 +146,8 @@ void CMap_Obstacle::Uninit()
 	// リストから削除
 	m_List.Delete(this);
 
-	// 終了処理
-	CObjectX::Uninit();
+	// オブジェクトの破棄
+	Release();
 }
 
 //==========================================================================
@@ -149,8 +164,8 @@ void CMap_Obstacle::Kill()
 	// リストから削除
 	m_List.Delete(this);
 
-	// 終了処理
-	CObjectX::Kill();
+	// オブジェクトの破棄
+	Release();
 }
 
 //==========================================================================
@@ -184,32 +199,54 @@ void CMap_Obstacle::Update()
 //==========================================================================
 void CMap_Obstacle::Draw()
 {
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
-
-	// ステンシルバッファ有効
-	pDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);
-
-	// 参照値設定
-	pDevice->SetRenderState(D3DRS_STENCILREF, 0x01);
-
-	// バッファへの値に対してのマスク設定
-	pDevice->SetRenderState(D3DRS_STENCILMASK, 0xff);
-
-	// ステンシルテストの比較方法設定
-	pDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_LESSEQUAL);
-
-	// テスト結果に対しての反映設定
-	pDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_INCR);		// Z+ステンシル成功
-	pDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_ZERO);		// Z+ステンシル失敗
-	pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_ZERO);		// Zテストのみ失敗
-
-	// ステンシル描画
-	CObjectX::Draw();
-
-	// ステンシルバッファ無効にしてZバッファ設定戻す
-	pDevice->SetRenderState(D3DRS_STENCILENABLE, FALSE);
-
-	// 普通の描画
-	CObjectX::Draw();
+	
 }
 
+void CMap_Obstacle::CalVtxMinMax()
+{
+	m_vtxMin = MyLib::Vector3();
+	m_vtxMax = MyLib::Vector3();
+
+	for (auto& obj : m_ObstacleInfo.boxcolliders)
+	{
+		MyLib::Vector3 vtxMin, vtxMax;
+		vtxMin = obj.vtxMin + obj.offset;
+		vtxMax = obj.vtxMax + obj.offset;
+
+		// X
+		if (m_vtxMin.x > vtxMin.x)
+		{// 今の最小値よりも今回の値がちいさかったら
+
+			m_vtxMin.x = vtxMin.x;
+		}
+		if (m_vtxMax.x < vtxMax.x)
+		{// 今の最大値よりも今回の値が大きかったら
+
+			m_vtxMax.x = vtxMax.x;
+		}
+
+		// Y
+		if (m_vtxMin.y > vtxMin.y)
+		{// 今の最小値よりも今回の値がちいさかったら
+
+			m_vtxMin.y = vtxMin.y;
+		}
+		if (m_vtxMax.y < vtxMax.y)
+		{// 今の最大値よりも今回の値が大きかったら
+
+			m_vtxMax.y = vtxMax.y;
+		}
+
+		// Z
+		if (m_vtxMin.z > vtxMin.z)
+		{// 今の最小値よりも今回の値がちいさかったら
+
+			m_vtxMin.z = vtxMin.z;
+		}
+		if (m_vtxMax.z < vtxMax.z)
+		{// 今の最大値よりも今回の値が大きかったら
+
+			m_vtxMax.z = vtxMax.z;
+		}
+	}
+}
