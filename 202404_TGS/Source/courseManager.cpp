@@ -207,6 +207,11 @@ void CCourseManager::Load()
 	// ロード情報コピー
 	m_vecAllSegmentPos = loaddata;
 
+
+	// ランダム選出されたブロックに付随する、チェックポイント、障害物の生成
+	// Blockの読み込み(障害物、チェックポイント)
+	CMapBlock::Load();
+
 	for(auto& vec : m_vecAllSegmentPos)
 	{
 		while (1)
@@ -304,10 +309,6 @@ void CCourseManager::Load()
 	pCourse->SetVecPosition(segmentpos);
 	pCourse->ReCreateVtx();
 	CGame::GetInstance()->SetCource(pCourse);
-
-	// ランダム選出されたブロックに付随する、チェックポイント、障害物の生成
-	// Blockの読み込み(障害物、チェックポイント)
-	CMapBlock::Load();
 
 	// 距離にあわせた配置を行う
 	for (int i = 0; i < NUM_CHUNK; i++)
