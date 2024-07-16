@@ -10,6 +10,7 @@ SCRIPT			# この行は絶対消さないこと！
 # キャラクターファイル名
 #------------------------------------------------------------------
 MOTION_FILENAME = data/TEXT/character/mob/setup_person_cherry.txt		# [0]強チェ
+MOTION_FILENAME = data/TEXT/character/mob/person_01/setup_human.txt		# [1]袴姿の人
 
 #===================================================================================================
 # 群情報
