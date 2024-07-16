@@ -2,14 +2,13 @@ Metasequoia Document
 Format Text Ver 1.0
 
 Scene {
-	pos -13.6600 -29.1271 9536.7451
+	pos -13.6600 -29.1271 5960.4658
 	lookat 8.7483 94.7502 -11.6924
-	head 0.0000
-	pich 0.0000
+	head -0.1700
+	pich 0.0400
 	bank 0.0000
-	ortho 1
-	zoom2 3.2165
-	zoom_pers 1.2564
+	ortho 0
+	zoom2 2.0102
 	amb 0.250 0.250 0.250
 	dirlights 1 {
 		light {
@@ -18,7 +17,7 @@ Scene {
 		}
 	}
 }
-Material 9 {
+Material 8 {
 	"mat1" col(1.000 0.843 0.718 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00)
 	"mat2" col(0.157 0.157 0.157 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00)
 	"mat4" col(0.000 0.024 0.388 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00)
@@ -27,10 +26,9 @@ Material 9 {
 	"mat3" col(0.353 0.353 0.353 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00)
 	"mat7" col(0.000 0.000 0.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00)
 	"mat8" col(0.741 0.475 0.153 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00)
-	"None" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\É`Å[ÉÄêßçÏ\2024Team_TGS\202404_TGS\data\TEXTURE\map_object\kayabuki_yane.jpg")
 }
 Object "body" {
-	visible 15
+	visible 0
 	locking 0
 	shading 1
 	facet 59.5
@@ -679,7 +677,7 @@ Object "body" {
 	}
 }
 Object "head" {
-	visible 0
+	visible 15
 	locking 0
 	shading 1
 	facet 59.5
@@ -1975,8 +1973,8 @@ Object "L_downer_leg" {
 		4 V(50 47 46 48) M(2) UV(0.05209 0.82845 0.07528 0.82753 0.10480 0.82522 0.12856 0.82396)
 	}
 }
-Object "obj1" {
-	visible 0
+Object "waist" {
+	visible 15
 	locking 0
 	shading 1
 	facet 59.5
