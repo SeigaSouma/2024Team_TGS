@@ -283,9 +283,13 @@ void CCourseManager::Load()
 	std::vector<MyLib::Vector3> segmentpos;	// 基点の位置
 	MyLib::Vector3 start;
 	std::vector<MyLib::Vector3> vecstart;	// 基点の位置
-	vecstart.push_back(0.0f);
-	vecstart.push_back(10.0f);
-	vecstart.push_back(2000.0f);
+	vecstart.push_back(MyLib::Vector3(2000.0f, 0.0f, 0.0f));
+	start = vecstart.back() + MyLib::Vector3(DISTANCE_TO_CHUNCK, 0.0f, 0.0f);
+
+
+	segmentpos.push_back(MyLib::Vector3(-10.0f, 0.0f, 0.0f));
+	segmentpos.push_back(MyLib::Vector3(10.0f, 0.0f, 0.0f));
+	segmentpos.push_back(MyLib::Vector3(2000.0f, 0.0f, 0.0f));
 
 	for (const auto& idx : randIdx)
 	{
