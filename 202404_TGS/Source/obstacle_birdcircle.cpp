@@ -67,7 +67,7 @@ HRESULT CObstacle_BirdCircle::Init()
 	CMap_Obstacle::GetListObj().Regist(this);
 	MyLib::Vector3 rot;
 
-#if 1
+#if _DEBUG
 	CMap_Obstacle::Init();
 #endif
 

@@ -210,6 +210,8 @@ void CCourseManager::Load()
 	//=============================
 	// ƒ‰ƒ“ƒ_ƒ€‘Io
 	//=============================
+	// —”‚Ìí‚ğİ’è
+	srand((unsigned int)time(0));
 	int segmentSize = static_cast<int>(m_vecAllSegmentPos.size()) - 1;
 	
 	std::vector<int> randIdx;
