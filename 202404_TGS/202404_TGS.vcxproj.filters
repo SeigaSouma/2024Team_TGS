@@ -605,6 +605,12 @@
     <ClCompile Include="Source\peoplemanager.cpp">
       <Filter>people</Filter>
     </ClCompile>
+    <ClCompile Include="Source\map_obstacle_motion.cpp">
+      <Filter>map</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\map_obstacle_obj.cpp">
+      <Filter>map</Filter>
+    </ClCompile>
     <ClCompile Include="Source\countdown_start.cpp">
       <Filter>direction</Filter>
     </ClCompile>
@@ -1104,6 +1110,12 @@
     </ClInclude>
     <ClInclude Include="Source\peoplemanager.h">
       <Filter>people</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\map_obstacle_motion.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\map_obstacle_obj.h">
+      <Filter>map</Filter>
     </ClInclude>
     <ClInclude Include="Source\countdown_start.h">
       <Filter>direction</Filter>

@@ -368,7 +368,7 @@ void CEdit_Obstacle_Arrangment::ObjectSelect()
 		CMap_Obstacle* pObject = nullptr;
 
 		// リストコピー
-		std::vector<CObjectX*> pObjectSort;
+		std::vector<CMap_Obstacle*> pObjectSort;
 
 		while (list.ListLoop(itr))
 		{
@@ -468,8 +468,11 @@ void CEdit_Obstacle_Arrangment::ObjectSelect()
 		m_pGrabObj->SetRotation(rot);
 		m_pGrabObj->SetScale(scale);
 
-		if (m_pGrabObj->GetCollisionLineBox() != nullptr) {
-			m_pGrabObj->GetCollisionLineBox()->SetPosition(pos);
+		if (m_pGrabObj->GetCollisionLineBox().size() > 0) {
+			for (auto& box : m_pGrabObj->GetCollisionLineBox())
+			{
+				box->SetPosition(m_pGrabObj->GetPosition() + pos);
+			}
 		}
 
 		if (m_pHandle != nullptr) {
@@ -624,8 +627,11 @@ void CEdit_Obstacle_Arrangment::Transform()
 
 		// 位置設定
 		m_pGrabObj->SetPosition(pos);
-		if (m_pGrabObj->GetCollisionLineBox() != nullptr) {
-			m_pGrabObj->GetCollisionLineBox()->SetPosition(pos);
+		if (m_pGrabObj->GetCollisionLineBox().size() > 0) {
+			for (auto& box : m_pGrabObj->GetCollisionLineBox())
+			{
+				box->SetPosition(m_pGrabObj->GetPosition() + pos);
+			}
 		}
 		if (m_pHandle != nullptr) {
 			m_pHandle->SetPosition(m_pGrabObj->GetPosition());
