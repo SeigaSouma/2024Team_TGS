@@ -629,16 +629,6 @@ void CCourse::Update()
 
 #endif
 
-
-	for (const auto& pos : m_vecSegmentPosition)
-	{
-		CEffect3D::Create(
-			pos + GetPosition(),
-			0.0f,
-			D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f),
-			80.0f, 2, CEffect3D::MOVEEFFECT::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
-	}
-
 	// í∏ì_ç¿ïW
 	SetVtx();
 }
