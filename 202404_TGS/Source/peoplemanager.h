@@ -53,7 +53,7 @@ public:
 
 	static CPeopleManager *Create();
 	HRESULT ReadText(const std::string& filename);	// 外部ファイル読み込み処理
-	void SetPeople(MyLib::Vector3 pos, MyLib::Vector3 rot, int nPattern);	// 敵配置
+	void SetPeople(const MyLib::Vector3& pos, const MyLib::Vector3& rot, int nPattern);	// 敵配置
 	void SetByRank();	// ランクごとのセット処理
 
 	void SetRank(const CJudge::JUDGE& judge) { m_Rank = judge; }			// ランク設定

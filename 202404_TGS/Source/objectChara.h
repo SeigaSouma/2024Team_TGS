@@ -66,7 +66,7 @@ public:
 	*/
 	struct ColliderData
 	{
-		SphereCollider collider;	// スフィアコライダー
+		std::vector<SphereCollider> colliders;	// スフィアコライダー
 		std::string filename;		// ファイル名
 	};
 

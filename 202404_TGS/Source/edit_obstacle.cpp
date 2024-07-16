@@ -235,14 +235,28 @@ void CEdit_Obstacle_Arrangment::Update()
 		}
 
 		// 生成
-		m_pDragObj = CObjectX::Create(m_ObstacleInfo.modelFile);
-		m_pDragObj->SetType(CObject::TYPE::TYPE_OBJECTX);
+		/*m_pDragObj = CObjectX::Create(m_ObstacleInfo.modelFile);
+		m_pDragObj->SetType(CObject::TYPE::TYPE_OBJECTX);*/
 	}
 
 
 	// マウス情報取得
 	CInputMouse* pMouse = CInputMouse::GetInstance();
 	MyLib::Vector3 mouseWorldPos = pMouse->GetWorldPosition();
+
+	// ドラッグ中
+	if (m_bButtonDrag)
+	{
+		MyLib::Vector3 setpos = mouseWorldPos;
+		setpos.y = 0.0f;
+
+		CEffect3D::Create(
+			setpos,
+			0.0f,
+			D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f),
+			80.0f, 2, CEffect3D::MOVEEFFECT::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+	}
+
 
 	if (m_pDragObj != nullptr) {
 

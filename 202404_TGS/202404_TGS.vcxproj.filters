@@ -605,6 +605,9 @@
     <ClCompile Include="Source\peoplemanager.cpp">
       <Filter>people</Filter>
     </ClCompile>
+    <ClCompile Include="Source\countdown_start.cpp">
+      <Filter>direction</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ballast.h">
@@ -1101,6 +1104,9 @@
     </ClInclude>
     <ClInclude Include="Source\peoplemanager.h">
       <Filter>people</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\countdown_start.h">
+      <Filter>direction</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
