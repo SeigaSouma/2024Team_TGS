@@ -207,6 +207,46 @@ void CCourseManager::Load()
 	// ロード情報コピー
 	m_vecAllSegmentPos = loaddata;
 
+	for(auto& vec : m_vecAllSegmentPos)
+	{
+		while (1)
+		{
+			if (vec[0] != MyLib::Vector3(0.0f, 0.0f, 0.0f))
+			{
+				vec.erase(vec.begin());
+				continue;
+			}
+			break;
+		}
+
+		int i = 0;
+		while (1)
+		{
+			if (vec.size() <= i)
+			{
+				break;
+			}
+
+			if (vec[i].x <= 12000.0f)
+			{
+				i++;
+				continue;
+			}
+
+			if (vec[i].x > 12000.0f)
+			{
+				vec.erase(vec.begin() + i);
+
+				if (vec.size() <= i)
+				{
+					break;
+				}
+			}
+		}
+
+	}
+	Save();
+
 	//=============================
 	// ランダム選出
 	//=============================
@@ -224,6 +264,8 @@ void CCourseManager::Load()
 	MyLib::Vector3 start;
 	std::vector<MyLib::Vector3> vecstart;	// 基点の位置
 	vecstart.push_back(0.0f);
+	vecstart.push_back(10.0f);
+	vecstart.push_back(2000.0f);
 
 	for (const auto& idx : randIdx)
 	{
@@ -238,6 +280,7 @@ void CCourseManager::Load()
 		start = segmentpos.back() + MyLib::Vector3(DISTANCE_TO_CHUNCK, 0.0f, 0.0f);
 		vecstart.push_back(start);
 	}
+	segmentpos.push_back(segmentpos.back() + MyLib::Vector3(10.0f, 0.0f, 0.0f));
 
 	//=============================
 	// コース作成
