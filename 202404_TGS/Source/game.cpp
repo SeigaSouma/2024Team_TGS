@@ -310,7 +310,7 @@ HRESULT CGame::Init()
 	//=============================
 	// ƒS[ƒ‹ì¬
 	//=============================
-	CGoalflagX::Create((m_pCourse->GetCourceLength() * 5) * 1.2f);
+	CGoalflagX::Create((CCourseManager::GetBlockLength() * 5) * 0.975f);
 	//CGoalflagX::Create(m_pCourse->GetCourceLength() * 0.975f);
 
 	//=============================
