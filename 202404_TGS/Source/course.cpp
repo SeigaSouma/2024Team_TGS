@@ -23,8 +23,8 @@ namespace
 	const int WIDTH_BLOCK = 2;
 	const float WIDTH = 2000.0f;
 	const float INTERVAL_TEXU = 500.0f;		// U座標の間隔
-	const float INTERVAL_SINCURVE = 1000.0f;	// サインカーブの間隔
-	const float HEIGHT_SINCURVE = 4.0f;	// サインカーブの高さ
+	const float INTERVAL_SINCURVE = 1200.0f;	// サインカーブの間隔
+	const float HEIGHT_SINCURVE = 8.4f;	// サインカーブの高さ
 	const float SCROLL_VELOCITY = 10.0f;
 }
 const float CCourse::m_fCreateDistance = 600.0f;	// 生成間隔
@@ -628,16 +628,6 @@ void CCourse::Update()
 	m_fSinCurve -= SCROLL_VELOCITY;
 
 #endif
-
-
-	for (const auto& pos : m_vecSegmentPosition)
-	{
-		CEffect3D::Create(
-			pos + GetPosition(),
-			0.0f,
-			D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f),
-			80.0f, 2, CEffect3D::MOVEEFFECT::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
-	}
 
 	// 頂点座標
 	SetVtx();

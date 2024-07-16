@@ -207,22 +207,89 @@ void CCourseManager::Load()
 	// ロード情報コピー
 	m_vecAllSegmentPos = loaddata;
 
+
+	// ランダム選出されたブロックに付随する、チェックポイント、障害物の生成
+	// Blockの読み込み(障害物、チェックポイント)
+	CMapBlock::Load();
+
+	for(auto& vec : m_vecAllSegmentPos)
+	{
+		while (1)
+		{
+			if (vec[0] != MyLib::Vector3(0.0f, 0.0f, 0.0f))
+			{
+				vec.erase(vec.begin());
+				continue;
+			}
+			break;
+		}
+
+		int i = 0;
+		while (1)
+		{
+			if (vec.size() <= i)
+			{
+				break;
+			}
+
+			if (vec[i].x <= 12000.0f)
+			{
+				i++;
+				continue;
+			}
+
+			if (vec[i].x > 12000.0f)
+			{
+				vec.erase(vec.begin() + i);
+
+				if (vec.size() <= i)
+				{
+					break;
+				}
+			}
+		}
+
+	}
+	Save();
+
 	//=============================
 	// ランダム選出
 	//=============================
+	// 乱数の種を設定
+	srand((unsigned int)time(0));
 	int segmentSize = static_cast<int>(m_vecAllSegmentPos.size()) - 1;
 	
 	std::vector<int> randIdx;
 	for (int i = 0; i < NUM_CHUNK; i++)
 	{
-		randIdx.push_back(UtilFunc::Transformation::Random(0, segmentSize));
+		int idx = 0;
+		while (1)
+		{
+			idx = UtilFunc::Transformation::Random(0, segmentSize);
+
+			// 前回と違う番号にする
+			if (i != 0 && segmentSize > 1)
+			{
+				if (idx == randIdx[i - 1]) continue;
+			}
+
+			break;
+		}
+
+		randIdx.push_back(idx);
 	}
 
 	// 一本のコースにする
 	std::vector<MyLib::Vector3> segmentpos;	// 基点の位置
 	MyLib::Vector3 start;
 	std::vector<MyLib::Vector3> vecstart;	// 基点の位置
-	vecstart.push_back(0.0f);
+	vecstart.push_back(MyLib::Vector3(2000.0f, 0.0f, 0.0f));
+	start = vecstart.back() + MyLib::Vector3(DISTANCE_TO_CHUNCK, 0.0f, 0.0f);
+
+
+	segmentpos.push_back(MyLib::Vector3(-10.0f, 0.0f, 0.0f));
+	segmentpos.push_back(MyLib::Vector3(10.0f, 0.0f, 0.0f));
+	segmentpos.push_back(MyLib::Vector3(2000.0f, 0.0f, 0.0f));
 
 	for (const auto& idx : randIdx)
 	{
@@ -237,6 +304,7 @@ void CCourseManager::Load()
 		start = segmentpos.back() + MyLib::Vector3(DISTANCE_TO_CHUNCK, 0.0f, 0.0f);
 		vecstart.push_back(start);
 	}
+	segmentpos.push_back(segmentpos.back() + MyLib::Vector3(10.0f, 0.0f, 0.0f));
 
 	//=============================
 	// コース作成
@@ -245,10 +313,6 @@ void CCourseManager::Load()
 	pCourse->SetVecPosition(segmentpos);
 	pCourse->ReCreateVtx();
 	CGame::GetInstance()->SetCource(pCourse);
-
-	// ランダム選出されたブロックに付随する、チェックポイント、障害物の生成
-	// Blockの読み込み(障害物、チェックポイント)
-	CMapBlock::Load();
 
 	// 距離にあわせた配置を行う
 	for (int i = 0; i < NUM_CHUNK; i++)

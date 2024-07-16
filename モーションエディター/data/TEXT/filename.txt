@@ -13,6 +13,7 @@ SCRIPT			# Ç±ÇÃçsÇÕê‚ëŒè¡Ç≥Ç»Ç¢Ç±Ç∆ÅI
 1MOTION_FILENAME = data/TEXT/character/enemy/gobelin/setup_gobelin.txt
 1MOTION_FILENAME = data/TEXT/character/enemy/stonegolem/setup_stonegolem.txt
 1MOTION_FILENAME = data/TEXT/character/enemy/gorira/setup_gorira.txt
+MOTION_FILENAME = data/TEXT/character/mob/setup_person_cherry.txt
 1MOTION_FILENAME = data/TEXT/character/horse/setup_horse.txt
 MOTION_FILENAME = data/TEXT/character/bird/setup_bird.txt
 

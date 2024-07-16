@@ -69,7 +69,7 @@ HRESULT CObstacle_FishArch::Init()
 	CMap_Obstacle::GetListObj().Regist(this);
 	MyLib::Vector3 rot;
 	
-#if 1
+#if _DEBUG
 	CMap_Obstacle::Init();
 #endif
 
@@ -204,6 +204,7 @@ void CObstacle_FishArch::ControllFish()
 			UtilFunc::Transformation::RotNormalize(rot.x);
 			it.pFish->SetRotation(rot);
 			SetFishOffSet(it);
+			it.pFish->SetScale(GetScale());
 		}
 	}
 }

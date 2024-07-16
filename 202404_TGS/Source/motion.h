@@ -161,7 +161,7 @@ private:
 	static std::vector<std::string> m_sTextFile;	// テキストファイル名
 	static int m_nNumLoad;	// 読み込んだ数
 	static std::vector<int> m_nNumLoadData;				// モーション毎のデータ数
-	static std::vector<Info> m_aLoadData[MAX_MOTION];	// モーションの読み込み情報
+	static std::vector<CMotion::Info> m_aLoadData[MAX_MOTION];	// モーションの読み込み情報
 	static std::vector<AttackInfo> m_aLoadAttackData[MAX_MOTION][MAX_PARTS];	// 攻撃の読み込み情報
 };
 

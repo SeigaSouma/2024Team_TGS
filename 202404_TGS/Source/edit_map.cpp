@@ -1016,7 +1016,7 @@ void CEdit_Map::Save()
 void CEdit_Map::Load(const std::string& file)
 {
 	// 再読み込み回避
-	if (m_bLoad) return;
+	//if (m_bLoad) return;
 
 	char aComment[MAX_COMMENT] = {};	//コメント用
 	int nFileNum = 0;					// ファイルの数

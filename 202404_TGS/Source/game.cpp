@@ -52,6 +52,7 @@
 #include "waterstoneManager.h"
 #include "spline.h"
 #include "courseManager.h"
+#include "peoplemanager.h"
 
 //==========================================================================
 // 静的メンバ変数宣言
@@ -80,6 +81,7 @@ CGame::CGame()
 	m_pCourseManager = nullptr;		// コースマネージャのオブジェクト
 	m_pJudgeZoneManager = nullptr;	// 判定ゾーンマネージャ
 	m_pWaterStoneManager = nullptr;	// 水中石マネージャ
+	m_pPeopleManager = nullptr;		// 人マネージャ
 	m_pMapUI = nullptr;				// マップUI
 }
 
@@ -308,7 +310,8 @@ HRESULT CGame::Init()
 	//=============================
 	// ゴール作成
 	//=============================
-	CGoalflagX::Create(60100.0f);
+	CGoalflagX::Create((CCourseManager::GetBlockLength() * 5) * 0.975f);
+	//CGoalflagX::Create(m_pCourse->GetCourceLength() * 0.975f);
 
 	//=============================
 	// 判定ゾーンマネージャ
@@ -328,6 +331,11 @@ HRESULT CGame::Init()
 	// 水中石マネージャ
 	//=============================
 	m_pWaterStoneManager = CWaterStone_Manager::Create();
+
+	//=============================
+	// 人マネージャ
+	//=============================
+	m_pPeopleManager = CPeopleManager::Create();
 
 	// BGM再生
 	CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_BGM_GAME);
@@ -444,6 +452,13 @@ void CGame::Uninit()
 		m_pCourseManager = nullptr;
 	}
 
+	// 人マネージャ
+	if (m_pPeopleManager != nullptr)
+	{
+		m_pPeopleManager->Uninit();
+		m_pPeopleManager = nullptr;
+	}
+
 	// マップUI
 	if (m_pMapUI != nullptr)
 	{
@@ -469,6 +484,12 @@ void CGame::Update()
 	{
 		// 更新処理
 		m_pGameManager->Update();
+	}
+
+	// 人マネージャ
+	if (m_pPeopleManager != nullptr)
+	{
+		m_pPeopleManager->Update();
 	}
 
 	CManager::GetInstance()->GetDebugProc()->Print(

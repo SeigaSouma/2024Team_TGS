@@ -67,6 +67,10 @@ HRESULT CObstacle_BirdCircle::Init()
 	CMap_Obstacle::GetListObj().Regist(this);
 	MyLib::Vector3 rot;
 
+#if _DEBUG
+	CMap_Obstacle::Init();
+#endif
+
 	// 種類の設定
 	CObject::SetType(TYPE_OBJECTX);
 
@@ -140,10 +144,12 @@ void CObstacle_BirdCircle::Update()
 	m_rot.x -= m_Info.fRotSpeed;
 	UtilFunc::Transformation::RotNormalize(m_rot.y);
 	UtilFunc::Transformation::RotNormalize(m_rot.x);
-	SetRotation(m_rot);
 
 	// 距離設定
 	SetNowLength();
+
+	// マトリックス設定
+	CalWorldMtx();
 
 	// 鳥の更新
 	ControllBird();
@@ -195,6 +201,7 @@ void CObstacle_BirdCircle::ControllBird()
 			UtilFunc::Transformation::RotNormalize(rot.y);
 			it.pBird->SetRotation(rot);
 			SetBirdOffSet(it);
+			it.pBird->SetScale(GetScale());
 		}
 	}
 }
