@@ -388,9 +388,9 @@ void CPlayerControlMove::Move(CPlayer* player)
 		}
 	}
 
-	// Šp“x‚Ì³‹K‰»
-	UtilFunc::Transformation::RotNormalize(fRotDest);
-	player->SetRotDest(fRotDest);
+	//// Šp“x‚Ì³‹K‰»
+	//UtilFunc::Transformation::RotNormalize(fRotDest);
+	//player->SetRotDest(fRotDest);
 }
 
 //==========================================================================

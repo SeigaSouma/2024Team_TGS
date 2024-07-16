@@ -310,7 +310,8 @@ HRESULT CGame::Init()
 	//=============================
 	// ゴール作成
 	//=============================
-	CGoalflagX::Create(m_pCourse->GetCourceLength() * 0.975f);
+	CGoalflagX::Create((CCourseManager::GetBlockLength() * 5) * 0.975f);
+	//CGoalflagX::Create(m_pCourse->GetCourceLength() * 0.975f);
 
 	//=============================
 	// 判定ゾーンマネージャ

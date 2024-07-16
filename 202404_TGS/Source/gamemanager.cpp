@@ -401,20 +401,14 @@ void CGameManager::TurnAway()
 	// ˆÚ“®•ûŒü‚©‚çŠp“xŽZo
 	float moveLength = pPlayer->GetMoveLength();
 	MyLib::Vector3 posDest = MySpline::GetSplinePosition_NonLoop(CGame::GetInstance()->GetCourse()->GetVecPosition(), moveLength + 1.0f);
-	MyLib::Vector3 vecMove = (posDest - pPlayer->GetPosition());	// XYZ‚ÌƒxƒNƒgƒ‹ì¬
-	vecMove.y = 0.0f;			// Y‚Í‚¢‚ç‚È‚¢‚Ì‚ÅÁ‚·
-	vecMove = vecMove.Normal();	// ³‹K‰»
-
-	// Šp“xŒvŽZ
-	float angle = acosf(MyLib::Vector3(1.0f, 0.0f, 0.0f).Dot(vecMove));
-	if (vecMove.z > 0.0f)
-	{
-		angle *= -1;
-	}
+	
+	float angleXZ = pPlayer->GetPosition().AngleXZ(posDest);
+	angleXZ += (D3DX_PI * 0.5f);
+	UtilFunc::Transformation::RotNormalize(angleXZ);
 
 	// Šp“xÝ’è
 	MyLib::Vector3 rot = pCamera->GetRotation();
-	pCamera->SetRotation(MyLib::Vector3(rot.x, angle + pCamera->GetOriginRotation().y, rot.z));
+	pCamera->SetRotation(MyLib::Vector3(rot.x, angleXZ + pCamera->GetOriginRotation().y, rot.z));
 }
 
 //==========================================================================
