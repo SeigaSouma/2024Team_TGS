@@ -215,7 +215,8 @@ void CCourseManager::Load()
 	std::vector<int> randIdx;
 	for (int i = 0; i < NUM_CHUNK; i++)
 	{
-		randIdx.push_back(UtilFunc::Transformation::Random(0, segmentSize));
+		//randIdx.push_back(UtilFunc::Transformation::Random(0, segmentSize));
+		randIdx.push_back(rand() % (segmentSize - 1));
 	}
 
 	// 一本のコースにする
