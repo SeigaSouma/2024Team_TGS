@@ -217,8 +217,21 @@ void CCourseManager::Load()
 	std::vector<int> randIdx;
 	for (int i = 0; i < NUM_CHUNK; i++)
 	{
-		//randIdx.push_back(UtilFunc::Transformation::Random(0, segmentSize));
-		randIdx.push_back(rand() % (segmentSize - 1));
+		int idx = 0;
+		while (1)
+		{
+			idx = UtilFunc::Transformation::Random(0, segmentSize);
+
+			// 前回と違う番号にする
+			if (i != 0 && segmentSize > 1)
+			{
+				if (idx == randIdx[i - 1]) continue;
+			}
+
+			break;
+		}
+
+		randIdx.push_back(idx);
 	}
 
 	// 一本のコースにする
