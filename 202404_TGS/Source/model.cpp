@@ -199,7 +199,7 @@ void CModel::CalWorldMtx()
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
 
-	MyLib::Matrix mtxRot, mtxTrans, mtxScale, mtxRotOrigin;	// 計算用マトリックス宣言
+	MyLib::Matrix mtxRot, mtxTrans, mtxScale, mtxScaleOrigin, mtxRotOrigin;	// 計算用マトリックス宣言
 	MyLib::Matrix mtxParent;			// 親のマトリックス
 
 	bool bScale = false;
@@ -210,6 +210,10 @@ void CModel::CalWorldMtx()
 
 	// ワールドマトリックスの初期化
 	m_mtxWorld.Identity();
+
+	// 元のスケールを反映
+	mtxScaleOrigin.Scaling(m_scaleOrigin);
+	m_mtxWorld.Multiply(m_mtxWorld, mtxScaleOrigin);
 
 	// スケールを反映する
 	mtxScale.Scaling(m_scale);
