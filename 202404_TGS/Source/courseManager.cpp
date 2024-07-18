@@ -21,7 +21,7 @@
 namespace
 {
 	const std::string FILENAME = "data\\TEXT\\map\\chunkdata.bin";
-	const int NUM_CHUNK = 10;	// チャンクの数
+	const int NUM_CHUNK = 1;	// チャンクの数
 
 	const std::vector<MyLib::Vector3> DEFAULT_SEGMENTPOS =
 	{
