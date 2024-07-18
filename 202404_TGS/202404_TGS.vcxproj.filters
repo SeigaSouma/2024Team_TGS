@@ -614,6 +614,9 @@
     <ClCompile Include="Source\countdown_start.cpp">
       <Filter>direction</Filter>
     </ClCompile>
+    <ClCompile Include="Source\request_people.cpp">
+      <Filter>people</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ballast.h">
@@ -1119,6 +1122,9 @@
     </ClInclude>
     <ClInclude Include="Source\countdown_start.h">
       <Filter>direction</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\request_people.h">
+      <Filter>people</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

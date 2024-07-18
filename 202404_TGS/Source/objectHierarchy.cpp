@@ -524,7 +524,7 @@ HRESULT CObjectHierarchy::ReadText(const std::string& file)
 	pFile = fopen(file.c_str(), "r");
 
 	if (pFile == nullptr)
-	{//ファイルが開けた場合
+	{// ファイルが開けた場合
 		return E_FAIL;
 	}
 
