@@ -152,13 +152,15 @@ COLLIDER_FILENAME = data/TEXT/character/mob/person_01/sphere_collider.json
 #------------------------------------------------------------------------------
 # モーション数
 #------------------------------------------------------------------------------
-NUM_MOTION = 2
+NUM_MOTION = 4
 
 #------------------------------------------------------------------------------
 # モデルファイル名
 #------------------------------------------------------------------------------
 MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_def.txt				# [0]デフォルト
 MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_walk.txt			# [1]歩き
+MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_pass.txt			# [1]歩き
+MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_bye.txt			# [1]歩き
 
 
 END_SCRIPT		# この行は絶対消さないこと！

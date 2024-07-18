@@ -998,7 +998,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.500000;0.500000;0.500000;;
    TextureFilename {
-    "C:\\Users\\student\\Pictures\\Screenshots\\スクリーンショット (205).png";
+    "";
    }
   }
   Material {
