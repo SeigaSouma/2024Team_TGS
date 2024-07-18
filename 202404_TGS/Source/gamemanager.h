@@ -24,6 +24,7 @@ public:
 	enum SceneType
 	{
 		SCENE_MAIN = 0,			// メイン
+		SCENE_START,			// 開始演出
 		SCENE_MAINRESULT,		// メインリザルト
 		SCENE_DURING_MAINRESULT,		// メインリザルト中
 		SCENE_MAINCLEAR,		// メインクリア
@@ -35,6 +36,7 @@ public:
 		SCENE_TRANSITION,		// 転移
 		SCENE_RESULT,			// リザルト
 		SCENE_WAIT_AIRPUSH,		// 空気送り待ち
+		SCENE_GOAL,				// ゴール
 		SCENE_DEBUG,			// デバッグ
 		SCENE_MAX
 	};
