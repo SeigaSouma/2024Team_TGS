@@ -6,6 +6,7 @@
 //=============================================================================
 #include "peoplemanager.h"
 #include "people.h"
+#include "player.h"
 #include "calculation.h"
 #include "manager.h"
 #include "debugproc.h"
@@ -18,6 +19,8 @@ namespace
 	const std::string FILENAME = "data\\TEXT\\people\\manager.txt";
 	const float SPAWN_DISTANCE = 600.0f;		// 湧き距離間隔
 	const float SPAWN_ALL_LENGTH = 80000.0f;	// 出現する全ての長さ
+	const float SPAWN_MIN_LENGTH = -1000.0f;	// 出現する最低距離（プレイヤーからの距離）
+	const float SPAWN_MAX_LENGTH = 6000.0f;		// 出現する最高距離（プレイヤーからの距離、これより先は後生成リスト行き）
 }
 CPeopleManager* CPeopleManager::m_ThisPtr = nullptr;				// 自身のポインタ
 
@@ -84,6 +87,8 @@ HRESULT CPeopleManager::Init()
 //==========================================================================
 void CPeopleManager::Uninit()
 {
+	ResetLateSpawn();
+
 	delete m_ThisPtr;
 	m_ThisPtr = nullptr;
 }
@@ -93,12 +98,17 @@ void CPeopleManager::Uninit()
 //==========================================================================
 void CPeopleManager::Update()
 {
+	// 範囲外の人を消す
+	DespawnPeople();
 
 	// 評価ごとに人数増やす
 	if (m_Rank != m_OldRank)
 	{
 		SetByRank();
 	}
+
+	// 後生成の人を出す
+	LateSpawn();
 
 	// 前回のランク
 	m_OldRank = m_Rank;
@@ -109,15 +119,19 @@ void CPeopleManager::Update()
 //==========================================================================
 void CPeopleManager::SetByRank()
 {
-	// 障害物のリスト取得
-	CListManager<CPeople> list = CPeople::GetListObj();
+	// 人のリスト取得
+	CListManager<CPeople> listPeople = CPeople::GetListObj();
+
+	// プレイヤーリスト取得
+	CListManager<CPlayer> listPlayer = CPlayer::GetListObj();
 
 	// 先頭を保存
-	std::list<CPeople*>::iterator itr = list.GetEnd();
+	std::list<CPeople*>::iterator itr = listPeople.GetEnd();
 	CPeople* pObj = nullptr;
+	CPlayer* pPlayer = (*listPlayer.GetBegin());
 
 	// 全員フェードアウト
-	while (list.ListLoop(itr))
+	while (listPeople.ListLoop(itr))
 	{
 		(*itr)->SetState(CPeople::STATE::STATE_FADEOUT);
 	}
@@ -132,9 +146,10 @@ void CPeopleManager::SetByRank()
 	MyLib::Vector3 spawnpos = pos;
 	MyLib::Vector3 rot = MyLib::Vector3(0.0f, D3DX_PI * 0.5f, 0.0f);
 	int type = 0, patternNum = static_cast<int>(m_PatternByRank[m_Rank].size());
+	float playerLen = pPlayer->GetMoveLength();
+	float playerPosX = pPlayer->GetPosition().x;
 
-
-	for (float len = 0.0f; len <= SPAWN_ALL_LENGTH; len += SPAWN_DISTANCE)
+	for (float len = playerLen + SPAWN_MIN_LENGTH; len <= SPAWN_ALL_LENGTH; len += SPAWN_DISTANCE)
 	{
 		type = rand() % patternNum;
 
@@ -144,7 +159,82 @@ void CPeopleManager::SetByRank()
 		spawnpos.z += UtilFunc::Transformation::Random(-50, 50) * 10.0f;
 		spawnpos.z += UtilFunc::Transformation::Random(-50, 50);
 
-		SetPeople(spawnpos, rot, type);
+		if (spawnpos.x < playerPosX + SPAWN_MAX_LENGTH)
+		{// 範囲内なのですぐ出す
+			SetPeople(spawnpos, rot, type);
+		}
+		else
+		{// 範囲外なので後で出す
+			m_lateSpawnPeople.push_back(CPeopleManager::SPeopleData(type, spawnpos));
+		}
+	}
+}
+
+//==========================================================================
+// 人撤去
+//==========================================================================
+void CPeopleManager::DespawnPeople()
+{
+	std::list<CPeople*> despawnList;
+
+	// 人のリスト取得
+	CListManager<CPeople> listObjPeople = CPeople::GetListObj();
+
+	// プレイヤーリスト取得
+	CListManager<CPlayer> listPlayer = CPlayer::GetListObj();
+	
+	// 先頭を保存
+	std::list<CPeople*>::iterator itr = listObjPeople.GetEnd();
+	CPlayer* pPlayer = (*listPlayer.GetBegin());
+
+	// 距離取得・一定距離から外に出たら消すリストに追加
+	float playerPosX = pPlayer->GetPosition().x;
+	while (listObjPeople.ListLoop(itr))
+	{
+		float peoplePosX = (*itr)->GetPosition().x;
+
+		if (peoplePosX < playerPosX + SPAWN_MIN_LENGTH)
+		{
+			despawnList.push_back((*itr));
+		}
+	}
+
+	// 人を消す
+	for (const auto& peaple : despawnList)
+	{
+		peaple->Uninit();
+	}
+}
+
+//==========================================================================
+// 後生成分の生成
+//==========================================================================
+void CPeopleManager::LateSpawn()
+{
+	std::vector<SPeopleData> spawnList;
+
+	// プレイヤーリスト取得・先頭を保存
+	CListManager<CPlayer> listPlayer = CPlayer::GetListObj();
+	CPlayer* pPlayer = (*listPlayer.GetBegin());
+
+	// 出現範囲にいる人を抽出
+	float playerPosX = pPlayer->GetPosition().x;
+	for (const auto& latePeaple : m_lateSpawnPeople)
+	{
+		float peoplePosX = latePeaple.pos.x;
+
+		if (peoplePosX <= playerPosX + SPAWN_MAX_LENGTH)
+		{
+			spawnList.push_back(latePeaple);
+		}
+	}
+
+	// 抽出した人を出現して後生成リストから削除
+	MyLib::Vector3 rot = MyLib::Vector3(0.0f, D3DX_PI * 0.5f, 0.0f);
+	for (const auto& spawnPeaple : spawnList)
+	{
+		SetPeople(spawnPeaple.pos, rot, spawnPeaple.nType);
+		m_lateSpawnPeople.remove(spawnPeaple);
 	}
 }
 

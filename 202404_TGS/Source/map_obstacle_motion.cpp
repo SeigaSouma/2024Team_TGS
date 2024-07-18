@@ -11,6 +11,7 @@
 #include "collisionLine_Box.h"
 #include "obstacle_fisharch.h"
 #include "obstacle_birdcircle.h"
+#include "model.h"
 
 //==========================================================================
 // 定数定義
@@ -32,6 +33,7 @@ CMap_Obstacle_Motion::CMap_Obstacle_Motion(int nPriority,
 	CObject::LAYER layer) : CMap_Obstacle(nPriority, layer)
 {
 	// 値のクリア
+	m_pChara = nullptr;
 }
 
 //==========================================================================
@@ -57,7 +59,7 @@ CMap_Obstacle_Motion *CMap_Obstacle_Motion::Create(const CMap_ObstacleManager::S
 		pObj->SetSave(bSave);
 
 		// 初期化処理
-		pObj->Init();
+		//pObj->Init();
 	}
 
 	return pObj;
@@ -74,14 +76,18 @@ HRESULT CMap_Obstacle_Motion::Init()
 	// 種類の設定
 	CObject::SetType(TYPE_OBJECTX);
 
-	// キャラ生成
-	m_pChara = CObjectChara::Create(m_ObstacleInfo.modelFile);
-	m_pChara->GetMotion()->Set(0);
-	m_pChara->CObject::SetType(TYPE_OBJECTX);
-
 	m_OriginObstacleInfo = m_ObstacleInfo;	// 障害物情報
 
-	return CMap_Obstacle::Init();
+	// キャラ生成
+	if (m_pChara == nullptr)
+	{
+		m_pChara = CObjectChara::Create(m_ObstacleInfo.modelFile);
+		m_pChara->GetMotion()->Set(0);
+		m_pChara->CObject::SetType(TYPE_OBJECTX);
+		return CMap_Obstacle::Init();
+	}
+
+	return S_OK;
 }
 
 //==========================================================================
@@ -151,4 +157,21 @@ void CMap_Obstacle_Motion::SetRotation(const MyLib::Vector3& rot)
 {
 	CObject::SetRotation(rot);
 	m_pChara->SetRotation(rot);
+}
+
+//==========================================================================
+// サイズ設定
+//==========================================================================
+void CMap_Obstacle_Motion::SetScale(const MyLib::Vector3& scale)
+{
+	CModel* p = m_pChara->GetModel(0);
+	p->SetOriginScale(scale);
+}
+
+//==========================================================================
+// スケール取得
+//==========================================================================
+MyLib::Vector3 CMap_Obstacle_Motion::GetScale()
+{ 
+	return m_pChara->GetModel(0)->GetScale(); 
 }
