@@ -253,7 +253,7 @@ void CRequestPeople::Collision()
 	move.x += (0.0f - move.x) * 0.25f;
 	move.z += (0.0f - move.z) * 0.25f;
 
-	if (300.0f < pos.y)
+	if (300.0f > pos.y)
 	{// ’n–Ê‚Ì•û‚ª©•ª‚æ‚è‚‚©‚Á‚½‚ç
 
 		// ’n–Ê‚Ì‚‚³‚É•â³

@@ -271,7 +271,7 @@ void CPeople::Collision()
 		m_sMotionFrag.bMove = false;
 	}
 
-	if (300.0f < pos.y)
+	if (300.0f > pos.y)
 	{// ’n–Ê‚Ì•û‚ª©•ª‚æ‚è‚‚©‚Á‚½‚ç
 
 		// ’n–Ê‚Ì‚‚³‚É•â³

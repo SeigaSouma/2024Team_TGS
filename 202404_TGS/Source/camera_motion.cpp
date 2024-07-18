@@ -84,6 +84,8 @@ void CCameraMotion::Update()
 	// 現在のモーション情報
 	MotionInfo nowInfo = m_vecMotionInfo[m_nNowMotionIdx];
 
+	
+
 	// 次のキーインデックス
 	int keySize = static_cast<int>(nowInfo.Key.size());
 	int nextKeyID = (m_nNowKeyIdx + 1) & keySize;
@@ -108,7 +110,9 @@ void CCameraMotion::Update()
 	rot = UtilFunc::Correction::EasingLinear(nowKey.rotDest, nextKey.rotDest, 0.0f, nowInfo.playTime, m_fMotionTimer);
 	distance = UtilFunc::Correction::EasingLinear(nowKey.distance, nextKey.distance, 0.0f, nowInfo.playTime, m_fMotionTimer);
 
+	// カメラ情報設定
 	pCamera->SetPositionR(posR);
 	pCamera->SetRotation(rot);
+	pCamera->SetDistance(distance);
 
 }
