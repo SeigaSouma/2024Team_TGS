@@ -50,6 +50,8 @@ public:
 	void SetOriginRotation(const MyLib::Vector3 rot);	// 元の向き設定
 	MyLib::Vector3 GetOriginRotation() const;		// 元の向き取得
 	void SetScale(const MyLib::Vector3 scale);		// スケール設定
+	MyLib::Vector3 GetOriginScale() const { return m_scaleOrigin; }				// 元のスケール取得
+	void SetOriginScale(const MyLib::Vector3& scale) { m_scaleOrigin = scale; }	// 元のスケール設定
 	MyLib::Vector3 GetScale() const;			// スケール取得
 	MyLib::Vector3 GetVtxMax() const;			// 頂点の最大値取得
 	MyLib::Vector3 GetVtxMin() const;			// 頂点の最小値取得
@@ -77,11 +79,12 @@ private:
 	MyLib::Vector3 m_posOrigin;	// 元の位置
 	MyLib::Vector3 m_rot;		// 向き
 	MyLib::Vector3 m_rotOrigin;// 向き
-	MyLib::Vector3 m_scale;	// スケール
-	int m_nIdxXFile;		// Xファイルのインデックス番号
-	int *m_nIdxTexture;		// テクスチャのインデックス番号
-	CModel *m_pParent;		// 親モデルのポインタ
-	static int m_nNumAll;	// 総数
+	MyLib::Vector3 m_scale;		// スケール
+	MyLib::Vector3 m_scaleOrigin;	// 元のスケール
+	int m_nIdxXFile;			// Xファイルのインデックス番号
+	int *m_nIdxTexture;			// テクスチャのインデックス番号
+	CModel *m_pParent;			// 親モデルのポインタ
+	static int m_nNumAll;		// 総数
 };
 
 

@@ -44,7 +44,7 @@ public:
 	//=============================
 	// ƒƒ“ƒoŠÖ”
 	//=============================
-	virtual void Kill();	// íœ
+	virtual void Kill() override;	// íœ
 	bool GetSave() { return m_bSave; }
 	CMap_ObstacleManager::SObstacleInfo GetObstacleInfo() { return m_ObstacleInfo; }	// áŠQ•¨î•ñæ“¾
 	void SetObstacleInfo(const CMap_ObstacleManager::SObstacleInfo& info) { m_ObstacleInfo = info; }	// áŠQ•¨î•ñİ’è
