@@ -200,7 +200,6 @@ void CObstacle_BirdCircle::ControllBird()
 			BirdPos = (mtxBird._41, mtxBird._42, mtxBird._43);
 
 			it.pBird->SetPosition(mtxParent.GetWorldPosition());
-			CManager::GetInstance()->GetDebugProc()->Print("座標[ %f, %f, %f ]\n", it.pBird->GetPosition().x, it.pBird->GetPosition().y, it.pBird->GetPosition().z);
 		}
 
 		// 向きとオフセット設定
