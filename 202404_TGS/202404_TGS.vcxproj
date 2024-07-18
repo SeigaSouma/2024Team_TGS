@@ -289,6 +289,7 @@
     <ClCompile Include="Source\rankingmanager.cpp" />
     <ClCompile Include="Source\rankingscore.cpp" />
     <ClCompile Include="Source\renderer.cpp" />
+    <ClCompile Include="Source\request_people.cpp" />
     <ClCompile Include="Source\result.cpp" />
     <ClCompile Include="Source\resultmanager.cpp" />
     <ClCompile Include="Source\resultscore.cpp" />
@@ -459,6 +460,7 @@
     <ClInclude Include="Source\rankingmanager.h" />
     <ClInclude Include="Source\rankingscore.h" />
     <ClInclude Include="Source\renderer.h" />
+    <ClInclude Include="Source\request_people.h" />
     <ClInclude Include="Source\result.h" />
     <ClInclude Include="Source\resultmanager.h" />
     <ClInclude Include="Source\resultscore.h" />
