@@ -106,8 +106,9 @@ void CCameraMotion::Update()
 	// üŒ`•â³
 	posR = UtilFunc::Correction::EasingLinear(nowKey.posRDest, nextKey.posRDest, 0.0f, nowInfo.playTime, m_fMotionTimer);
 	rot = UtilFunc::Correction::EasingLinear(nowKey.rotDest, nextKey.rotDest, 0.0f, nowInfo.playTime, m_fMotionTimer);
-	m_fMotionTimer = UtilFunc::Correction::EasingLinear(nowKey.distance, nextKey.distance, 0.0f, nowInfo.playTime, m_fMotionTimer);
+	distance = UtilFunc::Correction::EasingLinear(nowKey.distance, nextKey.distance, 0.0f, nowInfo.playTime, m_fMotionTimer);
 
-
+	pCamera->SetPositionR(posR);
+	pCamera->SetRotation(rot);
 
 }
