@@ -45,7 +45,7 @@ public:
 	virtual void CalWorldMtx() override { m_pObject->CalWorldMtx(); }
 	virtual void SetPosition(const MyLib::Vector3& pos) override;		// 位置設定
 	virtual void SetRotation(const MyLib::Vector3& rot) override;		// 向き設定
-	virtual void SetScale(const MyLib::Vector3 scale) override;			// サイズ設定
+	virtual void SetScale(const MyLib::Vector3& scale) override;			// サイズ設定
 	virtual MyLib::Vector3 GetVtxMin() override { return m_pObject->GetVtxMin(); };			// 頂点の最小値取得
 	virtual MyLib::Vector3 GetVtxMax() override { return m_pObject->GetVtxMax(); };			// 頂点の最大値取得
 	virtual void SetState(CObjectX::STATE state) override { m_pObject->SetState(state); }

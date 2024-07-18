@@ -62,6 +62,8 @@ public:
 	void SetDefHeight(const float fHeight) { m_Info.fDefHeight = fHeight; }
 	void SetPlusHeight(const float fHeight) { m_Info.fPlusHeight = fHeight; }
 	void SetRotSpeed(const float fRotSpeed) { m_Info.fRotSpeed = fRotSpeed; }
+	void SetScale(const MyLib::Vector3& scale) { m_scale = scale; }
+	MyLib::Vector3 GetScale() { return m_scale; }
 
 	/**
 	@brief	可変情報の設定
@@ -87,6 +89,7 @@ private:
 	void ControllFish();	// 管理している魚の設定
 	void SetFishOffSet(FishInfo& info);	// 魚のオフセット設定
 	void SetNowHeight();	// 距離設定
+	void CalWorldMtx();
 
 	//=============================
 	// メンバ変数
@@ -94,6 +97,8 @@ private:
 	std::vector<FishInfo> m_FishList;	// 魚のリスト
 	Info m_Info;	// 可変情報
 	float m_fRot;	// 回転向き
+	MyLib::Matrix m_mtxWorld;	// ワールドマトリックス
+	MyLib::Vector3 m_scale;
 };
 
 

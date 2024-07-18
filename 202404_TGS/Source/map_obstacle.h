@@ -53,11 +53,11 @@ public:
 	CMap_ObstacleManager::SObstacleInfo GetObstacleInfo() { return m_ObstacleInfo; }	// 障害物情報取得
 	void SetObstacleInfo(const CMap_ObstacleManager::SObstacleInfo& info) { m_ObstacleInfo = info; }	// 障害物情報設定
 	virtual MyLib::Matrix GetWorldMtx() { return MyLib::Matrix(); }
-	virtual MyLib::Vector3 GetScale() { return MyLib::Vector3(1.0f, 1.0f, 1.0f); }
+	virtual MyLib::Vector3 GetScale() = 0;
 	virtual void CalWorldMtx() {}
 	virtual void SetPosition(const MyLib::Vector3& pos) { CObject::SetPosition(pos); }		// 位置設定
 	virtual void SetRotation(const MyLib::Vector3& rot) { CObject::SetRotation(rot); }		// 向き設定
-	virtual void SetScale(const MyLib::Vector3 scale) {}		// サイズ設定
+	virtual void SetScale(const MyLib::Vector3& scale) = 0;
 	virtual MyLib::Vector3 GetVtxMin() { return m_vtxMin; };			// 頂点の最小値取得
 	virtual MyLib::Vector3 GetVtxMax() { return m_vtxMax; };			// 頂点の最大値取得
 	virtual void SetState(CObjectX::STATE state){}
@@ -68,6 +68,7 @@ public:
 	//=============================
 	static CMap_Obstacle *Create(const CMap_ObstacleManager::SObstacleInfo& info, const bool bChange = true, const bool bSave = true);	// 生成処理
 	static CListManager<CMap_Obstacle> GetListObj() { return m_List; }				// リスト取得
+	static void ListRegist(CMap_Obstacle* pObstacle) { m_List.Regist(pObstacle); }
 
 private:
 

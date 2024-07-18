@@ -30,6 +30,7 @@ CModel::CModel(int nPriority)
 	m_rot = mylib_const::DEFAULT_VECTOR3;			// 向き
 	m_rotOrigin = mylib_const::DEFAULT_VECTOR3;		// 向き
 	m_scale = mylib_const::DEFAULT_SCALE;			// スケール
+	m_scaleOrigin = mylib_const::DEFAULT_SCALE;			// スケール
 	m_nIdxXFile = 0;								// Xファイルのインデックス番号
 	m_nIdxTexture = nullptr;							// テクスチャのインデックス番号
 	m_pParent = nullptr;								// 親モデルのポインタ

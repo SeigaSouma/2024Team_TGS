@@ -155,7 +155,7 @@ void CMap_Obstacle_Object::SetRotation(const MyLib::Vector3& rot)
 //==========================================================================
 // ƒTƒCƒYÝ’è
 //==========================================================================
-void CMap_Obstacle_Object::SetScale(const MyLib::Vector3 scale)
+void CMap_Obstacle_Object::SetScale(const MyLib::Vector3& scale)
 {
 	m_pObject->SetScale(scale);
 }

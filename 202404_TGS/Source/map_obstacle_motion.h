@@ -51,8 +51,9 @@ public:
 	virtual MyLib::Matrix GetWorldMtx() override { return m_pChara->GetWorldMtx(); }
 	virtual void SetPosition(const MyLib::Vector3& pos) override;		// 位置設定
 	virtual void SetRotation(const MyLib::Vector3& rot) override;		// 向き設定
-	virtual void SetScale(const MyLib::Vector3 scale)  override {}		// サイズ設定
+	virtual void SetScale(const MyLib::Vector3& scale)  override;		// サイズ設定
 	virtual void CalWorldMtx() override { m_pChara->CalWorldMtx(); }
+	virtual MyLib::Vector3 GetScale() override;
 
 	//=============================
 	// 静的関数
