@@ -86,7 +86,7 @@ CRequestPeople* CRequestPeople::Create(const MyLib::Vector3& pos)
 		pPeople->CObject::SetOriginPosition(pos);
 
 		// テキスト読み込み
-		HRESULT hr = pPeople->RoadText(FILENAME);
+		HRESULT hr = pPeople->LoadText(FILENAME);
 		if (FAILED(hr))
 		{// 失敗していたら
 			return nullptr;
@@ -131,7 +131,7 @@ HRESULT CRequestPeople::Init()
 //==========================================================================
 // テキスト読み込み
 //==========================================================================
-HRESULT CRequestPeople::RoadText(const std::string& pFileName)
+HRESULT CRequestPeople::LoadText(const std::string& pFileName)
 {
 	// キャラ作成
 	HRESULT hr = SetCharacter(pFileName);

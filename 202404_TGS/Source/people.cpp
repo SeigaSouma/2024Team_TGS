@@ -91,7 +91,7 @@ CPeople* CPeople::Create(const std::string& pFileName, MyLib::Vector3 pos)
 		pPeople->CObject::SetOriginPosition(pos);
 
 		// テキスト読み込み
-		HRESULT hr = pPeople->RoadText(pFileName.c_str());
+		HRESULT hr = pPeople->LoadText(pFileName.c_str());
 		if (FAILED(hr))
 		{// 失敗していたら
 			return nullptr;
@@ -136,7 +136,7 @@ HRESULT CPeople::Init()
 //==========================================================================
 // テキスト読み込み
 //==========================================================================
-HRESULT CPeople::RoadText(const char *pFileName)
+HRESULT CPeople::LoadText(const char *pFileName)
 {
 	// キャラ作成
 	HRESULT hr = SetCharacter(pFileName);

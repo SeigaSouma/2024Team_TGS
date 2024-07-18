@@ -332,6 +332,34 @@ namespace UtilFunc	// 便利関数
 		/**
 		@brief	線形補正(加速してから減速, イーズインアウト)
 		@details https://mo-no.design/blog/wp-content/uploads/2023/02/easeinout_1.mp4
+		@param	start	[in]	初期値
+		@param	end		[in]	目標値
+		@param	time	[in]	補正割合(0.0f ～ 1.0f)
+		@return	補正されたfloat値
+		*/
+		inline MyLib::Vector3 EasingEaseInOut(const MyLib::Vector3& start, const MyLib::Vector3& end, float time)
+		{
+			// 範囲外補正
+			UtilFunc::Transformation::ValueNormalize(time, 1.0f, 0.0f);
+
+			MyLib::Vector3 fValue;
+			if (time < 0.5f)
+			{
+				time = 2.0f * time;
+				fValue = start + (end - start) * 0.5f * time * time;
+			}
+			else
+			{
+				time = 2.0f * time - 1.0f;
+				float fSquaredTime = time * time;
+				fValue = start + (end - start) * (0.5f * (1.0f - (1.0f - fSquaredTime) * (1.0f - fSquaredTime)) + 0.5f);
+			}
+			return fValue;
+		}
+
+		/**
+		@brief	線形補正(加速してから減速, イーズインアウト)
+		@details https://mo-no.design/blog/wp-content/uploads/2023/02/easeinout_1.mp4
 		@param	start		[in]	初期値
 		@param	end			[in]	目標値
 		@param	startTime	[in]	開始時間
@@ -340,6 +368,25 @@ namespace UtilFunc	// 便利関数
 		@return	補正されたfloat値
 		*/
 		inline float EasingEaseInOut(float start, float end, float startTime, float endTime, float currentTime)
+		{
+			// 割合
+			float ratio = (currentTime - startTime) / (endTime - startTime);
+			UtilFunc::Transformation::ValueNormalize(ratio, 1.0f, 0.0f);
+
+			return EasingEaseInOut(start, end, ratio);
+		}
+
+		/**
+		@brief	線形補正(加速してから減速, イーズインアウト)
+		@details https://mo-no.design/blog/wp-content/uploads/2023/02/easeinout_1.mp4
+		@param	start		[in]	初期値
+		@param	end			[in]	目標値
+		@param	startTime	[in]	開始時間
+		@param	endTime		[in]	終了時間
+		@param	currentTime	[in]	現在の時間
+		@return	補正されたfloat値
+		*/
+		inline MyLib::Vector3 EasingEaseInOut(const MyLib::Vector3& start, const MyLib::Vector3& end, float startTime, float endTime, float currentTime)
 		{
 			// 割合
 			float ratio = (currentTime - startTime) / (endTime - startTime);

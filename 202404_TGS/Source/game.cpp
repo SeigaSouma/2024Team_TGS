@@ -54,6 +54,7 @@
 #include "courseManager.h"
 #include "peoplemanager.h"
 #include "countdown_start.h"
+#include "request_people.h"
 
 //==========================================================================
 // Ã“Iƒƒ“ƒo•Ï”éŒ¾
@@ -567,6 +568,7 @@ void CGame::Update()
 
 	if (pInputKeyboard->GetTrigger(DIK_4))
 	{
+		CRequestPeople::Create(MyLib::Vector3(0.0f, 500.0f, 0.0f));
 		CCountdown_Start::Create();
 	}
 

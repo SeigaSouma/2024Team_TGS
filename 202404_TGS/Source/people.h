@@ -59,7 +59,7 @@ public:
 	// モーション
 	void SetMotion(int motionIdx);	// モーションの設定
 
-	HRESULT RoadText(const char *pFileName);
+	HRESULT LoadText(const char *pFileName);
 
 	static CListManager<CPeople> GetListObj() { return m_List; }	// リスト取得
 	static CPeople* Create(const std::string& pFileName, MyLib::Vector3 pos);
