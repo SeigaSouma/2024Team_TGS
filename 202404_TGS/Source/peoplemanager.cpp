@@ -9,6 +9,7 @@
 #include "player.h"
 #include "calculation.h"
 #include "manager.h"
+#include "camera.h"
 #include "debugproc.h"
 
 //==========================================================================
@@ -176,6 +177,7 @@ void CPeopleManager::SetByRank()
 void CPeopleManager::DespawnPeople()
 {
 	std::list<CPeople*> despawnList;
+	CCamera* pCamera = CManager::GetInstance()->GetCamera();
 
 	// l‚ÌƒŠƒXƒgæ“¾
 	CListManager<CPeople> listObjPeople = CPeople::GetListObj();
@@ -191,9 +193,10 @@ void CPeopleManager::DespawnPeople()
 	float playerPosX = pPlayer->GetPosition().x;
 	while (listObjPeople.ListLoop(itr))
 	{
-		float peoplePosX = (*itr)->GetPosition().x;
+		MyLib::Vector3 pos = (*itr)->GetPosition();
+		MyLib::Vector3 screenPos = pCamera->GetScreenPos(pos);
 
-		if (peoplePosX < playerPosX + SPAWN_MIN_LENGTH)
+		if (pos.x < playerPosX + SPAWN_MIN_LENGTH && screenPos.x < -100.0f)
 		{
 			despawnList.push_back((*itr));
 		}
