@@ -20,7 +20,7 @@ namespace
 // デフォルト情報
 namespace FISHDEFAULT
 {
-	const float ROTATE_SPEED = (0.02f);		// 回転速度
+	const float ROTATE_SPEED = (-0.02f);		// 回転速度
 	const float WIDTH = (750.0f);			// 中心からの距離
 	const float HEIGHT = (1500.0f);			// 変化する距離
 	const float PLUS_HEIGHT = (0.0f);		// 加算高さ
@@ -35,6 +35,7 @@ CObstacle_FishArch::CObstacle_FishArch(int nPriority,
 	// 値のクリア
 	m_FishList.clear();
 	m_fRot = 0.0f;
+	m_scale = (1.0f);
 }
 
 //==========================================================================
@@ -66,13 +67,11 @@ CObstacle_FishArch* CObstacle_FishArch::Create(const CMap_ObstacleManager::SObst
 //==========================================================================
 HRESULT CObstacle_FishArch::Init()
 {
-	CMap_Obstacle::GetListObj().Regist(this);
+	CMap_Obstacle::ListRegist(this);
 	MyLib::Vector3 rot;
-	
-#if _DEBUG
-	CMap_Obstacle::Init();
-#endif
 
+	// 種類の設定
+	CObject::SetType(TYPE_OBJECTX);
 
 	// 魚を生成する
 	for (int i = 0; i < NUM_FISH; i++)
@@ -107,6 +106,7 @@ void CObstacle_FishArch::Uninit()
 		if (it.pFish != nullptr)
 		{
 			it.pFish->Uninit();
+			it.pFish = nullptr;
 		}
 	}
 
@@ -126,12 +126,16 @@ void CObstacle_FishArch::Kill()
 	{
 		if (it.pFish != nullptr)
 		{
-			it.pFish->Uninit();
+			it.pFish->Kill();
+			it.pFish = nullptr;
 		}
 	}
 
+	// リストクリア
+	m_FishList.clear();
+
 	// 終了処理
-	CMap_Obstacle::Uninit();
+	CMap_Obstacle::Kill();
 }
 
 //==========================================================================
@@ -175,7 +179,7 @@ void CObstacle_FishArch::ControllFish()
 		// 位置の設定
 		{
 			MyLib::Matrix mtxRot, mtxTrans, mtxScale, mtxFish;	// 計算用マトリックス宣言
-			MyLib::Matrix mtxParent = GetWorldMtx();	// 親のマトリックス
+			MyLib::Matrix mtxParent = m_mtxWorld;	// 親のマトリックス
 			MyLib::Vector3 FishPos = it.offset;
 
 			// 座標用マトリックス初期化
@@ -204,7 +208,7 @@ void CObstacle_FishArch::ControllFish()
 			UtilFunc::Transformation::RotNormalize(rot.x);
 			it.pFish->SetRotation(rot);
 			SetFishOffSet(it);
-			it.pFish->SetScale(GetScale());
+			it.pFish->SetScale(GetScale() + 5.0f);
 		}
 	}
 }
@@ -246,4 +250,32 @@ void CObstacle_FishArch::SetNowHeight()
 	// 本体の向きをから加算距離を設定
 	float rate = sinf(m_fRot);
 	m_Info.fNowHeight = m_Info.fDefHeight + (m_Info.fPlusHeight * rate);
+}
+
+//==========================================================================
+// ワールドマトリックス設定
+//==========================================================================
+void CObstacle_FishArch::CalWorldMtx() 
+{// デバイスの取得
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
+
+	// 情報取得
+	MyLib::Vector3 pos = GetPosition();
+	MyLib::Vector3 rot = GetRotation();
+	MyLib::Matrix mtxRot, mtxTrans, mtxScale;	// 計算用マトリックス宣言
+
+	// ワールドマトリックスの初期化
+	m_mtxWorld.Identity();
+
+	// スケールを反映する
+	mtxScale.Scaling(GetScale());
+	m_mtxWorld.Multiply(m_mtxWorld, mtxScale);
+
+	// 向きを反映する
+	mtxRot.RotationYawPitchRoll(rot.y, rot.x, rot.z);
+	m_mtxWorld.Multiply(m_mtxWorld, mtxRot);
+
+	// 位置を反映する
+	mtxTrans.Translation(pos);
+	m_mtxWorld.Multiply(m_mtxWorld, mtxTrans);
 }

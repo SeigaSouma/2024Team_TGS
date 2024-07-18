@@ -505,7 +505,7 @@ void CPlayer::Controll()
 		CMotion* pMotion = GetMotion();
 		pMotion->Set(MOTION_WALK, false);
 		// 荷物リセット
-		m_pBaggage->SetOriginPosition(MyLib::Vector3(0.0f, m_posCylinder.y, 0.0f));
+		m_pBaggage->SetOriginPosition(MyLib::Vector3(GetPosition().x, m_posCylinder.y, GetPosition().z));
 		m_pControlBaggage->Reset(this, m_pBaggage);
 	}
 
@@ -957,12 +957,12 @@ void CPlayer::ReaspawnCheckPoint()
 		fLength = pCheckPoint->GetLength();
 
 		// タイマー戻す
-		CTimer::GetInstance()->SetTime(pCheckPoint->GetPassedTime());
+		//CTimer::GetInstance()->SetTime(pCheckPoint->GetPassedTime());
 	}
 	else // チェックポイント未通過
 	{
 		pos = MySpline::GetSplinePosition_NonLoop(CGame::GetInstance()->GetCourse()->GetVecPosition(), 0);
-		CTimer::GetInstance()->SetTime(0.0f);
+		//CTimer::GetInstance()->SetTime(0.0f);
 	}
 
 	SetPosition(pos);
@@ -1805,5 +1805,13 @@ void CPlayer::CreateRetryUI()
 		m_pRetryUI = CRetry_Ui::Create();
 		hitresult.isdeath = true;
 		DeadSetting(&hitresult);
+		SetMove(0.0f);
+
+		// タイマーを停止
+		CTimer* pt = CGame::GetInstance()->GetTimer();
+		if (pt != nullptr)
+		{
+			pt->SetEnableAddTime(false);
+		}
 	}
 }
