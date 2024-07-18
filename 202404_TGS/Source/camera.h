@@ -241,6 +241,7 @@ private:
 	float m_fChaseDistance;				// 追従の間隔
 	float m_fDestChaseDistance;			// 目標の追従の間隔
 	bool m_bFollow;						// 追従するかどうか
+	bool m_bMotion;						// モーション中かどうか
 	bool m_bRotationZ;					// Z回転出来るかどうか
 	bool m_bRotationY;					// Y回転出来るかどうか
 	bool m_bRockON;						// ロックオン中か

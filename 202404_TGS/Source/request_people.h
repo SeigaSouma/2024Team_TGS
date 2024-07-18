@@ -29,13 +29,17 @@ public:
 		STATE_NONE = 0,		// なにもない
 		STATE_FADEIN,		// フェードイン
 		STATE_FADEOUT,		// フェードアウト
+		STATE_PASS,			// パス状態
+		STATE_BYEBYE,		// バイバイ
 		STATE_MAX
 	};
 
 	enum MOTION
 	{
-		MOTION_DEF = 0,			// ニュートラル
-		MOTION_WALK,			// 移動
+		MOTION_DEF = 0,	// ニュートラル
+		MOTION_WALK,	// 移動
+		MOTION_PASS,	// 渡す
+		MOTION_BYEBYE,	// バイバイ
 		MOTION_MAX
 	};
 
@@ -75,6 +79,8 @@ protected:
 	virtual void StateNone();		// 何もない状態
 	virtual void StateFadeIn();		// フェードイン
 	virtual void StateFadeOut();	// フェードアウト
+	virtual void StatePass();		// パス
+	virtual void StateByeBye();		// バイバイ
 
 	// その他関数
 	virtual void AttackAction(CMotion::AttackInfo ATKInfo, int nCntATK) override;		// 攻撃時処理

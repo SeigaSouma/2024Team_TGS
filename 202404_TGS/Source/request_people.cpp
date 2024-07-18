@@ -17,15 +17,13 @@
 #include "objectX.h"
 #include "limitarea.h"
 #include "debugproc.h"
-
+#include "baggage.h"
 
 //==========================================================================
 // 定数定義
 //==========================================================================
 namespace
 {
-	const float PLAYER_SERCH = 800.0f;	// プレイヤー探索範囲
-	const float CHACE_DISTABCE = 50.0f;	// 追い掛ける時の間隔
 	const std::string FILENAME = "data\\TEXT\\character\\mob\\person_01\\setup_human.txt";
 }
 
@@ -82,8 +80,7 @@ CRequestPeople* CRequestPeople::Create(const MyLib::Vector3& pos)
 	CRequestPeople* pPeople = DEBUG_NEW CRequestPeople;
 
 	if (pPeople != nullptr)
-	{// メモリの確保が出来ていたら
-
+	{
 		// 位置設定
 		pPeople->SetPosition(pos);
 		pPeople->CObject::SetOriginPosition(pos);
@@ -125,7 +122,7 @@ HRESULT CRequestPeople::Init()
 	CMotion* pMotion = GetMotion();
 	if (pMotion != nullptr)
 	{
-		pMotion->Set(UtilFunc::Transformation::Random(0, pMotion->GetNumMotion() - 1));
+		pMotion->Set(MOTION::MOTION_PASS);
 	}
 
 	return S_OK;
@@ -328,6 +325,51 @@ void CRequestPeople::StateFadeOut()
 		Uninit();
 		return;
 	}
+}
+
+//==========================================================================
+// パス
+//==========================================================================
+void CRequestPeople::StatePass()
+{
+	// モーション取得
+	CMotion* pMotion = GetMotion();
+	if (pMotion == nullptr)
+	{
+		return;
+	}
+
+	int nType = pMotion->GetType();
+	if ((nType == MOTION::MOTION_PASS && pMotion->IsFinish()) ||
+		nType != MOTION::MOTION_PASS)
+	{// パス終了 or パス以外
+
+		// モーション設定
+		pMotion->Set(MOTION::MOTION_BYEBYE);
+		m_state = STATE::STATE_BYEBYE;
+	}
+}
+
+//==========================================================================
+// バイバイ
+//==========================================================================
+void CRequestPeople::StateByeBye()
+{
+	// モーション取得
+	CMotion* pMotion = GetMotion();
+	if (pMotion == nullptr)
+	{
+		return;
+	}
+
+	int nType = pMotion->GetType();
+
+	if (nType != MOTION::MOTION_BYEBYE)
+	{
+		// モーション設定
+		pMotion->Set(MOTION::MOTION_BYEBYE);
+	}
+
 }
 
 //==========================================================================
