@@ -91,7 +91,6 @@ void CMap_Obstacle_Motion::Uninit()
 {
 	if (m_pChara != nullptr)
 	{
-		m_pChara->Uninit();
 		m_pChara = nullptr;
 	}
 

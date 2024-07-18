@@ -89,7 +89,6 @@ void CMap_Obstacle_Object::Uninit()
 	// 生成オブジェクト破棄
 	if (m_pObject != nullptr)
 	{
-		m_pObject->Uninit();
 		m_pObject = nullptr;
 	}
 
@@ -105,6 +104,13 @@ void CMap_Obstacle_Object::Uninit()
 //==========================================================================
 void CMap_Obstacle_Object::Kill()
 {
+	// 生成オブジェクト破棄
+	if (m_pObject != nullptr)
+	{
+		m_pObject->Kill();
+		m_pObject = nullptr;
+	}
+
 	// リストから削除
 	m_List.Delete(this);
 
