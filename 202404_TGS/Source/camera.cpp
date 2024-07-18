@@ -121,6 +121,7 @@ CCamera::CCamera()
 	m_fDiffHeightSave = 0.0f;					// 高さの差分保存用
 	m_fDiffHeightDest = 0.0f;					// 目標の高さの差分
 	m_bFollow = false;							// 追従するかどうか
+	m_bMotion = false;							// モーション中かどうか
 	m_bRotationZ = false;						// Z回転出来るかどうか
 	m_bRotationY = false;						// Y回転出来るかどうか
 	m_bRockON = false;							// ロックオンするか
@@ -941,13 +942,18 @@ void CCamera::SetCameraRTitle()
 //==========================================================================
 void CCamera::SetCameraRGame()
 {
-	if (m_bFollow == false)
+	if (!m_bFollow)
 	{// 追従しないとき
 
 		// 注視点の代入処理
 		m_posR.x = m_posV.x + cosf(m_rot.z) * sinf(m_rot.y) * m_fDistance;
 		m_posR.z = m_posV.z + cosf(m_rot.z) * cosf(m_rot.y) * m_fDistance;
 		m_posR.y = m_posV.y + sinf(m_rot.z) * m_fDistance;
+	}
+	else if (m_bMotion && m_bFollow)
+	{// カメラモーション中
+
+
 	}
 	else
 	{// 追従ON
