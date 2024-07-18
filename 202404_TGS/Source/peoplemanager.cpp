@@ -18,8 +18,6 @@ namespace
 	const std::string FILENAME = "data\\TEXT\\people\\manager.txt";
 	const float SPAWN_DISTANCE = 600.0f;		// 湧き距離間隔
 	const float SPAWN_ALL_LENGTH = 80000.0f;	// 出現する全ての長さ
-
-	
 }
 CPeopleManager* CPeopleManager::m_ThisPtr = nullptr;				// 自身のポインタ
 
@@ -121,9 +119,7 @@ void CPeopleManager::SetByRank()
 	// 全員フェードアウト
 	while (list.ListLoop(itr))
 	{
-		pObj = *itr;
-
-		pObj->SetState(CPeople::STATE::STATE_FADEOUT);
+		(*itr)->SetState(CPeople::STATE::STATE_FADEOUT);
 	}
 
 	if (m_Rank == CJudge::JUDGE::JUDGE_MAX)
@@ -155,16 +151,17 @@ void CPeopleManager::SetByRank()
 //==========================================================================
 // 人配置
 //==========================================================================
-void CPeopleManager::SetPeople(MyLib::Vector3 pos, MyLib::Vector3 rot, int nPattern)
+void CPeopleManager::SetPeople(const MyLib::Vector3& pos, const MyLib::Vector3& rot, int nPattern)
 {
-	SPattern NowPattern = m_PatternByRank[m_Rank][nPattern];
+	const SPattern& NowPattern = m_PatternByRank[m_Rank][nPattern];
 	int nNumSpawn = NowPattern.nNum;	// スポーンする数
 	CPeople* pPeople = nullptr;
 
+	MyLib::Vector3 spawnPos;
 	for (const auto& data : NowPattern.data)
 	{
 		// スポーン時の向きを掛け合わせる
-		MyLib::Vector3 spawnPos = pos;
+		spawnPos = pos;
 
 		// スポーン位置分加算
 		spawnPos += data.pos;
@@ -174,15 +171,12 @@ void CPeopleManager::SetPeople(MyLib::Vector3 pos, MyLib::Vector3 rot, int nPatt
 			m_vecMotionFileName[data.nType],	// ファイル名
 			spawnPos);							// 位置
 
-		if (pPeople == nullptr)
-		{
-			delete pPeople;
-			break;
-		}
-
 		// 向き設定
-		pPeople->SetRotation(rot);
-		pPeople->SetRotDest(rot.y);
+		if (pPeople != nullptr)
+		{
+			pPeople->SetRotation(rot);
+			pPeople->SetRotDest(rot.y);
+		}
 	}
 	
 }

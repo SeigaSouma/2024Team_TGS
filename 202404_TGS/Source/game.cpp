@@ -53,6 +53,7 @@
 #include "spline.h"
 #include "courseManager.h"
 #include "peoplemanager.h"
+#include "countdown_start.h"
 
 //==========================================================================
 // Ã“Iƒƒ“ƒo•Ï”éŒ¾
@@ -566,13 +567,7 @@ void CGame::Update()
 
 	if (pInputKeyboard->GetTrigger(DIK_4))
 	{
-
-		int z = UtilFunc::Transformation::Random(-20, 20) * 10;
-		int x = UtilFunc::Transformation::Random(2, 50) * 100;
-
-
-		//CWaterStone::Create(MyLib::Vector3(x, -40.0f, z));
-
+		CCountdown_Start::Create();
 	}
 
 
