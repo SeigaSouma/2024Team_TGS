@@ -23,6 +23,7 @@
 
 #include "objectX.h"
 #include "spline.h"
+#include "camera_motion.h"
 
 //==========================================================================
 // マクロ定義
@@ -134,6 +135,7 @@ CCamera::CCamera()
 	m_nChasePlayerIndex = 0;					// 追従するプレイヤーのインデックス番号
 	m_RockOnDir = ROCKON_DIR_RIGHT;				// ロックオン時の向き
 	m_stateRockOn = ROCKON_NORMAL;				// ロックオン時の状態
+	m_pCameraMotion = nullptr;					// カメラモーションのポインタ
 
 	m_StateCameraR = POSR_STATE_NORMAL;		// 注視点の状態
 	m_pStateCameraR = nullptr;	// 注視点の状態ポインタ
@@ -175,6 +177,8 @@ HRESULT CCamera::Init()
 	// 操作の状態設定
 	SetControlState(DEBUG_NEW CCameraControlState_Normal(this));
 
+	// カメラモーション作成
+	m_pCameraMotion = CCameraMotion::Create();
 	return S_OK;
 }
 
@@ -213,6 +217,12 @@ void CCamera::Uninit()
 	{
 		delete m_pControlState;
 		m_pControlState = nullptr;
+	}
+
+	if (m_pCameraMotion != nullptr)
+	{
+		m_pCameraMotion->Uninit();
+		m_pCameraMotion = nullptr;
 	}
 }
 
@@ -299,6 +309,14 @@ void CCamera::Update()
 		MyLib::Vector3(0.0f, 0.0f, 0.0f),
 		D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f),
 		80.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);*/
+
+
+
+	// カメラモーション作成
+	if (m_pCameraMotion != nullptr)
+	{
+		m_pCameraMotion->Update();
+	}
 }
 
 //==========================================================================

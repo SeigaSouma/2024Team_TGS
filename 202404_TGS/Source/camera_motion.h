@@ -60,29 +60,67 @@ private:
 	//=============================
 	// 構造体定義
 	//=============================
+	// キー情報
 	struct MotionKey
 	{
 		MyLib::Vector3 posRDest;	// 目標の注視点
 		MyLib::Vector3 rotDest;		// 目標の向き
 		float distance;				// 距離
+		float playTime;				// 再生フレーム
+
+		MotionKey() : posRDest(0.0f), rotDest(0.0f), distance(0.0f), playTime(1.0f) {}
 	};
 
+	// モーション情報
 	struct MotionInfo
 	{
-		float playTime;				// 再生フレーム
 		std::vector<MotionKey> Key;	// キー情報
+
+		MotionInfo() : Key() {}
 	};
+
+	// エディット情報
+	struct EditInfo
+	{
+		int motionIdx;			// モーションインデックス
+		int keyIdx;				// キーインデックス
+		float playRatio;		// 再生割合
+		bool bSlide;			// スライド中判定
+		MyLib::Vector3 offset;	// オフセット
+		MotionInfo motionInfo;	// モーション情報
+
+		EditInfo() : motionIdx(0), keyIdx(0), playRatio(0.0f), bSlide(false), motionInfo() {}
+	};
+
+
+	//=============================
+	// メンバ関数
+	//=============================
+	// セーブ&ロード
+	void SaveMotion(const std::string& filename, const MotionInfo& info);
+	void LoadMotion(const std::string& filename);	// モーション読み込み
+
+	// エディット用
+	void UpdateEdit();		// エディット更新
+	void SliderPlay();		// スライド再生
+	void ChangeMotion();	// モーション切り替え
+	void ChangeKey();		// キー切り替え
+	void EditMotion();		// モーションエディット
+	void EditKey();			// キーエディット
 
 	//=============================
 	// メンバ変数
 	//=============================
 	std::vector<MotionInfo> m_vecMotionInfo;	// モーション情報
+	std::vector<std::string> m_MotionFileName;	// モーションファイル名
+	std::string m_PathName;	// パス名
 	EASING m_EasingType;	// 補正の種類
 	MyLib::Vector3 m_pos;	// 位置
 	int m_nNowMotionIdx;	// 現在のモーションインデックス
 	int m_nNowKeyIdx;		// 現在のキーインデックス
 	float m_fMotionTimer;	// モーションタイマー
 	bool m_bFinish;			// 終了判定
+	EditInfo m_EditInfo;	// エディット情報
 };
 
 #endif

@@ -35,8 +35,10 @@ namespace
 
 namespace StateTime
 {
-	const float DAMAGE = 0.2f;	// ダメージ
-	const float DEAD = 0.7f;	// 死亡
+	const float DAMAGE = 0.2f;		// ダメージ
+	const float DEAD = 0.7f;		// 死亡
+	const float APPEARANCE = 0.4f;	// 出現
+	const float PASS = 1.5f;		// パス
 }
 
 //==========================================================================
@@ -44,9 +46,11 @@ namespace StateTime
 //==========================================================================
 CBaggage::STATE_FUNC CBaggage::m_StateFunc[] =
 {
-	&CBaggage::StateNone,	// なし
-	&CBaggage::StateDamage,	// ダメージ
-	&CBaggage::StateDead,	// 死亡
+	&CBaggage::StateNone,		// なし
+	&CBaggage::StateDamage,		// ダメージ
+	&CBaggage::StateDead,		// 死亡
+	&CBaggage::StateAppearance,	// 出現
+	&CBaggage::StatePass,		// パス
 };
 
 //==========================================================================
@@ -135,8 +139,10 @@ HRESULT CBaggage::Init()
 	m_nLife = m_baggageInfo.life;
 
 	CreateCollisionBox();
-	SetState(CObjectX::STATE::STATE_EDIT);
+	CObjectX::SetState(CObjectX::STATE::STATE_EDIT);
 
+	// スケールゼロ
+	SetScale(0.0f);
 	return S_OK;
 }
 
@@ -169,16 +175,15 @@ void CBaggage::Kill()
 //==========================================================================
 void CBaggage::Update()
 {
+	// 状態関数
+	UpdateState();
+
 	if (CGame::GetInstance()->GetGameManager()->GetType() == CGameManager::SceneType::SCENE_WAIT_AIRPUSH) {
 		return;
 	}
 
 	// 親クラスの更新処理
 	CObjectQuaternion::Update();
-
-
-	// 状態関数
-	UpdateState();
 
 
 	// 吹っ飛んだら終わり
@@ -344,6 +349,45 @@ void CBaggage::StateDead()
 			CGlassclush::Create();
 		}
 		m_bEnd = true;
+	}
+
+	SetPosition(pos);
+}
+
+//==========================================================================
+// 出現
+//==========================================================================
+void CBaggage::StateAppearance()
+{
+	// 拡大
+	float scale = UtilFunc::Correction::EasingLinear(0.0f, 1.0f, 0.0f, StateTime::APPEARANCE, m_fStateTimer);
+	SetScale(scale);
+
+	if (StateTime::APPEARANCE <= m_fStateTimer)
+	{
+		m_fStateTimer = 0.0f;
+		m_state = STATE::STATE_NONE;
+		SetScale(1.0f);
+	}
+}
+
+//==========================================================================
+// パス
+//==========================================================================
+void CBaggage::StatePass()
+{
+	// 放物線移動
+	MyLib::Vector3 pos = UtilFunc::Calculation::GetParabola3D(
+		m_posAwayStart,
+		GetOriginPosition(),
+		200.0f,
+		m_fStateTimer / StateTime::PASS);
+
+	if (StateTime::PASS <= m_fStateTimer)
+	{
+		m_fStateTimer = 0.0f;
+		m_state = STATE::STATE_NONE;
+		pos = GetOriginPosition();
 	}
 
 	SetPosition(pos);
@@ -538,4 +582,13 @@ void CBaggage::Reset()
 	m_fStateTimer = 0.0f;
 	m_state = STATE::STATE_NONE;
 	m_nLife = m_baggageInfo.life;
+}
+
+//==========================================================================
+// 状態設定
+//==========================================================================
+void CBaggage::SetState(STATE state)
+{
+	m_state = state;
+	m_fStateTimer = 0.0f;
 }

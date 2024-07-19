@@ -41,7 +41,10 @@ CRequestPeople::STATE_FUNC CRequestPeople::m_StateFunc[] =
 	&CRequestPeople::StateNone,	// なし
 	&CRequestPeople::StateFadeIn,	// フェードイン
 	&CRequestPeople::StateFadeOut,	// フェードアウト
+	&CRequestPeople::StatePass,		// パス
+	&CRequestPeople::StateByeBye,	// バイバイ
 };
+
 
 //==========================================================================
 // 静的メンバ変数宣言
@@ -105,7 +108,7 @@ CRequestPeople* CRequestPeople::Create(const MyLib::Vector3& pos)
 HRESULT CRequestPeople::Init()
 {
 	// 各種変数の初期化
-	m_state = STATE::STATE_FADEIN;	// 状態
+	m_state = STATE::STATE_PASS;	// 状態
 	m_Oldstate = m_state;
 	m_fStateTime = 0.0f;			// 状態遷移カウンター
 
@@ -391,7 +394,34 @@ void CRequestPeople::SetMotion(int motionIdx)
 //==========================================================================
 void CRequestPeople::AttackAction(CMotion::AttackInfo ATKInfo, int nCntATK)
 {
-	return;
+	// モーション取得
+	CMotion* pMotion = GetMotion();
+	if (pMotion == nullptr)
+	{
+		return;
+	}
+	int motionType = pMotion->GetType();
+
+	switch (motionType)
+	{
+	case MOTION::MOTION_PASS:
+	{
+		CBaggage* pBaggage = CBaggage::GetListObj().GetData(0);
+		if (nCntATK == 0)
+		{
+			pBaggage->SetState(CBaggage::STATE::STATE_APPEARANCE);
+		}
+		else if (nCntATK == 1)
+		{
+			pBaggage->SetState(CBaggage::STATE::STATE_PASS);
+			pBaggage->SetAwayStartPosition(pMotion->GetAttackPosition(GetModel(), ATKInfo));
+		}
+	}
+	break;
+
+	default:
+		break;
+	}
 }
 
 //==========================================================================
@@ -405,12 +435,32 @@ void CRequestPeople::AttackInDicision(CMotion::AttackInfo* pATKInfo, int nCntATK
 	{
 		return;
 	}
+	int motionType = pMotion->GetType();
 
 	// 位置取得
 	MyLib::Vector3 pos = GetPosition();
 
 	// 武器の位置
 	MyLib::Vector3 weponpos = pMotion->GetAttackPosition(GetModel(), *pATKInfo);
+
+
+	switch (motionType)
+	{
+	case MOTION::MOTION_PASS:
+	{
+		CBaggage* pBaggage = CBaggage::GetListObj().GetData(0);
+
+		if (pBaggage->GetState() != CBaggage::STATE::STATE_PASS)
+		{
+			pBaggage->SetPosition(weponpos);
+		}
+	}
+		break;
+
+	default:
+		break;
+	}
+
 
 	if (pATKInfo->fRangeSize == 0.0f)
 	{

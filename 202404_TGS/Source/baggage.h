@@ -33,9 +33,11 @@ public:
 	// 状態
 	enum STATE
 	{
-		STATE_NONE = 0,	// 通常
-		STATE_DAMAGE,	// ダメージ
-		STATE_DEAD,		// 死亡
+		STATE_NONE = 0,		// 通常
+		STATE_DAMAGE,		// ダメージ
+		STATE_DEAD,			// 死亡
+		STATE_APPEARANCE,	// 出現
+		STATE_PASS,			// パス
 		STATE_MAX
 	};
 
@@ -70,16 +72,23 @@ public:
 	void Kill();		// 削除
 	void SetForce(const MyLib::Vector3& power) { m_force = power; }				// 力設定
 	void AddForce(const MyLib::Vector3& power, const MyLib::Vector3& ActPos);	// 力追加
-	bool IsLand() { return m_bLand; }	// 着地判定
-	void SetModelPath(const std::string path) { m_baggageInfo.path = path; }
+	void SetModelPass(const std::string path) { m_baggageInfo.path = path; }
 	void SetCycle(const float& deviation) { m_baggageInfo.cycle = deviation; }
 	void SetWidth(const float& deviWidth) { m_baggageInfo.width = deviWidth; }
 	void SetWeight(const float& weight) { m_baggageInfo.weight = weight; }
+	bool IsLand() { return m_bLand; }	// 着地判定
 	bool IsHit() { return m_bHit; }		// Hit()での判定を返す
 	bool IsEnd() { return m_bEnd; }		// 終了判定を返す
 	MyLib::Vector3 GetVeloRot() { return m_velorot; }	// 回転速度
 	void SetVeloRot(const MyLib::Vector3& velorot) { m_velorot = velorot; }
 	void Reset();						// 判定リセット
+
+	void SetAwayStartPosition(const MyLib::Vector3& pos) { m_posAwayStart = pos; }	// 吹っ飛びスタート地点
+	MyLib::Vector3 GetAwayStartPosition() { return m_posAwayStart; }				// 吹っ飛びスタート地点
+
+
+	// 状態系
+	void SetState(STATE state);				// 状態設定
 	STATE GetState() { return m_state; }	// 状態取得
 
 	//=============================
@@ -105,6 +114,8 @@ private:
 	void StateNone();		// なし
 	void StateDamage();		// ダメージ
 	void StateDead();		// 死亡
+	void StateAppearance();	// 出現
+	void StatePass();		// パス
 
 	// その他
 	bool Hit();

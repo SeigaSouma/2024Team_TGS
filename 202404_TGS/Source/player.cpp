@@ -473,6 +473,7 @@ void CPlayer::Controll()
 			m_state != STATE_RESTART &&
 			m_state != STATE::STATE_RESPAWN)
 		{
+			// ‚Õ‚©‚Õ‚©ˆ—
 			Bobbing();
 
 			// ˆÚ“®‘€ì
