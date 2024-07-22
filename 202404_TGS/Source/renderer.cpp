@@ -406,8 +406,6 @@ void CRenderer::Draw()
 				CManager::GetInstance()->GetPause()->Draw();
 			}
 
-			// 黒フレーム
-			CManager::GetInstance()->GetBlackFrame()->Draw();
 		}
 		else
 			// ロードマネージャの更新

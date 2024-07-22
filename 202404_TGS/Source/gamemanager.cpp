@@ -30,6 +30,7 @@
 #include "peoplemanager.h"
 #include "spline.h"
 #include "request_people.h"
+#include "subtitle.h"
 
 //==========================================================================
 // 定数定義
@@ -145,6 +146,10 @@ HRESULT CGameManager::Init()
 
 	// カメラモーション再生
 	CManager::GetInstance()->GetCamera()->GetCameraMotion()->SetMotion(CCameraMotion::MOTION::MOTION_PASS, CCameraMotion::EASING::Linear);
+
+	CSubTitle* pSubTitle = CSubTitle::Create(MyLib::Vector3(640.0f, 670.0f, 0.0f), 2.0f);
+	pSubTitle->BindSubtitle("data\\TEXTURE\\subtitle\\sample.png");
+	pSubTitle->SetSizeByHeight(40.0f);
 	return S_OK;
 }
 
@@ -243,6 +248,13 @@ void CGameManager::Update()
 		}
 
 		CPeopleManager::GetInstance()->SetRank(CJudge::JUDGE::JUDGE_MAX);
+	}
+
+	if (CInputKeyboard::GetInstance()->GetTrigger(DIK_4))
+	{
+		CSubTitle* pSubTitle = CSubTitle::Create(MyLib::Vector3(640.0f, 670.0f, 0.0f), 2.0f);
+		pSubTitle->BindSubtitle("data\\TEXTURE\\subtitle\\sample.png");
+		pSubTitle->SetSizeByHeight(40.0f);
 	}
 
 

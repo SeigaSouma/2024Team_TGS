@@ -8,7 +8,6 @@
 #ifndef _BLACKFRAME_H_
 #define _BLACKFRAME_H_	// 二重インクルード防止
 
-#include "main.h"
 #include "object.h"
 
 //==========================================================================
@@ -20,7 +19,7 @@ class CObject2D;
 // クラス定義
 //==========================================================================
 // 黒フレームクラス定義
-class CBlackFrame
+class CBlackFrame : CObject
 {
 public:
 
@@ -35,16 +34,16 @@ public:
 		STATE_MAX
 	};
 
-	CBlackFrame(int nPriority = 8);
+	CBlackFrame(int nPriority = 1, const LAYER layer = LAYER::LAYER_2D);
 	~CBlackFrame();
 
 	static CBlackFrame *Create();
 
 	// オーバーライドされた関数
-	HRESULT Init();
-	void Uninit();
-	void Update();
-	void Draw();
+	HRESULT Init() override;
+	void Uninit() override;
+	void Update() override;
+	void Draw() override;
 
 	void SetState(STATE state);	// 状態設定
 	STATE GetState() { return m_state; }	// 状態設定

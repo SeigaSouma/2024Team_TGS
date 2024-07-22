@@ -64,7 +64,6 @@ CManager::CManager()
 	m_pScene = nullptr;				// シーン
 	m_pFade = nullptr;				// フェード
 	m_pInstantFade = nullptr;		// 遷移なしフェード
-	m_pBlackFrame = nullptr;		// 黒フレーム
 	m_pPause = nullptr;				// ポーズ
 	m_pResultManager = nullptr;		// リザルトマネージャ
 	m_pRankingManager = nullptr;	// ランキングマネージャ
@@ -323,15 +322,6 @@ void CManager::Load()
 	}
 
 	//**********************************
-	// 黒フレーム
-	//**********************************
-	m_pBlackFrame = CBlackFrame::Create();
-	if (m_pBlackFrame == nullptr)
-	{
-		return;
-	}
-
-	//**********************************
 	// ポーズ
 	//**********************************
 	m_pPause = CPause::Create(STARTMODE);
@@ -446,9 +436,6 @@ void CManager::Reset(CScene::MODE mode)
 			m_pPause->SetPause();
 		}
 	}
-
-	// 黒フレームリセット
-	m_pBlackFrame->Reset();
 
 	// カメラの情報リセット
 	if (m_pCamera != nullptr)
@@ -621,15 +608,6 @@ void CManager::Uninit()
 		m_pInstantFade = nullptr;
 	}
 
-	// 黒フレームの破棄
-	if (m_pBlackFrame != nullptr)
-	{// メモリの確保がされていたら
-
-		// 終了処理
-		m_pBlackFrame->Uninit();
-		m_pBlackFrame = nullptr;
-	}
-
 	if (m_pPause != nullptr)
 	{// メモリの確保がされていたら
 
@@ -759,11 +737,6 @@ void CManager::Update()
 
 	if (m_bLoadComplete)
 	{
-		// 黒フレーム
-		if (m_pBlackFrame != nullptr)
-		{
-			m_pBlackFrame->Update();
-		}
 
 		// 入力機器の更新処理
 		m_pInput->Update();
@@ -1014,14 +987,6 @@ CFade *CManager::GetFade()
 CInstantFade *CManager::GetInstantFade()
 {
 	return m_pInstantFade;
-}
-
-//==========================================================================
-// 黒フレームの取得
-//==========================================================================
-CBlackFrame *CManager::GetBlackFrame()
-{
-	return m_pBlackFrame;
 }
 
 //==========================================================================
