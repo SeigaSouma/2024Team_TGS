@@ -203,14 +203,19 @@ void CObjectQuaternion::CalWorldMtx()
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
 
-	MyLib::Matrix mtxTrans;	// 計算用マトリックス宣言
+	MyLib::Matrix mtxTrans, mtxScale;	// 計算用マトリックス宣言
 	MyLib::Matrix mtxWorld = GetWorldMtx();
 
 	// 情報取得
 	MyLib::Vector3 pos = GetPosition();
+	MyLib::Vector3 scale = GetScale();
 
 	// 初期化
 	mtxWorld.Identity();
+
+	// スケールを反映する
+	mtxScale.Scaling(scale);
+	mtxWorld.Multiply(mtxWorld, mtxScale);
 
 	// 向きを反映する
 	mtxWorld.Multiply(mtxWorld, m_RotationMtx);

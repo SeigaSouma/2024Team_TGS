@@ -48,19 +48,18 @@ CHARACTERSET
 	HEIGHT = 0.00		# 高さ
 	LIFE = 5		# 体力
 
-
 	PARTSSET
 		INDEX = 0
 		PARENT = -1
-		POS = 0.00 45.70 0.00
+		POS = 0.00 124.20 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
-	
+
 	PARTSSET
 		INDEX = 1
 		PARENT = 0
-		POS = 0.00 0.00 0.00
+		POS = 0.00 8.50 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
@@ -68,7 +67,7 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 2
 		PARENT = 1
-		POS = 0.00 23.40 0.00
+		POS = 0.00 72.40 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
@@ -76,7 +75,7 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 3
 		PARENT = 1
-		POS = -7.00 21.70 0.00
+		POS = -23.00 63.70 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
@@ -84,7 +83,7 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 4
 		PARENT = 3
-		POS = -17.10 -0.40 0.00
+		POS = -51.60 -1.90 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
@@ -92,7 +91,7 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 5
 		PARENT = 1
-		POS = 7.20 21.60 0.00
+		POS = 19.70 63.60 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
@@ -100,7 +99,7 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 6
 		PARENT = 5
-		POS = 17.10 -0.10 0.00
+		POS = 53.60 -0.10 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
@@ -108,7 +107,7 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 7
 		PARENT = 0
-		POS = -4.10 -4.20 0.00
+		POS = -12.60 -4.70 -5.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
@@ -116,7 +115,7 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 8
 		PARENT = 7
-		POS = 0.60 -15.90 0.00
+		POS = 0.60 -45.90 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
@@ -124,7 +123,7 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 9
 		PARENT = 0
-		POS = 5.10 -4.90 0.00
+		POS = 13.60 -5.40 -5.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
@@ -132,7 +131,7 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 10
 		PARENT = 9
-		POS = -0.50 -15.80 0.00
+		POS = -0.50 -45.80 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
@@ -153,13 +152,15 @@ COLLIDER_FILENAME = data/TEXT/character/mob/person_01/sphere_collider.json
 #------------------------------------------------------------------------------
 # モーション数
 #------------------------------------------------------------------------------
-NUM_MOTION = 2
+NUM_MOTION = 4
 
 #------------------------------------------------------------------------------
 # モデルファイル名
 #------------------------------------------------------------------------------
 MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_def.txt				# [0]デフォルト
 MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_walk.txt			# [1]歩き
+MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_pass.txt			# [1]歩き
+MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_bye.txt			# [1]歩き
 
 
 END_SCRIPT		# この行は絶対消さないこと！

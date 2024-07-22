@@ -23,6 +23,7 @@
 
 #include "objectX.h"
 #include "spline.h"
+#include "camera_motion.h"
 
 //==========================================================================
 // マクロ定義
@@ -121,6 +122,7 @@ CCamera::CCamera()
 	m_fDiffHeightSave = 0.0f;					// 高さの差分保存用
 	m_fDiffHeightDest = 0.0f;					// 目標の高さの差分
 	m_bFollow = false;							// 追従するかどうか
+	m_bMotion = false;							// モーション中かどうか
 	m_bRotationZ = false;						// Z回転出来るかどうか
 	m_bRotationY = false;						// Y回転出来るかどうか
 	m_bRockON = false;							// ロックオンするか
@@ -133,6 +135,7 @@ CCamera::CCamera()
 	m_nChasePlayerIndex = 0;					// 追従するプレイヤーのインデックス番号
 	m_RockOnDir = ROCKON_DIR_RIGHT;				// ロックオン時の向き
 	m_stateRockOn = ROCKON_NORMAL;				// ロックオン時の状態
+	m_pCameraMotion = nullptr;					// カメラモーションのポインタ
 
 	m_StateCameraR = POSR_STATE_NORMAL;		// 注視点の状態
 	m_pStateCameraR = nullptr;	// 注視点の状態ポインタ
@@ -174,6 +177,8 @@ HRESULT CCamera::Init()
 	// 操作の状態設定
 	SetControlState(DEBUG_NEW CCameraControlState_Normal(this));
 
+	// カメラモーション作成
+	m_pCameraMotion = CCameraMotion::Create();
 	return S_OK;
 }
 
@@ -212,6 +217,12 @@ void CCamera::Uninit()
 	{
 		delete m_pControlState;
 		m_pControlState = nullptr;
+	}
+
+	if (m_pCameraMotion != nullptr)
+	{
+		m_pCameraMotion->Uninit();
+		m_pCameraMotion = nullptr;
 	}
 }
 
@@ -298,6 +309,14 @@ void CCamera::Update()
 		MyLib::Vector3(0.0f, 0.0f, 0.0f),
 		D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f),
 		80.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);*/
+
+
+
+	// カメラモーション作成
+	if (m_pCameraMotion != nullptr)
+	{
+		m_pCameraMotion->Update();
+	}
 }
 
 //==========================================================================
@@ -941,13 +960,18 @@ void CCamera::SetCameraRTitle()
 //==========================================================================
 void CCamera::SetCameraRGame()
 {
-	if (m_bFollow == false)
+	if (!m_bFollow)
 	{// 追従しないとき
 
 		// 注視点の代入処理
 		m_posR.x = m_posV.x + cosf(m_rot.z) * sinf(m_rot.y) * m_fDistance;
 		m_posR.z = m_posV.z + cosf(m_rot.z) * cosf(m_rot.y) * m_fDistance;
 		m_posR.y = m_posV.y + sinf(m_rot.z) * m_fDistance;
+	}
+	else if (m_bMotion && m_bFollow)
+	{// カメラモーション中
+
+
 	}
 	else
 	{// 追従ON

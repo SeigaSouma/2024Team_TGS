@@ -117,6 +117,9 @@
     <Filter Include="map\obstacle">
       <UniqueIdentifier>{217adfda-8342-44ff-91fb-d739b9a6849f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="camera">
+      <UniqueIdentifier>{61f2cd6c-2c60-4c7d-9eec-19d2b4f10eea}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\ballast.cpp">
@@ -132,9 +135,6 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\blackframe.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\camera.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\collisionobject.cpp">
@@ -605,6 +605,24 @@
     <ClCompile Include="Source\peoplemanager.cpp">
       <Filter>people</Filter>
     </ClCompile>
+    <ClCompile Include="Source\map_obstacle_motion.cpp">
+      <Filter>map</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\map_obstacle_obj.cpp">
+      <Filter>map</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\countdown_start.cpp">
+      <Filter>direction</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\request_people.cpp">
+      <Filter>people</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\camera.cpp">
+      <Filter>camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\camera_motion.cpp">
+      <Filter>camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ballast.h">
@@ -620,9 +638,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\blackframe.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\camera.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\collisionobject.h">
@@ -1101,6 +1116,24 @@
     </ClInclude>
     <ClInclude Include="Source\peoplemanager.h">
       <Filter>people</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\map_obstacle_motion.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\map_obstacle_obj.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\countdown_start.h">
+      <Filter>direction</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\request_people.h">
+      <Filter>people</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\camera.h">
+      <Filter>camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\camera_motion.h">
+      <Filter>camera</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

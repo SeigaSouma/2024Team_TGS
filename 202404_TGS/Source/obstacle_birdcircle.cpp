@@ -8,6 +8,7 @@
 #include "debugproc.h"
 #include "manager.h"
 
+
 //==========================================================================
 // 定数定義
 //==========================================================================
@@ -20,7 +21,7 @@ namespace
 // デフォルト情報
 namespace BIRDDEFAULT
 {
-	const float ROTATE_SPEED = (-0.02f);	// 回転速度
+	const float ROTATE_SPEED = (0.02f);	// 回転速度
 	const float LENGTH = (750.0f);			// 中心からの距離
 	const float PLUSLENGTH = (250.0f);		// 変化する距離
 }
@@ -33,6 +34,7 @@ CObstacle_BirdCircle::CObstacle_BirdCircle(int nPriority,
 {
 	// 値のクリア
 	m_BirdList.clear();
+	m_scale = 1.0f;
 }
 
 //==========================================================================
@@ -64,12 +66,12 @@ CObstacle_BirdCircle* CObstacle_BirdCircle::Create(const CMap_ObstacleManager::S
 //==========================================================================
 HRESULT CObstacle_BirdCircle::Init()
 {
-	CMap_Obstacle::GetListObj().Regist(this);
+	CMap_Obstacle::ListRegist(this);
 	MyLib::Vector3 rot;
-
-#if _DEBUG
-	CMap_Obstacle::Init();
-#endif
+//
+//#if _DEBUG
+//	CMap_Obstacle::Init();
+//#endif
 
 	// 種類の設定
 	CObject::SetType(TYPE_OBJECTX);
@@ -107,6 +109,7 @@ void CObstacle_BirdCircle::Uninit()
 		if (it.pBird != nullptr)
 		{
 			it.pBird->Uninit();
+			it.pBird = nullptr;
 		}
 	}
 
@@ -126,12 +129,16 @@ void CObstacle_BirdCircle::Kill()
 	{
 		if (it.pBird != nullptr)
 		{
-			it.pBird->Uninit();
+			it.pBird->Kill();
+			it.pBird = nullptr;
 		}
 	}
 
+	// リストクリア
+	m_BirdList.clear();
+
 	// 終了処理
-	CMap_Obstacle::Uninit();
+	CMap_Obstacle::Kill();
 }
 
 //==========================================================================
@@ -177,7 +184,7 @@ void CObstacle_BirdCircle::ControllBird()
 		// 位置の設定
 		{
 			MyLib::Matrix mtxRot, mtxTrans, mtxScale, mtxBird;	// 計算用マトリックス宣言
-			MyLib::Matrix mtxParent = GetWorldMtx();	// 親のマトリックス
+			MyLib::Matrix mtxParent = m_mtxWorld;	// 親のマトリックス
 			MyLib::Vector3 BirdPos = it.offset;
 
 			// 座標用マトリックス初期化
@@ -197,11 +204,11 @@ void CObstacle_BirdCircle::ControllBird()
 
 		// 向きとオフセット設定
 		{
-			rot.y = m_rot.y + (D3DX_PI * 2) * (BIRD_ROT * it.nIdx);
+			rot.y = m_rot.y + (D3DX_PI * 2.0f) * (BIRD_ROT * it.nIdx) + D3DX_PI * 0.5f;
 			UtilFunc::Transformation::RotNormalize(rot.y);
 			it.pBird->SetRotation(rot);
 			SetBirdOffSet(it);
-			it.pBird->SetScale(GetScale());
+			it.pBird->SetScale(GetScale() + 1.0f);
 		}
 	}
 }
@@ -245,4 +252,32 @@ void CObstacle_BirdCircle::SetInfo(const float fDefLen, const float fPlusLen, co
 	m_Info.fDefLength = fDefLen;
 	m_Info.fPlusLength = fPlusLen;
 	m_Info.fRotSpeed = fRotSpd;
+}
+
+//==========================================================================
+// ワールドマトリックス設定
+//==========================================================================
+void CObstacle_BirdCircle::CalWorldMtx()
+{// デバイスの取得
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
+
+	// 情報取得
+	MyLib::Vector3 pos = GetPosition();
+	MyLib::Vector3 rot = GetRotation();
+	MyLib::Matrix mtxRot, mtxTrans, mtxScale;	// 計算用マトリックス宣言
+
+	// ワールドマトリックスの初期化
+	m_mtxWorld.Identity();
+
+	// スケールを反映する
+	mtxScale.Scaling(GetScale());
+	m_mtxWorld.Multiply(m_mtxWorld, mtxScale);
+
+	// 向きを反映する
+	mtxRot.RotationYawPitchRoll(rot.y, rot.x, rot.z);
+	m_mtxWorld.Multiply(m_mtxWorld, mtxRot);
+
+	// 位置を反映する
+	mtxTrans.Translation(pos);
+	m_mtxWorld.Multiply(m_mtxWorld, mtxTrans);
 }

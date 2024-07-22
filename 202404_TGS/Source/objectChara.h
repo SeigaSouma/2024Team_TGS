@@ -19,6 +19,9 @@ class CObjectChara : public CObjectHierarchy
 {
 public:
 
+	//=============================
+	// 構造体定義
+	//=============================
 	/**
 	@brief	スフィアコライダー
 	*/
@@ -58,6 +61,15 @@ public:
 		}
 	};
 
+	/**
+	@brief	コライダー情報
+	*/
+	struct ColliderData
+	{
+		std::vector<SphereCollider> colliders;	// スフィアコライダー
+		std::string filename;		// ファイル名
+	};
+
 	CObjectChara(int nPriority = mylib_const::PRIORITY_DEFAULT);
 	~CObjectChara();
 
@@ -93,7 +105,9 @@ public:
 	static CObjectChara *Create(const std::string pTextFile);	// 生成処理
 
 
+	//=============================
 	// JSONからの読み込み
+	//=============================
 	void from_json(const json& j)
 	{
 		for (const auto& colliderData : j.at("colliders")) 
@@ -104,7 +118,9 @@ public:
 		}
 	}
 
+	//=============================
 	// CObjectCharaのJSONへの書き込み
+	//=============================
 	void to_json(json& j) const
 	{
 		j["colliders"] = json::array(); // 空の配列を作成
@@ -130,12 +146,16 @@ protected:
 	bool m_bInDicision;	// 攻撃判定中フラグ
 private:
 
+	//=============================
 	// メンバ関数
+	//=============================
 	void LoadSphereColliders(const std::string& textfile);
 	void SaveSphereColliders();
 	void MotionInProgressAction();	// モーション中の行動処理
 
+	//=============================
 	// メンバ変数
+	//=============================
 	float m_fHeight;			// 身長
 	float m_fVelocity;			// 移動速度
 	float m_fRotDest;			// 目標の向き
@@ -145,6 +165,8 @@ private:
 	int m_nAddScore;			// スコア加算量
 	CMotion *m_pMotion;			// モーションの情報
 	std::vector<SphereCollider> m_SphereColliders;	// スフィアコライダー
+	static std::vector<ColliderData> m_LoadColliderData;	// コライダー情報
+
 };
 
 

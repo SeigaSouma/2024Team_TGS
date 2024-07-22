@@ -11,6 +11,8 @@
 #include "model.h"
 #include "3D_effect.h"
 
+std::vector<CObjectChara::ColliderData> CObjectChara::m_LoadColliderData = {};	// コライダー情報
+
 //==========================================================================
 // コンストラクタ
 //==========================================================================
@@ -146,7 +148,7 @@ void CObjectChara::Update()
 	// モーション更新
 	if (m_pMotion != nullptr)
 	{
-		m_pMotion->Update();
+		m_pMotion->Update(CManager::GetInstance()->GetDeltaTime() / (1.0f / 60.0f));
 	}
 
 	// コライダーの位置調整
@@ -356,6 +358,18 @@ void CObjectChara::LoadPartsData(FILE* pFile, const std::string& file, int *pCnt
 //==========================================================================
 void CObjectChara::LoadSphereColliders(const std::string& file)
 {
+	// 構造体の中の文字列を探す
+	auto itr = std::find_if(m_LoadColliderData.begin(), m_LoadColliderData.end(),
+		[&file](const CObjectChara::ColliderData& data) {return data.filename == file; });
+
+	// 見つかった場合の処理
+	if (itr != m_LoadColliderData.end())
+	{
+		m_SphereColliders = (*itr).colliders;
+		return;
+	}
+
+
 	// ファイルを開く
 	FILE* pFile = fopen(file.c_str(), "r");
 	if (pFile == nullptr)
@@ -367,6 +381,10 @@ void CObjectChara::LoadSphereColliders(const std::string& file)
 
 	// 読み込み用変数
 	char aComment[MAX_COMMENT];	// コメント用
+
+
+	// 要素追加
+	m_LoadColliderData.emplace_back();
 
 	while (1)
 	{
@@ -382,6 +400,8 @@ void CObjectChara::LoadSphereColliders(const std::string& file)
 
 			// ファイル名保存
 			filename = aComment;
+
+			m_LoadColliderData.back().filename = filename;
 			break;
 		}
 

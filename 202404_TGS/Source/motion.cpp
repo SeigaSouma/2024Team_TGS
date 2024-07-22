@@ -10,6 +10,7 @@
 #include "calculation.h"
 #include "model.h"
 #include "objectChara.h"
+#include "debugproc.h"
 
 //==========================================================================
 // 静的メンバ変数宣言
@@ -264,6 +265,11 @@ void CMotion::ResetPose(int nType)
 //==========================================================================
 void CMotion::Update(float fBuff)
 {
+#if 0
+	// テキストの描画
+	CManager::GetInstance()->GetDebugProc()->Print(
+		"倍率：%f\n", fBuff);
+#endif
 
 	// 攻撃判定中フラグリセット
 	m_bAttaking = false;

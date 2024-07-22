@@ -75,6 +75,7 @@ public:
 	MyLib::Vector3 GetOriginPosition() const;		// 最初の位置取得
 	void SetRadius(const float fRadius);		// 半径設定
 	float GetRadius() const;				// 半径取得
+	void CalWorldMtx();		// ワールドマトリックスの計算処理
 
 	HRESULT ReadText(const std::string& file);	// 外部ファイル読み込み処理
 	virtual HRESULT SetCharacter(const std::string& file);	// キャラクター設定
@@ -103,9 +104,6 @@ protected:
 	static std::vector<Load> m_aLoadData;
 	static int m_nNumLoad;	// 読み込んだ数
 private:
-
-	// メンバ関数
-	void CalWorldMtx();		// ワールドマトリックスの計算処理
 
 	// メンバ変数
 	MyLib::Matrix m_mtxWorld;	// ワールドマトリックス

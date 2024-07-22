@@ -235,14 +235,28 @@ void CEdit_Obstacle_Arrangment::Update()
 		}
 
 		// 生成
-		m_pDragObj = CObjectX::Create(m_ObstacleInfo.modelFile);
-		m_pDragObj->SetType(CObject::TYPE::TYPE_OBJECTX);
+		/*m_pDragObj = CObjectX::Create(m_ObstacleInfo.modelFile);
+		m_pDragObj->SetType(CObject::TYPE::TYPE_OBJECTX);*/
 	}
 
 
 	// マウス情報取得
 	CInputMouse* pMouse = CInputMouse::GetInstance();
 	MyLib::Vector3 mouseWorldPos = pMouse->GetWorldPosition();
+
+	// ドラッグ中
+	if (m_bButtonDrag)
+	{
+		MyLib::Vector3 setpos = mouseWorldPos;
+		setpos.y = 0.0f;
+
+		CEffect3D::Create(
+			setpos,
+			0.0f,
+			D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f),
+			80.0f, 2, CEffect3D::MOVEEFFECT::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+	}
+
 
 	if (m_pDragObj != nullptr) {
 
@@ -354,7 +368,7 @@ void CEdit_Obstacle_Arrangment::ObjectSelect()
 		CMap_Obstacle* pObject = nullptr;
 
 		// リストコピー
-		std::vector<CObjectX*> pObjectSort;
+		std::vector<CMap_Obstacle*> pObjectSort;
 
 		while (list.ListLoop(itr))
 		{
@@ -454,8 +468,11 @@ void CEdit_Obstacle_Arrangment::ObjectSelect()
 		m_pGrabObj->SetRotation(rot);
 		m_pGrabObj->SetScale(scale);
 
-		if (m_pGrabObj->GetCollisionLineBox() != nullptr) {
-			m_pGrabObj->GetCollisionLineBox()->SetPosition(pos);
+		if (m_pGrabObj->GetCollisionLineBox().size() > 0) {
+			for (auto& box : m_pGrabObj->GetCollisionLineBox())
+			{
+				box->SetPosition(m_pGrabObj->GetPosition() + pos);
+			}
 		}
 
 		if (m_pHandle != nullptr) {
@@ -610,8 +627,11 @@ void CEdit_Obstacle_Arrangment::Transform()
 
 		// 位置設定
 		m_pGrabObj->SetPosition(pos);
-		if (m_pGrabObj->GetCollisionLineBox() != nullptr) {
-			m_pGrabObj->GetCollisionLineBox()->SetPosition(pos);
+		if (m_pGrabObj->GetCollisionLineBox().size() > 0) {
+			for (auto& box : m_pGrabObj->GetCollisionLineBox())
+			{
+				box->SetPosition(m_pGrabObj->GetPosition() + pos);
+			}
 		}
 		if (m_pHandle != nullptr) {
 			m_pHandle->SetPosition(m_pGrabObj->GetPosition());

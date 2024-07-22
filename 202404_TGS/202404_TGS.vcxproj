@@ -165,6 +165,10 @@
     <ClCompile Include="Libraries\Imgui\imgui_widgets.cpp" />
     <ClCompile Include="Libraries\Imgui\implot.cpp" />
     <ClCompile Include="Libraries\Imgui\implot_items.cpp" />
+    <ClCompile Include="Source\camera_motion.cpp" />
+    <ClCompile Include="Source\countdown_start.cpp" />
+    <ClCompile Include="Source\map_obstacle_motion.cpp" />
+    <ClCompile Include="Source\map_obstacle_obj.cpp" />
     <ClCompile Include="Source\obstacle_birdcircle.cpp" />
     <ClCompile Include="Source\obstacle_fisharch.cpp" />
     <ClCompile Include="Source\map_block.cpp" />
@@ -286,6 +290,7 @@
     <ClCompile Include="Source\rankingmanager.cpp" />
     <ClCompile Include="Source\rankingscore.cpp" />
     <ClCompile Include="Source\renderer.cpp" />
+    <ClCompile Include="Source\request_people.cpp" />
     <ClCompile Include="Source\result.cpp" />
     <ClCompile Include="Source\resultmanager.cpp" />
     <ClCompile Include="Source\resultscore.cpp" />
@@ -335,6 +340,10 @@
     <ClInclude Include="Libraries\Imgui\imstb_rectpack.h" />
     <ClInclude Include="Libraries\Imgui\imstb_textedit.h" />
     <ClInclude Include="Libraries\Imgui\imstb_truetype.h" />
+    <ClInclude Include="Source\camera_motion.h" />
+    <ClInclude Include="Source\countdown_start.h" />
+    <ClInclude Include="Source\map_obstacle_motion.h" />
+    <ClInclude Include="Source\map_obstacle_obj.h" />
     <ClInclude Include="Source\obstacle_birdcircle.h" />
     <ClInclude Include="Source\obstacle_fisharch.h" />
     <ClInclude Include="Source\map_block.h" />
@@ -453,6 +462,7 @@
     <ClInclude Include="Source\rankingmanager.h" />
     <ClInclude Include="Source\rankingscore.h" />
     <ClInclude Include="Source\renderer.h" />
+    <ClInclude Include="Source\request_people.h" />
     <ClInclude Include="Source\result.h" />
     <ClInclude Include="Source\resultmanager.h" />
     <ClInclude Include="Source\resultscore.h" />

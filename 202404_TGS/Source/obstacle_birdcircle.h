@@ -62,6 +62,8 @@ public:
 	void SetDefLength(const float fLength) { m_Info.fDefLength = fLength; }
 	void SetPlusLength(const float fLength) { m_Info.fPlusLength = fLength; }
 	void SetRotSpeed(const float fRotSpeed) { m_Info.fRotSpeed = fRotSpeed; }
+	void SetScale(const MyLib::Vector3& scale) { m_scale = scale; }
+	MyLib::Vector3 GetScale() { return m_scale; }
 
 	/**
 	@brief	可変情報の設定
@@ -87,7 +89,7 @@ private:
 	void ControllBird();	// 管理している魚の設定
 	void SetBirdOffSet(BirdInfo& info);	// 魚のオフセット設定
 	void SetNowLength();	// 距離設定
-
+	void CalWorldMtx();
 
 	//=============================
 	// メンバ変数
@@ -95,6 +97,8 @@ private:
 	std::vector<BirdInfo> m_BirdList;	// 鳥のリスト
 	MyLib::Vector3 m_rot;	// 向き
 	Info m_Info;	// 情報
+	MyLib::Matrix m_mtxWorld;	// ワールドマトリックス
+	MyLib::Vector3 m_scale;		// スケール
 };
 
 

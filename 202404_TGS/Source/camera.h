@@ -13,6 +13,7 @@
 class CStateCameraR;	// 注視点の状態
 class CStateCameraV;	// 視点の状態
 class CCameraControlState;	// 状態別操作
+class CCameraMotion;	// カメラモーション
 
 //==========================================================================
 // クラス定義
@@ -241,6 +242,7 @@ private:
 	float m_fChaseDistance;				// 追従の間隔
 	float m_fDestChaseDistance;			// 目標の追従の間隔
 	bool m_bFollow;						// 追従するかどうか
+	bool m_bMotion;						// モーション中かどうか
 	bool m_bRotationZ;					// Z回転出来るかどうか
 	bool m_bRotationY;					// Y回転出来るかどうか
 	bool m_bRockON;						// ロックオン中か
@@ -256,7 +258,7 @@ private:
 	int m_nChasePlayerIndex;			// 追従するプレイヤーのインデックス番号
 	RockOnDir m_RockOnDir;				// ロックオン時の向き
 	RockOnState m_stateRockOn;			// ロックオン時の状態
-
+	CCameraMotion* m_pCameraMotion;		// カメラモーションのポインタ
 
 
 	float m_fAutoDistance_Dest;					// 距離

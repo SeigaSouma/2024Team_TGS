@@ -30,6 +30,7 @@ CModel::CModel(int nPriority)
 	m_rot = mylib_const::DEFAULT_VECTOR3;			// 向き
 	m_rotOrigin = mylib_const::DEFAULT_VECTOR3;		// 向き
 	m_scale = mylib_const::DEFAULT_SCALE;			// スケール
+	m_scaleOrigin = mylib_const::DEFAULT_SCALE;			// スケール
 	m_nIdxXFile = 0;								// Xファイルのインデックス番号
 	m_nIdxTexture = nullptr;							// テクスチャのインデックス番号
 	m_pParent = nullptr;								// 親モデルのポインタ
@@ -199,7 +200,7 @@ void CModel::CalWorldMtx()
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
 
-	MyLib::Matrix mtxRot, mtxTrans, mtxScale, mtxRotOrigin;	// 計算用マトリックス宣言
+	MyLib::Matrix mtxRot, mtxTrans, mtxScale, mtxScaleOrigin, mtxRotOrigin;	// 計算用マトリックス宣言
 	MyLib::Matrix mtxParent;			// 親のマトリックス
 
 	bool bScale = false;
@@ -210,6 +211,10 @@ void CModel::CalWorldMtx()
 
 	// ワールドマトリックスの初期化
 	m_mtxWorld.Identity();
+
+	// 元のスケールを反映
+	mtxScaleOrigin.Scaling(m_scaleOrigin);
+	m_mtxWorld.Multiply(m_mtxWorld, mtxScaleOrigin);
 
 	// スケールを反映する
 	mtxScale.Scaling(m_scale);
