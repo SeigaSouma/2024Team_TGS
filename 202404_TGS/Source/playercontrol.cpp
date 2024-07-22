@@ -57,10 +57,11 @@ namespace MULTITARGET
 //==========================================================================
 void CPlayerControlMove::Move(CPlayer* player)
 {
+	if (CGame::GetInstance()->GetGameManager()->GetType() == CGameManager::SceneType::SCENE_GOAL) return;
+
 	// インプット情報取得
 	CInputKeyboard* pInputKeyboard = CInputKeyboard::GetInstance();
 	CInputGamepad* pInputGamepad = CInputGamepad::GetInstance();
-
 
 	// ダッシュ判定
 	bool bDash = false;
@@ -528,8 +529,11 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 		if (posBaggage.y <= posBaggageOrigin.y)
 		{
 			posBaggage.y = posBaggageOrigin.y;
-			player->Hit(1);
-			m_bLandOld = true;
+			if (CGame::GetInstance()->GetGameManager()->GetType() != CGameManager::SceneType::SCENE_GOAL)
+			{
+				player->Hit(1);
+				m_bLandOld = true;
+			}
 		}
 		else if(!pBaggage->IsLand())
 		{
@@ -563,10 +567,13 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 		{
 			// 位置設定
 			posBaggage.y = posBaggageOrigin.y;
-			player->Hit(1);
+			if (CGame::GetInstance()->GetGameManager()->GetType() != CGameManager::SceneType::SCENE_GOAL)
+			{
+				player->Hit(1);
 
-			// 前回着地した状態に
-			m_bLandOld = true;
+				// 前回着地した状態に
+				m_bLandOld = true;
+			}
 		}
 	}
 

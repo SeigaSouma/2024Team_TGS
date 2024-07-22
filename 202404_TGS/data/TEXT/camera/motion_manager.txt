@@ -15,6 +15,7 @@ PATH = data/TEXT/camera/	# 読み込むテキストのあるパス
 # モーションファイル名
 #------------------------------------------------------------------------------
 MOTION_FILENAME = motion_pass.bin	# [0]パスのモーション
-
+MOTION_FILENAME = motion_goal.bin	# [1]ゴール直後のモーション
+MOTION_FILENAME = motion_goalpush.bin	# [1]ゴール直後のモーション
 
 END_SCRIPT		# この行は絶対消さないこと！

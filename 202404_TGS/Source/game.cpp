@@ -53,8 +53,6 @@
 #include "spline.h"
 #include "courseManager.h"
 #include "peoplemanager.h"
-#include "countdown_start.h"
-#include "request_people.h"
 
 //==========================================================================
 // 静的メンバ変数宣言
@@ -168,16 +166,6 @@ HRESULT CGame::Init()
 		{
 			return E_FAIL;
 		}
-	}
-	// プレイヤー取得
-	CListManager<CPlayer> playerList = CPlayer::GetListObj();
-	CPlayer* pPlayer = nullptr;
-
-	// リストループ
-	while (playerList.ListLoop(&pPlayer))
-	{
-		pPlayer->SetPosition(MyLib::Vector3(0.0f, 10.0f, 0.0f));
-		pPlayer->SetRotation(MyLib::Vector3(0.0f, 0.0f, 0.0f));
 	}
 
 	//=============================
@@ -326,7 +314,7 @@ HRESULT CGame::Init()
 	//=============================
 	m_pMapUI = CMapUI::Create();
 
-	pPlayer = playerList.GetData(0);
+	CPlayer* pPlayer = CPlayer::GetListObj().GetData(0);
 	m_pMapUI->BindPlayer(pPlayer);
 
 	//=============================
@@ -576,8 +564,6 @@ void CGame::Update()
 
 	if (pInputKeyboard->GetTrigger(DIK_4))
 	{
-		CRequestPeople::Create(MyLib::Vector3(500.0f, 500.0f, 500.0f));
-		CCountdown_Start::Create();
 	}
 
 

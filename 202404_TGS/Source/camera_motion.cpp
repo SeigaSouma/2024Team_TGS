@@ -41,6 +41,7 @@ CCameraMotion::CCameraMotion()
 	m_nNowKeyIdx = 0;			// 現在のキーインデックス
 	m_fMotionTimer = 0.0f;		// モーションタイマー
 	m_bFinish = false;			// 終了判定
+	m_bEdit = false;			// エディターフラグ
 }
 
 //==========================================================================
@@ -338,6 +339,7 @@ void CCameraMotion::UpdateEdit()
 {
 	if (ImGui::CollapsingHeader("CameraMotion"))
 	{
+		m_bEdit = true;
 		// 再生
 		ImGui::Dummy(ImVec2(0.0f, 10.0f));
 		ImGui::SetNextItemWidth(150.0f);
@@ -354,7 +356,9 @@ void CCameraMotion::UpdateEdit()
 			m_fMotionTimer = 0.0f;
 			m_bFinish = true;
 		}
-		
+
+
+
 		ImGui::Dummy(ImVec2(0.0f, 5.0f));
 		if (ImGui::Button("Save", ImVec2(80, 50)))
 		{
@@ -382,6 +386,7 @@ void CCameraMotion::UpdateEdit()
 		// キー切替
 		ChangeKey();
 	}
+	else m_bEdit = false;
 }
 
 //==========================================================================
@@ -465,6 +470,31 @@ void CCameraMotion::ChangeKey()
 	{
 		ImGui::SeparatorText("Change Key");
 
+		//=============================
+		// コピー
+		//=============================
+		if (ImGui::Button("Copy Key"))
+		{
+			m_EditInfo.Key_copyData = m_vecMotionInfo[m_EditInfo.motionIdx].Key[m_EditInfo.keyIdx];
+		}
+		ImGui::SameLine();
+
+		//=============================
+		// ペースト
+		//=============================
+		if (ImGui::Button("Paste Key"))
+		{
+			m_EditInfo.motionInfo.Key[m_EditInfo.keyIdx] = m_EditInfo.Key_copyData;
+
+			// カメラ情報取得
+			CCamera* pCamera = CManager::GetInstance()->GetCamera();
+
+			// カメラ情報設定
+			pCamera->SetPositionR(m_pos + m_EditInfo.motionInfo.Key[m_EditInfo.keyIdx].posRDest);
+			pCamera->SetRotation(m_EditInfo.motionInfo.Key[m_EditInfo.keyIdx].rotDest);
+			pCamera->SetDistance(m_EditInfo.motionInfo.Key[m_EditInfo.keyIdx].distance);
+		}
+		ImGui::Separator();
 
 		//=============================
 		// 総数変更

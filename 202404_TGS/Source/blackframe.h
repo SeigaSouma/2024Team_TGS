@@ -17,10 +17,6 @@
 class CObject2D;
 
 //==========================================================================
-// マクロ定義
-//==========================================================================
-
-//==========================================================================
 // クラス定義
 //==========================================================================
 // 黒フレームクラス定義
@@ -53,7 +49,10 @@ public:
 	void SetState(STATE state);	// 状態設定
 	STATE GetState() { return m_state; }	// 状態設定
 	void Reset();			// リセット
+
+	static CBlackFrame* GetInstance() { return m_pThisPtr; }	// 自身のポインタ
 private:
+
 	// 列挙型定義
 	enum VTX
 	{
@@ -72,6 +71,7 @@ private:
 	int m_nCntMove;	// 移動カウント
 	CObject2D *m_pObj3D[VTX_MAX];	// オブジェクト2Dのオブジェクト
 	static const MyLib::Vector3 m_DestPosition[VTX_MAX];	// 目標の位置
+	static CBlackFrame* m_pThisPtr;	// 自身のポインタ
 };
 
 
