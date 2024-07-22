@@ -162,6 +162,7 @@ public:
 	int GetDistanceCnt() { return m_nCntDistance; }
 	void SetAutoMovingPosR(const MyLib::Vector3& pos) { m_AutoMovingPosR = pos; }	// 自動カメラ移動時の注視点
 	MyLib::Vector3 GetAutoMovingPosR() { return m_AutoMovingPosR; }					// 自動カメラ移動時の注視点取得
+	CCameraMotion* GetMotion() { return m_pCameraMotion; }
 
 	// ステートパターン設定
 	void SetStateCamraR(CStateCameraR* state);	// 注視点の状態設定
@@ -299,7 +300,6 @@ public:
 	virtual void SetCameraR(CCamera* pCamera) override;
 };
 
-
 //=============================
 // 視点の状態クラス
 //=============================
@@ -310,6 +310,7 @@ public:
 
 	virtual void LimitPos(CCamera* pCamera);	// 位置制限
 	virtual void Distance(CCamera* pCamera);	// 距離調整
+
 protected:
 	float GetDistance(CCamera* pCamera, const float fMultiply);
 };
@@ -326,6 +327,15 @@ public:
 	CStateCameraV_Enhance() {}
 
 	virtual void LimitPos(CCamera* pCamera) override;	// 位置制限
+};
+
+class CStateCameraV_Goal : public CStateCameraV
+{
+public:
+	CStateCameraV_Goal() {}
+
+	virtual void LimitPos(CCamera* pCamera) override;	// 位置制限
+	virtual void Distance(CCamera* pCamera) override;	// 距離調整
 };
 
 class CStateCameraV_Distance : public CStateCameraV

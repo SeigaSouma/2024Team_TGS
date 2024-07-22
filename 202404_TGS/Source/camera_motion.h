@@ -55,6 +55,7 @@ public:
 	int GetNowMotionIdx() { return m_nNowMotionIdx; }
 	void SetFinish(bool bFinish) { m_bFinish = bFinish; }
 	bool IsFinish() { return m_bFinish; }
+	bool IsEdit() { return m_bEdit; }
 	int GetNowKeyIdx() { return m_nNowKeyIdx; }
 	int GetNowKeyMax() { return m_vecMotionInfo[m_nNowMotionIdx].Key.size(); }
 
@@ -94,8 +95,10 @@ private:
 		bool bSlide;			// スライド中判定
 		MyLib::Vector3 offset;	// オフセット
 		MotionInfo motionInfo;	// モーション情報
+		MotionKey Key_copyData;	// キーのコピーデータ
 
-		EditInfo() : motionIdx(0), keyIdx(0), playRatio(0.0f), bSlide(false), motionInfo() {}
+		EditInfo() : motionIdx(0), keyIdx(0), playRatio(0.0f), bSlide(false), motionInfo(),
+			Key_copyData(MotionKey()) {}
 	};
 
 
