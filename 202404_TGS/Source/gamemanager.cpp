@@ -130,7 +130,7 @@ HRESULT CGameManager::Init()
 	m_OldSceneType = m_SceneType;
 
 	// ˆË—Šl¶¬
-	CRequestPeople::Create(MyLib::Vector3(500.0f, 0.0f, 500.0f));
+	CRequestPeople::Create(MyLib::Vector3(500.0f, 0.0f, 900.0f));
 
 	CBlackFrame::GetInstance()->SetState(CBlackFrame::STATE::STATE_INCOMPLETION);
 	return S_OK;

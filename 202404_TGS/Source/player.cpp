@@ -239,6 +239,9 @@ HRESULT CPlayer::Init()
 	m_pBaggage->SetPosition(m_posCylinder);
 	m_pBaggage->SetOriginPosition(MyLib::Vector3(0.0f, m_posCylinder.y, 0.0f));
 
+	// ˆÚ“®‹——£
+	m_fMoveLength = 3000.0f;
+
 	return S_OK;
 }
 
