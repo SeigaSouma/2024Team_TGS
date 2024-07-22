@@ -7,6 +7,10 @@
 #include "countdown_start.h"
 #include "manager.h"
 #include "calculation.h"
+#include "game.h"
+#include "gamemanager.h"
+#include "player.h"
+#include "baggage.h"
 
 //==========================================================================
 // 定数定義
@@ -276,6 +280,12 @@ void CCountdown_Start::StateComplete()
 
 		// フェードアウト状態へ遷移
 		m_state = State::STATE_FADEOUT;
+
+		CBaggage* pBaggage = CPlayer::GetListObj().GetData(0)->GetBaggage();
+		pBaggage->SetState(CBaggage::STATE::STATE_NONE);
+
+		// 空気待ち
+		CGame::GetInstance()->GetGameManager()->SetType(CGameManager::SceneType::SCENE_WAIT_AIRPUSH);
 	}
 }
 

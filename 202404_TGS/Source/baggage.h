@@ -36,6 +36,7 @@ public:
 		STATE_NONE = 0,		// 通常
 		STATE_DAMAGE,		// ダメージ
 		STATE_DEAD,			// 死亡
+		STATE_APPEARANCE_WAIT,	// 出現
 		STATE_APPEARANCE,	// 出現
 		STATE_PASS,			// パス
 		STATE_MAX
@@ -114,10 +115,12 @@ private:
 	void StateNone();		// なし
 	void StateDamage();		// ダメージ
 	void StateDead();		// 死亡
+	void StateAppearance_Wait();	// 出現待ち
 	void StateAppearance();	// 出現
 	void StatePass();		// パス
 
 	// その他
+	void Controll();	// 操作
 	bool Hit();
 	void DebugTransform();	// デバッグ時変形
 

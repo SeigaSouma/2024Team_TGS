@@ -627,7 +627,6 @@ void CManager::Uninit()
 
 		// I—¹ˆ—
 		m_pBlackFrame->Uninit();
-		delete m_pBlackFrame;
 		m_pBlackFrame = nullptr;
 	}
 
