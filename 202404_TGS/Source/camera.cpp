@@ -73,6 +73,9 @@ namespace
 	const float MIN_DISNTANCE = (1500.0f);
 	const float DISTANCE_TIMER = (1.0f / 120.0f);
 	const float MAX_AUTODISTANCEHEIGHT = 600.0f;	// Ž©“®‚‚³§Œä‚ÌÅ‘å’l
+	const MyLib::Vector3 GOAL_ROT = MyLib::Vector3(0.0f, D3DX_PI * 0.3f, 0.06f);	// ‹F‚èŽž‚ÌŒü‚«
+	const float GOAL_MULTI = (0.03f);
+	const float GOAL_LEN = (500.0f);
 }
 
 //==========================================================================
@@ -634,8 +637,11 @@ void CCamera::MoveCameraDistance()
 		m_fDistance = MIN_LENGTH;
 	}
 
-	// –Ú•W‚Ì‹——£‚Ö•â³
-	UtilFunc::Correction::InertiaCorrection(m_fDistance, m_fDestDistance, m_fDistanceCorrection);
+	if (!m_pCameraMotion->IsEdit() || !m_bMotion)
+	{
+		// –Ú•W‚Ì‹——£‚Ö•â³
+		UtilFunc::Correction::InertiaCorrection(m_fDistance, m_fDestDistance, m_fDistanceCorrection);
+	}
 
 }
 
@@ -866,7 +872,10 @@ void CCamera::SetCameraVGame()
 		// ‚‚³‚É‚æ‚é‹——£Ý’è
 		if (CGame::GetInstance()->GetGameManager()->GetType() != CGameManager::SceneType::SCENE_DEBUG)
 		{
-			m_pStateCameraV->Distance(this);
+			if (!m_bMotion)
+			{
+				m_pStateCameraV->Distance(this);
+			}
 		}
 
 		// •â³‚·‚é
@@ -1798,7 +1807,6 @@ void CStateCameraV::LimitPos(CCamera* pCamera)
 //==========================================================================
 void CStateCameraV::Distance(CCamera* pCamera)
 {
-	CManager::GetInstance()->GetDebugProc()->Print("‹——£’²®‚·‚é‚æ\n");
 	pCamera->SetDistance(GetDistance(pCamera, UPDISTANCE_MULTIPLY));
 }
 
@@ -1863,6 +1871,27 @@ void CStateCameraV_Distance::Distance(CCamera* pCamera)
 		pCamera->SetStateCameraV(new CStateCameraV);
 	}
 	else m_fMultiPly += DISTANCE_TIMER;
+}
+
+//==========================================================================
+// ‚‚³‚É‚æ‚é‹——£Ý’è
+//==========================================================================
+void CStateCameraV_Goal::LimitPos(CCamera* pCamera)
+{
+
+}
+
+//==========================================================================
+// ‹——£Ý’è
+//==========================================================================
+void CStateCameraV_Goal::Distance(CCamera* pCamera)
+{
+	// ‘ã“ü
+	CCameraMotion* pMotion = pCamera->GetMotion();
+	if (pMotion->GetNowKeyIdx() + 1 == pMotion->GetNowKeyMax())
+	{
+		pMotion->SetFinish(true);
+	}
 }
 
 //==========================================================================

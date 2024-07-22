@@ -55,6 +55,7 @@ public:
 	int GetNowMotionIdx() { return m_nNowMotionIdx; }
 	void SetFinish(bool bFinish) { m_bFinish = bFinish; }
 	bool IsFinish() { return m_bFinish; }
+	bool IsEdit() { return m_bEdit; }
 	int GetNowKeyIdx() { return m_nNowKeyIdx; }
 	int GetNowKeyMax() { return m_vecMotionInfo[m_nNowMotionIdx].Key.size(); }
 

@@ -12,6 +12,9 @@
 #include "stagecleartext.h"
 #include "spline.h"
 #include "course.h"
+#include "input.h"
+#include "camera.h"
+#include "camera_motion.h"
 
 //==========================================================================
 // 定数定義
@@ -144,13 +147,21 @@ void CGoalflagX::Update()
 		Playerpos = pObj->GetPosition();
 	}
 
-	if (CGame::GetInstance()->GetGameManager()->GetType() != CGameManager::SceneType::SCENE_MAINCLEAR &&
-		Playerpos.x >= pos.x)
+	CInputKeyboard* pKey = CInputKeyboard::GetInstance();
+
+	if (CGame::GetInstance()->GetGameManager()->GetType() != CGameManager::SceneType::SCENE_GOAL &&
+		Playerpos.x >= pos.x || pKey->GetTrigger(DIK_3))
 	{// ゴールしたっぺ
 
 		// 必要なゲームの状態設定してね
-		CGame::GetInstance()->GetGameManager()->SetType(CGameManager::SceneType::SCENE_MAINCLEAR);
-		CStageClearText::Create(MyLib::Vector3(640.0f, 400.0f, 0.0f));
+		CGame::GetInstance()->GetGameManager()->SetType(CGameManager::SceneType::SCENE_GOAL);
+
+		// カメラ設定
+		CCamera* pCamera = CManager::GetInstance()->GetCamera();
+		pCamera->SetStateCameraV(new CStateCameraV_Goal);
+		pCamera->GetMotion()->SetPosition(Playerpos);
+		pCamera->GetMotion()->SetMotion(CCameraMotion::MOTION::MOTION_GOAL, CCameraMotion::EASING::Linear);
+		//CStageClearText::Create(MyLib::Vector3(640.0f, 400.0f, 0.0f));
 	}
 }
 
