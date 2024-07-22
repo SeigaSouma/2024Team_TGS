@@ -167,16 +167,6 @@ HRESULT CGame::Init()
 			return E_FAIL;
 		}
 	}
-	// プレイヤー取得
-	CListManager<CPlayer> playerList = CPlayer::GetListObj();
-	CPlayer* pPlayer = nullptr;
-
-	// リストループ
-	while (playerList.ListLoop(&pPlayer))
-	{
-		pPlayer->SetPosition(MyLib::Vector3(0.0f, 10.0f, 0.0f));
-		pPlayer->SetRotation(MyLib::Vector3(0.0f, 0.0f, 0.0f));
-	}
 
 	//=============================
 	// ステージ
@@ -324,7 +314,7 @@ HRESULT CGame::Init()
 	//=============================
 	m_pMapUI = CMapUI::Create();
 
-	pPlayer = playerList.GetData(0);
+	CPlayer* pPlayer = CPlayer::GetListObj().GetData(0);
 	m_pMapUI->BindPlayer(pPlayer);
 
 	//=============================

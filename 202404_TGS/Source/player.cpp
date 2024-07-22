@@ -484,6 +484,7 @@ void CPlayer::Controll()
 
 			 // 浮上操作
 			float fHeight = m_pControlSurfacing->Surfacing(this);
+			fHeight += GetPosition().y;
 
 			MyLib::Vector3 pos = m_pBaggage->GetPosition();
 			m_pBaggage->SetOriginPosition(MyLib::Vector3(0.0f, m_posCylinder.y + fHeight, 0.0f));
@@ -532,6 +533,7 @@ void CPlayer::Controll()
 	// 移動距離加算
 	m_fMoveLength += fabsf(move.x) + fabsf(move.z);
 	newPosition = MySpline::GetSplinePosition_NonLoop(CGame::GetInstance()->GetCourse()->GetVecPosition(), m_fMoveLength);
+	newPosition.y += pos.y;
 
 	CManager::GetInstance()->GetDebugProc()->Print("プレイヤー移動距離[ %f ]\n", m_fMoveLength);
 
@@ -622,7 +624,6 @@ void CPlayer::Controll()
 		move.x += (0.0f - move.x) * 0.25f;
 		move.z += (0.0f - move.z) * 0.25f;
 	}
-
 
 	// 位置設定
 	SetPosition(pos);
