@@ -29,6 +29,7 @@
 #include "judgezoneManager.h"
 #include "peoplemanager.h"
 #include "spline.h"
+#include "request_people.h"
 
 //==========================================================================
 // 定数定義
@@ -120,13 +121,18 @@ HRESULT CGameManager::Init()
 
 #if _DEBUG
 	m_nNowStage = 0;			// 現在のステージ
-	m_SceneType = SceneType::SCENE_WAIT_AIRPUSH;	// シーンの種類 
+	m_SceneType = SceneType::SCENE_START;	// シーンの種類 
 #else
 	m_nNowStage = 0;			// 現在のステージ
-	m_SceneType = SceneType::SCENE_WAIT_AIRPUSH;	// シーンの種類 
+	m_SceneType = SceneType::SCENE_START;	// シーンの種類 
 #endif
 
 	m_OldSceneType = m_SceneType;
+
+	// 依頼人生成
+	CRequestPeople::Create(MyLib::Vector3(500.0f, 0.0f, 500.0f));
+
+	CBlackFrame::GetInstance()->SetState(CBlackFrame::STATE::STATE_INCOMPLETION);
 	return S_OK;
 }
 
@@ -152,6 +158,10 @@ void CGameManager::Update()
 		CheckJudgeZone();
 		ContainPlayerBaggage();
 		TurnAway();
+		break;
+
+	case CGameManager::SceneType::SCENE_START:
+		m_bControll = false;
 		break;
 
 	case CGameManager::SceneType::SCENE_MAINCLEAR:

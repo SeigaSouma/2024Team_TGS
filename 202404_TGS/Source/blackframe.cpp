@@ -18,6 +18,7 @@
 #define START_UP	(MyLib::Vector3(640.0f, -SIZE.y, 0.0f))
 #define START_DOWN	(MyLib::Vector3(640.0f, SCREEN_HEIGHT + SIZE.y, 0.0f))
 #define MOVETIME	(50)
+CBlackFrame* CBlackFrame::m_pThisPtr = nullptr;	// 自身のポインタ
 
 //==========================================================================
 // 静的メンバ変数宣言
@@ -52,26 +53,21 @@ CBlackFrame::~CBlackFrame()
 //==========================================================================
 CBlackFrame *CBlackFrame::Create()
 {
-	// 生成用のオブジェクト
-	CBlackFrame *pTitleScreen = nullptr;
-
-	if (pTitleScreen == nullptr)
+	if (m_pThisPtr == nullptr)
 	{// nullptrだったら
 
 		// メモリの確保
-		pTitleScreen = DEBUG_NEW CBlackFrame;
+		m_pThisPtr = DEBUG_NEW CBlackFrame;
 
-		if (pTitleScreen != nullptr)
+		if (m_pThisPtr != nullptr)
 		{// メモリの確保が出来ていたら
 
 			// 初期化処理
-			pTitleScreen->Init();
+			m_pThisPtr->Init();
 		}
-
-		return pTitleScreen;
 	}
 
-	return nullptr;
+	return m_pThisPtr;
 }
 
 //==========================================================================
@@ -160,6 +156,9 @@ void CBlackFrame::Uninit()
 			m_pObj3D[nCntSelect] = nullptr;
 		}
 	}
+
+	delete m_pThisPtr;
+	m_pThisPtr = nullptr;
 }
 
 //==========================================================================
@@ -204,6 +203,8 @@ void CBlackFrame::UpdateState(int nCntVtx)
 		break;
 
 	case CBlackFrame::STATE_INCOMPLETION:
+
+		m_pObj3D[nCntVtx]->SetPosition(m_DestPosition[nCntVtx]);
 		break;
 
 	case CBlackFrame::STATE_OUTCOMPLETION:

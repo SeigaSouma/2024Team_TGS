@@ -507,7 +507,11 @@ void CPlayer::Controll()
 		pMotion->Set(MOTION_WALK, false);
 		// 荷物リセット
 		m_pBaggage->SetOriginPosition(MyLib::Vector3(GetPosition().x, m_posCylinder.y, GetPosition().z));
-		m_pControlBaggage->Reset(this, m_pBaggage);
+
+		if (CGame::GetInstance()->GetGameManager()->GetType() != CGameManager::SceneType::SCENE_START)
+		{
+			m_pControlBaggage->Reset(this, m_pBaggage);
+		}
 	}
 
 	// 位置取得
