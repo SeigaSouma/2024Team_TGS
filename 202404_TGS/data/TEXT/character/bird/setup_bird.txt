@@ -79,11 +79,13 @@ COLLIDER_FILENAME = data/TEXT/character/bird/sphere_collider.json
 #------------------------------------------------------------------------------
 # モーション数
 #------------------------------------------------------------------------------
-NUM_MOTION = 1
+NUM_MOTION = 3
 
 #------------------------------------------------------------------------------
 # モデルファイル名
 #------------------------------------------------------------------------------
 MOTION_FILENAME = data/TEXT/character/bird/motion_def.txt			# [0]デフォルト
+MOTION_FILENAME = data/TEXT/character/bird/motion_hit.txt			# [1]ヒット(墜落あり)
+MOTION_FILENAME = data/TEXT/character/bird/motion_hit.txt			# [2]ヒット(墜落なし)
 
 END_SCRIPT		# この行は絶対消さないこと！
