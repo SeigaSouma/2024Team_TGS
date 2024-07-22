@@ -12,6 +12,8 @@
 #include "map_obstacle.h"
 #include "renderer.h"
 #include "glassclush.h"
+#include "countdown_start.h"
+#include "blackframe.h"
 
 //==========================================================================
 // 定数定義
@@ -49,6 +51,7 @@ CBaggage::STATE_FUNC CBaggage::m_StateFunc[] =
 	&CBaggage::StateNone,		// なし
 	&CBaggage::StateDamage,		// ダメージ
 	&CBaggage::StateDead,		// 死亡
+	&CBaggage::StateAppearance_Wait,	// 出現
 	&CBaggage::StateAppearance,	// 出現
 	&CBaggage::StatePass,		// パス
 };
@@ -143,6 +146,7 @@ HRESULT CBaggage::Init()
 
 	// スケールゼロ
 	SetScale(0.0f);
+	m_state = STATE::STATE_APPEARANCE_WAIT;
 	return S_OK;
 }
 
@@ -185,13 +189,16 @@ void CBaggage::Update()
 	// 親クラスの更新処理
 	CObjectQuaternion::Update();
 
+#ifdef _DEBUG	// デバッグ時変形
+	DebugTransform();
+#endif
+}
 
-	// 吹っ飛んだら終わり
-	if (m_state == STATE::STATE_DEAD)
-	{
-		return;
-	}
-
+//==========================================================================
+// 操作
+//==========================================================================
+void CBaggage::Controll()
+{
 	// 情報取得
 	MyLib::Vector3 posOrigin = GetOriginPosition();
 	MyLib::Vector3 pos = GetPosition();
@@ -258,10 +265,6 @@ void CBaggage::Update()
 	// 情報設定
 	SetPosition(pos);
 	SetMove(move);
-
-#ifdef _DEBUG	// デバッグ時変形
-	DebugTransform();
-#endif
 }
 
 //==========================================================================
@@ -301,6 +304,9 @@ void CBaggage::StateNone()
 	}
 
 	m_fStateTimer = 0.0f;
+
+	// 操作
+	Controll();
 }
 
 //==========================================================================
@@ -313,6 +319,9 @@ void CBaggage::StateDamage()
 		m_fStateTimer = 0.0f;
 		m_state = STATE::STATE_NONE;
 	}
+
+	// 操作
+	Controll();
 }
 
 //==========================================================================
@@ -355,6 +364,15 @@ void CBaggage::StateDead()
 }
 
 //==========================================================================
+// 出現待ち
+//==========================================================================
+void CBaggage::StateAppearance_Wait()
+{
+	m_fStateTimer = 0.0f;
+	SetMove(0.0f);
+}
+
+//==========================================================================
 // 出現
 //==========================================================================
 void CBaggage::StateAppearance()
@@ -366,7 +384,7 @@ void CBaggage::StateAppearance()
 	if (StateTime::APPEARANCE <= m_fStateTimer)
 	{
 		m_fStateTimer = 0.0f;
-		m_state = STATE::STATE_NONE;
+		m_state = STATE::STATE_APPEARANCE_WAIT;
 		SetScale(1.0f);
 	}
 }
@@ -386,8 +404,14 @@ void CBaggage::StatePass()
 	if (StateTime::PASS <= m_fStateTimer)
 	{
 		m_fStateTimer = 0.0f;
-		m_state = STATE::STATE_NONE;
+		m_state = STATE::STATE_APPEARANCE_WAIT;
 		pos = GetOriginPosition();
+
+		// カウントダウン開始
+		CCountdown_Start::Create();
+
+		// 黒フレーム削除
+		CBlackFrame::GetInstance()->SetState(CBlackFrame::STATE::STATE_OUT);
 	}
 
 	SetPosition(pos);

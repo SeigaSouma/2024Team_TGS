@@ -1,6 +1,6 @@
 #==============================================================================
 #
-# 『階層モデル』スクリプトファイル [setup_boss.txt]
+# 『階層モデル』スクリプトファイル [setup_humanblue.txt]
 # Author : 相馬 靜雅
 #
 #==============================================================================
@@ -20,15 +20,15 @@ NUM_MODEL = 11
 # モデルファイル名
 #------------------------------------------------------------------------------
 MODEL_FILENAME = data/MODEL/mob/person_01/00_waist.x			# [0]腰
-MODEL_FILENAME = data/MODEL/mob/person_01/01_body.x			# [1]体
-MODEL_FILENAME = data/MODEL/mob/person_01/02_head.x			# [2]頭
-MODEL_FILENAME = data/MODEL/mob/person_01/03_R_arm.x			# [3]右腕
-MODEL_FILENAME = data/MODEL/mob/person_01/04_R_hand.x		# [4]右手
-MODEL_FILENAME = data/MODEL/mob/person_01/05_L_arm.x			# [5]左腕
-MODEL_FILENAME = data/MODEL/mob/person_01/06_L_hand.x		# [6]左手
-MODEL_FILENAME = data/MODEL/mob/person_01/07_R_upperleg.x	# [7]右太腿
+MODEL_FILENAME = data/MODEL/mob/person_02/01_body.x				# [1]体
+MODEL_FILENAME = data/MODEL/mob/person_01/02_head.x				# [2]頭
+MODEL_FILENAME = data/MODEL/mob/person_02/03_R_arm.x			# [3]右腕
+MODEL_FILENAME = data/MODEL/mob/person_01/04_R_hand.x			# [4]右手
+MODEL_FILENAME = data/MODEL/mob/person_02/05_L_arm.x			# [5]左腕
+MODEL_FILENAME = data/MODEL/mob/person_01/06_L_hand.x			# [6]左手
+MODEL_FILENAME = data/MODEL/mob/person_01/07_R_upperleg.x		# [7]右太腿
 MODEL_FILENAME = data/MODEL/mob/person_01/08_R_leg.x			# [8]右足
-MODEL_FILENAME = data/MODEL/mob/person_01/09_L_upperleg.x	# [9]左太腿
+MODEL_FILENAME = data/MODEL/mob/person_01/09_L_upperleg.x		# [9]左太腿
 MODEL_FILENAME = data/MODEL/mob/person_01/10_L_leg.x			# [10]左足
 
 
@@ -159,9 +159,9 @@ NUM_MOTION = 5
 #------------------------------------------------------------------------------
 MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_def.txt				# [0]デフォルト
 MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_walk.txt			# [1]歩き
-MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_pass.txt			# [1]歩き
-MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_bye.txt			# [1]歩き
-MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_get.txt			# [1]歩き
+MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_clap.txt			# [1]歩き
+MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_pump.txt			# [1]歩き
+MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_handwave.txt			# [1]歩き
 
 
 END_SCRIPT		# この行は絶対消さないこと！

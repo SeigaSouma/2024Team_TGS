@@ -287,8 +287,8 @@ void CCourseManager::Load()
 	start = vecstart.back() + MyLib::Vector3(DISTANCE_TO_CHUNCK, 0.0f, 0.0f);
 
 
-	segmentpos.push_back(MyLib::Vector3(-10.0f, 0.0f, 0.0f));
-	segmentpos.push_back(MyLib::Vector3(10.0f, 0.0f, 0.0f));
+	segmentpos.push_back(MyLib::Vector3(-3010.0f, 0.0f, 0.0f));
+	segmentpos.push_back(MyLib::Vector3(-3000.0f, 0.0f, 0.0f));
 	segmentpos.push_back(MyLib::Vector3(2000.0f, 0.0f, 0.0f));
 
 	for (const auto& idx : randIdx)
