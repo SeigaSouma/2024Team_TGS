@@ -343,8 +343,11 @@ void CRequestPeople::StateWait()
 		return;
 	}
 
-	// モーション設定
-	pMotion->Set(MOTION::MOTION_BYEBYE);
+	if (pMotion->GetType() != MOTION::MOTION_BYEBYE)
+	{
+		// モーション設定
+		pMotion->Set(MOTION::MOTION_BYEBYE);
+	}
 }
 
 //==========================================================================

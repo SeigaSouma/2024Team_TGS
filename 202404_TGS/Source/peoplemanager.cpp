@@ -143,7 +143,7 @@ void CPeopleManager::SetByRank()
 	}
 
 
-	MyLib::Vector3 pos = MyLib::Vector3(0.0f, 300.0f, 500.0f);
+	MyLib::Vector3 pos = MyLib::Vector3(0.0f, 300.0f, 1500.0f);
 	MyLib::Vector3 spawnpos = pos;
 	MyLib::Vector3 rot = MyLib::Vector3(0.0f, D3DX_PI * 0.5f, 0.0f);
 	int type = 0, patternNum = static_cast<int>(m_PatternByRank[m_Rank].size());
@@ -251,6 +251,9 @@ void CPeopleManager::SetPeople(const MyLib::Vector3& pos, const MyLib::Vector3& 
 	CPeople* pPeople = nullptr;
 
 	MyLib::Vector3 spawnPos;
+
+	// キャラの数
+	int maxType = static_cast<int>(m_vecMotionFileName.size()) - 1;
 	for (const auto& data : NowPattern.data)
 	{
 		// スポーン時の向きを掛け合わせる
@@ -261,7 +264,7 @@ void CPeopleManager::SetPeople(const MyLib::Vector3& pos, const MyLib::Vector3& 
 
 		// 生成
 		pPeople = CPeople::Create(
-			m_vecMotionFileName[data.nType],	// ファイル名
+			m_vecMotionFileName[UtilFunc::Transformation::Random(0, maxType)],	// ファイル名
 			spawnPos);							// 位置
 
 		// 向き設定
