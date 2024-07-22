@@ -41,6 +41,7 @@ CCameraMotion::CCameraMotion()
 	m_nNowKeyIdx = 0;			// 現在のキーインデックス
 	m_fMotionTimer = 0.0f;		// モーションタイマー
 	m_bFinish = false;			// 終了判定
+	m_bEdit = false;			// エディターフラグ
 }
 
 //==========================================================================
@@ -338,6 +339,7 @@ void CCameraMotion::UpdateEdit()
 {
 	if (ImGui::CollapsingHeader("CameraMotion"))
 	{
+		m_bEdit = true;
 		// 再生
 		ImGui::Dummy(ImVec2(0.0f, 10.0f));
 		ImGui::SetNextItemWidth(150.0f);
@@ -354,7 +356,7 @@ void CCameraMotion::UpdateEdit()
 			m_fMotionTimer = 0.0f;
 			m_bFinish = true;
 		}
-		
+
 		ImGui::Dummy(ImVec2(0.0f, 5.0f));
 		if (ImGui::Button("Save", ImVec2(80, 50)))
 		{
@@ -382,6 +384,7 @@ void CCameraMotion::UpdateEdit()
 		// キー切替
 		ChangeKey();
 	}
+	else m_bEdit = false;
 }
 
 //==========================================================================

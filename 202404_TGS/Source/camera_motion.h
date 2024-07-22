@@ -23,6 +23,7 @@ public:
 	enum MOTION
 	{
 		MOTION_PASS = 0,	// パスモーション
+		MOTION_GOAL,
 		MOTION_MAX
 	};
 
@@ -51,6 +52,11 @@ public:
 	// 情報操作
 	void SetPosition(const MyLib::Vector3& pos) { m_pos = pos; }	// 位置設定
 	MyLib::Vector3 GetPosition() { return m_pos; }					// 位置取得
+	int GetNowMotionIdx() { return m_nNowMotionIdx; }
+	void SetFinish(bool bFinish) { m_bFinish = bFinish; }
+	bool IsFinish() { return m_bFinish; }
+	int GetNowKeyIdx() { return m_nNowKeyIdx; }
+	int GetNowKeyMax() { return m_vecMotionInfo[m_nNowMotionIdx].Key.size(); }
 
 	// 静的関数
 	static CCameraMotion* Create();	// 生成処理
@@ -120,6 +126,7 @@ private:
 	int m_nNowKeyIdx;		// 現在のキーインデックス
 	float m_fMotionTimer;	// モーションタイマー
 	bool m_bFinish;			// 終了判定
+	bool m_bEdit;			// エディット使用中か
 	EditInfo m_EditInfo;	// エディット情報
 };
 
