@@ -23,7 +23,6 @@
 
 #include "objectX.h"
 #include "spline.h"
-#include "camera_motion.h"
 
 //==========================================================================
 // É}ÉNÉçíËã`

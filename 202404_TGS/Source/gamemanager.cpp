@@ -51,6 +51,11 @@ namespace
 	};
 }
 
+namespace SceneTime
+{
+	const float RequestStart = 3.5f;	// 依頼開始
+}
+
 //==========================================================================
 // コンストラクタ
 //==========================================================================
@@ -68,6 +73,8 @@ CGameManager::CGameManager()
 	m_nEvaluationPoint = 0;		// 評価ポイント
 	m_fCameraLengthOld = 0;		// 前のカメラの距離
 	m_fPosRY = 0.0f;
+	m_fSceneTimer = 0.0f;		// シーンタイマー
+	m_pRequestPeople = nullptr;	// 依頼人のポインタ
 }
 
 //==========================================================================
@@ -130,9 +137,14 @@ HRESULT CGameManager::Init()
 	m_OldSceneType = m_SceneType;
 
 	// 依頼人生成
-	CRequestPeople::Create(MyLib::Vector3(500.0f, 0.0f, 900.0f));
+	m_pRequestPeople = CRequestPeople::Create(MyLib::Vector3(500.0f, 0.0f, 900.0f));
+	m_pRequestPeople->SetState(CRequestPeople::STATE::STATE_WAIT);
 
+	// 黒フレームイン
 	CBlackFrame::GetInstance()->SetState(CBlackFrame::STATE::STATE_INCOMPLETION);
+
+	// カメラモーション再生
+	CManager::GetInstance()->GetCamera()->GetCameraMotion()->SetMotion(CCameraMotion::MOTION::MOTION_PASS, CCameraMotion::EASING::Linear);
 	return S_OK;
 }
 
@@ -151,6 +163,7 @@ void CGameManager::Update()
 {
 	
 	// 操作状態
+	m_fSceneTimer += CManager::GetInstance()->GetDeltaTime();		// シーンタイマー
 	switch (m_SceneType)
 	{
 	case CGameManager::SceneType::SCENE_MAIN:
@@ -162,6 +175,7 @@ void CGameManager::Update()
 
 	case CGameManager::SceneType::SCENE_START:
 		m_bControll = false;
+		SceneStart();
 		break;
 
 	case CGameManager::SceneType::SCENE_MAINCLEAR:
@@ -251,6 +265,18 @@ void CGameManager::GameClearSettings()
 	CPlayer* pPlayer = playerList.GetData(0);
 
 
+}
+
+//==========================================================================
+// 開始演出
+//==========================================================================
+void CGameManager::SceneStart()
+{
+	if (m_fSceneTimer >= SceneTime::RequestStart &&
+		m_pRequestPeople->GetState() == CRequestPeople::STATE::STATE_WAIT)
+	{
+		m_pRequestPeople->SetState(CRequestPeople::STATE::STATE_PASS);
+	}
 }
 
 //==========================================================================

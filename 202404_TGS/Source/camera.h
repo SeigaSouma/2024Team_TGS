@@ -9,11 +9,11 @@
 
 #include "main.h"
 #include "scene.h"
+#include "camera_motion.h"	// カメラモーション
 
 class CStateCameraR;	// 注視点の状態
 class CStateCameraV;	// 視点の状態
 class CCameraControlState;	// 状態別操作
-class CCameraMotion;	// カメラモーション
 
 //==========================================================================
 // クラス定義
@@ -104,6 +104,12 @@ public:
 	void SetRockOn(const MyLib::Vector3 pos, bool bSet);	// ロックオン設定
 	void SetRockDir(RockOnDir dir) { m_RockOnDir = dir; }	// ロックオン時のズレ向き設定
 
+	// カメラモーション
+	bool IsMotion() { return m_bMotion; }					// モーション中かどうか
+	void SetEnableMotion(bool frag) { m_bMotion = frag; }	// モーション中かどうか
+	CCameraMotion* GetCameraMotion() { return m_pCameraMotion; }		// カメラモーションのポインタ
+
+
 	// 関数リスト
 	typedef void(CCamera::* ROCKON_STATE_FUNC)();
 	static ROCKON_STATE_FUNC m_RockOnStateFunc[];
@@ -132,8 +138,6 @@ public:
 	int GetPlayerChaseIndex();					// 追従するプレイヤーのインデックス番号取得
 	bool IsFollow();										// 追従状態取得
 	bool IsRockOn() { return m_bRockON; }					// 追従状態取得
-	bool IsMotion() { return m_bMotion; }						// モーション中かどうか
-	void SetEnableMotion(bool frag) { m_bMotion = frag; }						// モーション中かどうか
 	bool IsRotationZ() { return m_bRotationZ; }
 	bool IsRotationY() { return m_bRotationY; }
 	void SetEnableFollow(bool bFollow);							// 追従の判定設定

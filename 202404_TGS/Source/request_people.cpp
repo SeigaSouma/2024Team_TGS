@@ -41,6 +41,7 @@ CRequestPeople::STATE_FUNC CRequestPeople::m_StateFunc[] =
 	&CRequestPeople::StateNone,	// なし
 	&CRequestPeople::StateFadeIn,	// フェードイン
 	&CRequestPeople::StateFadeOut,	// フェードアウト
+	&CRequestPeople::StateWait,		// 待機
 	&CRequestPeople::StatePass,		// パス
 	&CRequestPeople::StateByeBye,	// バイバイ
 };
@@ -331,6 +332,22 @@ void CRequestPeople::StateFadeOut()
 }
 
 //==========================================================================
+// 待機
+//==========================================================================
+void CRequestPeople::StateWait()
+{
+	// モーション取得
+	CMotion* pMotion = GetMotion();
+	if (pMotion == nullptr)
+	{
+		return;
+	}
+
+	// モーション設定
+	pMotion->Set(MOTION::MOTION_BYEBYE);
+}
+
+//==========================================================================
 // パス
 //==========================================================================
 void CRequestPeople::StatePass()
@@ -343,6 +360,13 @@ void CRequestPeople::StatePass()
 	}
 
 	int nType = pMotion->GetType();
+	if (nType != MOTION::MOTION_PASS)
+	{
+		// モーション設定
+		pMotion->Set(MOTION::MOTION_PASS);
+	}
+
+	nType = pMotion->GetType();
 	if ((nType == MOTION::MOTION_PASS && pMotion->IsFinish()) ||
 		nType != MOTION::MOTION_PASS)
 	{// パス終了 or パス以外
