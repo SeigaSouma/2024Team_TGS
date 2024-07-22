@@ -21,7 +21,7 @@ namespace
 {
 	const std::string TEXTURE = "data\\TEXTURE\\FIELD\\soil.jpg";
 	const int WIDTH_BLOCK = 2;
-	const float FIELD_WORLDLINE_Z = 5000.0f;		// 絶対座標のライン
+	const float FIELD_WORLDLINE_Z = 3000.0f;		// 絶対座標のライン
 	const float INTERVAL_TEXU = 900.0f;	// U座標の間隔
 }
 
