@@ -94,8 +94,10 @@ private:
 		bool bSlide;			// スライド中判定
 		MyLib::Vector3 offset;	// オフセット
 		MotionInfo motionInfo;	// モーション情報
+		MotionKey Key_copyData;	// キーのコピーデータ
 
-		EditInfo() : motionIdx(0), keyIdx(0), playRatio(0.0f), bSlide(false), motionInfo() {}
+		EditInfo() : motionIdx(0), keyIdx(0), playRatio(0.0f), bSlide(false), motionInfo(),
+			Key_copyData(MotionKey()) {}
 	};
 
 
