@@ -252,6 +252,9 @@ void CCameraMotion::Update()
 #endif // DEBUG
 
 
+	CCamera* pCamera = CManager::GetInstance()->GetCamera();
+	pCamera->SetEnableMotion(!m_bFinish);
+
 	if (m_bFinish)
 	{// ƒ‚[ƒVƒ‡ƒ“’†‚Ì‚Ý
 		return;
@@ -294,7 +297,6 @@ void CCameraMotion::Update()
 	MotionKey nextKey = nowInfo.Key[nextKeyID];
 
 	// ƒJƒƒ‰î•ñŽæ“¾
-	CCamera* pCamera = CManager::GetInstance()->GetCamera();
 	MyLib::Vector3 posR, rot;
 	float distance = pCamera->GetDistance();
 

@@ -132,6 +132,8 @@ public:
 	int GetPlayerChaseIndex();					// 追従するプレイヤーのインデックス番号取得
 	bool IsFollow();										// 追従状態取得
 	bool IsRockOn() { return m_bRockON; }					// 追従状態取得
+	bool IsMotion() { return m_bMotion; }						// モーション中かどうか
+	void SetEnableMotion(bool frag) { m_bMotion = frag; }						// モーション中かどうか
 	bool IsRotationZ() { return m_bRotationZ; }
 	bool IsRotationY() { return m_bRotationY; }
 	void SetEnableFollow(bool bFollow);							// 追従の判定設定
