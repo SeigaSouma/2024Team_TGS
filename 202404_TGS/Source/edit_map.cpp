@@ -96,9 +96,6 @@ HRESULT CEdit_Map::Init()
 	// ロード状況保存
 	bool bLoad = m_bLoad;
 
-	// 読み込み処理
-	Load(LOADTEXT);
-
 #if _DEBUG
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevive = CManager::GetInstance()->GetRenderer()->GetDevice();
