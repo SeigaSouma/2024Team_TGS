@@ -28,6 +28,7 @@ void SmokeRed();
 void SmokeYel();
 void EnemyFade();
 void OffSetting();
+void OffSetting_2D();
 void Fire_WallTorch();
 void Fire_StandTorch();
 void BattleStart();
@@ -96,6 +97,11 @@ void my_particle::Create(const MyLib::Vector3& pos, TYPE nType)
 	case TYPE_OFFSETTING:
 		m_nLife = 30;
 		OffSetting();
+		break;
+
+	case TYPE_OFFSETTING_2D:
+		m_nLife = 30;
+		OffSetting_2D();
 		break;
 
 	case TYPE_ENEMY_FADE:
@@ -361,6 +367,39 @@ void OffSetting()
 		{
 			return;
 		}
+	}
+}
+
+//==========================================================================
+// 打ち消しのパーティクル(2D)
+//==========================================================================
+void OffSetting_2D()
+{
+	float fAngle, fMove;
+
+	for (int nCntUse = 0; nCntUse < 10; nCntUse++)
+	{
+
+		fMove = (float)(rand() % 10) / 1 + 3.0f;		// 移動量
+		fAngle = (float)(rand() % 629 - 314) / 100.0f;	// 角度
+
+		// 移動量の設定
+		m_move.x = sinf((float)(rand() % 629 - 314) / 100.0f) * fMove;
+		m_move.y = cosf((float)(rand() % 629 - 314) / 100.0f) * fMove;
+		m_move.z = 0.0f;
+
+		m_col = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);
+
+		m_fRadius = 40.0f;
+
+		// エフェクトの設定
+		CEffect2D::Create(
+			m_pos,
+			m_move,
+			m_col,
+			m_fRadius,
+			m_nLife,
+			CEffect2D::MOVEEFFECT_SUB, CEffect2D::TYPE_NORMAL);
 	}
 }
 

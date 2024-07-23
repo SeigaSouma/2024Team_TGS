@@ -23,6 +23,7 @@ namespace my_particle
 		TYPE_SMOKE_YEL,		// 煙のパーティクル黄
 		TYPE_EXPLOSION,		// 爆発のパーティクル
 		TYPE_OFFSETTING,	// 弾打ち消し
+		TYPE_OFFSETTING_2D,	// 弾打ち消し(2D)
 		TYPE_ENEMY_FADE,	// 敵のフェード
 		TYPE_FIRE_WALLTORCH,	// 壁松明の火
 		TYPE_FIRE_STANDTORCH,	// 壁松明の火

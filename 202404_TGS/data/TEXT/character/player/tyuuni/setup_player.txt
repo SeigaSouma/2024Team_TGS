@@ -155,37 +155,15 @@ COLLIDER_FILENAME = data/TEXT/character/player/tyuuni/sphere_collider.json
 #------------------------------------------------------------------------------
 # モーション数
 #------------------------------------------------------------------------------
-NUM_MOTION = 26
+NUM_MOTION = 4
 
 #------------------------------------------------------------------------------
 # モデルファイル名
 #------------------------------------------------------------------------------
 MOTION_FILENAME = data/TEXT/character/player/tyuuni/motion_def.txt			# [0]デフォルト
 MOTION_FILENAME = data/TEXT/character/player/tyuuni/motion_walk.txt			# [1]歩き
-MOTION_FILENAME = data/TEXT/character/player/tyuuni/motion_dash.txt			# [2]ダッシュ
-MOTION_FILENAME = data/TEXT/character/player/tyuuni/motion_avoid.txt		# [3]回避
-MOTION_FILENAME = data/TEXT/character/player/tyuuni/motion_attack.txt		# [4]攻撃
-MOTION_FILENAME = data/TEXT/character/player/tyuuni/motion_attack2.txt		# [5]攻撃2
-MOTION_FILENAME = data/TEXT/character/player/tyuuni/motion_attack3.txt		# [5]攻撃3
-MOTION_FILENAME = data/TEXT/character/player/tyuuni/motion_attack4.txt		# [5]攻撃4
-MOTION_FILENAME = data/TEXT/character/player/tyuuni/motion_jump.txt			# [6]ジャンプ
-MOTION_FILENAME = data/TEXT/character/player/tyuuni/motion_fall.txt			# [7]落下中
-MOTION_FILENAME = data/TEXT/character/player/tyuuni/motion_dmg.txt	# [8]ダメージ
-MOTION_FILENAME = data/TEXT/character/player/tyuuni/motion_knockback.txt	# [8]ノックバック
-MOTION_FILENAME = data/TEXT/character/player/tyuuni/motion_knockback_passive.txt	# [8]ノックバック受け身
-MOTION_FILENAME = data/TEXT/character/player/tyuuni/motion_down.txt			# [9]ダウン
-MOTION_FILENAME = data/TEXT/character/player/tyuuni/motion_deadwait.txt			# [9]死亡
 MOTION_FILENAME = data/TEXT/character/player/tyuuni/motion_dead.txt			# [9]死亡
-MOTION_FILENAME = data/TEXT/character/player/tyuuni/motion_respawn.txt		# [9]復活
-MOTION_FILENAME = data/TEXT/character/player/tyuuni/motion_prayer.txt		# [9]祈り
-MOTION_FILENAME = data/TEXT/character/player/tyuuni/motion_prayerloop.txt		# [9]祈りループ
-MOTION_FILENAME = data/TEXT/character/player/tyuuni/motion_guard.txt		# [10]ガード
-MOTION_FILENAME = data/TEXT/character/player/tyuuni/motion_guarddmg.txt		# [10]ガードダメージ
-MOTION_FILENAME = data/TEXT/character/player/tyuuni/motion_counter_wait.txt		# [10]反撃待機
-MOTION_FILENAME = data/TEXT/character/player/tyuuni/motion_counter_turn.txt		# [11]反撃受け流し
-MOTION_FILENAME = data/TEXT/character/player/tyuuni/motion_counter_attack.txt	# [12]反撃
-MOTION_FILENAME = data/TEXT/character/player/tyuuni/motion_dashattack.txt		# [14]ダッシュ攻撃
-MOTION_FILENAME = data/TEXT/character/player/tyuuni/motion_attack4_Finish.txt		# [5]攻撃4
+MOTION_FILENAME = data/TEXT/character/player/tyuuni/motion_start.txt			# [9]死亡
 
 
 END_SCRIPT		# この行は絶対消さないこと！

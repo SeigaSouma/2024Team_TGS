@@ -38,6 +38,18 @@ public:
 		MAX
 	};
 
+
+	// トリガー情報
+	struct TriggerInfo
+	{
+		bool bTrigger;	// トリガー判定
+		int nIdx;		// インデックス
+
+		TriggerInfo() : bTrigger(false), nIdx(0) {}
+		TriggerInfo(bool _bTrigger, int _nIdx) : bTrigger(_bTrigger), nIdx(_nIdx) {}
+	};
+
+
 	CCameraMotion();
 	~CCameraMotion();
 
@@ -60,6 +72,8 @@ public:
 
 	bool SetEnablePause(bool bPause) { m_bPause = bPause; }	// ポーズ判定
 	bool IsPause() { return m_bPause; }		// ポーズ判定
+
+	TriggerInfo GetTrigger();	// トリガー判定取得
 
 	int GetNowKeyIdx() { return m_nNowKeyIdx; }
 	int GetNowKeyMax() { return m_vecMotionInfo[m_nNowMotionIdx].Key.size(); }
@@ -87,6 +101,7 @@ private:
 	struct MotionInfo
 	{
 		std::vector<MotionKey> Key;	// キー情報
+		std::vector<float> trigger;	// トリガー
 
 		MotionInfo() : Key() {}
 	};
@@ -96,23 +111,38 @@ private:
 	{
 		int motionIdx;			// モーションインデックス
 		int keyIdx;				// キーインデックス
+		int triggerIdx;			// トリガーインデックス
 		float playRatio;		// 再生割合
 		bool bSlide;			// スライド中判定
 		MyLib::Vector3 offset;	// オフセット
 		MotionInfo motionInfo;	// モーション情報
 		MotionKey Key_copyData;	// キーのコピーデータ
 
-		EditInfo() : motionIdx(0), keyIdx(0), playRatio(0.0f), bSlide(false), motionInfo(),
+		EditInfo() : motionIdx(0), keyIdx(0), triggerIdx(0), playRatio(0.0f), bSlide(false), motionInfo(),
 			Key_copyData(MotionKey()) {}
 	};
 
+	//=============================
+	// 関数リスト
+	//=============================
+	// モーションリスト
+	typedef void(CCameraMotion::*MOTION_FUNC)();
+	static MOTION_FUNC m_MotionFunc[];
+
+	using CREATE_FUNC = std::function<CCameraMotion* ()>;
+	CREATE_FUNC m_CreateFunc;
 
 	//=============================
 	// メンバ関数
 	//=============================
-	// セーブ&ロード
+	// セーブ＆ロード
 	void SaveMotion(const std::string& filename, const MotionInfo& info);
 	void LoadMotion(const std::string& filename);	// モーション読み込み
+
+	// モーション
+	void MotionPass();		// パス
+	void MotionGoal();		// ゴール
+	void MotionGoalBag();	// ゴールフット橋
 
 	// エディット用
 	void UpdateEdit();		// エディット更新
@@ -121,6 +151,10 @@ private:
 	void ChangeKey();		// キー切り替え
 	void EditMotion();		// モーションエディット
 	void EditKey();			// キーエディット
+	void EditTrigger();		// トリガーエディット
+
+	// その他
+	void TriggerMoment();	// トリガー判定の瞬間
 
 	//=============================
 	// メンバ変数
@@ -132,10 +166,12 @@ private:
 	MyLib::Vector3 m_pos;	// 位置
 	int m_nNowMotionIdx;	// 現在のモーションインデックス
 	int m_nNowKeyIdx;		// 現在のキーインデックス
+	int m_nNowTriggerIdx;	// 現在のトリガーインデックス
 	float m_fMotionTimer;	// モーションタイマー
 	bool m_bFinish;			// 終了判定
 	bool m_bEdit;			// エディット使用中か
 	bool m_bPause;			// ポーズ判定
+	bool m_bTrigger;		// トリガー判定
 	EditInfo m_EditInfo;	// エディット情報
 };
 

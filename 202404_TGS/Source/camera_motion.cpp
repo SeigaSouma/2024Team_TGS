@@ -11,6 +11,7 @@
 #include "game.h"
 #include "input.h"
 #include "calculation.h"
+#include "particle.h"
 
 //==========================================================================
 // マクロ定義
@@ -20,14 +21,16 @@ namespace
 	const std::string FILENAME = "data\\TEXT\\camera\\motion_manager.txt";	// 読み込むファイル名
 }
 
+
 //==========================================================================
 // 関数ポインタ
 //==========================================================================
-//CCameraMotion::ROCKON_STATE_FUNC CCameraMotion::m_RockOnStateFunc[] =	// カウンター状態
-//{
-//	&CCameraMotion::RockOnStateNormal,	// 通常
-//	&CCameraMotion::RockOnStateCounter,	// カウンター
-//};
+CCameraMotion::MOTION_FUNC CCameraMotion::m_MotionFunc[] =
+{
+	&CCameraMotion::MotionPass,		// パス
+	&CCameraMotion::MotionGoal,		// ゴール
+	&CCameraMotion::MotionGoalBag,	// ゴールフット橋
+};
 
 //==========================================================================
 // コンストラクタ
@@ -39,6 +42,7 @@ CCameraMotion::CCameraMotion()
 	m_pos = 0.0f;				// 位置
 	m_nNowMotionIdx = 0;		// 現在のモーションインデックス
 	m_nNowKeyIdx = 0;			// 現在のキーインデックス
+	m_nNowTriggerIdx = 0;		// 現在のトリガーインデックス
 	m_fMotionTimer = 0.0f;		// モーションタイマー
 	m_bFinish = false;			// 終了判定
 	m_bEdit = false;			// エディターフラグ
@@ -191,6 +195,29 @@ void CCameraMotion::SaveMotion(const std::string& filename, const MotionInfo& in
 	// コンテナ内の要素をセーブ
 	File.write(reinterpret_cast<const char*>(info.Key.data()), vecSize * sizeof(MotionKey));
 
+
+
+
+#if 1
+	// トリガーのセーブ
+	{
+		//MotionInfo_Save info_Save;
+
+		// データの個数を計算
+		size_t vecSize = info.trigger.size();
+
+		// コンテナのサイズをセーブ
+		File.write(reinterpret_cast<const char*>(&vecSize), sizeof(vecSize));
+
+		// コンテナ内の要素をセーブ
+		File.write(reinterpret_cast<const char*>(info.trigger.data()), vecSize * sizeof(float));
+	}
+#endif
+
+
+
+
+
 	// ファイルを閉じる
 	File.close();
 }
@@ -215,7 +242,6 @@ void CCameraMotion::LoadMotion(const std::string& filename)
 	// コンテナ以外のロード
 	//File.read(reinterpret_cast<char*>(&loadData.playTime), sizeof(loadData.playTime));
 
-
 	// キーのサイズをロード
 	size_t size;
 	File.read(reinterpret_cast<char*>(&size), sizeof(size));
@@ -225,6 +251,20 @@ void CCameraMotion::LoadMotion(const std::string& filename)
 
 	// キーデータロード
 	File.read(reinterpret_cast<char*>(loadData.Key.data()), size * sizeof(MotionKey));
+
+
+	// トリガーのロード
+	{
+		// トリガーのサイズをロード
+		File.read(reinterpret_cast<char*>(&size), sizeof(size));
+
+		// サイズ分確保
+		loadData.trigger.resize(size);
+
+		// キーデータロード
+		File.read(reinterpret_cast<char*>(loadData.trigger.data()), size * sizeof(float));
+	}
+
 
 	// ファイルを閉じる
 	File.close();
@@ -252,7 +292,7 @@ void CCameraMotion::Update()
 	UpdateEdit();
 #endif // DEBUG
 
-
+	// カメラ取得
 	CCamera* pCamera = CManager::GetInstance()->GetCamera();
 	pCamera->SetEnableMotion(!m_bFinish);
 
@@ -275,6 +315,31 @@ void CCameraMotion::Update()
 		m_fMotionTimer += CManager::GetInstance()->GetDeltaTime();
 	}
 
+	//=============================
+	// トリガー判定
+	//=============================
+	{
+		// トリガー判定リセット
+		m_bTrigger = false;
+
+		if (!m_bTrigger &&
+			m_nNowTriggerIdx < static_cast<int>(nowInfo.trigger.size()) &&	// トリガーのサイズ以下
+			m_fMotionTimer >= nowInfo.trigger[m_nNowTriggerIdx])
+		{
+			// トリガー判定ON
+			m_bTrigger = true;
+			m_nNowTriggerIdx++;
+
+			// トリガー時処理
+			TriggerMoment();
+
+#if _DEBUG
+			my_particle::Create(MyLib::Vector3(640.0f, 360.0f, 0.0f), my_particle::TYPE_OFFSETTING_2D);
+#endif
+
+		}
+	}
+
 	if (m_fMotionTimer >= nowInfo.Key[m_nNowKeyIdx].playTime)
 	{
 		// キー更新
@@ -287,6 +352,9 @@ void CCameraMotion::Update()
 			// 終了判定ON
 			m_bFinish = true;
 			pCamera->SetEnableMotion(false);
+
+			// トリガーリセット
+			m_nNowTriggerIdx = 0;
 			return;
 		}
 	}
@@ -342,13 +410,48 @@ void CCameraMotion::Update()
 }
 
 //==========================================================================
+// トリガー判定の瞬間
+//==========================================================================
+void CCameraMotion::TriggerMoment()
+{
+	// 状態更新
+	(this->*(m_MotionFunc[m_nNowMotionIdx]))();
+}
+
+//==========================================================================
+// パス
+//==========================================================================
+void CCameraMotion::MotionPass()
+{
+
+}
+
+//==========================================================================
+// ゴール
+//==========================================================================
+void CCameraMotion::MotionGoal()
+{
+
+}
+
+//==========================================================================
+// ゴールフット橋
+//==========================================================================
+void CCameraMotion::MotionGoalBag()
+{
+
+}
+
+//==========================================================================
 // エディット更新
 //==========================================================================
 void CCameraMotion::UpdateEdit()
 {
 	if (ImGui::CollapsingHeader("CameraMotion"))
 	{
+		// エディット中判定
 		m_bEdit = true;
+
 		// 再生
 		ImGui::Dummy(ImVec2(0.0f, 10.0f));
 		ImGui::SetNextItemWidth(150.0f);
@@ -363,9 +466,8 @@ void CCameraMotion::UpdateEdit()
 		{
 			m_nNowKeyIdx = 0;
 			m_fMotionTimer = 0.0f;
-			m_bFinish = true;
+			m_bFinish = true;	// 終了判定
 		}
-
 
 
 		ImGui::Dummy(ImVec2(0.0f, 5.0f));
@@ -394,6 +496,10 @@ void CCameraMotion::UpdateEdit()
 
 		// キー切替
 		ChangeKey();
+
+		// トリガー編集
+		EditTrigger();
+
 	}
 	else m_bEdit = false;
 }
@@ -622,13 +728,97 @@ void CCameraMotion::EditKey()
 }
 
 //==========================================================================
+// トリガーエディット
+//==========================================================================
+void CCameraMotion::EditTrigger()
+{
+	if (ImGui::TreeNode("Trigger"))
+	{
+		std::vector<float>* pTrigger = &m_EditInfo.motionInfo.trigger;
+
+		//=============================
+		// 総数変更
+		//=============================
+		ImGui::AlignTextToFramePadding();
+		ImGui::Text("Change Trigger Num:");
+		ImGui::SameLine();
+		if (ImGui::ArrowButton("##left", ImGuiDir_Left) &&
+			pTrigger->size() > 1)
+		{
+			pTrigger->pop_back();
+
+			m_EditInfo.triggerIdx = UtilFunc::Transformation::Clamp(m_EditInfo.triggerIdx, 0, static_cast<int>(pTrigger->size()) - 1);
+		}
+		ImGui::SameLine(0.0f);
+		if (ImGui::ArrowButton("##right", ImGuiDir_Right))
+		{
+			pTrigger->push_back(0.0f);
+		}
+		ImGui::SameLine();
+
+		// サイズ
+		int segmentSize = static_cast<int>(pTrigger->size());
+		ImGui::Text("%d", segmentSize);
+
+		//=============================
+		// 例外処理
+		//=============================
+		if (pTrigger->size() <= 0)
+		{
+			ImGui::Text("※None Data※");
+			ImGui::TreePop();
+			return;
+		}
+		float* pThisTrigger = &m_EditInfo.motionInfo.trigger[m_EditInfo.triggerIdx];
+
+		ImGui::SetNextItemWidth(140.0f);
+		if (ImGui::SliderInt("Trigger Idx", &m_EditInfo.triggerIdx, 0, pTrigger->size() - 1))
+		{
+			// 元のデータ
+			if (m_vecMotionInfo[m_EditInfo.motionIdx].trigger.size() > m_EditInfo.triggerIdx)
+			{
+				m_EditInfo.motionInfo.trigger[m_EditInfo.triggerIdx] = m_vecMotionInfo[m_EditInfo.motionIdx].trigger[m_EditInfo.triggerIdx];
+			}
+			else
+			{
+				m_EditInfo.motionInfo.trigger[m_EditInfo.keyIdx] = 0.0f;
+			}
+
+		}
+		ImGui::Dummy(ImVec2(0.0f, 10.0f));
+
+		//=============================
+		// 元データへ割り当て
+		//=============================
+		if (ImGui::Button("Regist Trigger"))
+		{
+			m_vecMotionInfo[m_EditInfo.motionIdx].trigger = *pTrigger;
+		}
+
+		// トリガー発生時間
+		ImGui::DragFloat("trigger Time", &(*pThisTrigger), 0.01f, 0.0f, 0.0f, "%.2f");
+
+		ImGui::TreePop();
+	}
+}
+
+//==========================================================================
 // モーション設定
 //==========================================================================
 void CCameraMotion::SetMotion(int motion, EASING EasingType)
 {
 	m_nNowMotionIdx = motion;
 	m_nNowKeyIdx = 0;
+	m_nNowTriggerIdx = 0;
 	m_fMotionTimer = 0.0f;
 	m_bFinish = false;
 	m_EasingType = EasingType;
+}
+
+//==========================================================================
+// トリガー判定取得
+//==========================================================================
+CCameraMotion::TriggerInfo CCameraMotion::GetTrigger()
+{
+	return TriggerInfo(m_bTrigger, m_nNowTriggerIdx);
 }

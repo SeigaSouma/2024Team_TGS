@@ -243,7 +243,7 @@ void CPlayerControlMove::Move(CPlayer* player)
 			// ˆÚ“®ƒ‚[ƒVƒ‡ƒ“
 			if (bDash)
 			{
-				pMotion->Set(CPlayer::MOTION::MOTION_DASH);
+				//pMotion->Set(CPlayer::MOTION::MOTION_DASH);
 			}
 			else
 			{

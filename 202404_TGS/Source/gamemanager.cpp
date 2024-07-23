@@ -450,6 +450,10 @@ void CGameManager::TurnAway()
 {
 	// カメラ取得
 	CCamera* pCamera = CManager::GetInstance()->GetCamera();
+	if (pCamera->GetCameraMotion()->IsEdit())
+	{
+		return;
+	}
 
 	// プレイヤー取得
 	CListManager<CPlayer> playerList = CPlayer::GetListObj();

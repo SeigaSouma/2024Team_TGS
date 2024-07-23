@@ -242,6 +242,9 @@ HRESULT CPlayer::Init()
 	// 移動距離
 	m_fMoveLength = 3000.0f;
 
+
+	pMotion->Set(MOTION::MOTION_START, false);
+
 	return S_OK;
 }
 
@@ -508,23 +511,29 @@ void CPlayer::Controll()
 			m_pControlBaggage->Action(this, m_pBaggage);		// 荷物操作
 			m_pBaggage->SetOriginPosition(MyLib::Vector3(0.0f, m_posCylinder.y + fHeight, 0.0f));
 
-			{// トリック操作
-				int idx = -1; bool value = false;
-				m_pControlTrick->Trick(this, idx, value);
+			//{// トリック操作
+			//	int idx = -1; bool value = false;
+			//	m_pControlTrick->Trick(this, idx, value);
 
-				// 操作成功
-				if (value)
-				{
-					SetMotion(idx);	// モーション変更
-				}
-			}
+			//	// 操作成功
+			//	if (value)
+			//	{
+			//		SetMotion(idx);	// モーション変更
+			//	}
+			//}
 		}
 	}
 	else
 	{
 		// モーション取得
 		CMotion* pMotion = GetMotion();
-		pMotion->Set(MOTION_WALK, false);
+
+		if (pMotion->GetType() != MOTION::MOTION_START ||
+			(pMotion->GetType() == MOTION::MOTION_START && pMotion->IsFinish()))
+		{
+			pMotion->Set(MOTION_WALK, false);
+		}
+
 		// 荷物リセット
 		m_pBaggage->SetOriginPosition(MyLib::Vector3(GetPosition().x, m_posCylinder.y, GetPosition().z));
 
@@ -771,7 +780,7 @@ void CPlayer::MotionSet()
 			// 移動モーション
 			if (m_bDash)
 			{
-				pMotion->Set(MOTION_DASH);
+
 			}
 			else
 			{
@@ -785,13 +794,11 @@ void CPlayer::MotionSet()
 			m_sMotionFrag.bJump = false;
 
 			// ジャンプモーション
-			pMotion->Set(MOTION_JUMP);
 		}
 		else if (m_bJump && m_sMotionFrag.bJump == false && m_sMotionFrag.bATK == false && m_sMotionFrag.bKnockBack == false && m_sMotionFrag.bDead == false)
 		{// ジャンプ中&&ジャンプモーションが終わってる時
 
 			// 落下モーション
-			pMotion->Set(MOTION_FALL);
 		}
 		else
 		{
@@ -816,12 +823,6 @@ void CPlayer::MotionBySetState()
 
 	switch (nType)
 	{
-	case MOTION_DASH:
-
-		// ダッシュ時間加算
-		m_fDashTime += CManager::GetInstance()->GetDeltaTime();
-		break;
-
 	default:
 		m_fDashTime = 0.0f;
 		break;
@@ -874,17 +875,6 @@ void CPlayer::AttackAction(CMotion::AttackInfo ATKInfo, int nCntATK)
 		else{
 
 			CSound::GetInstance()->PlaySound(CSound::LABEL_SE_WALK2);
-		}*/
-		break;
-
-	case MOTION::MOTION_DASH:
-		/*if (nCntATK == 0)
-		{
-			CSound::GetInstance()->PlaySound(CSound::LABEL_SE_DASH1);
-		}
-		else {
-
-			CSound::GetInstance()->PlaySound(CSound::LABEL_SE_DASH2);
 		}*/
 		break;
 
@@ -1337,9 +1327,6 @@ void CPlayer::DeadSetting(MyLib::HitResult_Character* result)
 	// 遷移カウンター設定
 	m_nCntState = DEADTIME;
 
-	// やられモーション
-	GetMotion()->Set(MOTION_KNOCKBACK);
-
 	// ノックバックの位置更新
 	MyLib::Vector3 pos = GetPosition();
 	MyLib::Vector3 rot = GetRotation();
@@ -1589,8 +1576,7 @@ void CPlayer::StateDead()
 //==========================================================================
 void CPlayer::StateDeadWait()
 {
-	// ぶっ倒れモーション
-	GetMotion()->Set(MOTION_DEADWAIT);
+
 }
 
 //==========================================================================
