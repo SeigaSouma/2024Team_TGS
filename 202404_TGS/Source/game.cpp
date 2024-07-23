@@ -171,7 +171,7 @@ HRESULT CGame::Init()
 	//=============================
 	// ステージ
 	//=============================
-	m_pStage = CStage::Create("data\\TEXT\\stage\\info.txt");
+	//m_pStage = CStage::Create("data\\TEXT\\stage\\info.txt");
 
 	CManager::GetInstance()->GetCamera()->Reset(CScene::MODE_GAME);
 

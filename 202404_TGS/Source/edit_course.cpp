@@ -778,8 +778,7 @@ void CEdit_Course::ResetObstacle()
 
 		info = vecInfo[blockinfo.nType];
 
-		CMap_Obstacle* pObj = CMap_Obstacle::Create(info);
-		pObj->SetPosition(blockinfo.pos);
+		CMap_Obstacle* pObj = CMap_Obstacle::Create(info, blockinfo.pos);
 		pObj->SetRotation(blockinfo.rot);
 		pObj->SetScale(blockinfo.scale);
 		pObj->CalWorldMtx();

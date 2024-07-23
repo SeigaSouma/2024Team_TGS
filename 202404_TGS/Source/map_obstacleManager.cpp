@@ -378,8 +378,7 @@ void CMap_ObstacleManager::Load()
 			// ê∂ê¨
 			if (type < static_cast<int>(m_ObstacleInfo.size()))
 			{
-				CMap_Obstacle* pObj = CMap_Obstacle::Create(m_ObstacleInfo[type]);
-				pObj->SetPosition(pos);
+				CMap_Obstacle* pObj = CMap_Obstacle::Create(m_ObstacleInfo[type], pos);
 				pObj->SetRotation(rot);
 				pObj->SetScale(scale);
 			}
