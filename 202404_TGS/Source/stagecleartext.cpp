@@ -203,7 +203,7 @@ void CStageClearText::StateFadeOut()
 		m_bCreateResultWindow = true;
 
 		// í‰Ê¶¬
-		CGame::GetInstance()->GetGameManager()->SetType(CGameManager::SceneType::SCENE_DURING_MAINRESULT);
+		CGame::GetInstance()->GetGameManager()->SetType(CGameManager::SceneType::SCENE_GOAL);
 	}
 
 	if (m_fStateTimer >= TIME_FADEOUT)

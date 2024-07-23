@@ -48,7 +48,7 @@ private:
 //=============================
 class CPlayerControlBaggage
 {
-private:
+public:
 
 	enum STATE
 	{
@@ -58,8 +58,6 @@ private:
 		STATE_RELEASE,	// 離した
 		STATE_MAX
 	};
-
-public:
 
 	// コンストラクタ
 	CPlayerControlBaggage() 
@@ -72,6 +70,7 @@ public:
 	virtual void Action(CPlayer* player, CBaggage* pBaggage);	// アクション
 	void EffectStop();	// エフェクト停止
 	void Reset(CPlayer* player, CBaggage* pBaggage);		// リセット
+	STATE GetState() { return m_state; }
 
 private:
 
