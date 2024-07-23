@@ -146,7 +146,7 @@ HRESULT CBaggage::Init()
 	CObjectX::SetState(CObjectX::STATE::STATE_EDIT);
 
 	// ÉXÉPÅ[ÉãÉ[Éç
-	//SetScale(1.0f);
+	SetScale(0.0f);
 	m_state = STATE::STATE_APPEARANCE_WAIT;
 	return S_OK;
 }
