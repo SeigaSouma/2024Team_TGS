@@ -281,6 +281,8 @@ void CCameraMotion::Update()
 
 			// I—¹”»’èON
 			m_bFinish = true;
+			pCamera->SetEnableMotion(false);
+			return;
 		}
 	}
 
