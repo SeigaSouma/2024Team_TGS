@@ -54,6 +54,7 @@ CBaggage::STATE_FUNC CBaggage::m_StateFunc[] =
 	&CBaggage::StateAppearance_Wait,	// 出現
 	&CBaggage::StateAppearance,	// 出現
 	&CBaggage::StatePass,		// パス
+	&CBaggage::StateGoal,		// ゴール
 };
 
 //==========================================================================
@@ -145,8 +146,8 @@ HRESULT CBaggage::Init()
 	CObjectX::SetState(CObjectX::STATE::STATE_EDIT);
 
 	// スケールゼロ
-	SetScale(0.0f);
-	m_state = STATE::STATE_APPEARANCE_WAIT;
+	SetScale(1.0f);
+	//m_state = STATE::STATE_APPEARANCE_WAIT;
 	return S_OK;
 }
 
@@ -418,6 +419,14 @@ void CBaggage::StatePass()
 	}
 
 	SetPosition(pos);
+}
+
+//==========================================================================
+// ゴール
+//==========================================================================
+void CBaggage::StateGoal()
+{
+	
 }
 
 //==========================================================================

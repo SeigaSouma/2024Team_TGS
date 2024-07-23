@@ -152,7 +152,7 @@ COLLIDER_FILENAME = data/TEXT/character/mob/person_01/sphere_collider.json
 #------------------------------------------------------------------------------
 # モーション数
 #------------------------------------------------------------------------------
-NUM_MOTION = 6
+NUM_MOTION = 7
 
 #------------------------------------------------------------------------------
 # モデルファイル名
@@ -163,6 +163,7 @@ MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_pass.txt			# [1]歩き
 MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_bye.txt			# [1]歩き
 MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_get.txt			# [1]歩き
 MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_return.txt			# [1]歩き
+MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_drown.txt			# [1]歩き
 
 
 END_SCRIPT		# この行は絶対消さないこと！
