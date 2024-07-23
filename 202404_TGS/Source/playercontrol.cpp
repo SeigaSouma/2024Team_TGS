@@ -868,6 +868,15 @@ void CPlayerControlBaggage::GoalAction(CPlayer* player, CBaggage* pBaggage)
 		move.x += -move.x * GOAL_INER;
 		move.z += -move.z * GOAL_INER;
 		move.y += GOAL_GRAVITY;
+
+		// ‚‚³§ŒÀ
+		if (pBaggage->GetPosition().y <= pBaggage->GetOriginPosition().y)
+		{
+			MyLib::Vector3 move = pBaggage->GetMove();
+			MyLib::Vector3 pos = pBaggage->GetPosition();
+			pos.y = pBaggage->GetOriginPosition().y;
+		}
+
 	}
 		break;
 

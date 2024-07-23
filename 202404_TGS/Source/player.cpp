@@ -449,6 +449,15 @@ void CPlayer::Update()
 
 #endif
 
+	// ‚‚³§ŒÀ
+	if (m_pBaggage->GetPosition().y <= m_pBaggage->GetOriginPosition().y && 
+		m_pControlBaggage->GetState() == CPlayerControlBaggage::STATE::STATE_RELEASE)
+	{
+		// ’…’n‚µ‚½‚ç‘JˆÚ
+		CManager::GetInstance()->GetFade()->SetFade(CScene::MODE_GAME);
+
+		return;
+	}
 }
 
 //==========================================================================
