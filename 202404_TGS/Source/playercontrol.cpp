@@ -782,6 +782,8 @@ void CPlayerControlBaggage::GoalAction(CPlayer* player, CBaggage* pBaggage)
 	CInputKeyboard* pInputKeyboard = CInputKeyboard::GetInstance();
 	CKeyConfigManager* pKeyConfigManager = CKeyConfigManager::GetInstance();
 	CKeyConfig* pKeyConfigPad = pKeyConfigManager->GetConfig(CKeyConfigManager::CONTROL_INPAD);
+	CCamera* pCamera = CManager::GetInstance()->GetCamera();
+	CCameraMotion* pCamMotion = pCamera->GetMotion();
 	pBaggage->SetState(CBaggage::STATE::STATE_GOAL);
 
 	static float up = 0.35f, power = 0.8f;
@@ -793,6 +795,11 @@ void CPlayerControlBaggage::GoalAction(CPlayer* player, CBaggage* pBaggage)
 	if ((m_state == STATE::STATE_WAIT || m_state == STATE::STATE_PRESS) && (CInputKeyboard::GetInstance()->GetPress(DIK_RETURN) ||
 		pKeyConfigPad->GetPress(INGAME::ACT_AIR)))
 	{
+		if (m_state == STATE::STATE_WAIT)
+		{
+			pCamMotion->SetMotion(CCameraMotion::MOTION::MOTION_GOALBAG, CCameraMotion::EASING::Linear);
+		}
+
 		m_state = STATE::STATE_PRESS;
 	}
 	// “ü—Í‚³‚ê‚Ä‚¢‚È‚¢
@@ -880,6 +887,7 @@ void CPlayerControlBaggage::GoalAction(CPlayer* player, CBaggage* pBaggage)
 
 	pBaggage->SetMove(move);
 	pBaggage->SetPosition(pos);
+	pCamMotion->SetPosition(pos);
 }
 
 //==========================================================================
