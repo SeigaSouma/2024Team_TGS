@@ -167,6 +167,8 @@
     <ClCompile Include="Libraries\Imgui\implot_items.cpp" />
     <ClCompile Include="Source\camera_motion.cpp" />
     <ClCompile Include="Source\catchresult.cpp" />
+    <ClCompile Include="Source\catchresult_FAIL.cpp" />
+    <ClCompile Include="Source\catchresult_OK.cpp" />
     <ClCompile Include="Source\countdown_start.cpp" />
     <ClCompile Include="Source\map_obstacle_motion.cpp" />
     <ClCompile Include="Source\map_obstacle_obj.cpp" />
@@ -344,6 +346,8 @@
     <ClInclude Include="Libraries\Imgui\imstb_truetype.h" />
     <ClInclude Include="Source\camera_motion.h" />
     <ClInclude Include="Source\catchresult.h" />
+    <ClInclude Include="Source\catchresult_FAIL.h" />
+    <ClInclude Include="Source\catchresult_OK.h" />
     <ClInclude Include="Source\countdown_start.h" />
     <ClInclude Include="Source\map_obstacle_motion.h" />
     <ClInclude Include="Source\map_obstacle_obj.h" />
