@@ -23,7 +23,8 @@ public:
 	enum MOTION
 	{
 		MOTION_PASS = 0,	// パスモーション
-		MOTION_GOAL,
+		MOTION_GOAL,		// ゴール
+		MOTION_GOALBAG,		// ゴールフット橋
 		MOTION_MAX
 	};
 
