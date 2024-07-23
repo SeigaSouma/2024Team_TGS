@@ -412,6 +412,9 @@ void CBaggage::StatePass()
 
 		// 黒フレーム削除
 		CBlackFrame::GetInstance()->SetState(CBlackFrame::STATE::STATE_OUT);
+
+		// カウントダウンに遷移
+		CGame::GetInstance()->GetGameManager()->SetType(CGameManager::SceneType::SCENE_COUNTDOWN);
 	}
 
 	SetPosition(pos);
