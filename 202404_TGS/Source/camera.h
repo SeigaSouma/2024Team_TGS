@@ -316,6 +316,7 @@ public:
 
 	virtual void LimitPos(CCamera* pCamera);	// 位置制限
 	virtual void Distance(CCamera* pCamera);	// 距離調整
+	virtual void SetMotion(CCamera* pCamera){}	// モーション設定
 
 protected:
 	float GetDistance(CCamera* pCamera, const float fMultiply);
@@ -342,6 +343,7 @@ public:
 
 	virtual void LimitPos(CCamera* pCamera) override;	// 位置制限
 	virtual void Distance(CCamera* pCamera) override;	// 距離調整
+	virtual void SetMotion(CCamera* pCamera) override;	// モーション設定
 };
 
 class CStateCameraV_Distance : public CStateCameraV

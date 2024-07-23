@@ -835,6 +835,11 @@ void CCamera::SetCameraVGame()
 		m_posV.x = m_posR.x + cosf(m_rot.z) * sinf(m_rot.y) * -m_fDistance;
 		m_posV.z = m_posR.z + cosf(m_rot.z) * cosf(m_rot.y) * -m_fDistance;
 		m_posV.y = m_posR.y + sinf(m_rot.z) * -m_fDistance;
+
+		if (CGame::GetInstance()->GetGameManager()->GetType() != CGameManager::SceneType::SCENE_DEBUG)
+		{
+			m_pStateCameraV->SetMotion(this);
+		}
 	}
 	else if (m_bFollow)
 	{// ’Ç]ON
@@ -1896,11 +1901,19 @@ void CStateCameraV_Goal::LimitPos(CCamera* pCamera)
 //==========================================================================
 void CStateCameraV_Goal::Distance(CCamera* pCamera)
 {
+	SetMotion(pCamera);
+}
+
+//==========================================================================
+// ƒ‚[ƒVƒ‡ƒ“İ’è
+//==========================================================================
+void CStateCameraV_Goal::SetMotion(CCamera* pCamera)
+{
 	// ‘ã“ü
 	CCameraMotion* pMotion = pCamera->GetMotion();
 	if (pMotion->GetNowKeyIdx() + 1 == pMotion->GetNowKeyMax())
 	{
-		pMotion->SetFinish(true);
+		pMotion->SetEnablePause(true);
 	}
 }
 
