@@ -137,6 +137,7 @@ HRESULT CGameManager::Init()
 
 	m_OldSceneType = m_SceneType;
 
+#if 1
 	// 依頼人生成
 	m_pRequestPeople = CRequestPeople::Create(MyLib::Vector3(500.0f, 0.0f, 900.0f));
 	m_pRequestPeople->SetState(CRequestPeople::STATE::STATE_WAIT);
@@ -150,6 +151,10 @@ HRESULT CGameManager::Init()
 	CSubTitle* pSubTitle = CSubTitle::Create(MyLib::Vector3(640.0f, 670.0f, 0.0f), 2.0f);
 	pSubTitle->BindSubtitle("data\\TEXTURE\\subtitle\\sample.png");
 	pSubTitle->SetSizeByHeight(40.0f);
+#else
+
+	m_SceneType = SceneType::SCENE_WAIT_AIRPUSH;	// シーンの種類 
+#endif
 	return S_OK;
 }
 
@@ -181,6 +186,10 @@ void CGameManager::Update()
 	case CGameManager::SceneType::SCENE_START:
 		m_bControll = false;
 		SceneStart();
+		break;
+
+	case CGameManager::SceneType::SCENE_COUNTDOWN:		// カウントダウン
+		TurnAway();
 		break;
 
 	case CGameManager::SceneType::SCENE_MAINCLEAR:
@@ -228,6 +237,7 @@ void CGameManager::Update()
 	case SceneType::SCENE_WAIT_AIRPUSH:
 		m_bControll = false;
 		SceneWaitAirPush();
+		TurnAway();
 		break;
 
 	case SceneType::SCENE_DEBUG:
