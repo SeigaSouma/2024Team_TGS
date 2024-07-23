@@ -812,6 +812,7 @@ void CCameraMotion::SetMotion(int motion, EASING EasingType)
 	m_nNowTriggerIdx = 0;
 	m_fMotionTimer = 0.0f;
 	m_bFinish = false;
+	m_bPause = false;
 	m_EasingType = EasingType;
 }
 

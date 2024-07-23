@@ -20,7 +20,7 @@ namespace
 	const std::string FILENAME = "data\\TEXT\\people\\manager.txt";
 	const float SPAWN_DISTANCE = 600.0f;		// 湧き距離間隔
 	const float SPAWN_ALL_LENGTH = 80000.0f;	// 出現する全ての長さ
-	const float SPAWN_MIN_LENGTH = -1000.0f;	// 出現する最低距離（プレイヤーからの距離）
+	const float SPAWN_MIN_LENGTH = -6000.0f;	// 出現する最低距離（プレイヤーからの距離）
 	const float SPAWN_MAX_LENGTH = 6000.0f;		// 出現する最高距離（プレイヤーからの距離、これより先は後生成リスト行き）
 }
 CPeopleManager* CPeopleManager::m_ThisPtr = nullptr;				// 自身のポインタ
@@ -142,6 +142,8 @@ void CPeopleManager::SetByRank()
 		return;
 	}
 
+	// 後出しリストリセット
+	m_lateSpawnPeople.clear();
 
 	MyLib::Vector3 pos = MyLib::Vector3(0.0f, 300.0f, 1500.0f);
 	MyLib::Vector3 spawnpos = pos;
@@ -160,7 +162,7 @@ void CPeopleManager::SetByRank()
 		spawnpos.z += UtilFunc::Transformation::Random(-50, 50) * 10.0f;
 		spawnpos.z += UtilFunc::Transformation::Random(-50, 50);
 
-		if (spawnpos.x < playerPosX + SPAWN_MAX_LENGTH)
+		if (len < playerLen + SPAWN_MAX_LENGTH)
 		{// 範囲内なのですぐ出す
 			SetPeople(spawnpos, rot, type);
 		}

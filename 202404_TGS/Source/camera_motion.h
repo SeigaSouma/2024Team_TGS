@@ -70,7 +70,7 @@ public:
 	bool IsFinish() { return m_bFinish; }
 	bool IsEdit() { return m_bEdit; }
 
-	bool SetEnablePause(bool bPause) { m_bPause = bPause; }	// ポーズ判定
+	void SetEnablePause(bool bPause) { m_bPause = bPause; }	// ポーズ判定
 	bool IsPause() { return m_bPause; }		// ポーズ判定
 
 	TriggerInfo GetTrigger();	// トリガー判定取得
