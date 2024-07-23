@@ -391,8 +391,7 @@ void CMapBlock::Set(const int Idx, const MyLib::Vector3& startpos, float startle
 
 		for (const auto& it : pInfo->GetObstacleInfo())
 		{
-			CMap_Obstacle* pObj = CMap_Obstacle::Create(pManager->GetObstacleInfo(it.nType));
-			pObj->SetPosition(it.pos + startpos);
+			CMap_Obstacle* pObj = CMap_Obstacle::Create(pManager->GetObstacleInfo(it.nType), it.pos + startpos);
 			pObj->SetRotation(it.rot);
 			pObj->SetScale(it.scale);
 		}

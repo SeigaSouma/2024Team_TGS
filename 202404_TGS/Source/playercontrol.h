@@ -50,17 +50,27 @@ class CPlayerControlBaggage
 {
 public:
 
+	enum STATE
+	{
+		STATE_NONE = 0,	// 何もない
+		STATE_WAIT,		// 入力待機
+		STATE_PRESS,	// 入力中
+		STATE_RELEASE,	// 離した
+		STATE_MAX
+	};
+
 	// コンストラクタ
 	CPlayerControlBaggage() 
 	{
 		m_BressHandle = nullptr;
 		m_bFall = true;
-		m_bFinish = false;
+		m_state = STATE::STATE_NONE;
 	}
 
 	virtual void Action(CPlayer* player, CBaggage* pBaggage);	// アクション
 	void EffectStop();	// エフェクト停止
 	void Reset(CPlayer* player, CBaggage* pBaggage);		// リセット
+	STATE GetState() { return m_state; }
 
 private:
 
@@ -87,7 +97,8 @@ private:
 	float m_fIntervalBress = 0.0f;		// 息のタイマー
 	bool m_bLandOld;					// 前回の着地情報
 	bool m_bFall;						// 落下しているかどうか
-	bool m_bFinish;
+	STATE m_state;
+	MyLib::Vector3 m_GoalMove;			// ゴール時の移動量
 };
 
 //=============================

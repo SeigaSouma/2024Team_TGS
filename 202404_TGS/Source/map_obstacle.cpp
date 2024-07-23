@@ -19,13 +19,14 @@
 //==========================================================================
 namespace
 {
-
 }
 
 //==========================================================================
 // 静的メンバ変数
 //==========================================================================
 CListManager<CMap_Obstacle> CMap_Obstacle::m_List = {};	// リスト
+std::map<int, CListManager<CMap_Obstacle>> CMap_Obstacle::m_ListBlock = {};	// リスト
+const float CMap_Obstacle::m_DISTANCE_COLLISION_BLOCK = 2000.0f;	// 当たり判定
 
 //==========================================================================
 // コンストラクタ
@@ -34,6 +35,7 @@ CMap_Obstacle::CMap_Obstacle(int nPriority,
 	CObject::LAYER layer) : CObject(nPriority, layer)
 {
 	// 値のクリア
+	m_nMapBlock = 0;		// マップのブロック
 }
 
 //==========================================================================
@@ -47,7 +49,7 @@ CMap_Obstacle::~CMap_Obstacle()
 //==========================================================================
 // 生成処理
 //==========================================================================
-CMap_Obstacle *CMap_Obstacle::Create(const CMap_ObstacleManager::SObstacleInfo& info, const bool bChange, const bool bSave)
+CMap_Obstacle *CMap_Obstacle::Create(const CMap_ObstacleManager::SObstacleInfo& info, const MyLib::Vector3& pos, const bool bChange, const bool bSave)
 {
 	CMap_Obstacle* pObj = nullptr;
 	// メモリの確保
@@ -96,6 +98,9 @@ CMap_Obstacle *CMap_Obstacle::Create(const CMap_ObstacleManager::SObstacleInfo& 
 		pObj->m_ObstacleInfo = info;
 		pObj->m_bSave = bSave;
 
+		// 位置設定
+		pObj->SetPosition(pos);
+
 		// 初期化処理
 		pObj->Init();
 	}
@@ -108,13 +113,33 @@ CMap_Obstacle *CMap_Obstacle::Create(const CMap_ObstacleManager::SObstacleInfo& 
 //==========================================================================
 HRESULT CMap_Obstacle::Init()
 {
+	m_nMapBlock = 0;
+	float distanceX = GetPosition().x;
+	while (1)
+	{
+		// 間隔分減算
+		distanceX -= m_DISTANCE_COLLISION_BLOCK;
+		if (distanceX <= 0.0f)
+		{
+			break;
+		}
+
+		// ブロック加算
+		m_nMapBlock++;
+	}
+
+	// リストに追加
+	m_ListBlock[m_nMapBlock].Regist(this);
+
+
 	// リストに追加
 	m_List.Regist(this);
 
 	// 種類の設定
 	CObject::SetType(TYPE_OBJECTX);
 
-	m_OriginObstacleInfo = m_ObstacleInfo;	// 障害物情報
+	// 障害物情報
+	m_OriginObstacleInfo = m_ObstacleInfo;
 
 #if _DEBUG
 
@@ -145,6 +170,7 @@ void CMap_Obstacle::Uninit()
 
 	// リストから削除
 	m_List.Delete(this);
+	m_ListBlock[m_nMapBlock].Delete(this);
 
 	// オブジェクトの破棄
 	Release();
@@ -163,6 +189,7 @@ void CMap_Obstacle::Kill()
 
 	// リストから削除
 	m_List.Delete(this);
+	m_ListBlock[m_nMapBlock].Delete(this);
 
 	// オブジェクトの破棄
 	Release();

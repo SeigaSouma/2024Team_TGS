@@ -39,6 +39,7 @@ public:
 		STATE_APPEARANCE_WAIT,	// 出現
 		STATE_APPEARANCE,	// 出現
 		STATE_PASS,			// パス
+		STATE_GOAL,			// ゴール
 		STATE_MAX
 	};
 
@@ -118,6 +119,7 @@ private:
 	void StateAppearance_Wait();	// 出現待ち
 	void StateAppearance();	// 出現
 	void StatePass();		// パス
+	void StateGoal();		// ゴール
 
 	// その他
 	void Controll();	// 操作

@@ -23,7 +23,8 @@ public:
 	enum MOTION
 	{
 		MOTION_PASS = 0,	// パスモーション
-		MOTION_GOAL,
+		MOTION_GOAL,		// ゴール
+		MOTION_GOALBAG,		// ゴールフット橋
 		MOTION_MAX
 	};
 
@@ -56,6 +57,10 @@ public:
 	void SetFinish(bool bFinish) { m_bFinish = bFinish; }
 	bool IsFinish() { return m_bFinish; }
 	bool IsEdit() { return m_bEdit; }
+
+	bool SetEnablePause(bool bPause) { m_bPause = bPause; }	// ポーズ判定
+	bool IsPause() { return m_bPause; }		// ポーズ判定
+
 	int GetNowKeyIdx() { return m_nNowKeyIdx; }
 	int GetNowKeyMax() { return m_vecMotionInfo[m_nNowMotionIdx].Key.size(); }
 
@@ -130,6 +135,7 @@ private:
 	float m_fMotionTimer;	// モーションタイマー
 	bool m_bFinish;			// 終了判定
 	bool m_bEdit;			// エディット使用中か
+	bool m_bPause;			// ポーズ判定
 	EditInfo m_EditInfo;	// エディット情報
 };
 

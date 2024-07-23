@@ -54,6 +54,7 @@ CBaggage::STATE_FUNC CBaggage::m_StateFunc[] =
 	&CBaggage::StateAppearance_Wait,	// 出現
 	&CBaggage::StateAppearance,	// 出現
 	&CBaggage::StatePass,		// パス
+	&CBaggage::StateGoal,		// ゴール
 };
 
 //==========================================================================
@@ -421,6 +422,14 @@ void CBaggage::StatePass()
 }
 
 //==========================================================================
+// ゴール
+//==========================================================================
+void CBaggage::StateGoal()
+{
+	
+}
+
+//==========================================================================
 // デバッグ時変形
 //==========================================================================
 void CBaggage::DebugTransform()
@@ -526,8 +535,25 @@ void CBaggage::Draw()
 //==========================================================================
 bool CBaggage::Hit()
 {
+
+	int block = 0;
+	float distanceX = GetPosition().x;
+	while (1)
+	{
+		// 間隔分減算
+		distanceX -= CMap_Obstacle::GetDistance_CollisionBlock();
+		if (distanceX <= 0.0f)
+		{
+			break;
+		}
+
+		// ブロック加算
+		block++;
+	}
+
+
 	// 障害物のリスト取得
-	CListManager<CMap_Obstacle> list = CMap_Obstacle::GetListObj();
+	CListManager<CMap_Obstacle> list = CMap_Obstacle::GetListByBlock(block);
 
 	// 先頭を保存
 	std::list<CMap_Obstacle*>::iterator itr = list.GetEnd();

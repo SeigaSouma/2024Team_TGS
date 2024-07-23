@@ -53,6 +53,7 @@
 #include "spline.h"
 #include "courseManager.h"
 #include "peoplemanager.h"
+#include "subtitle.h"
 
 //==========================================================================
 // 静的メンバ変数宣言
@@ -171,7 +172,7 @@ HRESULT CGame::Init()
 	//=============================
 	// ステージ
 	//=============================
-	m_pStage = CStage::Create("data\\TEXT\\stage\\info.txt");
+	//m_pStage = CStage::Create("data\\TEXT\\stage\\info.txt");
 
 	CManager::GetInstance()->GetCamera()->Reset(CScene::MODE_GAME);
 
@@ -500,6 +501,13 @@ void CGame::Update()
 	}
 
 
+	if (pInputKeyboard->GetTrigger(DIK_4))
+	{
+		CSubTitle* pSubTitle = CSubTitle::Create(MyLib::Vector3(640.0f, 670.0f, 0.0f), 2.0f);
+		pSubTitle->BindSubtitle("data\\TEXTURE\\subtitle\\sample.png");
+		pSubTitle->SetSizeByHeight(40.0f);
+	}
+
 #if _DEBUG
 
 	if (ImGui::TreeNode("Water Ripple"))
@@ -561,10 +569,6 @@ void CGame::Update()
 		ImGui::TreePop();
 	}
 
-
-	if (pInputKeyboard->GetTrigger(DIK_4))
-	{
-	}
 
 
 

@@ -1,10 +1,10 @@
 //=============================================================================
 // 
-// ステージクリアテキスト処理 [stagecleartext.cpp]
+// キャッチ結果処理 [catchresult.cpp]
 // Author : 相馬靜雅
 // 
 //=============================================================================
-#include "stagecleartext.h"
+#include "catchresult.h"
 #include "manager.h"
 #include "sound.h"
 #include "calculation.h"
@@ -26,32 +26,27 @@ namespace
 //==========================================================================
 // 関数ポインタ
 //==========================================================================
-CStageClearText::STATE_FUNC CStageClearText::m_StateFuncList[] =
+CCatchResult::STATE_FUNC CCatchResult::m_StateFuncList[] =
 {
-	&CStageClearText::StateExpansion,
-	&CStageClearText::StateExpNone,
-	&CStageClearText::StateFadeOut,
+	&CCatchResult::StateExpansion,
+	&CCatchResult::StateExpNone,
+	&CCatchResult::StateFadeOut,
 };
-
-//==========================================================================
-// 静的メンバ変数宣言
-//==========================================================================
 
 //==========================================================================
 // コンストラクタ
 //==========================================================================
-CStageClearText::CStageClearText(int nPriority) : CObject2D(nPriority)
+CCatchResult::CCatchResult(int nPriority) : CObject2D(nPriority)
 {
 	// 値のクリア
-	m_state = STATE_EXPANSION;			// 状態
+	m_state = STATE_EXPANSION;		// 状態
 	m_fStateTimer = 0.0f;			// 状態タイマー
-	m_bCreateResultWindow = false;	// リザルト画面の呼び出しフラグ
 }
 
 //==========================================================================
 // デストラクタ
 //==========================================================================
-CStageClearText::~CStageClearText()
+CCatchResult::~CCatchResult()
 {
 
 }
@@ -59,10 +54,10 @@ CStageClearText::~CStageClearText()
 //==========================================================================
 // 生成処理
 //==========================================================================
-CStageClearText* CStageClearText::Create(const MyLib::Vector3 pos)
+CCatchResult* CCatchResult::Create(const MyLib::Vector3& pos, bool bClear)
 {
 	// メモリの確保
-	CStageClearText* pEffect = DEBUG_NEW CStageClearText;
+	CCatchResult* pEffect = DEBUG_NEW CCatchResult;
 
 	if (pEffect != nullptr)
 	{// メモリの確保が出来ていたら
@@ -78,7 +73,7 @@ CStageClearText* CStageClearText::Create(const MyLib::Vector3 pos)
 //==========================================================================
 // 初期化処理
 //==========================================================================
-HRESULT CStageClearText::Init()
+HRESULT CCatchResult::Init()
 {
 	HRESULT hr;
 
@@ -104,7 +99,7 @@ HRESULT CStageClearText::Init()
 
 	// 開始
 	m_fStateTimer = 0.0f;
-	m_state = eState::STATE_EXPANSION;
+	m_state = State::STATE_EXPANSION;
 
 	// 向き設定
 	SetRotation(MyLib::Vector3(0.0f, 0.0f, 0.0f));
@@ -116,7 +111,7 @@ HRESULT CStageClearText::Init()
 //==========================================================================
 // 終了処理
 //==========================================================================
-void CStageClearText::Uninit()
+void CCatchResult::Uninit()
 {
 	// 終了処理
 	CObject2D::Uninit();
@@ -125,7 +120,7 @@ void CStageClearText::Uninit()
 //==========================================================================
 // 更新処理
 //==========================================================================
-void CStageClearText::Update()
+void CCatchResult::Update()
 {
 	if (IsDeath())
 	{
@@ -147,7 +142,7 @@ void CStageClearText::Update()
 //==========================================================================
 // 拡大
 //==========================================================================
-void CStageClearText::StateExpansion()
+void CCatchResult::StateExpansion()
 {
 	if (m_fStateTimer >= TIME_EXPANSION)
 	{
@@ -172,7 +167,7 @@ void CStageClearText::StateExpansion()
 //==========================================================================
 // 整い状態
 //==========================================================================
-void CStageClearText::StateExpNone()
+void CCatchResult::StateExpNone()
 {
 	// 状態遷移カウンター加算
 	m_fStateTimer += CManager::GetInstance()->GetDeltaTime();
@@ -180,7 +175,7 @@ void CStageClearText::StateExpNone()
 	if (m_fStateTimer >= TIME_EXPNONE)
 	{
 		m_fStateTimer = 0.0f;
-		m_state = eState::STATE_FADEOUT;
+		m_state = State::STATE_FADEOUT;
 		return;
 	}
 }
@@ -188,7 +183,7 @@ void CStageClearText::StateExpNone()
 //==========================================================================
 // フェードアウト状態
 //==========================================================================
-void CStageClearText::StateFadeOut()
+void CCatchResult::StateFadeOut()
 {
 	// 状態遷移カウンター加算
 	m_fStateTimer += CManager::GetInstance()->GetDeltaTime();
@@ -196,15 +191,6 @@ void CStageClearText::StateFadeOut()
 	// 不透明度更新
 	float alpha = 1.0f - m_fStateTimer / TIME_FADEOUT;
 	SetAlpha(alpha);
-
-	if (TIME_FADEOUT * 0.7f <= m_fStateTimer &&
-		!m_bCreateResultWindow)
-	{
-		m_bCreateResultWindow = true;
-
-		// 戦果生成
-		CGame::GetInstance()->GetGameManager()->SetType(CGameManager::SceneType::SCENE_GOAL);
-	}
 
 	if (m_fStateTimer >= TIME_FADEOUT)
 	{
@@ -217,7 +203,7 @@ void CStageClearText::StateFadeOut()
 //==========================================================================
 // 描画処理
 //==========================================================================
-void CStageClearText::Draw()
+void CCatchResult::Draw()
 {
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
@@ -239,7 +225,7 @@ void CStageClearText::Draw()
 //==========================================================================
 // 頂点情報設定処理
 //==========================================================================
-void CStageClearText::SetVtx()
+void CCatchResult::SetVtx()
 {
 	// 頂点設定
 	CObject2D::SetVtx();
