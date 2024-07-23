@@ -32,7 +32,7 @@ const MyLib::Vector3 CBlackFrame::m_DestPosition[VTX_MAX] =	// 目標の位置
 //==========================================================================
 // コンストラクタ
 //==========================================================================
-CBlackFrame::CBlackFrame(int nPriority)
+CBlackFrame::CBlackFrame(int nPriority, const LAYER layer) : CObject(nPriority, layer)
 {
 	// 値のクリア
 	memset(&m_pObj3D[0], 0, sizeof(m_pObj3D));	// オブジェクト2Dのオブジェクト
@@ -107,6 +107,8 @@ HRESULT CBlackFrame::Init()
 	}
 	m_state = STATE_OUTCOMPLETION;	// 状態
 
+	// 種類設定
+	CObject::SetType(CObject::TYPE::TYPE_OBJECT2D);
 	return S_OK;
 }
 
@@ -152,12 +154,13 @@ void CBlackFrame::Uninit()
 
 			// 終了処理
 			m_pObj3D[nCntSelect]->Uninit();
-			delete m_pObj3D[nCntSelect];
 			m_pObj3D[nCntSelect] = nullptr;
 		}
 	}
 
-	delete m_pThisPtr;
+	// 開放処理
+	Release();
+
 	m_pThisPtr = nullptr;
 }
 

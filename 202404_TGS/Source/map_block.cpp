@@ -429,7 +429,38 @@ void CMapBlock::SubInfo()
 	m_InfoList.Delete(m_InfoList.GetData(m_InfoList.GetNumAll() - 1));
 }
 
+//==========================================================================
+// データの削除
+//==========================================================================
+void CMapBlock::DataDelete()
+{
+	//// チェックポイントの終了
+	//for (int i = 0; i < m_CheckpointList.GetNumAll(); i++)
+	//{
+	//	m_CheckpointList.GetData(i)->Uninit();
+	//}
 
+	//m_CheckpointList.Uninit();
+
+
+	//// 障害物の終了
+	//for (int i = 0; i < m_ObstacleList.GetNumAll(); i++)
+	//{
+	//	m_ObstacleList.GetData(i)->Uninit();
+	//}
+
+	//m_ObstacleList.Uninit();
+}
+
+//void CMapBlock::DataDelete()
+//{
+//
+//}
+//
+//void CMapBlock::InfoDelete()
+//{
+//
+//}
 
 //==========================================================================
 // コンストラクタ
@@ -616,4 +647,3 @@ void CMapBlockInfo::ObstacleLoad(std::ifstream* pFile)
 		m_ObstacleList.push_back(info);
 	}
 }
-

@@ -19,15 +19,15 @@ NUM_MODEL = 9
 #------------------------------------------------------------------------------
 # モデルファイル名
 #------------------------------------------------------------------------------
-MODEL_FILENAME = data/MODEL/mob/person_watermelon/person_watermelon_body.x		# [0]腰
-MODEL_FILENAME = data/MODEL/mob/person_watermelon/person_watermelon_R_shoulder.x		# [0]腰
-MODEL_FILENAME = data/MODEL/mob/person_watermelon/person_watermelon_R_hand.x		# [0]腰
-MODEL_FILENAME = data/MODEL/mob/person_watermelon/person_watermelon_L_shoulder.x		# [0]腰
-MODEL_FILENAME = data/MODEL/mob/person_watermelon/person_watermelon_L_hand.x		# [0]腰
-MODEL_FILENAME = data/MODEL/mob/person_watermelon/person_watermelon_R_Uper_leg.x		# [0]腰
-MODEL_FILENAME = data/MODEL/mob/person_watermelon/person_watermelon_R_Downer_leg.x		# [0]腰
-MODEL_FILENAME = data/MODEL/mob/person_watermelon/person_watermelon_L_Uper_leg.x		# [0]腰
-MODEL_FILENAME = data/MODEL/mob/person_watermelon/person_watermelon_L_Downer_leg.x		# [0]腰
+MODEL_FILENAME = data/MODEL/mob/person_bell/person_bell_body.x		# [0]腰
+MODEL_FILENAME = data/MODEL/mob/person_bell/person_bell_R_shoulder.x		# [0]腰
+MODEL_FILENAME = data/MODEL/mob/person_bell/person_bell_R_hand.x		# [0]腰
+MODEL_FILENAME = data/MODEL/mob/person_bell/person_bell_L_shoulder.x		# [0]腰
+MODEL_FILENAME = data/MODEL/mob/person_bell/person_bell_L_hand.x		# [0]腰
+MODEL_FILENAME = data/MODEL/mob/person_bell/person_bell_R_Uper_leg.x		# [0]腰
+MODEL_FILENAME = data/MODEL/mob/person_bell/person_bell_R_Downer_leg.x		# [0]腰
+MODEL_FILENAME = data/MODEL/mob/person_bell/person_bell_L_Uper_leg.x		# [0]腰
+MODEL_FILENAME = data/MODEL/mob/person_bell/person_bell_L_Downer_leg.x		# [0]腰
 
 
 #------------------------------------------------------------------------------

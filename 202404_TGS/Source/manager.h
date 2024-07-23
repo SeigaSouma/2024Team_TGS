@@ -40,7 +40,6 @@ class CElevation;
 class CEnemyManager;
 class CFade;
 class CInstantFade;
-class CBlackFrame;
 class CPause;
 class CPowerGauge;
 class CResultManager;
@@ -80,7 +79,6 @@ public:
 	CEdit *GetEdit();
 	CFade *GetFade();
 	CInstantFade *GetInstantFade();	// 遷移なしフェード取得
-	CBlackFrame *GetBlackFrame();	// 黒フレーム取得
 	CPause *GetPause();
 	CResultManager *GetResultManager();	// リザルトマネージャ取得
 	CRankingManager *GetRankingManager();	// ランキングマネージャ
@@ -114,7 +112,6 @@ private:
 	CScene *m_pScene;					// シーン
 	CFade *m_pFade;						// フェード
 	CInstantFade *m_pInstantFade;		// 遷移なしフェード
-	CBlackFrame *m_pBlackFrame;			// 黒フレーム
 	CPause *m_pPause;					// ポーズ
 	CResultManager *m_pResultManager;	// リザルトマネージャ
 	CRankingManager *m_pRankingManager;	// ランキングマネージャ

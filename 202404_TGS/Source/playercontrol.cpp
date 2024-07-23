@@ -406,6 +406,17 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 		return;
 	}
 
+	// ゴール中
+	{
+		CGameManager* pManager = CGame::GetInstance()->GetGameManager();
+
+		if (pManager->GetType() == CGameManager::SceneType::SCENE_GOAL)
+		{
+			GoalAction(player, pBaggage);
+			return;
+		}
+	}
+
 	// インプット情報取得
 	CInputKeyboard* pInputKeyboard = CInputKeyboard::GetInstance();
 	CInputGamepad* pInputGamepad = CInputGamepad::GetInstance();
@@ -761,6 +772,157 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 }
 
 //==========================================================================
+// ゴールアクション
+//==========================================================================
+void CPlayerControlBaggage::GoalAction(CPlayer* player, CBaggage* pBaggage)
+{
+	// インプット情報取得
+	CInputKeyboard* pInputKeyboard = CInputKeyboard::GetInstance();
+	CInputGamepad* pInputGamepad = CInputGamepad::GetInstance();
+	CKeyConfigManager* pKeyConfigManager = CKeyConfigManager::GetInstance();
+	CKeyConfig* pKeyConfigPad = pKeyConfigManager->GetConfig(CKeyConfigManager::CONTROL_INPAD);
+	CGameManager* pGameMgr = CGame::GetInstance()->GetGameManager();
+
+
+	// 情報取得
+	MyLib::Vector3 move = player->GetMove();
+	MyLib::Vector3 pos = player->GetPosition();
+	MyLib::Vector3 posBaggage = pBaggage->GetPosition();
+	MyLib::Vector3 posBaggageOrigin = pBaggage->GetOriginPosition();
+
+	static float up = 4.3f, power = 4.5f;
+
+	static float starttimeDownheight = 1.5f;	// 降下が始まるまでの時間
+	static float timeDownheight = 2.0f;			// 落ちきるまでの時間
+	static float ratioMinDownheight = 0.2f;		// 落ちきった時の再下底割合
+
+	// 荷物の高さで割合設定
+	float ratio = (posBaggage.y - posBaggageOrigin.y) / LENGTH_COLLISIONHEIGHT;
+	float ratioHeight = 1.0f - ratio;
+	ratioHeight = UtilFunc::Transformation::Clamp(ratioHeight, 0.4f, 0.6f);
+
+	// 割合
+	ratio = UtilFunc::Transformation::Clamp(ratio, 0.3f, 1.0f);
+
+	// 息の届く横範囲
+	float range = ratio * LENGTH_COLLISIONRANGE;
+
+#if GEKIMUZU
+
+		// 高さ制限
+	if (!pBaggage->IsLand())
+	{
+
+		// 前回が着地
+		if (m_bLandOld)
+		{
+			CSound::GetInstance()->StopSound(CSound::LABEL::LABEL_SE_DROWN);
+			float multi = 1.0f - static_cast<float>(player->GetLife()) / static_cast<float>(player->GetLifeOrigin());
+
+			// フィードバックエフェクトOFF
+			CManager::GetInstance()->GetRenderer()->SetEnableDrawMultiScreen(
+				MULTITARGET::OFF_ALPHA,
+				MULTITARGET::OFF_MULTI,
+				MULTITARGET::OFF_TIMER * multi);
+
+			// コントローラー振動停止
+			pInputGamepad->SetEnableVibration();
+			pInputGamepad->SetVibMulti(0.0f);
+		}
+
+		// 体力回復
+		int setLife = player->GetLife();
+		setLife = UtilFunc::Transformation::Clamp(setLife + 1, 0, player->GetLifeOrigin());
+		player->SetLife(setLife);
+
+		// 前回着地していない状態に
+		m_bLandOld = false;
+	}
+
+#endif
+
+	//=============================
+	// 息エフェクト
+	//=============================
+	BressEffect(player, pBaggage);
+	bool bKantsu = CollisionObstacle(player, pBaggage);
+	if (CInputKeyboard::GetInstance()->GetPress(DIK_RETURN) ||
+		pKeyConfigPad->GetPress(INGAME::ACT_AIR))
+	{
+
+		// 高さの降下時間加算
+		m_fTimeDownHeight += CManager::GetInstance()->GetDeltaTime();
+
+		if (m_bFall)
+		{// 落下中
+
+			m_bFall = false;
+			pBaggage->SetForce(0.0f);
+
+
+			if (m_BressHandle != nullptr)
+			{
+				// SEストップ
+				CSound::GetInstance()->StopSound(CSound::LABEL::LABEL_SE_BRESS_STREAM);
+
+				CMyEffekseer::GetInstance()->SetTrigger(*m_BressHandle, 1);
+			}
+
+			// 息エフェクト生成
+			MyLib::Vector3 d = pos;
+			d.y = posBaggageOrigin.y;
+			CMyEffekseer::GetInstance()->SetEffect(
+				&m_BressHandle,
+				CMyEffekseer::EFKLABEL::EFKLABEL_BRESS,
+				d, 0.0f, 0.0f, DEFAULT_BRESSSCALE_EFFECT, true);
+
+			// SE再生
+			CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_BRESS_STREAM);
+		}
+
+		// 息の加算計算
+		m_fHeightVelocity += (0.0f - m_fHeightVelocity) * 0.2f;
+		m_fHeight += ADD_HEIGHT + m_fHeightVelocity;
+		m_fHeight = UtilFunc::Transformation::Clamp(m_fHeight, MIN_HEIGHT, LENGTH_COLLISIONHEIGHT);
+
+		// 高さの割合
+		float ratio = m_fHeight / m_fMaxHeight;
+
+		// SEのピッチ変更
+		CSound::GetInstance()->SetFrequency(CSound::LABEL::LABEL_SE_BRESS_STREAM, 0.5f + ratio * 1.5f);
+
+		ratio = UtilFunc::Transformation::Clamp(ratio, MIN_RATIO_HEIGHT_BRESS, 1.0f);
+
+		// 振動
+		pInputGamepad->SetEnableVibration();
+		pInputGamepad->SetVibMulti(1.0f * ratio);
+		pInputGamepad->SetVibration(CInputGamepad::VIBRATION_STATE::VIBRATION_STATE_AIR, 0);
+
+		if (posBaggage.y <= posBaggageOrigin.y + m_fHeight &&
+			posBaggage.x <= pos.x + range &&
+			posBaggage.x >= pos.x - range)
+		{// 範囲内
+
+			if (bKantsu)
+			{// 障害物の空気貫通判定
+
+				// 荷物へ空気移動量加算
+				pBaggage->AddForce(MyLib::Vector3(0.0f, up * ratioHeight, power * ratioHeight), pBaggage->GetPosition());
+			}
+		}
+	}
+
+	// 息エフェクト状態変更
+	if (m_bFall && m_BressHandle != nullptr)
+	{
+		CMyEffekseer::GetInstance()->SetTrigger(*m_BressHandle, 0);
+
+		// SEストップ
+		CSound::GetInstance()->StopSound(CSound::LABEL::LABEL_SE_BRESS_STREAM);
+	}
+}
+
+//==========================================================================
 // 息エフェクト
 //==========================================================================
 void CPlayerControlBaggage::BressEffect(CPlayer* player, CBaggage* pBaggage)
@@ -880,6 +1042,7 @@ void CPlayerControlBaggage::Reset(CPlayer* player, CBaggage* pBaggage)
 	MyLib::Vector3 pos = player->GetPosition();
 	MyLib::Vector3 posBaggageOrigin = pBaggage->GetOriginPosition();
 	pBaggage->SetPosition(MyLib::Vector3(pos.x, posBaggageOrigin.y, pos.z));
+	m_bFinish = false;
 }
 
 //==========================================================================

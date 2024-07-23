@@ -55,6 +55,7 @@ public:
 	{
 		m_BressHandle = nullptr;
 		m_bFall = true;
+		m_bFinish = false;
 	}
 
 	virtual void Action(CPlayer* player, CBaggage* pBaggage);	// アクション
@@ -66,6 +67,7 @@ private:
 	// メンバ関数
 	bool CollisionObstacle(CPlayer* player, CBaggage* pBaggage);	// 障害物判定
 	bool EndCheck(CBaggage* pBaggage);
+	void GoalAction(CPlayer* player, CBaggage* pBaggage);
 	void BressEffect(CPlayer* player, CBaggage* pBaggage);		// 息エフェクト
 
 	// メンバ変数
@@ -85,6 +87,7 @@ private:
 	float m_fIntervalBress = 0.0f;		// 息のタイマー
 	bool m_bLandOld;					// 前回の着地情報
 	bool m_bFall;						// 落下しているかどうか
+	bool m_bFinish;
 };
 
 //=============================

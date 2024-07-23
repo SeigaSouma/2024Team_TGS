@@ -12,6 +12,8 @@
 #include "instantfade.h"
 #include "scene.h"
 
+class CRequestPeople;
+
 //==========================================================================
 // クラス定義
 //==========================================================================
@@ -84,6 +86,7 @@ protected:
 	// メンバ関数
 	virtual void SceneTransition();	// 遷移中
 	virtual void SceneWaitAirPush();
+	virtual void SceneStart();			// 開始演出
 	virtual void SceneGoal();
 	virtual void ContainPlayerBaggage();
 	virtual void TurnAway();
@@ -103,6 +106,8 @@ protected:
 	int m_nEvaluationPoint;	// 評価ポイント
 	float m_fCameraLengthOld;	// 前のカメラの距離
 	float m_fPosRY;			// プレイヤーと荷物を画面内に収めるときに使うposRのY座標
+	float m_fSceneTimer;	// シーンタイマー
+	CRequestPeople* m_pRequestPeople;	// 依頼人のポインタ
 };
 
 

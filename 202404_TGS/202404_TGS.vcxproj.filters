@@ -623,6 +623,9 @@
     <ClCompile Include="Source\camera_motion.cpp">
       <Filter>camera</Filter>
     </ClCompile>
+    <ClCompile Include="Source\subtitle.cpp">
+      <Filter>direction</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ballast.h">
@@ -1134,6 +1137,9 @@
     </ClInclude>
     <ClInclude Include="Source\camera_motion.h">
       <Filter>camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\subtitle.h">
+      <Filter>direction</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

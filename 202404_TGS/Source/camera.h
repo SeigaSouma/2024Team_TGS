@@ -9,11 +9,11 @@
 
 #include "main.h"
 #include "scene.h"
+#include "camera_motion.h"	// カメラモーション
 
 class CStateCameraR;	// 注視点の状態
 class CStateCameraV;	// 視点の状態
 class CCameraControlState;	// 状態別操作
-class CCameraMotion;	// カメラモーション
 
 //==========================================================================
 // クラス定義
@@ -103,6 +103,12 @@ public:
 	MyLib::Vector3 GetRockOnPosition();			// 追従目標の位置取得
 	void SetRockOn(const MyLib::Vector3 pos, bool bSet);	// ロックオン設定
 	void SetRockDir(RockOnDir dir) { m_RockOnDir = dir; }	// ロックオン時のズレ向き設定
+
+	// カメラモーション
+	bool IsMotion() { return m_bMotion; }					// モーション中かどうか
+	void SetEnableMotion(bool frag) { m_bMotion = frag; }	// モーション中かどうか
+	CCameraMotion* GetCameraMotion() { return m_pCameraMotion; }		// カメラモーションのポインタ
+
 
 	// 関数リスト
 	typedef void(CCamera::* ROCKON_STATE_FUNC)();

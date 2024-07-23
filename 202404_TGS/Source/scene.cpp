@@ -16,6 +16,7 @@
 #include "MyEffekseer.h"
 #include "fog.h"
 #include "edit_map.h"
+#include "blackframe.h"
 
 // 遷移先
 #include "game.h"
@@ -32,6 +33,10 @@ namespace
 	const char* MAP_TEXT = "data\\TEXT\\map\\info.txt";
 	const char* ELEVATION_TEXT = "data\\TEXT\\elevation\\field_mountain.txt";
 }
+
+#if 1
+#define LOADMAP = 0;
+#endif
 
 //==========================================================================
 // 静的メンバ変数宣言
@@ -116,10 +121,16 @@ HRESULT CScene::Init()
 	// フォグリセット
 	MyFog::ToggleFogFrag(false);
 
+
+	//**********************************
+	// 黒フレーム
+	//**********************************
+	CBlackFrame::Create();
+
 	//**********************************
 	// マップの生成
 	//**********************************
-#if _DEBUG
+#ifdef LOADMAP
 	if (FAILED(MyMap::Create(MAP_TEXT)))
 	{// 失敗した場合
 		return E_FAIL;
@@ -129,7 +140,7 @@ HRESULT CScene::Init()
 	//**********************************
 	// マップの生成
 	//**********************************
-#ifndef _DEBUG
+#ifdef LOADMAP
 	CEdit_Map_Release::Create(MAP_TEXT, CManager::BuildMode::MODE_RELEASE);
 #endif
 
@@ -191,7 +202,7 @@ void CScene::ResetScene()
 	{// 失敗した場合
 		return;
 	}
-#ifndef _DEBUG
+#ifdef LOADMAP
 	CEdit_Map_Release::Create(MAP_TEXT, CManager::BuildMode::MODE_RELEASE);
 #endif
 

@@ -29,6 +29,7 @@ public:
 		STATE_NONE = 0,		// なにもない
 		STATE_FADEIN,		// フェードイン
 		STATE_FADEOUT,		// フェードアウト
+		STATE_WAIT,			// 待機状態
 		STATE_PASS,			// パス状態
 		STATE_BYEBYE,		// バイバイ
 		STATE_MAX
@@ -79,6 +80,7 @@ protected:
 	virtual void StateNone();		// 何もない状態
 	virtual void StateFadeIn();		// フェードイン
 	virtual void StateFadeOut();	// フェードアウト
+	virtual void StateWait();		// 待機
 	virtual void StatePass();		// パス
 	virtual void StateByeBye();		// バイバイ
 
@@ -89,10 +91,10 @@ protected:
 	//=============================
 	// メンバ変数
 	//=============================
-	STATE m_state;							// 状態
-	STATE m_Oldstate;						// 前回の状態
-	float m_fStateTime;						// 状態カウンター
-	D3DXCOLOR m_mMatcol;					// マテリアルの色
+	STATE m_state;			// 状態
+	STATE m_Oldstate;		// 前回の状態
+	float m_fStateTime;		// 状態カウンター
+	D3DXCOLOR m_mMatcol;	// マテリアルの色
 
 
 private:

@@ -23,7 +23,6 @@
 
 #include "objectX.h"
 #include "spline.h"
-#include "camera_motion.h"
 
 //==========================================================================
 // マクロ定義
@@ -829,6 +828,14 @@ void CCamera::SetCameraVGame()
 		m_posV.z = m_posR.z + cosf(m_rot.z) * cosf(m_rot.y) * -m_fDistance;
 		m_posV.y = m_posR.y + sinf(m_rot.z) * -m_fDistance;
 	}
+	else if (m_bMotion && m_bFollow)
+	{// カメラモーション中
+
+		// 視点の代入処理
+		m_posV.x = m_posR.x + cosf(m_rot.z) * sinf(m_rot.y) * -m_fDistance;
+		m_posV.z = m_posR.z + cosf(m_rot.z) * cosf(m_rot.y) * -m_fDistance;
+		m_posV.y = m_posR.y + sinf(m_rot.z) * -m_fDistance;
+	}
 	else if (m_bFollow)
 	{// 追従ON
 		
@@ -980,7 +987,10 @@ void CCamera::SetCameraRGame()
 	else if (m_bMotion && m_bFollow)
 	{// カメラモーション中
 
-
+		// 注視点の代入処理
+		m_posR.x = m_posV.x + cosf(m_rot.z) * sinf(m_rot.y) * m_fDistance;
+		m_posR.z = m_posV.z + cosf(m_rot.z) * cosf(m_rot.y) * m_fDistance;
+		m_posR.y = m_posV.y + sinf(m_rot.z) * m_fDistance;
 	}
 	else
 	{// 追従ON
