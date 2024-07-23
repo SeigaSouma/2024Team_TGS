@@ -155,7 +155,7 @@ COLLIDER_FILENAME = data/TEXT/character/player/ninja/sphere_collider.json
 #------------------------------------------------------------------------------
 # モーション数
 #------------------------------------------------------------------------------
-NUM_MOTION = 3
+NUM_MOTION = 4
 
 #------------------------------------------------------------------------------
 # モデルファイル名
@@ -163,5 +163,6 @@ NUM_MOTION = 3
 MOTION_FILENAME = data/TEXT/character/player/ninja/motion_def.txt			# [0]デフォルト
 MOTION_FILENAME = data/TEXT/character/player/ninja/motion_walk.txt			# [1]歩き
 MOTION_FILENAME = data/TEXT/character/player/ninja/motion_dead.txt			# [2]死亡
+MOTION_FILENAME = data/TEXT/character/player/ninja/motion_start.txt			# [3]スタート直前
 
 END_SCRIPT		# この行は絶対消さないこと！
