@@ -526,8 +526,25 @@ void CBaggage::Draw()
 //==========================================================================
 bool CBaggage::Hit()
 {
+
+	int block = 0;
+	float distanceX = GetPosition().x;
+	while (1)
+	{
+		// ŠÔŠu•ªŒ¸Z
+		distanceX -= CMap_Obstacle::GetDistance_CollisionBlock();
+		if (distanceX <= 0.0f)
+		{
+			break;
+		}
+
+		// ƒuƒƒbƒN‰ÁZ
+		block++;
+	}
+
+
 	// áŠQ•¨‚ÌƒŠƒXƒgæ“¾
-	CListManager<CMap_Obstacle> list = CMap_Obstacle::GetListObj();
+	CListManager<CMap_Obstacle> list = CMap_Obstacle::GetListByBlock(block);
 
 	// æ“ª‚ğ•Û‘¶
 	std::list<CMap_Obstacle*>::iterator itr = list.GetEnd();

@@ -84,6 +84,8 @@ HRESULT CMap_Obstacle_Motion::Init()
 		m_pChara = CObjectChara::Create(m_ObstacleInfo.modelFile);
 		m_pChara->GetMotion()->Set(0);
 		m_pChara->CObject::SetType(TYPE_OBJECTX);
+		m_pChara->SetPosition(GetPosition());
+
 		return CMap_Obstacle::Init();
 	}
 
@@ -147,7 +149,11 @@ void CMap_Obstacle_Motion::Draw()
 void CMap_Obstacle_Motion::SetPosition(const MyLib::Vector3& pos)
 {
 	CObject::SetPosition(pos);
-	m_pChara->SetPosition(pos);
+
+	if (m_pChara != nullptr)
+	{
+		m_pChara->SetPosition(pos);
+	}
 }
 
 //==========================================================================
@@ -156,7 +162,11 @@ void CMap_Obstacle_Motion::SetPosition(const MyLib::Vector3& pos)
 void CMap_Obstacle_Motion::SetRotation(const MyLib::Vector3& rot)
 {
 	CObject::SetRotation(rot);
-	m_pChara->SetRotation(rot);
+
+	if (m_pChara != nullptr)
+	{
+		m_pChara->SetRotation(rot);
+	}
 }
 
 //==========================================================================

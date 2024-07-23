@@ -284,8 +284,7 @@ void CEdit_Obstacle_Arrangment::Update()
 			MyLib::Vector3 setpos = mouseWorldPos;
 			setpos.y = 0.0f;
 
-			CMap_Obstacle* pObj = CMap_Obstacle::Create(m_ObstacleInfo);
-			pObj->SetPosition(setpos);
+			CMap_Obstacle* pObj = CMap_Obstacle::Create(m_ObstacleInfo, setpos);
 			pObj->CalWorldMtx();
 
 			CreateBoxLine();
