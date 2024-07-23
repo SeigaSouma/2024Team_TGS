@@ -27,6 +27,7 @@ public:
 	{
 		SCENE_MAIN = 0,			// メイン
 		SCENE_START,			// 開始演出
+		SCENE_COUNTDOWN,		// カウントダウン
 		SCENE_MAINRESULT,		// メインリザルト
 		SCENE_DURING_MAINRESULT,		// メインリザルト中
 		SCENE_MAINCLEAR,		// メインクリア
