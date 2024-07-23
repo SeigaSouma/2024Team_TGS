@@ -19,13 +19,14 @@
 //==========================================================================
 namespace
 {
-
 }
 
 //==========================================================================
 // 静的メンバ変数
 //==========================================================================
 CListManager<CMap_Obstacle> CMap_Obstacle::m_List = {};	// リスト
+std::map<int, CListManager<CMap_Obstacle>> CMap_Obstacle::m_ListBlock = {};	// リスト
+const float CMap_Obstacle::m_DISTANCE_COLLISION_BLOCK = 2000.0f;	// 当たり判定
 
 //==========================================================================
 // コンストラクタ
@@ -47,7 +48,7 @@ CMap_Obstacle::~CMap_Obstacle()
 //==========================================================================
 // 生成処理
 //==========================================================================
-CMap_Obstacle *CMap_Obstacle::Create(const CMap_ObstacleManager::SObstacleInfo& info, const bool bChange, const bool bSave)
+CMap_Obstacle *CMap_Obstacle::Create(const CMap_ObstacleManager::SObstacleInfo& info, const MyLib::Vector3& pos, const bool bChange, const bool bSave)
 {
 	CMap_Obstacle* pObj = nullptr;
 	// メモリの確保
@@ -96,6 +97,9 @@ CMap_Obstacle *CMap_Obstacle::Create(const CMap_ObstacleManager::SObstacleInfo& 
 		pObj->m_ObstacleInfo = info;
 		pObj->m_bSave = bSave;
 
+		// 位置設定
+		pObj->SetPosition(pos);
+
 		// 初期化処理
 		pObj->Init();
 	}
@@ -108,13 +112,33 @@ CMap_Obstacle *CMap_Obstacle::Create(const CMap_ObstacleManager::SObstacleInfo& 
 //==========================================================================
 HRESULT CMap_Obstacle::Init()
 {
+	int block = 0;
+	float distanceX = GetPosition().x;
+	while (1)
+	{
+		// 間隔分減算
+		distanceX -= m_DISTANCE_COLLISION_BLOCK;
+		if (distanceX <= 0.0f)
+		{
+			break;
+		}
+
+		// ブロック加算
+		block++;
+	}
+
+	// リストに追加
+	m_ListBlock[block].Regist(this);
+
+
 	// リストに追加
 	m_List.Regist(this);
 
 	// 種類の設定
 	CObject::SetType(TYPE_OBJECTX);
 
-	m_OriginObstacleInfo = m_ObstacleInfo;	// 障害物情報
+	// 障害物情報
+	m_OriginObstacleInfo = m_ObstacleInfo;
 
 #if _DEBUG
 

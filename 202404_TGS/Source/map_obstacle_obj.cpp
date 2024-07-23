@@ -77,6 +77,7 @@ HRESULT CMap_Obstacle_Object::Init()
 
 	// オブジェクト生成
 	m_pObject = CObjectX::Create(m_ObstacleInfo.modelFile);
+	m_pObject->SetPosition(GetPosition());
 
 	return CMap_Obstacle::Init();
 }
@@ -140,7 +141,11 @@ void CMap_Obstacle_Object::Draw()
 void CMap_Obstacle_Object::SetPosition(const MyLib::Vector3& pos)
 {
 	CObject::SetPosition(pos);
-	m_pObject->SetPosition(pos);
+	
+	if (m_pObject != nullptr)
+	{
+		m_pObject->SetPosition(pos);
+	}
 }
 
 //==========================================================================
@@ -149,7 +154,11 @@ void CMap_Obstacle_Object::SetPosition(const MyLib::Vector3& pos)
 void CMap_Obstacle_Object::SetRotation(const MyLib::Vector3& rot)
 {
 	CObject::SetRotation(rot);
-	m_pObject->SetRotation(rot);
+
+	if (m_pObject != nullptr)
+	{
+		m_pObject->SetRotation(rot);
+	}
 }
 
 //==========================================================================
