@@ -120,6 +120,9 @@
     <Filter Include="camera">
       <UniqueIdentifier>{61f2cd6c-2c60-4c7d-9eec-19d2b4f10eea}</UniqueIdentifier>
     </Filter>
+    <Filter Include="direction\catch">
+      <UniqueIdentifier>{3eac656b-ab26-4fd8-b449-744fefb0f633}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\ballast.cpp">
@@ -627,7 +630,13 @@
       <Filter>direction</Filter>
     </ClCompile>
     <ClCompile Include="Source\catchresult.cpp">
-      <Filter>direction</Filter>
+      <Filter>direction\catch</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\catchresult_OK.cpp">
+      <Filter>direction\catch</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\catchresult_FAIL.cpp">
+      <Filter>direction\catch</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1145,7 +1154,13 @@
       <Filter>direction</Filter>
     </ClInclude>
     <ClInclude Include="Source\catchresult.h">
-      <Filter>direction</Filter>
+      <Filter>direction\catch</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\catchresult_OK.h">
+      <Filter>direction\catch</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\catchresult_FAIL.h">
+      <Filter>direction\catch</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

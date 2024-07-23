@@ -1,10 +1,10 @@
 //=============================================================================
 // 
-// キャッチ結果処理 [catchresult.cpp]
+// キャッチ結果処理 [catchresult_OK.cpp]
 // Author : 相馬靜雅
 // 
 //=============================================================================
-#include "catchresult.h"
+#include "catchresult_OK.h"
 #include "manager.h"
 #include "sound.h"
 #include "calculation.h"
@@ -12,86 +12,37 @@
 #include "game.h"
 #include "player.h"
 
-// 遷移先
-#include "catchresult_OK.h"
-#include "catchresult_FAIL.h"
-
 //==========================================================================
 // マクロ定義
 //==========================================================================
 namespace
 {
 	const char* TEXTURE = "data\\TEXTURE\\battlewin\\goal.png";
-	const float TIME_EXPANSION = 0.3f;			//拡大
-	const float TIME_EXPNONE = 1.0f;			//拡大後何もしない
+	const float TIME_EXPANSION = 0.3f;			// 拡大
+	const float TIME_EXPNONE = 1.0f;			// 拡大後何もしない
 	const float TIME_FADEOUT = 0.4f;			// フェードアウト時間
 }
 
 //==========================================================================
-// 関数ポインタ
-//==========================================================================
-CCatchResult::STATE_FUNC CCatchResult::m_StateFuncList[] =
-{
-	&CCatchResult::StateExpansion,
-	&CCatchResult::StateExpNone,
-	&CCatchResult::StateFadeOut,
-};
-
-//==========================================================================
 // コンストラクタ
 //==========================================================================
-CCatchResult::CCatchResult(int nPriority) : CObject2D(nPriority)
+CCatchResult_OK::CCatchResult_OK(int nPriority) : CCatchResult(nPriority)
 {
-	// 値のクリア
-	m_state = STATE_EXPANSION;	// 状態
-	m_fStateTimer = 0.0f;		// 状態タイマー
+
 }
 
 //==========================================================================
 // デストラクタ
 //==========================================================================
-CCatchResult::~CCatchResult()
+CCatchResult_OK::~CCatchResult_OK()
 {
 
-}
-
-//==========================================================================
-// 生成処理
-//==========================================================================
-CCatchResult* CCatchResult::Create(const MyLib::Vector3& pos, TYPE resultType)
-{
-	// メモリの確保
-	CCatchResult* pObj = nullptr;
-
-	switch (resultType)
-	{
-	case CCatchResult::TYPE_OK:
-		pObj = DEBUG_NEW CCatchResult_OK;
-		break;
-
-	case CCatchResult::TYPE_FAIL:
-		pObj = DEBUG_NEW CCatchResult_FAIL;
-		break;
-
-	default:
-		break;
-	}
-
-	if (pObj != nullptr)
-	{// メモリの確保が出来ていたら
-
-		// 初期化処理
-		pObj->Init();
-		pObj->SetPosition(pos);
-	}
-
-	return pObj;
 }
 
 //==========================================================================
 // 初期化処理
 //==========================================================================
-HRESULT CCatchResult::Init()
+HRESULT CCatchResult_OK::Init()
 {
 	HRESULT hr;
 
@@ -127,54 +78,62 @@ HRESULT CCatchResult::Init()
 }
 
 //==========================================================================
-// 終了処理
+// 拡大
 //==========================================================================
-void CCatchResult::Uninit()
+void CCatchResult_OK::StateExpansion()
 {
-	// 終了処理
-	CObject2D::Uninit();
-}
-
-//==========================================================================
-// 更新処理
-//==========================================================================
-void CCatchResult::Update()
-{
-	if (IsDeath())
+	if (m_fStateTimer >= TIME_EXPANSION)
 	{
+		m_fStateTimer = 0.0f;
+		m_state = STATE_EXPNONE;
 		return;
 	}
 
-	// 状態別処理
-	(this->*(m_StateFuncList[m_state]))();
+	// 状態遷移カウンター加算
+	m_fStateTimer += CManager::GetInstance()->GetDeltaTime();
 
-	if (IsDeath())
-	{
-		return;
-	}
+	float ratio = m_fStateTimer / TIME_EXPANSION;
 
-	// 頂点座標の設定
-	SetVtx();
+	// サイズ設定
+	D3DXVECTOR2 size = GetSize();
+	size.x = UtilFunc::Correction::EasingEaseIn(0.0f, GetSizeOrigin().x, ratio);
+	size.y = UtilFunc::Correction::EasingEaseIn(0.0f, GetSizeOrigin().y, ratio);
+	SetSize(size);
+
 }
 
 //==========================================================================
-// 描画処理
+// 整い状態
 //==========================================================================
-void CCatchResult::Draw()
+void CCatchResult_OK::StateExpNone()
 {
-	// デバイスの取得
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
+	// 状態遷移カウンター加算
+	m_fStateTimer += CManager::GetInstance()->GetDeltaTime();
 
-	// アルファテストを有効にする
-	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
-	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
-	pDevice->SetRenderState(D3DRS_ALPHAREF, 0);
+	if (m_fStateTimer >= TIME_EXPNONE)
+	{
+		m_fStateTimer = 0.0f;
+		m_state = State::STATE_FADEOUT;
+		return;
+	}
+}
 
-	// 描画処理
-	CObject2D::Draw();
+//==========================================================================
+// フェードアウト状態
+//==========================================================================
+void CCatchResult_OK::StateFadeOut()
+{
+	// 状態遷移カウンター加算
+	m_fStateTimer += CManager::GetInstance()->GetDeltaTime();
 
-	// アルファテストを有効にする
-	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
-	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_ALWAYS);
-	pDevice->SetRenderState(D3DRS_ALPHAREF, 0);
+	// 不透明度更新
+	float alpha = 1.0f - m_fStateTimer / TIME_FADEOUT;
+	SetAlpha(alpha);
+
+	if (m_fStateTimer >= TIME_FADEOUT)
+	{
+		m_fStateTimer = 0.0f;
+		Uninit();
+		return;
+	}
 }
