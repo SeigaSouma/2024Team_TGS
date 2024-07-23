@@ -149,8 +149,8 @@ void CGoalflagX::Update()
 
 	CInputKeyboard* pKey = CInputKeyboard::GetInstance();
 
-	if (CGame::GetInstance()->GetGameManager()->GetType() != CGameManager::SceneType::SCENE_GOAL &&
-		Playerpos.x >= pos.x || pKey->GetTrigger(DIK_3))
+	if (/*CGame::GetInstance()->GetGameManager()->GetType() != CGameManager::SceneType::SCENE_GOAL &&
+		Playerpos.x >= pos.x*/ /*||*/ pKey->GetTrigger(DIK_3))
 	{// ゴールしたっぺ
 
 		// 必要なゲームの状態設定してね

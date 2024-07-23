@@ -93,6 +93,7 @@ public:
 	static void SetInfoList(const CListManager<CMapBlockInfo>& info) { m_InfoList = info; }	// 配置情報リスト取得
 	static CListManager<CMapBlockInfo> GetInfoList() { return m_InfoList; }	// 配置情報リスト取得
 	static CListManager<CMapBlockInfo>* GetInfoListPtr() { return &m_InfoList; }	// 配置情報リスト取得
+	static void Delete();
 
 private:
 
@@ -101,6 +102,8 @@ private:
 	//=============================
 	static std::vector<std::vector<float>> LoadBin_CheckPoint();	// チェックポイント読み込み
 	static std::vector<std::vector<CMapBlockInfo::SObsacleInfo>> LoadBin_Obstacle();	// 障害物読み込み
+	void DataDelete();
+	void InfoDelete();
 
 	//=============================
 	// メンバ変数
