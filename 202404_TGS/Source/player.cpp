@@ -475,6 +475,16 @@ void CPlayer::Controll()
 	// Œo‰ßŽžŠÔŽæ“¾
 	float fCurrentTime = CManager::GetInstance()->GetDeltaTime();
 
+	if (m_state != STATE_DEAD &&
+		m_state != STATE_DEADWAIT &&
+		m_state != STATE_RETURN &&
+		m_state != STATE_RESTART &&
+		m_state != STATE::STATE_RESPAWN)
+	{
+		// ‚Õ‚©‚Õ‚©ˆ—
+		Bobbing();
+	}
+
 	if (CGame::GetInstance()->GetGameManager()->IsControll())
 	{// s“®‚Å‚«‚é‚Æ‚«
 
@@ -485,9 +495,6 @@ void CPlayer::Controll()
 			m_state != STATE_RESTART &&
 			m_state != STATE::STATE_RESPAWN)
 		{
-			// ‚Õ‚©‚Õ‚©ˆ—
-			Bobbing();
-
 			// ˆÚ“®‘€ì
 			m_pControlMove->Move(this);
 
