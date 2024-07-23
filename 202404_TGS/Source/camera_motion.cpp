@@ -42,6 +42,7 @@ CCameraMotion::CCameraMotion()
 	m_fMotionTimer = 0.0f;		// モーションタイマー
 	m_bFinish = false;			// 終了判定
 	m_bEdit = false;			// エディターフラグ
+	m_bPause = false;			// ポーズ判定
 }
 
 //==========================================================================
@@ -269,7 +270,11 @@ void CCameraMotion::Update()
 
 
 	// モーションタイマー加算
-	m_fMotionTimer += CManager::GetInstance()->GetDeltaTime();
+	if (!m_bPause)
+	{
+		m_fMotionTimer += CManager::GetInstance()->GetDeltaTime();
+	}
+
 	if (m_fMotionTimer >= nowInfo.Key[m_nNowKeyIdx].playTime)
 	{
 		// キー更新

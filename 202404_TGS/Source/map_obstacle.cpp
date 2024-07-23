@@ -35,6 +35,7 @@ CMap_Obstacle::CMap_Obstacle(int nPriority,
 	CObject::LAYER layer) : CObject(nPriority, layer)
 {
 	// 値のクリア
+	m_nMapBlock = 0;		// マップのブロック
 }
 
 //==========================================================================
@@ -112,7 +113,7 @@ CMap_Obstacle *CMap_Obstacle::Create(const CMap_ObstacleManager::SObstacleInfo& 
 //==========================================================================
 HRESULT CMap_Obstacle::Init()
 {
-	int block = 0;
+	m_nMapBlock = 0;
 	float distanceX = GetPosition().x;
 	while (1)
 	{
@@ -124,11 +125,11 @@ HRESULT CMap_Obstacle::Init()
 		}
 
 		// ブロック加算
-		block++;
+		m_nMapBlock++;
 	}
 
 	// リストに追加
-	m_ListBlock[block].Regist(this);
+	m_ListBlock[m_nMapBlock].Regist(this);
 
 
 	// リストに追加
@@ -169,6 +170,7 @@ void CMap_Obstacle::Uninit()
 
 	// リストから削除
 	m_List.Delete(this);
+	m_ListBlock[m_nMapBlock].Delete(this);
 
 	// オブジェクトの破棄
 	Release();
@@ -187,6 +189,7 @@ void CMap_Obstacle::Kill()
 
 	// リストから削除
 	m_List.Delete(this);
+	m_ListBlock[m_nMapBlock].Delete(this);
 
 	// オブジェクトの破棄
 	Release();
