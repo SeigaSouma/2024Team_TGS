@@ -33,6 +33,8 @@ namespace
 	float DEVIATION_WIDTH = 300.0f;	// ぶれ幅
 	float DEVIATION_SPEED = 0.02f * D3DX_PI;	// ぶれ速度
 	float DEADANGLE_HIT = D3DX_PI * 0.2f;		// ヒット時の死亡判定
+	const float GOAL_INER = 0.045f;
+	const float GOAL_GRAVITY = -1.0f;
 }
 
 namespace StateTime
@@ -54,6 +56,7 @@ CBaggage::STATE_FUNC CBaggage::m_StateFunc[] =
 	&CBaggage::StateAppearance_Wait,	// 出現
 	&CBaggage::StateAppearance,	// 出現
 	&CBaggage::StatePass,		// パス
+	&CBaggage::StateGoal,		// ゴール
 };
 
 //==========================================================================
@@ -415,6 +418,21 @@ void CBaggage::StatePass()
 	}
 
 	SetPosition(pos);
+}
+
+//==========================================================================
+// ゴール
+//==========================================================================
+void CBaggage::StateGoal()
+{
+	MyLib::Vector3 pos = GetPosition();
+	MyLib::Vector3 move = GetMove();
+	pos += move;
+	SetPosition(pos);
+	move.x += -move.x * GOAL_INER;
+	move.z += -move.z * GOAL_INER;
+	move.y += GOAL_GRAVITY;
+	SetMove(move);
 }
 
 //==========================================================================
