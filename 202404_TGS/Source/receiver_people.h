@@ -1,12 +1,12 @@
 //=============================================================================
 // 
-//  人ヘッダー [people.h]
-//  Author : 相馬靜雅
+//  届け先ヘッダー [receiver_people.h]
+//  Author : IbukiOkusada
 // 
 //=============================================================================
 
-#ifndef _ENEMY_H_
-#define _ENEMY_H_	// 二重インクルード防止
+#ifndef _RECEIVER_PEOPLE_H_
+#define _RECEIVER_PEOPLE_H_	// 二重インクルード防止
 
 #include "listmanager.h"
 #include "objectChara.h"
@@ -14,12 +14,13 @@
 
 // 前方宣言
 class CShadow;
+class CBaggage;
 
 //==========================================================================
 // クラス定義
 //==========================================================================
-// 人クラス
-class CPeople : public CObjectChara
+// 依頼人クラス
+class CReceiverPeople : public CObjectChara
 {
 public:
 	
@@ -29,19 +30,29 @@ public:
 		STATE_NONE = 0,		// なにもない
 		STATE_FADEIN,		// フェードイン
 		STATE_FADEOUT,		// フェードアウト
+		STATE_WAIT,			// 待機状態
+		STATE_GET,			// キャッチ状態
+		STATE_RETURN,		// レシーブ状態
+		STATE_DROWN,		// 溺れ状態
+		STATE_BYEBYE,		// バイバイ
 		STATE_MAX
 	};
 
 	enum MOTION
 	{
-		MOTION_DEF = 0,			// ニュートラル
-		MOTION_WALK,			// 移動
+		MOTION_DEF = 0,	// ニュートラル
+		MOTION_WALK,	// 移動
+		MOTION_PASS,	// 渡す
+		MOTION_BYEBYE,	// バイバイ
+		MOTION_GET,		// キャッチ
+		MOTION_RETURN,	// 遠くに飛ばしすぎてアウト
+		MOTION_DROWN,	// 溺れる
 		MOTION_MAX
 	};
 
 
-	CPeople(int nPriority = mylib_const::ENEMY_PRIORITY);
-	virtual ~CPeople();
+	CReceiverPeople(int nPriority = mylib_const::ENEMY_PRIORITY);
+	virtual ~CReceiverPeople();
 
 
 	// オーバーライドされた関数
@@ -52,6 +63,7 @@ public:
 
 	virtual void Kill();	// 削除
 
+	// 状態系
 	void SetState(STATE state);		// 状態設定
 	STATE GetState() { return m_state; }
 	void SetStateTime(float time) { m_fStateTime = time; }	// 状態時間設定
@@ -59,27 +71,14 @@ public:
 	// モーション
 	void SetMotion(int motionIdx);	// モーションの設定
 
-	HRESULT LoadText(const char *pFileName);
+	HRESULT LoadText(const std::string& pFileName);
 
-	static CListManager<CPeople> GetListObj() { return m_List; }	// リスト取得
-	static CPeople* Create(const std::string& pFileName, MyLib::Vector3 pos);
+	static CListManager<CReceiverPeople> GetListObj() { return m_List; }	// リスト取得
+	static CReceiverPeople* Create(const MyLib::Vector3& pos);
 
 protected:
 
-	//=============================
-	// 構造体定義
-	//=============================
-	// モーションの判定
-	struct SMotionFrag
-	{
-		bool bJump;			// ジャンプ中かどうか
-		bool bATK;			// 攻撃中かどうか
-		bool bKnockback;	// ノックバック中かどうか
-		bool bMove;			// 移動中かどうか
-		bool bCharge;		// チャージ中かどうか
-		SMotionFrag() : bJump(false), bATK(false), bKnockback(false), bMove(false), bCharge(false) {}
-	};
-
+	
 	//=============================
 	// メンバ関数
 	//=============================
@@ -87,39 +86,43 @@ protected:
 	virtual void StateNone();		// 何もない状態
 	virtual void StateFadeIn();		// フェードイン
 	virtual void StateFadeOut();	// フェードアウト
+	virtual void StateWait();		// 待機
+	virtual void StatePass();		// パス
+	virtual void StateGet();		// キャッチ
+	virtual void StateReturn();		// レシーブ
+	virtual void StateDrown();		// 溺れる
+	virtual void StateByeBye();		// バイバイ
 
 	// その他関数
-	virtual void ProcessLanding();	// 着地時処理
 	virtual void AttackAction(CMotion::AttackInfo ATKInfo, int nCntATK) override;		// 攻撃時処理
 	virtual void AttackInDicision(CMotion::AttackInfo* pATKInfo, int nCntATK) override;	// 攻撃判定中処理
 
 	//=============================
 	// メンバ変数
 	//=============================
-	STATE m_state;							// 状態
-	STATE m_Oldstate;						// 前回の状態
-	float m_fStateTime;						// 状態カウンター
-	SMotionFrag m_sMotionFrag;				// モーションのフラグ
-	D3DXCOLOR m_mMatcol;					// マテリアルの色
-	MyLib::Vector3 m_TargetPosition;		// 目標の位置
+	STATE m_state;			// 状態
+	STATE m_Oldstate;		// 前回の状態
+	float m_fStateTime;		// 状態カウンター
+	D3DXCOLOR m_mMatcol;	// マテリアルの色
+
 
 private:
 	
 	//=============================
 	// 関数リスト
 	//=============================
-	typedef void(CPeople::* STATE_FUNC)();
+	typedef void(CReceiverPeople::* STATE_FUNC)();
 	static STATE_FUNC m_StateFunc[];	// 状態関数リスト
 
-	void UpdateState();					// 状態更新処理
-	void Collision();					// 当たり判定
-	void LimitArea(); // 大人の壁判定
+	void UpdateState();		// 状態更新処理
+	void Collision();		// 当たり判定
 
 	//=============================
 	// メンバ変数
 	//=============================
 	CShadow *m_pShadow;			// 影の情報
-	static CListManager<CPeople> m_List;	// リスト
+	bool m_bEnd;				// 終了
+	static CListManager<CReceiverPeople> m_List;	// リスト
 };
 
 

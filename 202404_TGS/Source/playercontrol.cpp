@@ -37,8 +37,8 @@ namespace
 	float INTERVAL_BRESSEFFECT = 0.32f;	// 息出すまでの間隔
 	const float DEFAULT_BRESSSCALE_EFFECT = 90.0f;	// デフォの息エフェクトスケール
 	const float MIN_RATIO_HEIGHT_BRESS = 0.2f;	// 息の高さの最小割合
-	const float GOAL_INER = 0.02f;
-	const float GOAL_GRAVITY = -1.0f;
+	const float GOAL_INER = 0.03f;
+	const float GOAL_GRAVITY = -0.7f;
 }
 
 //==========================================================================
@@ -786,7 +786,7 @@ void CPlayerControlBaggage::GoalAction(CPlayer* player, CBaggage* pBaggage)
 	CCameraMotion* pCamMotion = pCamera->GetMotion();
 	pBaggage->SetState(CBaggage::STATE::STATE_GOAL);
 
-	static float up = 0.35f, power = 0.8f;
+	static float up = 0.175f, power = 0.4f;
 
 	//=============================
 	// 息エフェクト
@@ -876,6 +876,8 @@ void CPlayerControlBaggage::GoalAction(CPlayer* player, CBaggage* pBaggage)
 			MyLib::Vector3 pos = pBaggage->GetPosition();
 			pos.y = pBaggage->GetOriginPosition().y;
 		}
+
+		pBaggage->SetState(CBaggage::STATE::STATE_SEND);
 
 	}
 		break;

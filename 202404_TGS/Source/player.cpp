@@ -451,16 +451,6 @@ void CPlayer::Update()
 		, pos.x, pos.y, pos.z, rot.x, rot.y, rot.y, move.x, move.y, move.z, pMotion->GetType(), GetLife(), m_state, m_fDashTime);
 
 #endif
-
-	// ‚‚³§ŒÀ
-	if (m_pBaggage->GetPosition().y <= m_pBaggage->GetOriginPosition().y && 
-		m_pControlBaggage->GetState() == CPlayerControlBaggage::STATE::STATE_RELEASE)
-	{
-		// ’…’n‚µ‚½‚ç‘JˆÚ
-		CManager::GetInstance()->GetFade()->SetFade(CScene::MODE_GAME);
-
-		return;
-	}
 }
 
 //==========================================================================

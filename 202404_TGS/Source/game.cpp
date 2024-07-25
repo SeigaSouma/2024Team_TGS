@@ -54,6 +54,7 @@
 #include "courseManager.h"
 #include "peoplemanager.h"
 #include "subtitle.h"
+#include "receiver_people.h"
 
 //==========================================================================
 // 静的メンバ変数宣言
@@ -301,8 +302,21 @@ HRESULT CGame::Init()
 	//=============================
 	// ゴール作成
 	//=============================
-	CGoalflagX::Create((CCourseManager::GetBlockLength() * 5) * 0.975f);
+	CGoalflagX::Create(m_pCourse->GetCourceLength() * 0.975f);
 	//CGoalflagX::Create(m_pCourse->GetCourceLength() * 0.975f);
+
+	//=============================
+	// 届け先作成
+	//=============================
+	{
+		MyLib::Vector3 pos = MySpline::GetSplinePosition_NonLoop(CGame::GetInstance()->GetCourse()->GetVecPosition(),
+			m_pCourse->GetCourceLength() * 0.975f, 0.0f);
+		pos.y = 0.0f;
+		pos.x += 3000.0f;
+		CReceiverPeople* pReceiverPeople = CReceiverPeople::Create(pos);
+		pReceiverPeople->SetState(CReceiverPeople::STATE::STATE_WAIT);
+		m_pGameManager->SetReceiverPeople(pReceiverPeople);
+	}
 
 	//=============================
 	// 判定ゾーンマネージャ

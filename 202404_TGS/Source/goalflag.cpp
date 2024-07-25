@@ -149,8 +149,8 @@ void CGoalflagX::Update()
 
 	CInputKeyboard* pKey = CInputKeyboard::GetInstance();
 
-	if (/*CGame::GetInstance()->GetGameManager()->GetType() != CGameManager::SceneType::SCENE_GOAL &&
-		Playerpos.x >= pos.x*/ /*||*/ pKey->GetTrigger(DIK_3))
+	if (CGame::GetInstance()->GetGameManager()->GetType() != CGameManager::SceneType::SCENE_GOAL &&
+		Playerpos.x >= pos.x || pKey->GetTrigger(DIK_3))
 	{// ƒS[ƒ‹‚µ‚½‚Á‚Ø
 
 		// •K—v‚ÈƒQ[ƒ€‚Ìó‘ÔÝ’è‚µ‚Ä‚Ë
@@ -161,7 +161,7 @@ void CGoalflagX::Update()
 		pCamera->SetStateCameraV(new CStateCameraV_Goal);
 		pCamera->GetMotion()->SetPosition(Playerpos);
 		pCamera->GetMotion()->SetMotion(CCameraMotion::MOTION::MOTION_GOAL, CCameraMotion::EASING::Linear);
-		//CStageClearText::Create(MyLib::Vector3(640.0f, 400.0f, 0.0f));
+		CStageClearText::Create(MyLib::Vector3(640.0f, 400.0f, 0.0f));
 	}
 }
 
