@@ -168,6 +168,7 @@ private:
 	int m_nNowKeyIdx;		// 現在のキーインデックス
 	int m_nNowTriggerIdx;	// 現在のトリガーインデックス
 	float m_fMotionTimer;	// モーションタイマー
+	float m_fTriggerTimer;	// トリガータイマー
 	bool m_bFinish;			// 終了判定
 	bool m_bEdit;			// エディット使用中か
 	bool m_bPause;			// ポーズ判定
