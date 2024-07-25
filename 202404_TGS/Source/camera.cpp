@@ -41,7 +41,7 @@
 #define BACKFOLLOW_TIME	(20)				// ”w–Ê•â³‚Ü‚Å‚ÌŽžŠÔ
 #define TITLE_POSR_DEST	(MyLib::Vector3(321.91f, 160.74f, -296.28f))
 #define TITLE_LEN_DEST	(365.0f)
-#define TITLECAMERAROT_NONE		(MyLib::Vector3(0.0f, -0.76f, 0.24f))
+#define TITLECAMERAROT_NONE		(MyLib::Vector3(0.0f, 0.0f, -0.2f))
 #define TITLECAMERAROT_ENEMY	(MyLib::Vector3(0.0f, -0.79f, -0.12f))
 #define TITLESTATE_CHANGE	(60 * 14)
 #define TITLESTATE_CHASE	(60 * 20)
@@ -399,8 +399,8 @@ void CCamera::MoveCameraMouse()
 {
 #if 1
 
-	if (CManager::GetInstance()->GetMode() == CScene::MODE::MODE_GAME ||
-		CManager::GetInstance()->GetMode() == CScene::MODE::MODE_GAMETUTORIAL)
+	/*if (CManager::GetInstance()->GetMode() == CScene::MODE::MODE_GAME ||
+		CManager::GetInstance()->GetMode() == CScene::MODE::MODE_GAMETUTORIAL)*/
 	{
 		// ƒL[ƒ{[ƒhî•ñŽæ“¾
 		CInputKeyboard* pInputKeyboard = CInputKeyboard::GetInstance();
@@ -817,6 +817,14 @@ void CCamera::SetCameraVTitle()
 //==========================================================================
 void CCamera::SetCameraVGame()
 {
+	if (CGame::GetInstance() == nullptr) return;
+
+	CGameManager* pGameManager = CGame::GetInstance()->GetGameManager();
+	if (pGameManager == nullptr)
+	{
+		return;
+	}
+
 	// Y‰ñ“]‚Ìƒtƒ‰ƒO
 	m_bRotationY = true;
 
@@ -836,7 +844,7 @@ void CCamera::SetCameraVGame()
 		m_posV.z = m_posR.z + cosf(m_rot.z) * cosf(m_rot.y) * -m_fDistance;
 		m_posV.y = m_posR.y + sinf(m_rot.z) * -m_fDistance;
 
-		if (CGame::GetInstance()->GetGameManager()->GetType() != CGameManager::SceneType::SCENE_DEBUG)
+		if (pGameManager->GetType() != CGameManager::SceneType::SCENE_DEBUG)
 		{
 			m_pStateCameraV->SetMotion(this);
 		}
@@ -845,7 +853,7 @@ void CCamera::SetCameraVGame()
 	{// ’Ç]ON
 		
 		// Ž©“®ŒX‚«‚ÌŒvŽZˆ—
-		if (CGame::GetInstance()->GetGameManager()->GetType() != CGameManager::SceneType::SCENE_DEBUG)
+		if (pGameManager->GetType() != CGameManager::SceneType::SCENE_DEBUG)
 		{
 			m_fAutoRot_Dest = (m_posR.y - 200.0f) / m_fDistance + m_rotOrigin.z;
 			m_rot.z += (m_fAutoRot_Dest - m_rot.z) * 0.2f;
@@ -882,7 +890,7 @@ void CCamera::SetCameraVGame()
 		}
 
 		// ‚‚³‚É‚æ‚é‹——£Ý’è
-		if (CGame::GetInstance()->GetGameManager()->GetType() != CGameManager::SceneType::SCENE_DEBUG)
+		if (pGameManager->GetType() != CGameManager::SceneType::SCENE_DEBUG)
 		{
 			if (!m_bMotion)
 			{
@@ -981,6 +989,14 @@ void CCamera::SetCameraRTitle()
 //==========================================================================
 void CCamera::SetCameraRGame()
 {
+	if (CGame::GetInstance() == nullptr) return;
+
+	CGameManager* pGameManager = CGame::GetInstance()->GetGameManager();
+	if (pGameManager == nullptr)
+	{
+		return;
+	}
+
 	if (!m_bFollow)
 	{// ’Ç]‚µ‚È‚¢‚Æ‚«
 
@@ -1029,7 +1045,7 @@ void CCamera::SetCameraRGame()
 		// ’Ž‹“_‚Ì‘ã“üˆ—
 		m_pStateCameraR->SetCameraR(this);
 
-		if (CGame::GetInstance()->GetGameManager()->GetType() == CGameManager::SceneType::SCENE_DEBUG)
+		if (pGameManager->GetType() == CGameManager::SceneType::SCENE_DEBUG)
 		{
 			m_posRDest = m_TargetPos;
 		}

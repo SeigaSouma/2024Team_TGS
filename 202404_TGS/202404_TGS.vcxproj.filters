@@ -638,6 +638,12 @@
     <ClCompile Include="Source\catchresult_FAIL.cpp">
       <Filter>direction\catch</Filter>
     </ClCompile>
+    <ClCompile Include="Source\timer_result.cpp">
+      <Filter>mode\result</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\clearrank.cpp">
+      <Filter>mode\result</Filter>
+    </ClCompile>
     <ClCompile Include="Source\receiver_people.cpp">
       <Filter>people</Filter>
     </ClCompile>
@@ -1164,6 +1170,12 @@
     </ClInclude>
     <ClInclude Include="Source\catchresult_FAIL.h">
       <Filter>direction\catch</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\timer_result.h">
+      <Filter>mode\result</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\clearrank.h">
+      <Filter>mode\result</Filter>
     </ClInclude>
     <ClInclude Include="Source\receiver_people.h">
       <Filter>people</Filter>

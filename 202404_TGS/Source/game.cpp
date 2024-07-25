@@ -180,7 +180,10 @@ HRESULT CGame::Init()
 	// クリアの判定
 	SetEnableClear(true);
 
-	m_pTimer = CTimer::Create();
+	//=============================
+	// タイマー
+	//=============================
+	m_pTimer = CTimer::Create(CTimer::Type::TYPE_NORMAL);
 
 	//=============================
 	// 障害物マネージャ
@@ -631,6 +634,8 @@ void CGame::Update()
 
 	if (pInputKeyboard->GetTrigger(DIK_F))
 	{
+		CManager::GetInstance()->GetResultManager()->SetClearTime(m_pTimer->GetTime());
+
 		// モード設定
 		CManager::GetInstance()->GetFade()->SetFade(CScene::MODE_RESULT);
 	}

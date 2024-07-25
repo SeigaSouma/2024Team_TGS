@@ -1,48 +1,37 @@
 //=============================================================================
 // 
-//  リザルトヘッダー [result.h]
+//  タイマーヘッダー [timer_result.h]
 //  Author : 相馬靜雅
 // 
 //=============================================================================
 
-#ifndef _RESULT_H_
-#define _RESULT_H_	// 二重インクルード防止
+#ifndef _TIMER_RESULT_H_
+#define _TIMER_RESULT_H_	// 二重インクルード防止
 
-#include "main.h"
-#include "manager.h"
+#include "timer.h"
 
 //==========================================================================
 // 前方宣言
 //==========================================================================
-class CResultScore;
 
 //==========================================================================
 // クラス定義
 //==========================================================================
-// リザルトクラス定義
-class CResult : public CScene
+// タイマークラス
+class CTimer_Result : public CTimer
 {
 public:
 
-	CResult();
-	~CResult();
+	CTimer_Result(int nPriority = 6);
+	~CTimer_Result();
 
-	// オーバーライドされた関数
-	HRESULT Init();
-	void Uninit();
-	void Update();
-	void Draw();
-
-	static CResultScore *GetResultScore();
-	static void SetEnableArrival();
+	HRESULT Init() override;
+	void Uninit() override;
+	void Update() override;
+	void Draw() override;
 
 private:
 
-	// メンバ変数
-	bool m_clear; // クリア判定
-
-	static bool m_bAllArrival;		// 全て到着した判定
-	static CResultScore *m_pResultScore;
 };
 
 

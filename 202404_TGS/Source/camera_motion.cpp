@@ -44,6 +44,7 @@ CCameraMotion::CCameraMotion()
 	m_nNowKeyIdx = 0;			// 現在のキーインデックス
 	m_nNowTriggerIdx = 0;		// 現在のトリガーインデックス
 	m_fMotionTimer = 0.0f;		// モーションタイマー
+	m_fTriggerTimer = 0.0f;		// トリガータイマー
 	m_bFinish = false;			// 終了判定
 	m_bEdit = false;			// エディターフラグ
 	m_bPause = false;			// ポーズ判定
@@ -313,6 +314,7 @@ void CCameraMotion::Update()
 	if (!m_bPause)
 	{
 		m_fMotionTimer += CManager::GetInstance()->GetDeltaTime();
+		m_fTriggerTimer += CManager::GetInstance()->GetDeltaTime();
 	}
 
 	//=============================
@@ -324,7 +326,7 @@ void CCameraMotion::Update()
 
 		if (!m_bTrigger &&
 			m_nNowTriggerIdx < static_cast<int>(nowInfo.trigger.size()) &&	// トリガーのサイズ以下
-			m_fMotionTimer >= nowInfo.trigger[m_nNowTriggerIdx])
+			m_fTriggerTimer >= nowInfo.trigger[m_nNowTriggerIdx])
 		{
 			// トリガー判定ON
 			m_bTrigger = true;
@@ -355,6 +357,7 @@ void CCameraMotion::Update()
 
 			// トリガーリセット
 			m_nNowTriggerIdx = 0;
+			m_fTriggerTimer = 0.0f;
 			return;
 		}
 	}
@@ -811,6 +814,7 @@ void CCameraMotion::SetMotion(int motion, EASING EasingType)
 	m_nNowKeyIdx = 0;
 	m_nNowTriggerIdx = 0;
 	m_fMotionTimer = 0.0f;
+	m_fTriggerTimer = 0.0f;
 	m_bFinish = false;
 	m_bPause = false;
 	m_EasingType = EasingType;

@@ -12,6 +12,9 @@
 #include "game.h"
 #include "gamemanager.h"
 
+// îhê∂êÊ
+#include "timer_result.h"
+
 //==========================================================================
 // íËêîíËã`
 //==========================================================================
@@ -63,12 +66,22 @@ CTimer::~CTimer()
 //==========================================================================
 // ê∂ê¨èàóù
 //==========================================================================
-CTimer* CTimer::Create()
+CTimer* CTimer::Create(Type type)
 {
 	if (m_pTimer != nullptr) return m_pTimer;
 
 	// ÉÅÉÇÉäÇÃämï€
-	m_pTimer = DEBUG_NEW CTimer;
+
+	switch (type)
+	{
+	case TYPE_NORMAL:
+		m_pTimer = DEBUG_NEW CTimer;
+		break;
+
+	case Type::TYPE_RESULT:
+		m_pTimer = DEBUG_NEW CTimer_Result;
+		break;
+	}
 
 	if (m_pTimer != nullptr)
 	{

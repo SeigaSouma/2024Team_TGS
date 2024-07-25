@@ -36,7 +36,7 @@ namespace
 	const float TIME_LOAD = 2.0f;	// ƒ[ƒhŽžŠÔ
 
 #if _DEBUG
-	const CScene::MODE STARTMODE = CScene::MODE_GAME;
+	const CScene::MODE STARTMODE = CScene::MODE::MODE_GAME;
 #else
 	const CScene::MODE STARTMODE = CScene::MODE_GAME;
 #endif
@@ -622,7 +622,6 @@ void CManager::Uninit()
 
 		// I—¹ˆ—
 		m_pResultManager->Uninit();
-		delete m_pResultManager;
 		m_pResultManager = nullptr;
 	}
 
