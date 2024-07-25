@@ -10,6 +10,7 @@
 
 #include "main.h"
 #include "constans.h"
+#include "judge.h"
 
 // 前方宣言
 class CEnemy;
@@ -31,14 +32,16 @@ public:
 	void Update();
 	void Reset();	// リセット
 
-	void AddScore(int nValue);			// スコア加算
-	int GetBaseScore();			// 元のスコアの取得処理
-	int GetToatalScore();			// 最終スコアの取得処理
+	void SetJudgeRank(CJudge::JUDGE rank) { m_JudgeRank = rank; }	// 最終評価設定
+	void SetClearTime(float time) { m_fClearTime = time; }			// クリア時間設定
+
 	static CResultManager *Create();	// 生成処理
 	
 private:
-	int m_nBaseScore;	// 元のスコア
-	int m_nToatalScore;	// 最終スコア
+
+	CJudge::JUDGE m_JudgeRank;	// 最終評価
+	float m_fClearTime;			// クリア時間
+	static CResultManager* m_pThisPtr;	// 自身のポインタ
 };
 
 

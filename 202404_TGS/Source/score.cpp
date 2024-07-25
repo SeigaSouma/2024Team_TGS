@@ -182,9 +182,6 @@ void CScore::Add(int nValue)
 	// 値加算
 	m_nNum += nValue;
 
-	// スコアの加算
-	CManager::GetInstance()->GetResultManager()->AddScore(nValue);
-
 	if (m_nNum >= MAX_VALUE)
 	{// 最大値で固定
 		m_nNum = MAX_VALUE;

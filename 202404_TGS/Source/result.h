@@ -39,8 +39,6 @@ public:
 private:
 
 	// メンバ変数
-	D3DXCOLOR m_col; // フォグの色
-	float m_fLength; // フォグの距離
 	bool m_clear; // クリア判定
 
 	static bool m_bAllArrival;		// 全て到着した判定
