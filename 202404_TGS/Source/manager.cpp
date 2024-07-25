@@ -622,7 +622,6 @@ void CManager::Uninit()
 
 		// I—¹ˆ—
 		m_pResultManager->Uninit();
-		delete m_pResultManager;
 		m_pResultManager = nullptr;
 	}
 

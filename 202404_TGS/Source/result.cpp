@@ -5,6 +5,7 @@
 // 
 //=============================================================================
 #include "result.h"
+#include "resultManager.h"
 #include "input.h"
 #include "fade.h"
 #include "renderer.h"
@@ -13,6 +14,9 @@
 #include "player.h"
 #include "sound.h"
 #include "game.h"
+
+#include "timer.h"
+#include "clearrank.h"
 
 //=============================================================================
 // 定数定義
@@ -70,6 +74,16 @@ HRESULT CResult::Init()
 
 	// リザルト画面
 
+
+	// リザルトマネージャ
+	CResultManager* pResultManager = CResultManager::GetInstance();
+
+	// タイマー
+	CTimer* pTimer = CTimer::Create(CTimer::Type::TYPE_RESULT);
+	pTimer->SetTime(pResultManager->GetClearTime());
+
+	// クリアランク
+	CClearRank::Create(pResultManager->GetJudgeRank());
 
 	// 成功
 	return S_OK;
