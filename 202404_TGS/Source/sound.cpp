@@ -27,6 +27,15 @@ CSound::SOUNDINFO CSound::m_aSoundInfo[LABEL_MAX] =
 	{ "data/SE/SE_collide.wav", 0 },				// ヒット
 	{ "data/SE/SE_cracks_grass.wav", 0 },				// 画面割れ
 	{ "data/SE/SE_breath_stream.wav", -1 },				// 息ループ
+	{ "data/SE/oksd_000.wav", 0 },
+	{ "data/SE/oksd_001.wav", 0 },
+	{ "data/SE/oksd_002.wav", 0 },
+	{ "data/SE/sega_000.wav", 0 },
+	{ "data/SE/sega_001.wav", 0 },
+	{ "data/SE/sega_002.wav", 0 },
+	{ "data/SE/ore_000.wav", 0 },
+	{ "data/SE/ore_001.wav", 0 },
+	{ "data/SE/ore_002.wav", 0 },
 
 };	// サウンドの情報
 CSound* CSound::m_pThisPtr = nullptr;	// 自身のポインタ
