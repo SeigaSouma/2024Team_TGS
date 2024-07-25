@@ -457,7 +457,7 @@ void CPlayer::Update()
 		m_pControlBaggage->GetState() == CPlayerControlBaggage::STATE::STATE_RELEASE)
 	{
 		// ’…’n‚µ‚½‚ç‘JˆÚ
-		CManager::GetInstance()->GetFade()->SetFade(CScene::MODE_GAME);
+		CManager::GetInstance()->GetFade()->SetFade(CScene::MODE::MODE_RESULT);
 
 		return;
 	}

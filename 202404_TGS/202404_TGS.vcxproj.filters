@@ -644,6 +644,9 @@
     <ClCompile Include="Source\clearrank.cpp">
       <Filter>mode\result</Filter>
     </ClCompile>
+    <ClCompile Include="Source\toatalrank.cpp">
+      <Filter>mode\result</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ballast.h">
@@ -1172,6 +1175,9 @@
       <Filter>mode\result</Filter>
     </ClInclude>
     <ClInclude Include="Source\clearrank.h">
+      <Filter>mode\result</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\toatalrank.h">
       <Filter>mode\result</Filter>
     </ClInclude>
   </ItemGroup>

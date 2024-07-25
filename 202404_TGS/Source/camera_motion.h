@@ -129,9 +129,6 @@ private:
 	typedef void(CCameraMotion::*MOTION_FUNC)();
 	static MOTION_FUNC m_MotionFunc[];
 
-	using CREATE_FUNC = std::function<CCameraMotion* ()>;
-	CREATE_FUNC m_CreateFunc;
-
 	//=============================
 	// ÉÅÉìÉoä÷êî
 	//=============================

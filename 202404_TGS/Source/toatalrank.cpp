@@ -1,10 +1,10 @@
 //=============================================================================
 // 
-//  クリアランク処理 [clearrank.cpp]
+//  トータルランク処理 [toatalrank.cpp]
 //  Author : 相馬靜雅
 // 
 //=============================================================================
-#include "clearrank.h"
+#include "toatalrank.h"
 #include "manager.h"
 #include "calculation.h"
 #include "input.h"
@@ -21,21 +21,37 @@ namespace
 		"data\\TEXTURE\\result\\rank_B.png",
 		"data\\TEXTURE\\result\\rank_C.png",
 	};
+
+	const int RANKPOINT[] =	// ランクの基準
+	{
+		4,
+		3,
+		2,
+		1
+	};
+
+	const float TIMEPOINT[] =	// タイマーの基準
+	{
+		80.0f,
+		100.0f,
+		120.0f,
+		140.0f
+	};
 }
 
 //==========================================================================
 // コンストラクタ
 //==========================================================================
-CClearRank::CClearRank(int nPriority) : CObject2D(nPriority)
+CToatalRank::CToatalRank(int nPriority) : CObject2D(nPriority)
 {
-	// 値のクリア
+	// 値のトータル
 	m_Rank = CJudge::JUDGE::JUDGE_DDD;	// ランク
 }
 
 //==========================================================================
 // デストラクタ
 //==========================================================================
-CClearRank::~CClearRank()
+CToatalRank::~CToatalRank()
 {
 
 }
@@ -43,14 +59,14 @@ CClearRank::~CClearRank()
 //==========================================================================
 // 生成処理
 //==========================================================================
-CClearRank* CClearRank::Create(CJudge::JUDGE rank)
+CToatalRank* CToatalRank::Create(CJudge::JUDGE rank, float time)
 {
 	// メモリの確保
-	CClearRank* pClearRank = DEBUG_NEW CClearRank;
+	CToatalRank* pClearRank = DEBUG_NEW CToatalRank;
 
 	if (pClearRank != nullptr)
 	{
-		pClearRank->m_Rank = rank;
+		pClearRank->m_Rank = pClearRank->CalRank(rank, time);
 
 		// 初期化処理
 		pClearRank->Init();
@@ -62,7 +78,7 @@ CClearRank* CClearRank::Create(CJudge::JUDGE rank)
 //==========================================================================
 // 初期化処理
 //==========================================================================
-HRESULT CClearRank::Init()
+HRESULT CToatalRank::Init()
 {
 
 	// オブジェクト2Dの初期化
@@ -76,14 +92,14 @@ HRESULT CClearRank::Init()
 	D3DXVECTOR2 size = CTexture::GetInstance()->GetImageSize(texID);
 
 #if 0	// 横幅を元にサイズ設定
-	size = UtilFunc::Transformation::AdjustSizeByWidth(size, 100.0f);
+	size = UtilFunc::Transformation::AdjustSizeByWidth(size, 240.0f);
 
 #else	// 縦幅を元にサイズ設定
-	size = UtilFunc::Transformation::AdjustSizeByWidth(size, 100.0f);
+	size = UtilFunc::Transformation::AdjustSizeByWidth(size, 240.0f);
 #endif
-	SetSize(size);
+	SetSize(D3DXVECTOR2(640.0f,360.0f));
 	SetSizeOrigin(size);
-	SetPosition(MyLib::Vector3(1040.0f,360.0f,0.0f));
+	SetPosition(MyLib::Vector3(640.0f,360.0f,0.0f));
 
 	// 位置、向き設定は必要があれば追加
 
@@ -96,7 +112,7 @@ HRESULT CClearRank::Init()
 //==========================================================================
 // 終了処理
 //==========================================================================
-void CClearRank::Uninit()
+void CToatalRank::Uninit()
 {
 	// 終了処理
 	CObject2D::Uninit();
@@ -105,7 +121,7 @@ void CClearRank::Uninit()
 //==========================================================================
 // 更新処理
 //==========================================================================
-void CClearRank::Update()
+void CToatalRank::Update()
 {
 	// 更新処理
 	CObject2D::Update();
@@ -114,8 +130,46 @@ void CClearRank::Update()
 //==========================================================================
 // 描画処理
 //==========================================================================
-void CClearRank::Draw()
+void CToatalRank::Draw()
 {
 	// 描画処理
 	CObject2D::Draw();
+}
+
+//==========================================================================
+// ランク計算
+//==========================================================================
+CJudge::JUDGE CToatalRank::CalRank(CJudge::JUDGE rank, float time)
+{
+	int point = 0, i = 0;
+
+	// 時間のポイント計算
+	while (1)
+	{
+		if (TIMEPOINT[i] >= time)
+		{
+			point += CJudge::JUDGE::JUDGE_DDD - (i);
+			break;
+		}
+	}
+	
+	// ランクのポイント計算
+	point += CJudge::JUDGE::JUDGE_DDD - rank;
+
+	if (point >= CJudge::JUDGE::JUDGE_DDD * 2)
+	{
+		return CJudge::JUDGE::JUDGE_AAA;
+	}
+	else if (point >= CJudge::JUDGE::JUDGE_CCC * 2)
+	{
+		return CJudge::JUDGE::JUDGE_BBB;
+	}
+	else if (point >= CJudge::JUDGE::JUDGE_BBB * 2)
+	{
+		return CJudge::JUDGE::JUDGE_CCC;
+	}
+	else
+	{
+		return CJudge::JUDGE::JUDGE_DDD;
+	}
 }

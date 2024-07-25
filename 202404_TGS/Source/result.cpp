@@ -17,6 +17,7 @@
 
 #include "timer.h"
 #include "clearrank.h"
+#include "toatalrank.h"
 
 //=============================================================================
 // 定数定義
@@ -84,6 +85,10 @@ HRESULT CResult::Init()
 
 	// クリアランク
 	CClearRank::Create(pResultManager->GetJudgeRank());
+
+	// トータルランク
+	CToatalRank::Create(pResultManager->GetJudgeRank(), pResultManager->GetClearTime());
+
 
 	// 成功
 	return S_OK;
