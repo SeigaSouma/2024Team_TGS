@@ -37,10 +37,7 @@ bool CResult::m_bAllArrival = false;		// 全て到着した判定
 //==========================================================================
 // コンストラクタ
 //==========================================================================
-CResult::CResult() :
-	m_fLength(END_LENGTH),
-	m_col(LOSE_COLOR),
-	m_clear(false)
+CResult::CResult() : m_clear(false)
 {
 	// 値のクリア
 	m_bAllArrival = false;	// 全て到着した判定
@@ -62,9 +59,6 @@ HRESULT CResult::Init()
 	//プレイヤー数をリセット
 	CManager::GetInstance()->SetNumPlayer(0);
 
-	// クリア判定の取得
-	m_clear = CGame::GetInstance()->IsClearFrag();
-
 	// 初期化処理
 	if (FAILED(CScene::Init()))
 	{// 失敗した場合
@@ -74,18 +68,8 @@ HRESULT CResult::Init()
 	// BGM再生
 	CSound::GetInstance()->PlaySound(CSound::LABEL_BGM_RESULT);
 
-	// メッセージを生成
-	if (CGame::GetInstance()->IsClearFrag())
-	{
-		
-		m_col = WIN_COLOR;
-	}
-	else
-	{
-		m_col = LOSE_COLOR;
-	}
-
 	// リザルト画面
+
 
 	// 成功
 	return S_OK;

@@ -15,6 +15,7 @@
 //==========================================================================
 // 静的メンバ変数宣言
 //==========================================================================
+CResultManager* CResultManager::m_pThisPtr = nullptr;	// 自身のポインタ
 
 //==========================================================================
 // コンストラクタ
@@ -22,9 +23,8 @@
 CResultManager::CResultManager()
 {
 	// 値のクリア
-	m_nBaseScore = 0;		// スコア
-	m_nToatalScore = 0;	// 最終スコア
-
+	m_JudgeRank = CJudge::JUDGE::JUDGE_DDD;	// 最終評価
+	m_fClearTime = 0.0f;			// クリア時間
 }
 
 //==========================================================================
@@ -40,31 +40,21 @@ CResultManager::~CResultManager()
 //==========================================================================
 CResultManager *CResultManager::Create()
 {
-	// 生成用のオブジェクト
-	CResultManager *pManager = nullptr;
-
+	// メモリの確保
+	CResultManager *pManager = DEBUG_NEW CResultManager;
 	if (pManager == nullptr)
-	{// nullptrだったら
-
-		// メモリの確保
-		pManager = DEBUG_NEW CResultManager;
-
-		if (pManager != nullptr)
-		{// メモリの確保が出来ていたら
-
-			// 初期化処理
-			HRESULT hr = pManager->Init();
-
-			if (FAILED(hr))
-			{// 失敗していたら
-				return nullptr;
-			}
-		}
-
-		return pManager;
+	{
+		return nullptr;
 	}
 
-	return nullptr;
+	// 初期化処理
+	HRESULT hr = pManager->Init();
+	if (FAILED(hr))
+	{// 失敗していたら
+		return nullptr;
+	}
+
+	return pManager;
 }
 
 //==========================================================================
@@ -89,8 +79,7 @@ void CResultManager::Uninit()
 void CResultManager::Reset()
 {
 	// 値のクリア
-	m_nBaseScore = 0;		// スコア
-	m_nToatalScore = 0;	// 最終スコア
+
 }
 
 //==========================================================================
@@ -99,29 +88,4 @@ void CResultManager::Reset()
 void CResultManager::Update()
 {
 	
-}
-
-//==========================================================================
-// スコア加算
-//==========================================================================
-void CResultManager::AddScore(int nValue)
-{
-	m_nBaseScore += nValue;
-	m_nToatalScore += nValue;
-}
-
-//==========================================================================
-// スコアの取得処理
-//==========================================================================
-int CResultManager::GetBaseScore()
-{
-	return m_nBaseScore;
-}
-
-//==========================================================================
-// スコアの取得処理
-//==========================================================================
-int CResultManager::GetToatalScore()
-{
-	return m_nToatalScore;
 }
