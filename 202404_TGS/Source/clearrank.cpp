@@ -20,6 +20,7 @@ namespace
 		"data\\TEXTURE\\result\\rank_A.png",
 		"data\\TEXTURE\\result\\rank_B.png",
 		"data\\TEXTURE\\result\\rank_C.png",
+		"data\\TEXTURE\\result\\rank_C.png",
 	};
 }
 

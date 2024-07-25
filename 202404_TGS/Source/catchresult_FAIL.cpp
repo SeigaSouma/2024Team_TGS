@@ -12,6 +12,9 @@
 #include "game.h"
 #include "player.h"
 #include "fade.h"
+#include "timer.h"
+#include "resultmanager.h"
+#include "gamemanager.h"
 
 //==========================================================================
 // ƒ}ƒNƒ’è‹`
@@ -135,6 +138,10 @@ void CCatchResult_FAIL::StateFadeOut()
 	{
 		m_fStateTimer = 0.0f;
 		Uninit();
+
+		CGameManager* pManager = CGame::GetInstance()->GetGameManager();
+		CManager::GetInstance()->GetResultManager()->SetJudgeRank(static_cast<CJudge::JUDGE>(pManager->GetJudgeRank()));
+		CManager::GetInstance()->GetResultManager()->SetClearTime(CTimer::GetInstance()->GetTime());
 		CManager::GetInstance()->GetFade()->SetFade(CScene::MODE_RESULT);
 		return;
 	}

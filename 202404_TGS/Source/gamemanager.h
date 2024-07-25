@@ -72,6 +72,7 @@ public:
 	int GetNowStage();	// 現在のステージ取得
 	void SetNumStage(int nStage);				// ステージの総数設定
 	int GetNumStage() { return m_nNumStage; }	// ステージの総数取得
+	int GetJudgeRank() { return m_nJudgeRank; }
 
 	void GameClearSettings();	// ゲームクリア時の設定
 	void GameResultSettings();	// ゲームリザルトの設定
@@ -111,6 +112,7 @@ protected:
 	float m_fCameraLengthOld;	// 前のカメラの距離
 	float m_fPosRY;			// プレイヤーと荷物を画面内に収めるときに使うposRのY座標
 	float m_fSceneTimer;	// シーンタイマー
+	int m_nJudgeRank;		// クリアランク
 	CRequestPeople* m_pRequestPeople;	// 依頼人のポインタ
 	CReceiverPeople* m_pReceiverPeople;	// 届け先のポインタ
 };
