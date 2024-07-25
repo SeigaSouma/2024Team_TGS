@@ -13,6 +13,7 @@
 #include "calculation.h"
 #include "particle.h"
 
+
 //==========================================================================
 // É}ÉNÉçíËã`
 //==========================================================================
@@ -89,6 +90,12 @@ HRESULT CCameraMotion::Init()
 	LoadText();
 
 	m_EditInfo.motionInfo = m_vecMotionInfo[0];
+
+
+	//m_CreateFunc =
+	//{
+	//	[]() {return DEBUG_NEW CCameraTrigger_Pass; }
+	//};
 	return S_OK;
 }
 
