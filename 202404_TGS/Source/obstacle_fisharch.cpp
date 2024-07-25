@@ -78,7 +78,7 @@ HRESULT CObstacle_FishArch::Init()
 	{
 		FishInfo info;
 		info.nIdx = i;
-		info.pFish = CMap_Obstacle::Create(GetObstacleInfo(), false, false);
+		info.pFish = CMap_Obstacle::Create(GetObstacleInfo(), GetPosition(), false, false);
 		rot.x = (i * FISH_ROT) * (D3DX_PI * 2);
 		UtilFunc::Transformation::RotNormalize(rot.x);
 		info.pFish->SetRotation(rot);
