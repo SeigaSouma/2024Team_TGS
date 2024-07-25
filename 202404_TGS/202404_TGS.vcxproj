@@ -169,6 +169,7 @@
     <ClCompile Include="Source\catchresult.cpp" />
     <ClCompile Include="Source\catchresult_FAIL.cpp" />
     <ClCompile Include="Source\catchresult_OK.cpp" />
+    <ClCompile Include="Source\clearrank.cpp" />
     <ClCompile Include="Source\countdown_start.cpp" />
     <ClCompile Include="Source\map_obstacle_motion.cpp" />
     <ClCompile Include="Source\map_obstacle_obj.cpp" />
@@ -292,6 +293,7 @@
     <ClCompile Include="Source\ranking.cpp" />
     <ClCompile Include="Source\rankingmanager.cpp" />
     <ClCompile Include="Source\rankingscore.cpp" />
+    <ClCompile Include="Source\receiver_people.cpp" />
     <ClCompile Include="Source\renderer.cpp" />
     <ClCompile Include="Source\request_people.cpp" />
     <ClCompile Include="Source\result.cpp" />
@@ -318,9 +320,11 @@
     <ClCompile Include="Source\targetpoint.cpp" />
     <ClCompile Include="Source\texture.cpp" />
     <ClCompile Include="Source\timer.cpp" />
+    <ClCompile Include="Source\timer_result.cpp" />
     <ClCompile Include="Source\title.cpp" />
     <ClCompile Include="Source\titlelogo.cpp" />
     <ClCompile Include="Source\title_pressenter.cpp" />
+    <ClCompile Include="Source\toatalrank.cpp" />
     <ClCompile Include="Source\townfield_sinuous.cpp" />
     <ClCompile Include="Source\townfield_sinuous_front.cpp" />
     <ClCompile Include="Source\tutorial.cpp" />
@@ -348,6 +352,7 @@
     <ClInclude Include="Source\catchresult.h" />
     <ClInclude Include="Source\catchresult_FAIL.h" />
     <ClInclude Include="Source\catchresult_OK.h" />
+    <ClInclude Include="Source\clearrank.h" />
     <ClInclude Include="Source\countdown_start.h" />
     <ClInclude Include="Source\map_obstacle_motion.h" />
     <ClInclude Include="Source\map_obstacle_obj.h" />
@@ -468,6 +473,7 @@
     <ClInclude Include="Source\ranking.h" />
     <ClInclude Include="Source\rankingmanager.h" />
     <ClInclude Include="Source\rankingscore.h" />
+    <ClInclude Include="Source\receiver_people.h" />
     <ClInclude Include="Source\renderer.h" />
     <ClInclude Include="Source\request_people.h" />
     <ClInclude Include="Source\result.h" />
@@ -494,9 +500,11 @@
     <ClInclude Include="Source\targetpoint.h" />
     <ClInclude Include="Source\texture.h" />
     <ClInclude Include="Source\timer.h" />
+    <ClInclude Include="Source\timer_result.h" />
     <ClInclude Include="Source\title.h" />
     <ClInclude Include="Source\titlelogo.h" />
     <ClInclude Include="Source\title_pressenter.h" />
+    <ClInclude Include="Source\toatalrank.h" />
     <ClInclude Include="Source\townfield_sinuous.h" />
     <ClInclude Include="Source\townfield_sinuous_front.h" />
     <ClInclude Include="Source\tutorial.h" />

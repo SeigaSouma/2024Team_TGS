@@ -31,6 +31,7 @@
 #include "spline.h"
 #include "request_people.h"
 #include "subtitle.h"
+#include "receiver_people.h"
 
 //==========================================================================
 // 定数定義
@@ -76,6 +77,7 @@ CGameManager::CGameManager()
 	m_fPosRY = 0.0f;
 	m_fSceneTimer = 0.0f;		// シーンタイマー
 	m_pRequestPeople = nullptr;	// 依頼人のポインタ
+	m_pReceiverPeople = nullptr;
 }
 
 //==========================================================================
