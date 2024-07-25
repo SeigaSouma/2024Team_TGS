@@ -64,7 +64,7 @@ CStoneWall* CStoneWall::Create()
 //==========================================================================
 HRESULT CStoneWall::Init()
 {
-	HRESULT hr;
+	//HRESULT hr;
 
 	// èâä˙âªèàóù
 	CMapMesh::Init();
