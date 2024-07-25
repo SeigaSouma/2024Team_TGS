@@ -81,7 +81,7 @@ HRESULT CObstacle_BirdCircle::Init()
 	{
 		BirdInfo info;
 		info.nIdx = i;
-		info.pBird = CMap_Obstacle::Create(GetObstacleInfo(), false, false);
+		info.pBird = CMap_Obstacle::Create(GetObstacleInfo(), GetPosition(), false, false);
 		rot.y = (i * BIRD_ROT) * (D3DX_PI * 2);
 		UtilFunc::Transformation::RotNormalize(rot.y);
 		info.pBird->SetRotation(rot);
