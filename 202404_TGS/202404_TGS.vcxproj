@@ -169,6 +169,7 @@
     <ClCompile Include="Source\catchresult.cpp" />
     <ClCompile Include="Source\catchresult_FAIL.cpp" />
     <ClCompile Include="Source\catchresult_OK.cpp" />
+    <ClCompile Include="Source\clearrank.cpp" />
     <ClCompile Include="Source\countdown_start.cpp" />
     <ClCompile Include="Source\map_obstacle_motion.cpp" />
     <ClCompile Include="Source\map_obstacle_obj.cpp" />
@@ -318,6 +319,7 @@
     <ClCompile Include="Source\targetpoint.cpp" />
     <ClCompile Include="Source\texture.cpp" />
     <ClCompile Include="Source\timer.cpp" />
+    <ClCompile Include="Source\timer_result.cpp" />
     <ClCompile Include="Source\title.cpp" />
     <ClCompile Include="Source\titlelogo.cpp" />
     <ClCompile Include="Source\title_pressenter.cpp" />
@@ -348,6 +350,7 @@
     <ClInclude Include="Source\catchresult.h" />
     <ClInclude Include="Source\catchresult_FAIL.h" />
     <ClInclude Include="Source\catchresult_OK.h" />
+    <ClInclude Include="Source\clearrank.h" />
     <ClInclude Include="Source\countdown_start.h" />
     <ClInclude Include="Source\map_obstacle_motion.h" />
     <ClInclude Include="Source\map_obstacle_obj.h" />
@@ -494,6 +497,7 @@
     <ClInclude Include="Source\targetpoint.h" />
     <ClInclude Include="Source\texture.h" />
     <ClInclude Include="Source\timer.h" />
+    <ClInclude Include="Source\timer_result.h" />
     <ClInclude Include="Source\title.h" />
     <ClInclude Include="Source\titlelogo.h" />
     <ClInclude Include="Source\title_pressenter.h" />

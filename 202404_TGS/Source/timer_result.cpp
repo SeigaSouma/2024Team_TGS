@@ -1,97 +1,76 @@
 //=============================================================================
 // 
-//  リザルトマネージャ処理 [resultmanager.cpp]
+//  タイマー処理 [timer_result.cpp]
 //  Author : 相馬靜雅
 // 
 //=============================================================================
+#include "timer_result.h"
+#include "manager.h"
+#include "multinumber.h"
 #include "debugproc.h"
-#include "resultmanager.h"
 #include "calculation.h"
+#include "game.h"
+#include "gamemanager.h"
 
 //==========================================================================
-// マクロ定義
+// 定数定義
 //==========================================================================
+namespace
+{
+	const char* TEXTURE = "data\\TEXTURE\\number\\number_oradano.png";	// テクスチャのファイル
 
-//==========================================================================
-// 静的メンバ変数宣言
-//==========================================================================
-CResultManager* CResultManager::m_pThisPtr = nullptr;	// 自身のポインタ
+	const MyLib::Vector3 DEFAULT_POSITION = MyLib::Vector3(1100.0f, 100.0f, 0.0f);	// 初期位置
+	const D3DXVECTOR2 SIZE_NUMBER = D3DXVECTOR2(30.0f, 30.0f);
+	const float DSTANCE_TIMER = SIZE_NUMBER.x * 2.25f;
+}
 
 //==========================================================================
 // コンストラクタ
 //==========================================================================
-CResultManager::CResultManager()
+CTimer_Result::CTimer_Result(int nPriority) : CTimer()
 {
 	// 値のクリア
-	m_JudgeRank = CJudge::JUDGE::JUDGE_DDD;	// 最終評価
-	m_fClearTime = 0.0f;			// クリア時間
 }
 
 //==========================================================================
 // デストラクタ
 //==========================================================================
-CResultManager::~CResultManager()
+CTimer_Result::~CTimer_Result()
 {
 
-}
-
-//==========================================================================
-// 生成処理
-//==========================================================================
-CResultManager *CResultManager::Create()
-{
-	if (m_pThisPtr != nullptr)
-	{
-		return m_pThisPtr;
-	}
-
-	// メモリの確保
-	m_pThisPtr = DEBUG_NEW CResultManager;
-	if (m_pThisPtr == nullptr)
-	{
-		return nullptr;
-	}
-
-	// 初期化処理
-	HRESULT hr = m_pThisPtr->Init();
-	if (FAILED(hr))
-	{// 失敗していたら
-		return nullptr;
-	}
-
-	return m_pThisPtr;
 }
 
 //==========================================================================
 // 初期化処理
 //==========================================================================
-HRESULT CResultManager::Init()
+HRESULT CTimer_Result::Init()
 {
+	CTimer::Init();
+
 	return S_OK;
 }
 
 //==========================================================================
 // 終了処理
 //==========================================================================
-void CResultManager::Uninit()
+void CTimer_Result::Uninit()
 {
-	delete m_pThisPtr;
-	m_pThisPtr = nullptr;
-}
-
-//==========================================================================
-// リセット
-//==========================================================================
-void CResultManager::Reset()
-{
-	// 値のクリア
-
+	CTimer::Uninit();
 }
 
 //==========================================================================
 // 更新処理
 //==========================================================================
-void CResultManager::Update()
+void CTimer_Result::Update()
 {
-	
+	CTimer::Update();
+}
+
+
+//==========================================================================
+// 描画処理
+//==========================================================================
+void CTimer_Result::Draw()
+{
+
 }
