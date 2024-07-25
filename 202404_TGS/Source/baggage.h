@@ -40,6 +40,7 @@ public:
 		STATE_APPEARANCE,	// 出現
 		STATE_PASS,			// パス
 		STATE_GOAL,			// ゴール
+		STATE_SEND,			// 届ける
 		STATE_MAX
 	};
 
@@ -120,6 +121,7 @@ private:
 	void StateAppearance();	// 出現
 	void StatePass();		// パス
 	void StateGoal();		// ゴール
+	void StateSend();		// 届ける
 
 	// その他
 	void Controll();	// 操作

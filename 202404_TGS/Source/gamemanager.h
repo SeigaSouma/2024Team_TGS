@@ -13,6 +13,7 @@
 #include "scene.h"
 
 class CRequestPeople;
+class CReceiverPeople;
 
 //==========================================================================
 // クラス定義
@@ -78,6 +79,8 @@ public:
 	// 評価関連
 	void AddEvaluationPoint(int point) { m_nEvaluationPoint += point; }	// ポイント加算
 
+	void SetReceiverPeople(CReceiverPeople* pPeople) { m_pReceiverPeople = pPeople; }
+
 
 	static CGameManager *Create(CScene::MODE mode);	// 生成処理
 
@@ -109,6 +112,7 @@ protected:
 	float m_fPosRY;			// プレイヤーと荷物を画面内に収めるときに使うposRのY座標
 	float m_fSceneTimer;	// シーンタイマー
 	CRequestPeople* m_pRequestPeople;	// 依頼人のポインタ
+	CReceiverPeople* m_pReceiverPeople;	// 届け先のポインタ
 };
 
 

@@ -11,6 +11,7 @@
 #include "camera.h"
 #include "game.h"
 #include "player.h"
+#include "fade.h"
 
 //==========================================================================
 // ƒ}ƒNƒ’è‹`
@@ -134,6 +135,7 @@ void CCatchResult_OK::StateFadeOut()
 	{
 		m_fStateTimer = 0.0f;
 		Uninit();
+		CManager::GetInstance()->GetFade()->SetFade(CScene::MODE_RESULT);
 		return;
 	}
 }
