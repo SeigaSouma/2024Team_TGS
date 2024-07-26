@@ -56,8 +56,8 @@ private:
 	// メンバ変数
 	//=============================
 	// 状態系
-	float m_fStateTime;		// 状態カウンター
-	State m_state;			// 状態
+	float m_fLife;		// 寿命
+	float m_fOriginLife;		// 寿命
 };
 
 

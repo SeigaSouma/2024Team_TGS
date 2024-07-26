@@ -8,7 +8,7 @@
 #ifndef _PLAYERCONTROL_H_
 #define _PLAYERCONTROL_H_	// 二重インクルード防止
 
-#define BRESSRANGE (1)
+#define BRESSRANGE (0)
 
 #include "player.h"
 #include "baggage.h"

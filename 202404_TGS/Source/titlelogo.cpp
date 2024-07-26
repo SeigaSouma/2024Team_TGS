@@ -17,7 +17,7 @@
 //==========================================================================
 namespace
 {
-	const char* TEXTURE = "data\\TEXTURE\\title\\titlelogo3.png";
+	const char* TEXTURE = "data\\TEXTURE\\title\\titlelogo4.png";
 }
 
 //==========================================================================
