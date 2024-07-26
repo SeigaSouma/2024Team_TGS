@@ -54,6 +54,8 @@
 #include "courseManager.h"
 #include "peoplemanager.h"
 #include "subtitle.h"
+#include "receiver_people.h"
+#include "splashwater.h"
 
 //==========================================================================
 // 静的メンバ変数宣言
@@ -179,7 +181,10 @@ HRESULT CGame::Init()
 	// クリアの判定
 	SetEnableClear(true);
 
-	m_pTimer = CTimer::Create();
+	//=============================
+	// タイマー
+	//=============================
+	m_pTimer = CTimer::Create(CTimer::Type::TYPE_NORMAL);
 
 	//=============================
 	// 障害物マネージャ
@@ -301,8 +306,21 @@ HRESULT CGame::Init()
 	//=============================
 	// ゴール作成
 	//=============================
-	CGoalflagX::Create((CCourseManager::GetBlockLength() * 5) * 0.975f);
+	CGoalflagX::Create(m_pCourse->GetCourceLength() * 0.975f);
 	//CGoalflagX::Create(m_pCourse->GetCourceLength() * 0.975f);
+
+	//=============================
+	// 届け先作成
+	//=============================
+	{
+		MyLib::Vector3 pos = MySpline::GetSplinePosition_NonLoop(CGame::GetInstance()->GetCourse()->GetVecPosition(),
+			m_pCourse->GetCourceLength() * 0.975f, 0.0f);
+		pos.y = 0.0f;
+		pos.x += 3000.0f;
+		CReceiverPeople* pReceiverPeople = CReceiverPeople::Create(pos);
+		pReceiverPeople->SetState(CReceiverPeople::STATE::STATE_WAIT);
+		m_pGameManager->SetReceiverPeople(pReceiverPeople);
+	}
 
 	//=============================
 	// 判定ゾーンマネージャ
@@ -506,6 +524,7 @@ void CGame::Update()
 		CSubTitle* pSubTitle = CSubTitle::Create(MyLib::Vector3(640.0f, 670.0f, 0.0f), 2.0f);
 		pSubTitle->BindSubtitle("data\\TEXTURE\\subtitle\\sample.png");
 		pSubTitle->SetSizeByHeight(40.0f);
+		CSplashwater::Create();
 	}
 
 #if _DEBUG
@@ -617,6 +636,8 @@ void CGame::Update()
 
 	if (pInputKeyboard->GetTrigger(DIK_F))
 	{
+		CManager::GetInstance()->GetResultManager()->SetClearTime(m_pTimer->GetTime());
+
 		// モード設定
 		CManager::GetInstance()->GetFade()->SetFade(CScene::MODE_RESULT);
 	}

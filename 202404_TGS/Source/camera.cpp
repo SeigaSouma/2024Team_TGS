@@ -399,8 +399,8 @@ void CCamera::MoveCameraMouse()
 {
 #if 1
 
-	if (CManager::GetInstance()->GetMode() == CScene::MODE::MODE_GAME ||
-		CManager::GetInstance()->GetMode() == CScene::MODE::MODE_GAMETUTORIAL)
+	/*if (CManager::GetInstance()->GetMode() == CScene::MODE::MODE_GAME ||
+		CManager::GetInstance()->GetMode() == CScene::MODE::MODE_GAMETUTORIAL)*/
 	{
 		// キーボード情報取得
 		CInputKeyboard* pInputKeyboard = CInputKeyboard::GetInstance();

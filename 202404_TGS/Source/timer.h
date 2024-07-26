@@ -23,6 +23,13 @@ class CTimer
 {
 public:
 
+	enum Type
+	{
+		TYPE_NORMAL = 0,
+		TYPE_RESULT,
+		TYPE_MAX
+	};
+
 	enum eState
 	{
 		STATE_WAIT = 0,		// 待機
@@ -33,13 +40,10 @@ public:
 	CTimer(int nPriority = 6);
 	~CTimer();
 
-	static CTimer *Create();
-	static CTimer *GetInstance() { return m_pTimer; }
-
-	HRESULT Init();
-	void Uninit();
-	void Update();
-	void Draw();
+	virtual HRESULT Init();
+	virtual void Uninit();
+	virtual void Update();
+	virtual void Draw();
 
 	float GetTime() { return m_fTime; }	// 時間取得
 	void SetTime(const float time);
@@ -47,6 +51,9 @@ public:
 
 	CTimer::eState GetState() { return m_state; }
 	void SetState(eState state) { m_state = state; }
+
+	static CTimer* Create(Type type);
+	static CTimer* GetInstance() { return m_pTimer; }
 
 private:
 
@@ -59,9 +66,11 @@ private:
 	//=============================
 	// メンバ関数
 	//=============================
-	void StateWait();
-	void StateGoal();
-	void ApplyTimer();
+	virtual void StateWait();
+	virtual void StateGoal();
+	virtual void ApplyTimer();
+
+protected:
 
 	//=============================
 	// メンバ変数
@@ -72,7 +81,7 @@ private:
 	float m_fStateTime;				// 状態時間
 	float m_fTime;					// 時間
 	bool m_bAddTime;				// タイマー加算のフラグ
-	CMultiNumber* m_pClearTime[3];		// 種類ごとの数字
+	CMultiNumber* m_pClearTime[3];	// 種類ごとの数字
 	static CTimer *m_pTimer;	// 自身のポインタ
 };
 

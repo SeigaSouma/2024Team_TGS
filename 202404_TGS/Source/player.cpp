@@ -245,7 +245,9 @@ HRESULT CPlayer::Init()
 
 	pMotion->Set(MOTION::MOTION_START, false);
 
-	return S_OK;
+	SetRotation(MyLib::Vector3(0.0f, D3DX_PI * 0.5f, 0.0f));
+	SetRotDest(-D3DX_PI * 0.5f);
+		return S_OK;
 }
 
 //==========================================================================
@@ -452,15 +454,6 @@ void CPlayer::Update()
 
 #endif
 
-	// 高さ制限
-	if (m_pBaggage->GetPosition().y <= m_pBaggage->GetOriginPosition().y && 
-		m_pControlBaggage->GetState() == CPlayerControlBaggage::STATE::STATE_RELEASE)
-	{
-		// 着地したら遷移
-		CManager::GetInstance()->GetFade()->SetFade(CScene::MODE_GAME);
-
-		return;
-	}
 }
 
 //==========================================================================
@@ -1292,6 +1285,9 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 		{ 
 			pt->SetEnableAddTime(false); 
 		}
+
+		// リトライUIなければ生成
+		CreateRetryUI();
 	}
 	else if (nLife <= camlife)
 	{
@@ -1517,7 +1513,7 @@ void CPlayer::StateDead()
 	m_nCntState--;
 
 	// 起伏との判定
-	if ((CManager::GetInstance()->GetScene()->GetElevation()->IsHit(pos) || m_bHitStage) && m_nCntState >= 10)
+	if (m_nCntState >= 10)
 	{// 地面と当たっていたら
 
 		//m_state = STATE::STATE_FADEOUT;	// 死亡待機状態
@@ -1669,7 +1665,7 @@ void CPlayer::StateRestart()
 		Uninit();
 #else
 		// 開始地点に戻す
-		m_fMoveLength = 0.0f;
+		m_fMoveLength = 3000.0f;
 		SetPosition(GetOriginPosition());
 		m_state = STATE::STATE_RESPAWN;
 		SetLife(GetLifeOrigin());

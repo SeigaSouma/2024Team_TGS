@@ -14,6 +14,7 @@
 #include "glassclush.h"
 #include "countdown_start.h"
 #include "blackframe.h"
+#include "splashwater.h"
 
 //==========================================================================
 // 定数定義
@@ -55,6 +56,7 @@ CBaggage::STATE_FUNC CBaggage::m_StateFunc[] =
 	&CBaggage::StateAppearance,	// 出現
 	&CBaggage::StatePass,		// パス
 	&CBaggage::StateGoal,		// ゴール
+	&CBaggage::StateSend,		// 届ける
 };
 
 //==========================================================================
@@ -427,6 +429,14 @@ void CBaggage::StatePass()
 void CBaggage::StateGoal()
 {
 	
+}
+
+//==========================================================================
+// 届ける
+//==========================================================================
+void CBaggage::StateSend()
+{
+
 }
 
 //==========================================================================

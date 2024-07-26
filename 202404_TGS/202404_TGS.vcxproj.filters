@@ -638,7 +638,31 @@
     <ClCompile Include="Source\catchresult_FAIL.cpp">
       <Filter>direction\catch</Filter>
     </ClCompile>
-  </ItemGroup>
+    <ClCompile Include="Source\timer_result.cpp">
+      <Filter>mode\result</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\clearrank.cpp">
+      <Filter>mode\result</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\toatalrank.cpp">
+      <Filter>mode\result</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\receiver_people.cpp">
+      <Filter>people</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\camera_motion_trigger.cpp">
+      <Filter>camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\cameratrigger_pass.cpp">
+      <Filter>camera</Filter>
+    </ClCompile>
+
+    <ClCompile Include="Source\townfield_fixedplane.cpp">
+      <Filter>map\mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\splashwater.cpp">
+      <Filter>direction</Filter>
+    </ClCompile>  </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ballast.h">
       <Filter>ヘッダー ファイル</Filter>
@@ -1161,6 +1185,29 @@
     </ClInclude>
     <ClInclude Include="Source\catchresult_FAIL.h">
       <Filter>direction\catch</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\timer_result.h">
+      <Filter>mode\result</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\clearrank.h">
+      <Filter>mode\result</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\toatalrank.h">
+      <Filter>mode\result</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\receiver_people.h">
+      <Filter>people</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\camera_motion_trigger.h">
+      <Filter>camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\cameratrigger_pass.h">
+      <Filter>camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\townfield_fixedplane.h">
+      <Filter>map\mesh</Filter>
+    </ClInclude>    <ClInclude Include="Source\splashwater.h">
+      <Filter>direction</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
