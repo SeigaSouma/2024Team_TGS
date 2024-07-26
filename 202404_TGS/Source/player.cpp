@@ -1283,6 +1283,9 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 		{ 
 			pt->SetEnableAddTime(false); 
 		}
+
+		// ƒŠƒgƒ‰ƒCUI‚È‚¯‚ê‚Î¶¬
+		CreateRetryUI();
 	}
 	else if (nLife <= camlife)
 	{
