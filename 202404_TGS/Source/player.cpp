@@ -1511,7 +1511,7 @@ void CPlayer::StateDead()
 	m_nCntState--;
 
 	// ‹N•š‚Æ‚Ì”»’è
-	if ((CManager::GetInstance()->GetScene()->GetElevation()->IsHit(pos) || m_bHitStage) && m_nCntState >= 10)
+	if (m_nCntState >= 10)
 	{// ’n–Ê‚Æ“–‚½‚Á‚Ä‚¢‚½‚ç
 
 		//m_state = STATE::STATE_FADEOUT;	// Ž€–S‘Ò‹@ó‘Ô
