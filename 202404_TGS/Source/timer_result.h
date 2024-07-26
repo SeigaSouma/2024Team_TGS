@@ -32,6 +32,10 @@ public:
 
 private:
 
+	void CreateText();	// •¶š¶¬
+
+	CObject2D* m_pText;		// •¶š
+
 };
 
 
