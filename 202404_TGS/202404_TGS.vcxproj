@@ -165,7 +165,9 @@
     <ClCompile Include="Libraries\Imgui\imgui_widgets.cpp" />
     <ClCompile Include="Libraries\Imgui\implot.cpp" />
     <ClCompile Include="Libraries\Imgui\implot_items.cpp" />
+    <ClCompile Include="Source\cameratrigger_pass.cpp" />
     <ClCompile Include="Source\camera_motion.cpp" />
+    <ClCompile Include="Source\camera_motion_trigger.cpp" />
     <ClCompile Include="Source\catchresult.cpp" />
     <ClCompile Include="Source\catchresult_FAIL.cpp" />
     <ClCompile Include="Source\catchresult_OK.cpp" />
@@ -349,7 +351,9 @@
     <ClInclude Include="Libraries\Imgui\imstb_rectpack.h" />
     <ClInclude Include="Libraries\Imgui\imstb_textedit.h" />
     <ClInclude Include="Libraries\Imgui\imstb_truetype.h" />
+    <ClInclude Include="Source\cameratrigger_pass.h" />
     <ClInclude Include="Source\camera_motion.h" />
+    <ClInclude Include="Source\camera_motion_trigger.h" />
     <ClInclude Include="Source\catchresult.h" />
     <ClInclude Include="Source\catchresult_FAIL.h" />
     <ClInclude Include="Source\catchresult_OK.h" />

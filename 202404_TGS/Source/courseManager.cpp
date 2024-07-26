@@ -91,6 +91,8 @@ void CCourseManager::Uninit()
 {
 	delete m_ThisPtr;
 	m_ThisPtr = nullptr;
+
+	CMapBlock::Kill();
 }
 
 //==========================================================================

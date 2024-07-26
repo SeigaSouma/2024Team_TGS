@@ -12,13 +12,17 @@
 #include "game.h"
 #include "player.h"
 #include "fade.h"
+#include "judge.h"
+#include "timer.h"
+#include "resultmanager.h"
+#include "gamemanager.h"
 
 //==========================================================================
 // マクロ定義
 //==========================================================================
 namespace
 {
-	const char* TEXTURE = "data\\TEXTURE\\battlewin\\goal.png";
+	const char* TEXTURE = "data\\TEXTURE\\result\\OK.png";
 	const float TIME_EXPANSION = 0.3f;			// 拡大
 	const float TIME_EXPNONE = 1.0f;			// 拡大後何もしない
 	const float TIME_FADEOUT = 0.4f;			// フェードアウト時間
@@ -135,6 +139,10 @@ void CCatchResult_OK::StateFadeOut()
 	{
 		m_fStateTimer = 0.0f;
 		Uninit();
+
+		CGameManager* pManager = CGame::GetInstance()->GetGameManager();
+		CManager::GetInstance()->GetResultManager()->SetJudgeRank(static_cast<CJudge::JUDGE>(pManager->GetJudgeRank()));
+		CManager::GetInstance()->GetResultManager()->SetClearTime(CTimer::GetInstance()->GetTime());
 		CManager::GetInstance()->GetFade()->SetFade(CScene::MODE_RESULT);
 		return;
 	}

@@ -8,6 +8,7 @@
 #define _CAMERA_MOTION_H_		// 二重インクルード防止のマクロを定義する
 
 #include "scene.h"
+#include "camera_motion_trigger.h"
 
 //==========================================================================
 // クラス定義
@@ -171,6 +172,8 @@ private:
 	bool m_bPause;			// ポーズ判定
 	bool m_bTrigger;		// トリガー判定
 	EditInfo m_EditInfo;	// エディット情報
+
+	CCameraMotion_Trigger* m_pCameraMotion_Trigger[MOTION_MAX];
 };
 
 #endif

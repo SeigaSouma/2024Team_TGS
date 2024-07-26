@@ -78,6 +78,7 @@ CGameManager::CGameManager()
 	m_fSceneTimer = 0.0f;		// シーンタイマー
 	m_pRequestPeople = nullptr;	// 依頼人のポインタ
 	m_pReceiverPeople = nullptr;
+	m_nJudgeRank = 0;
 }
 
 //==========================================================================
@@ -255,10 +256,12 @@ void CGameManager::Update()
 	{
 		if (m_nEvaluationPoint >= CHANGE_BASEPOINT[i])
 		{
+			m_nJudgeRank = i;
 			CPeopleManager::GetInstance()->SetRank(static_cast<CJudge::JUDGE>(i));
 			break;
 		}
 
+		m_nJudgeRank = CJudge::JUDGE::JUDGE_MAX;
 		CPeopleManager::GetInstance()->SetRank(CJudge::JUDGE::JUDGE_MAX);
 	}
 
