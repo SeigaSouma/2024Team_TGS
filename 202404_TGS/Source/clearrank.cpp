@@ -22,6 +22,7 @@ namespace
 		"data\\TEXTURE\\result\\rank_C.png",
 		"data\\TEXTURE\\result\\rank_C.png",
 	};
+	const std::string TEXT_TEXTURE = "data\\TEXTURE\\result\\clearrank.png";
 }
 
 //==========================================================================
@@ -31,6 +32,7 @@ CClearRank::CClearRank(int nPriority) : CObject2D(nPriority)
 {
 	// 値のクリア
 	m_Rank = CJudge::JUDGE::JUDGE_DDD;	// ランク
+	m_pText = nullptr;		// 文字
 }
 
 //==========================================================================
@@ -86,12 +88,40 @@ HRESULT CClearRank::Init()
 	SetSizeOrigin(size);
 	SetPosition(MyLib::Vector3(1040.0f,360.0f,0.0f));
 
-	// 位置、向き設定は必要があれば追加
-
 	// 種類の設定
 	SetType(CObject::TYPE::TYPE_OBJECT2D);
 
+
+	//=============================
+	// 文字生成
+	//=============================
+	CreateText();
 	return S_OK;
+}
+
+//==========================================================================
+// 文字生成
+//==========================================================================
+void CClearRank::CreateText()
+{
+	// 生成
+	m_pText = CObject2D::Create(GetPriority());
+	m_pText->SetType(CObject::TYPE::TYPE_OBJECT2D);
+
+	// テクスチャ設定
+	int texID = CTexture::GetInstance()->Regist(TEXT_TEXTURE);
+	m_pText->BindTexture(texID);
+
+	// サイズ設定
+	D3DXVECTOR2 size = CTexture::GetInstance()->GetImageSize(texID);
+
+	// 横幅を元にサイズ設定
+	size = UtilFunc::Transformation::AdjustSizeByWidth(size, 100.0f);
+	m_pText->SetSize(size);
+	m_pText->SetSizeOrigin(size);
+
+	// 位置設定
+	m_pText->SetPosition(GetPosition() + MyLib::Vector3(-size.x, 0.0f, 0.0f));
 }
 
 //==========================================================================

@@ -53,6 +53,7 @@ private:
 
 	// その他関数
 	CJudge::JUDGE CalRank(CJudge::JUDGE rank, float time);	// ランク計算
+	void CreateText();	// 文字生成
 
 	//=============================
 	// メンバ変数
@@ -63,6 +64,7 @@ private:
 
 	// その他
 	CJudge::JUDGE m_Rank;	// ランク
+	CObject2D* m_pText;		// 文字
 
 };
 

@@ -328,6 +328,7 @@
     <ClCompile Include="Source\titlelogo.cpp" />
     <ClCompile Include="Source\title_pressenter.cpp" />
     <ClCompile Include="Source\toatalrank.cpp" />
+    <ClCompile Include="Source\townfield_fixedplane.cpp" />
     <ClCompile Include="Source\townfield_sinuous.cpp" />
     <ClCompile Include="Source\townfield_sinuous_front.cpp" />
     <ClCompile Include="Source\tutorial.cpp" />
@@ -511,6 +512,7 @@
     <ClInclude Include="Source\titlelogo.h" />
     <ClInclude Include="Source\title_pressenter.h" />
     <ClInclude Include="Source\toatalrank.h" />
+    <ClInclude Include="Source\townfield_fixedplane.h" />
     <ClInclude Include="Source\townfield_sinuous.h" />
     <ClInclude Include="Source\townfield_sinuous_front.h" />
     <ClInclude Include="Source\tutorial.h" />
