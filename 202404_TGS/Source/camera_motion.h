@@ -173,7 +173,7 @@ private:
 	bool m_bTrigger;		// トリガー判定
 	EditInfo m_EditInfo;	// エディット情報
 
-	CCameraMotion_Trigger* m_pCameraMotion_Trigger;
+	CCameraMotion_Trigger* m_pCameraMotion_Trigger[MOTION_MAX];
 };
 
 #endif

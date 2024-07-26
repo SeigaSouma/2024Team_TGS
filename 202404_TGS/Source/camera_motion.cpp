@@ -91,11 +91,8 @@ HRESULT CCameraMotion::Init()
 
 	m_EditInfo.motionInfo = m_vecMotionInfo[0];
 
+	m_pCameraMotion_Trigger[MOTION_PASS] = CCameraMotion_Trigger::Create(MOTION_PASS);
 
-	//m_CreateFunc =
-	//{
-	//	[]() {return DEBUG_NEW CCameraTrigger_Pass; }
-	//};
 	return S_OK;
 }
 
@@ -335,12 +332,14 @@ void CCameraMotion::Update()
 			m_nNowTriggerIdx < static_cast<int>(nowInfo.trigger.size()) &&	// トリガーのサイズ以下
 			m_fTriggerTimer >= nowInfo.trigger[m_nNowTriggerIdx])
 		{
+			// トリガー時処理
+			TriggerMoment();
+			
 			// トリガー判定ON
 			m_bTrigger = true;
 			m_nNowTriggerIdx++;
 
-			// トリガー時処理
-			TriggerMoment();
+			
 
 #if _DEBUG
 			my_particle::Create(MyLib::Vector3(640.0f, 360.0f, 0.0f), my_particle::TYPE_OFFSETTING_2D);
@@ -425,7 +424,9 @@ void CCameraMotion::Update()
 void CCameraMotion::TriggerMoment()
 {
 	// 状態更新
-	(this->*(m_MotionFunc[m_nNowMotionIdx]))();
+	//(this->*(m_MotionFunc[m_nNowMotionIdx]))();
+
+	m_pCameraMotion_Trigger[MOTION_PASS]->TriggerMoment(m_nNowTriggerIdx);
 }
 
 //==========================================================================
