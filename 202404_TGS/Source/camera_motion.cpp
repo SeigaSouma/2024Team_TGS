@@ -91,7 +91,10 @@ HRESULT CCameraMotion::Init()
 
 	m_EditInfo.motionInfo = m_vecMotionInfo[0];
 
-	m_pCameraMotion_Trigger[MOTION_PASS] = CCameraMotion_Trigger::Create(MOTION_PASS);
+	for (int i = 0; i < MOTION_MAX; i++)
+	{
+		m_pCameraMotion_Trigger[i] = CCameraMotion_Trigger::Create(i);
+	}
 
 	return S_OK;
 }
@@ -426,7 +429,12 @@ void CCameraMotion::TriggerMoment()
 	// ó‘ÔXV
 	//(this->*(m_MotionFunc[m_nNowMotionIdx]))();
 
-	m_pCameraMotion_Trigger[MOTION_PASS]->TriggerMoment(m_nNowTriggerIdx);
+	if (m_pCameraMotion_Trigger[m_nNowMotionIdx] == nullptr)
+	{
+		return;
+	}
+
+	m_pCameraMotion_Trigger[m_nNowMotionIdx]->TriggerMoment(m_nNowTriggerIdx);
 }
 
 //==========================================================================
