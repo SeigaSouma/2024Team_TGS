@@ -13,9 +13,9 @@ MOTION_FILENAME = data/TEXT/character/mob/setup_person_cherry.txt		# [0]強チェ
 MOTION_FILENAME = data/TEXT/character/mob/setup_person_bell.txt			# [1]ベル
 MOTION_FILENAME = data/TEXT/character/mob/setup_person_replay.txt		# [2]リプレイ
 MOTION_FILENAME = data/TEXT/character/mob/setup_person_watermelon.txt	# [3]スイカ
-MOTION_FILENAME = data/TEXT/character/mob/setup_humanblue.txt	# [3]スイカ
-MOTION_FILENAME = data/TEXT/character/mob/setup_humanchild.txt	# [3]スイカ
-MOTION_FILENAME = data/TEXT/character/mob/setup_humangirl.txt	# [3]スイカ
+MOTION_FILENAME = data/TEXT/character/mob/person_01/setup_humanblue.txt	# [3]スイカ
+MOTION_FILENAME = data/TEXT/character/mob/person_01/setup_humanchild.txt	# [3]スイカ
+MOTION_FILENAME = data/TEXT/character/mob/person_01/setup_humangirl.txt	# [3]スイカ
 
 #===================================================================================================
 # 群情報

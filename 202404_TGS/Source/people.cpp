@@ -18,6 +18,7 @@
 #include "objectX.h"
 #include "limitarea.h"
 #include "debugproc.h"
+#include "motion.h"
 
 
 //==========================================================================
@@ -27,6 +28,7 @@ namespace
 {
 	const float PLAYER_SERCH = 800.0f;	// プレイヤー探索範囲
 	const float CHACE_DISTABCE = 50.0f;	// 追い掛ける時の間隔
+	const int TURN_RIGHT = 100;	// 回れ右間隔
 }
 
 namespace STATE_TIME
@@ -65,6 +67,7 @@ CPeople::CPeople(int nPriority) : CObjectChara(nPriority)
 	m_fStateTime = 0.0f;		// 状態遷移カウンター
 	m_sMotionFrag = SMotionFrag();		// モーションのフラグ
 	m_pShadow = nullptr;
+	m_flame = 0;
 }
 
 //==========================================================================
@@ -191,6 +194,32 @@ void CPeople::Update()
 	{// 死亡フラグが立っていたら
 		return;
 	}
+
+	CMotion* pMotion = GetMotion();
+	D3DXVECTOR3 move = GetMove();
+	D3DXVECTOR3 pos = GetPosition();
+
+	if (pMotion->IsGetMove(pMotion->GetType()) == 1)
+	{// 歩きモーションの時
+
+		pos += move;
+
+		move.x -= 2.0f;
+		m_flame++;
+
+		if (m_flame >= TURN_RIGHT)
+		{// フレーム数超過
+			move.z -= 2.0f;
+
+			if (m_flame >= TURN_RIGHT * 2)
+			{
+				move.z = 0.0f;
+			}
+		}
+	}
+
+	SetMove(move);
+	SetPosition(pos);
 
 	// 過去の位置設定
 	SetOldPosition(GetPosition());

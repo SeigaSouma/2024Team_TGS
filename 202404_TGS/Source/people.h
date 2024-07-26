@@ -102,6 +102,7 @@ protected:
 	SMotionFrag m_sMotionFrag;				// モーションのフラグ
 	D3DXCOLOR m_mMatcol;					// マテリアルの色
 	MyLib::Vector3 m_TargetPosition;		// 目標の位置
+	int m_flame;
 
 private:
 	
