@@ -402,6 +402,24 @@ void CCourseManager::Load()
 	// 石垣の頂上に頂点をそろえる
 	pTownFieldFront->SetVecVtxPosition(pStoneWall_Front->GetVecTopPosition());
 	pTownFieldFront->BindVtxPosition();
+
+	//=============================
+	// 固定平面街フィールド
+	//=============================
+	std::vector<MyLib::Vector3> vecFixedPlanePos =
+	{
+		MyLib::Vector3(-30000.0f, 300.0f, 33000.0f),
+		MyLib::Vector3(100000.0f, 300.0f, 33000.0f),
+		MyLib::Vector3(-30000.0f, 300.0f, 3000.0f),
+		MyLib::Vector3(100000.0f, 300.0f, 3000.0f)
+	};
+	CMapMesh* pTownFieldFixed = CMapMesh::Create(CMapMesh::MeshType::TYPE_TOWNFIELD_FIXEDPLANE);
+	pTownFieldFixed->SetVecPosition(vecFixedPlanePos);
+	pTownFieldFixed->Reset();
+
+	// 石垣の頂上に頂点をそろえる
+	pTownFieldFixed->SetVecVtxPosition(vecFixedPlanePos);
+	pTownFieldFixed->BindVtxPosition();
 #endif
 }
 
