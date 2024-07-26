@@ -20,11 +20,11 @@ MOTIONSET
 	# çUåÇèÓïÒ
 	#===================
 	ATTACKINFO
-		COLLISIONPARTS = 0
-		ATTACKRANGE = 0.00
-		OFFSET = 0.00 0.00 0.00
-		ATTACKCOUNT = 0 0
-		INPACTCOUNT = -1
+		COLLISIONPARTS = 4
+		ATTACKRANGE = 42.00
+		OFFSET = 114.50 0.00 0.00
+		ATTACKCOUNT = 102 118
+		INPACTCOUNT = 110
 		DAMAGE = 0
 	END_ATTACKINFO
 
@@ -32,66 +32,66 @@ MOTIONSET
 		FRAME = 15
 		PARTS	# ----- [ 0 ] -----
 			ROT = 0.00 0.00 0.00
-			POS = 0.00 0.00 15.00
+			POS = 0.00 -1.20 0.00
 			SCALE = 1.00 1.00 1.00
 		END_PARTS
 
 		PARTS	# ----- [ 1 ] -----
-			ROT = 0.16 0.00 0.00
+			ROT = -0.10 0.00 0.00
 			POS = 0.00 0.00 0.00
 			SCALE = 1.00 1.00 1.00
 		END_PARTS
 
 		PARTS	# ----- [ 2 ] -----
-			ROT = 0.92 0.00 0.00
+			ROT = -0.25 0.00 0.00
 			POS = 0.00 0.00 0.00
 			SCALE = 1.00 1.00 1.00
 		END_PARTS
 
 		PARTS	# ----- [ 3 ] -----
-			ROT = 2.79 0.00 1.53
+			ROT = 0.00 -0.53 1.07
 			POS = 0.00 0.00 0.00
 			SCALE = 1.00 1.00 1.00
 		END_PARTS
 
 		PARTS	# ----- [ 4 ] -----
-			ROT = -0.00 0.00 0.35
+			ROT = 0.00 -0.53 0.35
 			POS = 0.00 0.00 0.00
 			SCALE = 1.00 1.00 1.00
 		END_PARTS
 
 		PARTS	# ----- [ 5 ] -----
-			ROT = 2.77 0.00 -1.57
+			ROT = 0.00 0.53 -1.07
 			POS = 0.00 0.00 0.00
 			SCALE = 1.00 1.00 1.00
 		END_PARTS
 
 		PARTS	# ----- [ 6 ] -----
-			ROT = 0.00 0.00 -0.35
+			ROT = 0.00 0.53 -0.35
 			POS = 0.00 0.00 0.00
 			SCALE = 1.00 1.00 1.00
 		END_PARTS
 
 		PARTS	# ----- [ 7 ] -----
-			ROT = 0.00 0.00 0.00
+			ROT = 0.18 0.00 0.00
 			POS = 0.00 0.00 0.00
 			SCALE = 1.00 1.00 1.00
 		END_PARTS
 
 		PARTS	# ----- [ 8 ] -----
-			ROT = 0.00 0.00 0.00
+			ROT = -0.28 0.00 0.00
 			POS = 0.00 0.00 0.00
 			SCALE = 1.00 1.00 1.00
 		END_PARTS
 
 		PARTS	# ----- [ 9 ] -----
-			ROT = 0.00 0.00 0.00
+			ROT = 0.18 0.00 0.00
 			POS = 0.00 0.00 0.00
 			SCALE = 1.00 1.00 1.00
 		END_PARTS
 
 		PARTS	# ----- [ 10 ] -----
-			ROT = 0.00 0.00 0.00
+			ROT = -0.28 0.00 0.00
 			POS = 0.00 0.00 0.00
 			SCALE = 1.00 1.00 1.00
 		END_PARTS
