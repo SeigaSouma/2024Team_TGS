@@ -14,7 +14,7 @@
 //==========================================================================
 std::vector < CCameraMotion_Trigger::CREATE_FUNC > CCameraMotion_Trigger::m_CreateFunc =
 {
-	[]() {return DEBUG_NEW CCameraTrigger_Pass; }	// パス
+	[]() {return DEBUG_NEW CCameraTrigger_Pass(); }	// パス
 };
 
 //==========================================================================

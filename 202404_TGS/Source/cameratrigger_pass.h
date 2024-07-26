@@ -36,7 +36,11 @@ private:
 	typedef void(CCameraTrigger_Pass::*TRIGGER_FUNC)();
 	static TRIGGER_FUNC m_TriggerFunc[];
 
-	void SubTitle01();	// Žš–‹
+	void waiting();	// Žš–‹
+	void newMission();
+	void carry();
+	void carefull();
+	void goodluck();
 
 };
 
