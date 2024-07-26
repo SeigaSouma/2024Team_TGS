@@ -118,21 +118,12 @@ HRESULT CMapBlock::Init()
 void CMapBlock::Uninit()
 {
 	// チェックポイントの終了
-	for (int i = 0; i < m_CheckpointList.GetNumAll(); i++)
-	{
-		m_CheckpointList.GetData(i)->Uninit();
-	}
-
 	m_CheckpointList.Uninit();
 
-
 	// 障害物の終了
-	for (int i = 0; i < m_ObstacleList.GetNumAll(); i++)
-	{
-		m_ObstacleList.GetData(i)->Uninit();
-	}
-
 	m_ObstacleList.Uninit();
+
+	delete this;
 }
 
 //==========================================================================
@@ -144,6 +135,13 @@ void CMapBlock::Kill()
 	for (int i = 0; i < m_List.GetNumAll(); i++)
 	{
 		m_List.GetData(i)->Uninit();
+	}
+	m_List.Uninit();
+
+	// ブロック配置情報の終了
+	for (int i = 0; i < m_InfoList.GetNumAll(); i++)
+	{
+		m_InfoList.GetData(i)->Uninit();
 	}
 
 	m_List.Uninit();
@@ -293,7 +291,7 @@ void CMapBlock::LoadBin()
 	for (int i = 0; i < static_cast<int>(checkpoint.size()); i++)
 	{
 		// 生成してリストの管理下に
-		CMapBlockInfo* pBlock = new CMapBlockInfo;
+		CMapBlockInfo* pBlock = DEBUG_NEW CMapBlockInfo;
 		pBlock->Init();
 
 		pBlock->SetCheckpointInfo(checkpoint[i]);
@@ -415,7 +413,7 @@ void CMapBlock::Set(const int Idx, const MyLib::Vector3& startpos, float startle
 void CMapBlock::AddInfo()
 {
 	// 生成してリストの管理下に
-	CMapBlockInfo* pBlock = new CMapBlockInfo;
+	CMapBlockInfo* pBlock = DEBUG_NEW CMapBlockInfo;
 	pBlock->Init();
 	m_InfoList.Regist(pBlock);
 }
@@ -495,6 +493,8 @@ void CMapBlockInfo::Uninit()
 {
 	m_CheckpointList.clear();
 	m_ObstacleList.clear();
+
+	delete this;
 }
 
 //==========================================================================
