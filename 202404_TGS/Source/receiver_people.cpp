@@ -27,8 +27,8 @@
 namespace
 {
 	const std::string FILENAME = "data\\TEXT\\character\\mob\\person_01\\setup_human.txt";
-	const float HEAD_POSITION = 200.0f;
-	const float CATCH_RANGE = 200.0f;
+	const float HEAD_POSITION = 300.0f;
+	const float CATCH_RANGE = 300.0f;
 }
 
 namespace STATE_TIME
@@ -382,7 +382,7 @@ void CReceiverPeople::StateWait()
 	}
 	// キャッチできない
 	else if (pBaggage->GetPosition().y >= GetPosition().y + HEAD_POSITION &&
-		pBaggage->GetPosition().x >= GetPosition().x - CATCH_RANGE)
+		pBaggage->GetPosition().x >= GetPosition().x)
 	{
 		SetState(STATE::STATE_RETURN);
 	}
@@ -592,6 +592,12 @@ void CReceiverPeople::AttackAction(CMotion::AttackInfo ATKInfo, int nCntATK)
 //==========================================================================
 void CReceiverPeople::AttackInDicision(CMotion::AttackInfo* pATKInfo, int nCntATK)
 {
+	// ゴール中のみ情報設定
+	if (CGame::GetInstance()->GetGameManager()->GetType() != CGameManager::SceneType::SCENE_GOAL)
+	{
+		return;
+	}
+
 	// モーション取得
 	CMotion* pMotion = GetMotion();
 	if (pMotion == nullptr)
@@ -606,9 +612,24 @@ void CReceiverPeople::AttackInDicision(CMotion::AttackInfo* pATKInfo, int nCntAT
 	// 武器の位置
 	MyLib::Vector3 weponpos = pMotion->GetAttackPosition(GetModel(), *pATKInfo);
 
-
 	switch (motionType)
 	{
+	case MOTION::MOTION_BYEBYE:
+	{
+		// ばいばい状態だけ
+		if (m_state != STATE::STATE_BYEBYE) {
+			return;
+		}
+
+		CBaggage* pBaggage = CBaggage::GetListObj().GetData(0);
+
+		if (pBaggage->GetState() != CBaggage::STATE::STATE_PASS)
+		{
+			pBaggage->SetPosition(weponpos);
+		}
+	}
+	break;
+
 	case MOTION::MOTION_GET:
 	{
 		CBaggage* pBaggage = CBaggage::GetListObj().GetData(0);

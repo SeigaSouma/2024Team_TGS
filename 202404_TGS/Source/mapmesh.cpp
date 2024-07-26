@@ -18,6 +18,7 @@
 #include "stonewall.h"
 #include "townfield_sinuous.h"
 #include "townfield_sinuous_front.h"
+#include "townfield_fixedplane.h"
 
 //==========================================================================
 // íËêîíËã`
@@ -69,6 +70,10 @@ CMapMesh* CMapMesh::Create(MeshType type)
 
 	case CMapMesh::TYPE_TOWNFIELD_SINUOUS_FRONT:
 		pObjMeshField = DEBUG_NEW CTownField_Sinuous_Front;
+		break;
+
+	case CMapMesh::TYPE_TOWNFIELD_FIXEDPLANE:
+		pObjMeshField = DEBUG_NEW CTownField_FixedPlane;
 		break;
 
 	default:
