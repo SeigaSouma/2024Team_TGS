@@ -37,7 +37,7 @@ namespace
 	float INTERVAL_BRESSEFFECT = 0.32f;	// 息出すまでの間隔
 	const float DEFAULT_BRESSSCALE_EFFECT = 90.0f;	// デフォの息エフェクトスケール
 	const float MIN_RATIO_HEIGHT_BRESS = 0.2f;	// 息の高さの最小割合
-	const float GOAL_INER = 0.03f;
+	const float GOAL_INER = 0.02f;
 	const float GOAL_GRAVITY = -0.7f;
 }
 
