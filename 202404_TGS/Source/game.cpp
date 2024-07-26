@@ -55,6 +55,7 @@
 #include "peoplemanager.h"
 #include "subtitle.h"
 #include "receiver_people.h"
+#include "splashwater.h"
 
 //==========================================================================
 // Ã“Iƒƒ“ƒo•Ï”éŒ¾
@@ -523,6 +524,7 @@ void CGame::Update()
 		CSubTitle* pSubTitle = CSubTitle::Create(MyLib::Vector3(640.0f, 670.0f, 0.0f), 2.0f);
 		pSubTitle->BindSubtitle("data\\TEXTURE\\subtitle\\sample.png");
 		pSubTitle->SetSizeByHeight(40.0f);
+		CSplashwater::Create();
 	}
 
 #if _DEBUG

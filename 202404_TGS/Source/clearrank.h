@@ -52,6 +52,7 @@ private:
 	// ó‘ÔŒn
 
 	// ‚»‚Ì‘¼ŠÖ”
+	void CreateText();	// •¶š¶¬
 
 	//=============================
 	// ƒƒ“ƒo•Ï”
@@ -62,6 +63,7 @@ private:
 
 	// ‚»‚Ì‘¼
 	CJudge::JUDGE m_Rank;	// ƒ‰ƒ“ƒN
+	CObject2D* m_pText;		// •¶š
 
 };
 

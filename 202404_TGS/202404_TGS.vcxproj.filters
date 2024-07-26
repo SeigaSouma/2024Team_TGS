@@ -656,10 +656,13 @@
     <ClCompile Include="Source\cameratrigger_pass.cpp">
       <Filter>camera</Filter>
     </ClCompile>
+
     <ClCompile Include="Source\townfield_fixedplane.cpp">
       <Filter>map\mesh</Filter>
     </ClCompile>
-  </ItemGroup>
+    <ClCompile Include="Source\splashwater.cpp">
+      <Filter>direction</Filter>
+    </ClCompile>  </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ballast.h">
       <Filter>ヘッダー ファイル</Filter>
@@ -1203,6 +1206,8 @@
     </ClInclude>
     <ClInclude Include="Source\townfield_fixedplane.h">
       <Filter>map\mesh</Filter>
+    </ClInclude>    <ClInclude Include="Source\splashwater.h">
+      <Filter>direction</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
