@@ -272,8 +272,16 @@ void CPeopleManager::SetPeople(const MyLib::Vector3& pos, const MyLib::Vector3& 
 		// Œü‚«Ý’è
 		if (pPeople != nullptr)
 		{
-			pPeople->SetRotation(rot);
-			pPeople->SetRotDest(rot.y);
+			// Œü‚«Ý’è
+			float rotY = rot.y;
+			if (rand() % 2 == 0)
+			{
+				rotY += D3DX_PI;
+			}
+
+			UtilFunc::Transformation::RotNormalize(rotY);
+			pPeople->SetRotation(MyLib::Vector3(0.0f, rotY, 0.0f));
+			pPeople->SetRotDest(rotY);
 		}
 	}
 	
