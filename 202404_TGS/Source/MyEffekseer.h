@@ -42,6 +42,8 @@ public:
 		EFKLABEL_RIVER_SAMPLE,		// 川サンプル
 		EFKLABEL_IMPACT,			// 衝撃
 		EFKLABEL_SPRAYWATER,		// 水しぶき
+		EFKLABEL_WATERJUMP,			// 魚入水
+		EFKLABEL_PLAYERMOVE_LINE,	// プレイヤーの移動線
 		EFKLABEL_MAX
 	};
 

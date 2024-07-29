@@ -1,19 +1,19 @@
-//=============================================================================
+ï»¿//=============================================================================
 // 
-//  ƒvƒŒƒCƒ„[ƒwƒbƒ_[ [player.h]
-//  Author : ‘Š”nèÎ‰ë
+//  ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãƒ˜ãƒƒãƒ€ãƒ¼ [player.h]
+//  Author : ç›¸é¦¬éœé›…
 // 
 //=============================================================================
 
 #ifndef _PLAYER_H_
-#define _PLAYER_H_	// “ñdƒCƒ“ƒNƒ‹[ƒh–h~
+#define _PLAYER_H_	// äºŒé‡ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰é˜²æ­¢
 
 #include "gamemanager.h"
 #include "objectChara.h"
 #include "listmanager.h"
 
 //==========================================================================
-// ‘O•ûéŒ¾
+// å‰æ–¹å®£è¨€
 //==========================================================================
 class CShadow;
 class CHP_GaugePlayer;
@@ -21,61 +21,61 @@ class CEnemy;
 class CBaggage;
 class CRetry_Ui;
 
-class CPlayerControlMove;		// ˆÚ“®
-class CPlayerControlBaggage;	// ‰×•¨‘€ì
-class CPlayerControlSurfacing;	// •‚ã‘€ì
-class CPlayerControlTrick;		// ƒgƒŠƒbƒN‘€ì
+class CPlayerControlMove;		// ç§»å‹•
+class CPlayerControlBaggage;	// è·ç‰©æ“ä½œ
+class CPlayerControlSurfacing;	// æµ®ä¸Šæ“ä½œ
+class CPlayerControlTrick;		// ãƒˆãƒªãƒƒã‚¯æ“ä½œ
 
 //==========================================================================
-// ƒNƒ‰ƒX’è‹`
+// ã‚¯ãƒ©ã‚¹å®šç¾©
 //==========================================================================
-// ƒvƒŒƒCƒ„[ƒNƒ‰ƒX’è‹`
+// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¯ãƒ©ã‚¹å®šç¾©
 class CPlayer : public CObjectChara
 {
 public:
 	//=============================
-	// —ñ‹“Œ^’è‹`
+	// åˆ—æŒ™å‹å®šç¾©
 	//=============================
-	// ƒ‚[ƒVƒ‡ƒ“—ñ‹“
+	// ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³åˆ—æŒ™
 	enum MOTION
 	{
-		MOTION_DEF = 0,		// ƒjƒ…[ƒgƒ‰ƒ‹ƒ‚[ƒVƒ‡ƒ“
-		MOTION_WALK,		// ˆÚ“®
-		MOTION_DEAD,		// €–S
-		MOTION_START,		// ƒXƒ^[ƒg‰‰o
+		MOTION_DEF = 0,		// ãƒ‹ãƒ¥ãƒ¼ãƒˆãƒ©ãƒ«ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³
+		MOTION_WALK,		// ç§»å‹•
+		MOTION_DEAD,		// æ­»äº¡
+		MOTION_START,		// ã‚¹ã‚¿ãƒ¼ãƒˆæ¼”å‡º
 		MOTION_MAX
 	};
 
-	// ó‘Ô’è‹`
+	// çŠ¶æ…‹å®šç¾©
 	enum STATE
 	{
-		STATE_NONE = 0,		// ‚È‚É‚à‚È‚¢
-		STATE_INVINCIBLE,	// –³“G
-		STATE_DMG,			// ƒ_ƒ[ƒW
-		STATE_DEAD,			// €
-		STATE_DEADWAIT,		// €–S‘Ò‹@
-		STATE_RETURN,		// ƒ`ƒFƒbƒNƒ|ƒCƒ“ƒg‚É–ß‚é
-		STATE_RESTART,		// ƒXƒ^[ƒg‚É–ß‚é
-		STATE_RESPAWN,		// •œŠˆ
+		STATE_NONE = 0,		// ãªã«ã‚‚ãªã„
+		STATE_INVINCIBLE,	// ç„¡æ•µ
+		STATE_DMG,			// ãƒ€ãƒ¡ãƒ¼ã‚¸
+		STATE_DEAD,			// æ­»
+		STATE_DEADWAIT,		// æ­»äº¡å¾…æ©Ÿ
+		STATE_RETURN,		// ãƒã‚§ãƒƒã‚¯ãƒã‚¤ãƒ³ãƒˆã«æˆ»ã‚‹
+		STATE_RESTART,		// ã‚¹ã‚¿ãƒ¼ãƒˆã«æˆ»ã‚‹
+		STATE_RESPAWN,		// å¾©æ´»
 		STATE_MAX
 	};
 
 	//=============================
-	// \‘¢‘Ì
+	// æ§‹é€ ä½“
 	//=============================
-	// ƒvƒŒƒCƒ„[ƒXƒe[ƒ^ƒX
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹
 	struct sPlayerStatus
 	{
-		float respawnHeal;				// ƒŠƒXƒ|[ƒ“‚Ì‰ñ•œ—Ê
-		float guardStaminaSubValue;		// ƒK[ƒh‚ÌƒXƒ^ƒ~ƒiŒ¸­—Ê
-		float counterStaminaSubValue;	// ƒJƒEƒ“ƒ^[‚ÌƒXƒ^ƒ~ƒiŒ¸­—Ê
-		float counterStaminaHealValue;	// ƒJƒEƒ“ƒ^[‚ÌƒXƒ^ƒ~ƒi‰ñ•œ—Ê
-		float attackMultiply;			// UŒ‚‚Ì”{—¦
-		float chargeTime;				// ƒ`ƒƒ[ƒWŠÔ
-		float counterExtensionFrame;	// ƒJƒEƒ“ƒ^[—P—\ƒtƒŒ[ƒ€
-		float damageMitigation;			// ƒ_ƒ[ƒWŒyŒ¸—¦
-		float addDownTime;				// ƒ_ƒEƒ“ŠÔ•t—^
-		bool bChargeFlinch;				// ‹¯‚İƒtƒ‰ƒO
+		float respawnHeal;				// ãƒªã‚¹ãƒãƒ¼ãƒ³æ™‚ã®å›å¾©é‡
+		float guardStaminaSubValue;		// ã‚¬ãƒ¼ãƒ‰æ™‚ã®ã‚¹ã‚¿ãƒŸãƒŠæ¸›å°‘é‡
+		float counterStaminaSubValue;	// ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼æ™‚ã®ã‚¹ã‚¿ãƒŸãƒŠæ¸›å°‘é‡
+		float counterStaminaHealValue;	// ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼æ™‚ã®ã‚¹ã‚¿ãƒŸãƒŠå›å¾©é‡
+		float attackMultiply;			// æ”»æ’ƒã®å€ç‡
+		float chargeTime;				// ãƒãƒ£ãƒ¼ã‚¸æ™‚é–“
+		float counterExtensionFrame;	// ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼çŒ¶äºˆãƒ•ãƒ¬ãƒ¼ãƒ 
+		float damageMitigation;			// ãƒ€ãƒ¡ãƒ¼ã‚¸è»½æ¸›ç‡
+		float addDownTime;				// ãƒ€ã‚¦ãƒ³æ™‚é–“ä»˜ä¸
+		bool bChargeFlinch;				// æ€¯ã¿ãƒ•ãƒ©ã‚°
 
 		sPlayerStatus() : respawnHeal(0.0f), guardStaminaSubValue(0.0f), counterStaminaSubValue(0.0f),
 			counterStaminaHealValue(0.0f), attackMultiply(0.0f), chargeTime(0.0f),
@@ -90,165 +90,166 @@ public:
 			counterExtensionFrame(countertime), damageMitigation(damagemitigation), addDownTime(downtime), bChargeFlinch(bFlinsh) {}
 	};
 
-	// ƒ_ƒ[ƒWî•ñ
+	// ãƒ€ãƒ¡ãƒ¼ã‚¸æƒ…å ±
 	struct sDamageInfo
 	{
-		bool bActiveSuperArmor;	// ƒX[ƒp[ƒA[ƒ}[
-		bool bReceived;			// ƒ_ƒ[ƒWó‚¯•t‚¯”»’è
-		float reciveTime;		// ƒ_ƒ[ƒWó•tŠÔ
+		bool bActiveSuperArmor;	// ã‚¹ãƒ¼ãƒ‘ãƒ¼ã‚¢ãƒ¼ãƒãƒ¼
+		bool bReceived;			// ãƒ€ãƒ¡ãƒ¼ã‚¸å—ã‘ä»˜ã‘åˆ¤å®š
+		float reciveTime;		// ãƒ€ãƒ¡ãƒ¼ã‚¸å—ä»˜æ™‚é–“
 
 		sDamageInfo() : bActiveSuperArmor(false), bReceived(false), reciveTime(0.0f) {}
 	};
 
-	// ƒ‚[ƒVƒ‡ƒ“‚Ì”»’è
+	// ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ã®åˆ¤å®š
 	struct SMotionFrag
 	{
-		bool bJump;			// ƒWƒƒƒ“ƒv’†
-		bool bATK;			// UŒ‚’†
-		bool bGuard;		// ƒK[ƒh
-		bool bCounter;		// ƒJƒEƒ“ƒ^[’†
-		bool bKnockBack;	// ƒmƒbƒNƒoƒbƒN’†
-		bool bDead;			// €–S’†
-		bool bMove;			// ˆÚ“®’†
+		bool bJump;			// ã‚¸ãƒ£ãƒ³ãƒ—ä¸­
+		bool bATK;			// æ”»æ’ƒä¸­
+		bool bGuard;		// ã‚¬ãƒ¼ãƒ‰
+		bool bCounter;		// ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ä¸­
+		bool bKnockBack;	// ãƒãƒƒã‚¯ãƒãƒƒã‚¯ä¸­
+		bool bDead;			// æ­»äº¡ä¸­
+		bool bMove;			// ç§»å‹•ä¸­
 	};
 
 	CPlayer(int nPriority = 2);
 	~CPlayer();
 
-	// ƒI[ƒo[ƒ‰ƒCƒh‚³‚ê‚½ŠÖ”
+	// ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰ã•ã‚ŒãŸé–¢æ•°
 	virtual HRESULT Init() override;
 	virtual void Uninit() override;
 	virtual void Update() override;
 	virtual void Draw() override;
 
-	MyLib::HitResult_Character Hit(const int nValue);	// ƒqƒbƒgˆ—
+	MyLib::HitResult_Character Hit(const int nValue);	// ãƒ’ãƒƒãƒˆå‡¦ç†
 
-	STATE GetState();		// ó‘Ôæ“¾
-	void SetState(STATE state, int nCntState = 0);	// ó‘Ôİ’è
-	virtual void Kill();			// €–Sˆ—
-	void SwitchRockOnTarget();		// ƒƒbƒN‘ÎÛØ‚è‘Ö‚¦
+	STATE GetState();		// çŠ¶æ…‹å–å¾—
+	void SetState(STATE state, int nCntState = 0);	// çŠ¶æ…‹è¨­å®š
+	virtual void Kill();			// æ­»äº¡å‡¦ç†
+	void SwitchRockOnTarget();		// ãƒ­ãƒƒã‚¯å¯¾è±¡åˆ‡ã‚Šæ›¿ãˆ
 
-	// ƒ‚[ƒVƒ‡ƒ“
-	void SetMotion(int motionIdx);									// ƒ‚[ƒVƒ‡ƒ“‚Ìİ’è
-	void SetEnableDash(bool bDash)	{ m_bDash = bDash; }			// ƒ_ƒbƒVƒ…ó‹µİ’è
-	bool IsDash()					{ return m_bDash; }				// ƒ_ƒbƒVƒ…”»’è
-	void SetEnableJump(bool bJump)	{ m_bJump = bJump; }			// ƒWƒƒƒ“ƒvó‹µİ’è
-	bool IsJump()					{ return m_bJump; }				// ƒWƒƒƒ“ƒv”»’è
-	float GetDashTime()				{ return m_fDashTime; }			// ƒ_ƒbƒVƒ…ŠÔ
-	void SetMotionFrag(SMotionFrag frag) { m_sMotionFrag = frag; }	// ƒ‚[ƒVƒ‡ƒ“‚Ìƒtƒ‰ƒOİ’è
-	SMotionFrag GetMotionFrag() { return m_sMotionFrag; }			// ƒ‚[ƒVƒ‡ƒ“‚Ìƒtƒ‰ƒOæ“¾
-	void SetDamageInfo(sDamageInfo info) { m_sDamageInfo = info; }	// ƒ_ƒ[ƒWî•ñİ’è
-	sDamageInfo GetDamageInfo() { return m_sDamageInfo; }			// ƒ_ƒ[ƒWî•ñæ“¾
-
-	//=============================
-	// ‘€ì
-	//=============================
-	void ChangeMoveControl(CPlayerControlMove* control);		// ˆÚ“®‚Ì‘€ì•ÏX
-	void ChangeBaggageControl(CPlayerControlBaggage* control);	// ‰×•¨‚Ì‘€ì•ÏX
-	void ChangeSurfacingControl(CPlayerControlSurfacing* control);	// •‚ã‚Ì‘€ì•ÏX
-	void ChangeTrickControl(CPlayerControlTrick* control);	// •‚ã‚Ì‘€ì•ÏX
+	// ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³
+	void SetMotion(int motionIdx);									// ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ã®è¨­å®š
+	void SetEnableDash(bool bDash)	{ m_bDash = bDash; }			// ãƒ€ãƒƒã‚·ãƒ¥çŠ¶æ³è¨­å®š
+	bool IsDash()					{ return m_bDash; }				// ãƒ€ãƒƒã‚·ãƒ¥åˆ¤å®š
+	void SetEnableJump(bool bJump)	{ m_bJump = bJump; }			// ã‚¸ãƒ£ãƒ³ãƒ—çŠ¶æ³è¨­å®š
+	bool IsJump()					{ return m_bJump; }				// ã‚¸ãƒ£ãƒ³ãƒ—åˆ¤å®š
+	float GetDashTime()				{ return m_fDashTime; }			// ãƒ€ãƒƒã‚·ãƒ¥æ™‚é–“
+	void SetMotionFrag(SMotionFrag frag) { m_sMotionFrag = frag; }	// ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ã®ãƒ•ãƒ©ã‚°è¨­å®š
+	SMotionFrag GetMotionFrag() { return m_sMotionFrag; }			// ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ã®ãƒ•ãƒ©ã‚°å–å¾—
+	void SetDamageInfo(sDamageInfo info) { m_sDamageInfo = info; }	// ãƒ€ãƒ¡ãƒ¼ã‚¸æƒ…å ±è¨­å®š
+	sDamageInfo GetDamageInfo() { return m_sDamageInfo; }			// ãƒ€ãƒ¡ãƒ¼ã‚¸æƒ…å ±å–å¾—
 
 	//=============================
-	// ‚»‚Ì‘¼
+	// æ“ä½œ
 	//=============================
-	void SetMyPlayerIdx(int idx) { m_nMyPlayerIdx = idx; }	// ©•ª‚ÌƒCƒ“ƒfƒbƒNƒXİ’è
-	int GetMyPlayerIdx() { return m_nMyPlayerIdx; }			// ©•ª‚ÌƒCƒ“ƒfƒbƒNƒXæ“¾
-	MyLib::Vector3 GetCylinderPosition() { return m_posCylinder; };		// “›‚ÌˆÊ’uæ“¾
-	void SetMoveLength(float len) { m_fMoveLength = len; }				// ˆÚ“®‹——£İ’è
-	float GetMoveLength() { return m_fMoveLength; }						// ˆÚ“®‹——£æ“¾
-	CBaggage* GetBaggage() { return m_pBaggage; }			// ©•ª‚Ì‰×•¨æ“¾
-	CRetry_Ui* GetRetryUI() { return m_pRetryUI; }			// ƒŠƒgƒ‰ƒCUIæ“¾
-	void CreateRetryUI();										// ƒŠƒgƒ‰ƒCUIİ’è
+	void ChangeMoveControl(CPlayerControlMove* control);		// ç§»å‹•ã®æ“ä½œå¤‰æ›´
+	void ChangeBaggageControl(CPlayerControlBaggage* control);	// è·ç‰©ã®æ“ä½œå¤‰æ›´
+	void ChangeSurfacingControl(CPlayerControlSurfacing* control);	// æµ®ä¸Šã®æ“ä½œå¤‰æ›´
+	void ChangeTrickControl(CPlayerControlTrick* control);	// æµ®ä¸Šã®æ“ä½œå¤‰æ›´
 
-	// ƒqƒbƒgŒn
+	//=============================
+	// ãã®ä»–
+	//=============================
+	void SetMyPlayerIdx(int idx) { m_nMyPlayerIdx = idx; }	// è‡ªåˆ†ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹è¨­å®š
+	int GetMyPlayerIdx() { return m_nMyPlayerIdx; }			// è‡ªåˆ†ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹å–å¾—
+	MyLib::Vector3 GetCylinderPosition() { return m_posCylinder; };		// ç­’ã®ä½ç½®å–å¾—
+	void SetMoveLength(float len) { m_fMoveLength = len; }				// ç§»å‹•è·é›¢è¨­å®š
+	float GetMoveLength() { return m_fMoveLength; }						// ç§»å‹•è·é›¢å–å¾—
+	CBaggage* GetBaggage() { return m_pBaggage; }			// è‡ªåˆ†ã®è·ç‰©å–å¾—
+	CRetry_Ui* GetRetryUI() { return m_pRetryUI; }			// ãƒªãƒˆãƒ©ã‚¤UIå–å¾—
+	void CreateRetryUI();										// ãƒªãƒˆãƒ©ã‚¤UIè¨­å®š
+
+	// ãƒ’ãƒƒãƒˆç³»
 	void DeadSetting(MyLib::HitResult_Character* result);
 
-	static CPlayer* Create(int nIdx);	// ¶¬
-	static CListManager<CPlayer> GetListObj() { return m_List; }	// ƒŠƒXƒgæ“¾
+	static CPlayer* Create(int nIdx);	// ç”Ÿæˆ
+	static CListManager<CPlayer> GetListObj() { return m_List; }	// ãƒªã‚¹ãƒˆå–å¾—
 
 protected:
 
-	bool Collision(MyLib::Vector3 &pos, MyLib::Vector3 &move);	// “–‚½‚è”»’è
-	void MotionSet();	// ƒ‚[ƒVƒ‡ƒ“‚Ìİ’è
+	bool Collision(MyLib::Vector3 &pos, MyLib::Vector3 &move);	// å½“ãŸã‚Šåˆ¤å®š
+	void MotionSet();	// ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ã®è¨­å®š
 
-	bool m_bJump;				// ƒWƒƒƒ“ƒv’†‚©‚Ç‚¤‚©
-	bool m_bLandOld;			// ‰ß‹‚Ì’…’nî•ñ
-	bool m_bHitStage;			// ƒXƒe[ƒW‚Ì“–‚½‚è”»’è
-	bool m_bLandField;			// ƒtƒB[ƒ‹ƒh‚Ì’…’n”»’è
-	bool m_bHitWall;			// •Ç‚Ì“–‚½‚è”»’è
-	int m_nMyPlayerIdx;			// ƒvƒŒƒCƒ„[ƒCƒ“ƒfƒbƒNƒX”Ô†
-	int m_nCntWalk;				// •àsƒJƒEƒ“ƒ^[
-	STATE m_state;				// ó‘Ô
-	CShadow *m_pShadow;			// ‰e‚Ìî•ñ
-	SMotionFrag m_sMotionFrag;	// ƒ‚[ƒVƒ‡ƒ“‚Ìƒtƒ‰ƒO
+	bool m_bJump;				// ã‚¸ãƒ£ãƒ³ãƒ—ä¸­ã‹ã©ã†ã‹
+	bool m_bLandOld;			// éå»ã®ç€åœ°æƒ…å ±
+	bool m_bHitStage;			// ã‚¹ãƒ†ãƒ¼ã‚¸ã®å½“ãŸã‚Šåˆ¤å®š
+	bool m_bLandField;			// ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®ç€åœ°åˆ¤å®š
+	bool m_bHitWall;			// å£ã®å½“ãŸã‚Šåˆ¤å®š
+	int m_nMyPlayerIdx;			// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ç•ªå·
+	int m_nCntWalk;				// æ­©è¡Œã‚«ã‚¦ãƒ³ã‚¿ãƒ¼
+	STATE m_state;				// çŠ¶æ…‹
+	CShadow *m_pShadow;			// å½±ã®æƒ…å ±
+	SMotionFrag m_sMotionFrag;	// ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ã®ãƒ•ãƒ©ã‚°
 private:
 
 	//=============================
-	// ŠÖ”ƒŠƒXƒg
+	// é–¢æ•°ãƒªã‚¹ãƒˆ
 	//=============================
 	typedef void(CPlayer::* STATE_FUNC)();
 	static STATE_FUNC m_StateFunc[];
 
 	//=============================
-	// ƒƒ“ƒoŠÖ”
+	// ãƒ¡ãƒ³ãƒé–¢æ•°
 	//=============================
-	// ó‘ÔŠÖ”
-	void UpdateState();		// ó‘ÔXV
-	void StateNone();		// ‚È‚µ
-	void StateInvincible();	// –³“G
-	void StateDamage();		// ƒ_ƒ[ƒW
-	void StateDead();		// €–S
-	void StateDeadWait();	// €–S‘Ò‹@
-	void StateReturn();		// ƒtƒF[ƒhƒAƒEƒg
-	void StateRestart();	// ƒŠƒXƒ^[ƒg
-	void StateRespawn();	// ƒŠƒXƒ|[ƒ“
+	// çŠ¶æ…‹é–¢æ•°
+	void UpdateState();		// çŠ¶æ…‹æ›´æ–°
+	void StateNone();		// ãªã—
+	void StateInvincible();	// ç„¡æ•µ
+	void StateDamage();		// ãƒ€ãƒ¡ãƒ¼ã‚¸
+	void StateDead();		// æ­»äº¡
+	void StateDeadWait();	// æ­»äº¡å¾…æ©Ÿ
+	void StateReturn();		// ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¢ã‚¦ãƒˆ
+	void StateRestart();	// ãƒªã‚¹ã‚¿ãƒ¼ãƒˆ
+	void StateRespawn();	// ãƒªã‚¹ãƒãƒ¼ãƒ³
 
-	// ‚»‚Ì‘¼ŠÖ”
-	virtual void Controll();		// ‘€ì
-	virtual void DeleteControl();	// ‘€ìíœ
-	void LimitPos();				// ˆÊ’u§ŒÀ
-	void ReaspawnCheckPoint();		// ƒ`ƒFƒbƒNƒ|ƒCƒ“ƒg•œŠˆ
-	void RespawnStart();			// ƒXƒ^[ƒg•œŠˆ
-	void CollisionMapObject();		// ƒ}ƒbƒvƒIƒuƒWƒFƒNƒg‚Æ‚Ì“–‚½‚è”»’è
-	void MotionBySetState();		// ƒ‚[ƒVƒ‡ƒ“•Ê‚Ìó‘Ôİ’è
-	void ResetFrag();				// ƒtƒ‰ƒOƒŠƒZƒbƒg
-	void UpdateDamageReciveTimer();	// ƒ_ƒ[ƒWó•tŠÔXV
-	void ReaspawnSetting();			// ƒŠƒXƒ|[ƒ“İ’è
-	void Bobbing();					// ‚Õ‚©‚Õ‚©
-	void ScreenReset();				// ‰æ–Êó‘ÔƒŠƒZƒbƒg
+	// ãã®ä»–é–¢æ•°
+	virtual void Controll();		// æ“ä½œ
+	virtual void DeleteControl();	// æ“ä½œå‰Šé™¤
+	void LimitPos();				// ä½ç½®åˆ¶é™
+	void ReaspawnCheckPoint();		// ãƒã‚§ãƒƒã‚¯ãƒã‚¤ãƒ³ãƒˆå¾©æ´»
+	void RespawnStart();			// ã‚¹ã‚¿ãƒ¼ãƒˆå¾©æ´»
+	void CollisionMapObject();		// ãƒãƒƒãƒ—ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¨ã®å½“ãŸã‚Šåˆ¤å®š
+	void MotionBySetState();		// ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³åˆ¥ã®çŠ¶æ…‹è¨­å®š
+	void ResetFrag();				// ãƒ•ãƒ©ã‚°ãƒªã‚»ãƒƒãƒˆ
+	void UpdateDamageReciveTimer();	// ãƒ€ãƒ¡ãƒ¼ã‚¸å—ä»˜æ™‚é–“æ›´æ–°
+	void ReaspawnSetting();			// ãƒªã‚¹ãƒãƒ¼ãƒ³è¨­å®š
+	void Bobbing();					// ã·ã‹ã·ã‹
+	void ScreenReset();				// ç”»é¢çŠ¶æ…‹ãƒªã‚»ãƒƒãƒˆ
+	void MovingWaterLine();			// ç§»å‹•æ™‚ã®æ°´æ”ãåˆ†ã‘ç·š
 
-	// ƒ‚[ƒVƒ‡ƒ“ŒnŠÖ”
-	void AttackAction(CMotion::AttackInfo ATKInfo, int nCntATK) override;		// UŒ‚ˆ—
-	void AttackInDicision(CMotion::AttackInfo* pATKInfo, int nCntATK) override;	// UŒ‚”»’è’†ˆ—
+	// ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ç³»é–¢æ•°
+	void AttackAction(CMotion::AttackInfo ATKInfo, int nCntATK) override;		// æ”»æ’ƒæ™‚å‡¦ç†
+	void AttackInDicision(CMotion::AttackInfo* pATKInfo, int nCntATK) override;	// æ”»æ’ƒåˆ¤å®šä¸­å‡¦ç†
 
 	//=============================
-	// ƒƒ“ƒo•Ï”
+	// ãƒ¡ãƒ³ãƒå¤‰æ•°
 	//=============================
-	STATE m_Oldstate;				// ‘O‰ñ‚Ìó‘Ô
-	D3DXCOLOR m_mMatcol;			// ƒ}ƒeƒŠƒAƒ‹‚ÌF
-	MyLib::Vector3 m_posKnokBack;	// ƒmƒbƒNƒoƒbƒN‚ÌˆÊ’u
-	MyLib::Vector3 m_KnokBackMove;	// ƒmƒbƒNƒoƒbƒN‚ÌˆÚ“®—Ê
-	MyLib::Vector3 m_posCylinder;	// “›‚ÌˆÊ’u
-	int m_nCntState;				// ó‘Ô‘JˆÚƒJƒEƒ“ƒ^[
-	bool m_bDash;					// ƒ_ƒbƒVƒ…”»’è
-	float m_fDashTime;				// ƒ_ƒbƒVƒ…ŠÔ
-	float m_fMoveLength;			// ˆÚ“®‹——£
-	bool m_bMotionAutoSet;			// ƒ‚[ƒVƒ‡ƒ“‚Ì©“®İ’è
+	STATE m_Oldstate;				// å‰å›ã®çŠ¶æ…‹
+	D3DXCOLOR m_mMatcol;			// ãƒãƒ†ãƒªã‚¢ãƒ«ã®è‰²
+	MyLib::Vector3 m_posKnokBack;	// ãƒãƒƒã‚¯ãƒãƒƒã‚¯ã®ä½ç½®
+	MyLib::Vector3 m_KnokBackMove;	// ãƒãƒƒã‚¯ãƒãƒƒã‚¯ã®ç§»å‹•é‡
+	MyLib::Vector3 m_posCylinder;	// ç­’ã®ä½ç½®
+	int m_nCntState;				// çŠ¶æ…‹é·ç§»ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼
+	bool m_bDash;					// ãƒ€ãƒƒã‚·ãƒ¥åˆ¤å®š
+	float m_fDashTime;				// ãƒ€ãƒƒã‚·ãƒ¥æ™‚é–“
+	float m_fMoveLength;			// ç§»å‹•è·é›¢
+	bool m_bMotionAutoSet;			// ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ã®è‡ªå‹•è¨­å®š
 	Effekseer::Handle m_WeaponHandle;
 
-	sPlayerStatus m_PlayerStatus;	// ƒvƒŒƒCƒ„[ƒXƒe[ƒ^ƒX
-	sDamageInfo m_sDamageInfo;		// ƒ_ƒ[ƒWî•ñ
-	CHP_GaugePlayer* m_pHPGauge;	// HPƒQ[ƒW‚Ìƒ|ƒCƒ“ƒ^
-	CBaggage* m_pBaggage;			// ‰×•¨‚Ìƒ|ƒCƒ“ƒ^
-	CRetry_Ui* m_pRetryUI;			// ƒŠƒgƒ‰ƒCUI‚Ìƒ|ƒCƒ“ƒ^
+	sPlayerStatus m_PlayerStatus;	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹
+	sDamageInfo m_sDamageInfo;		// ãƒ€ãƒ¡ãƒ¼ã‚¸æƒ…å ±
+	CHP_GaugePlayer* m_pHPGauge;	// HPã‚²ãƒ¼ã‚¸ã®ãƒã‚¤ãƒ³ã‚¿
+	CBaggage* m_pBaggage;			// è·ç‰©ã®ãƒã‚¤ãƒ³ã‚¿
+	CRetry_Ui* m_pRetryUI;			// ãƒªãƒˆãƒ©ã‚¤UIã®ãƒã‚¤ãƒ³ã‚¿
 	
-	// ƒpƒ^[ƒ“—pƒCƒ“ƒXƒ^ƒ“ƒX
-	CPlayerControlMove* m_pControlMove;			// ˆÚ“®‘€ì
-	CPlayerControlBaggage* m_pControlBaggage;	// ‰×•¨‘€ì
-	CPlayerControlSurfacing* m_pControlSurfacing;	// •‚ã‘€ì
-	CPlayerControlTrick* m_pControlTrick;		// ƒgƒŠƒbƒN‘€ì
+	// ãƒ‘ã‚¿ãƒ¼ãƒ³ç”¨ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
+	CPlayerControlMove* m_pControlMove;			// ç§»å‹•æ“ä½œ
+	CPlayerControlBaggage* m_pControlBaggage;	// è·ç‰©æ“ä½œ
+	CPlayerControlSurfacing* m_pControlSurfacing;	// æµ®ä¸Šæ“ä½œ
+	CPlayerControlTrick* m_pControlTrick;		// ãƒˆãƒªãƒƒã‚¯æ“ä½œ
 
-	static CListManager<CPlayer> m_List;	// ƒŠƒXƒg
+	static CListManager<CPlayer> m_List;	// ãƒªã‚¹ãƒˆ
 };
 
 

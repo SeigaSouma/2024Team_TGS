@@ -22,6 +22,8 @@ std::string CMyEffekseer::m_EffectName[CMyEffekseer::EFKLABEL_MAX] =	// エフェク
 	"data/Effekseer/sample_river.efkefc",			// 川サンプル
 	"data/Effekseer/impact.efkefc",			// 衝撃
 	"data/Effekseer/spraywater.efkefc",			// 衝撃
+	"data/Effekseer/waterjump.efkefc",			// 魚入水
+	"data/Effekseer/playermoveLine.efkefc",		// プレイヤーの移動線
 };
 CMyEffekseer* CMyEffekseer::m_pMyEffekseer = nullptr;	// 自身のポインタ
 

@@ -48,6 +48,25 @@ HRESULT CTownField_FixedPlane::Init()
 {
 	HRESULT hr;
 
+	m_vecVtxPosition =
+	{
+		MyLib::Vector3(-30000.0f, 300.0f, 33000.0f),
+		MyLib::Vector3(100000.0f, 300.0f, 33000.0f),
+		MyLib::Vector3(-30000.0f, 300.0f, 3000.0f),
+		MyLib::Vector3(100000.0f, 300.0f, 3000.0f)
+	};
+
+	SetVecPosition(m_vecVtxPosition);
+
+	// 各種変数初期化
+	SetWidthBlock(1);		// 幅分割
+	SetHeightBlock(1);	// 縦分割
+	SetWidthLen(0.0f);		// 縦長さ
+	SetHeightLen(0.0f);		// 横長さ
+
+	// オブジェクト3Dメッシュの初期化処理
+	CObject3DMesh::Init(CObject3DMesh::TYPE_FIELD);
+
 	// 初期化処理
 	CMapMesh::Init();
 
@@ -79,6 +98,19 @@ void CTownField_FixedPlane::BindVtxPosition()
 	MyLib::Vector3* pVtxPos = GetVtxPos();
 	MyLib::Vector3 rot;
 
+	D3DXVECTOR2* pTex = GetVtxTex();
+
+	float wourldLenU = m_vecVtxPosition[0].x - m_vecVtxPosition[1].x;
+	float wourldLenV = m_vecVtxPosition[0].z - m_vecVtxPosition[2].z;
+	float posU = wourldLenU / INTERVAL_TEXU, posV = wourldLenV / INTERVAL_TEXU;
+
+	pTex[0] = D3DXVECTOR2(0.0f, posV);
+	pTex[1] = D3DXVECTOR2(posU, posV);
+
+	pTex[2] = D3DXVECTOR2(0.0f, 0.0f);
+	pTex[3] = D3DXVECTOR2(posU, 0.0f);
+
+
 	for (int cnt = 0; cnt < static_cast<int>(m_vecVtxPosition.size()); cnt++)
 	{
 		pVtxPos[cnt] = m_vecVtxPosition[cnt];
@@ -86,6 +118,19 @@ void CTownField_FixedPlane::BindVtxPosition()
 
 	// 頂点情報設定
 	SetVtx();
+
+	VERTEX_3D* pVtx;	// 頂点情報へのポインタ
+
+	// 頂点バッファをロックし、頂点情報へのポインタを取得
+	GetVtxBuff()->Lock(0, 0, (void**)&pVtx, 0);
+
+	pVtx[0].nor = MyLib::Vector3(0.0f, 1.0f, 0.0f);
+	pVtx[1].nor = MyLib::Vector3(0.0f, 1.0f, 0.0f);
+	pVtx[2].nor = MyLib::Vector3(0.0f, 1.0f, 0.0f);
+	pVtx[3].nor = MyLib::Vector3(0.0f, 1.0f, 0.0f);
+
+	// 頂点バッファをアンロックする
+	GetVtxBuff()->Unlock();
 }
 
 //==========================================================================
@@ -94,36 +139,14 @@ void CTownField_FixedPlane::BindVtxPosition()
 void CTownField_FixedPlane::SetVtxTexUV()
 {
 	D3DXVECTOR2* pTex = GetVtxTex();
-	MyLib::Vector3* pVtxPos = GetVtxPos();
-	int nHeight = GetHeightBlock();
 
-	if (pTex != nullptr)
-	{
-		float posU = 0.0f, posV = 0.0f;
-		int idx = 0;
+	float wourldLenU = m_vecVtxPosition[0].x - m_vecVtxPosition[1].x;
+	float wourldLenV = m_vecVtxPosition[0].z - m_vecVtxPosition[2].z;
+	float posU = wourldLenU / INTERVAL_TEXU, posV = wourldLenV / INTERVAL_TEXU;
 
-		int texID = CTexture::GetInstance()->Regist(TEXTURE);
-		float intervalV = UtilFunc::Transformation::AdjustSizeByWidth(CTexture::GetInstance()->GetImageSize(texID), INTERVAL_TEXU).y;
+	pTex[0] = D3DXVECTOR2(0.0f, posV);
+	pTex[1] = D3DXVECTOR2(posU, posV);
 
-		for (int nCntHeight = 0; nCntHeight < nHeight + 1; nCntHeight++)
-		{// 縦の分割分繰り返す
-
-			// リセット
-			posV = 0.0f;
-
-
-			int front = (nCntHeight * WIDTH_BLOCK);
-			int back = (nCntHeight * WIDTH_BLOCK) + 1;
-
-			// 縦の割合分進める
-			posV += sqrtf((pVtxPos[front].z - pVtxPos[front + 1].z) * (pVtxPos[front].z - pVtxPos[front + 1].z)) / intervalV;
-
-			pTex[back] = D3DXVECTOR2(posU, 0.0f);
-			pTex[front] = D3DXVECTOR2(posU, posV);
-
-			// 横の割合分進める
-			posU += pVtxPos[back + 1].DistanceXZ(pVtxPos[back - 1]) / INTERVAL_TEXU;
-
-		}
-	}
+	pTex[2] = D3DXVECTOR2(0.0f, 0.0f);
+	pTex[3] = D3DXVECTOR2(posU, 0.0f);
 }

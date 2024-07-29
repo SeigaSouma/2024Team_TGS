@@ -178,6 +178,9 @@ void CObstacle_FishArch::ControllFish()
 
 		// 位置の設定
 		{
+			// 過去の位置設定
+			it.pFish->SetOldPosition(it.pFish->GetPosition());
+
 			MyLib::Matrix mtxRot, mtxTrans, mtxScale, mtxFish;	// 計算用マトリックス宣言
 			MyLib::Matrix mtxParent = m_mtxWorld;	// 親のマトリックス
 			MyLib::Vector3 FishPos = it.offset;
@@ -198,7 +201,18 @@ void CObstacle_FishArch::ControllFish()
 			// 座標を設定
 			FishPos = (mtxFish._41, mtxFish._42, mtxFish._43);
 
-			it.pFish->SetPosition(mtxParent.GetWorldPosition());
+			MyLib::Vector3 setpos = mtxParent.GetWorldPosition();
+			if (it.pFish->GetOldPosition().y > 0.0f &&
+				setpos.y <= 0.0f)
+			{
+				// 入水
+				CMyEffekseer::GetInstance()->SetEffect(
+					CMyEffekseer::EFKLABEL::EFKLABEL_WATERJUMP,
+					setpos, MyLib::Vector3(0.0f, 0.0f, 0.0f), 0.0f, 40.0f, true);
+			}
+
+			// 位置設定
+			it.pFish->SetPosition(setpos);
 		}
 
 		// 向きとオフセット設定
