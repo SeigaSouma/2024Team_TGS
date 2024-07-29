@@ -149,11 +149,17 @@ void CCourseManager::Save()
 	// ファイルを閉じる
 	File.close();
 
-	// チェックポイント保存
-	CMapBlock::SaveBin_CheckPoint();
+	// バイナリ保存
+	CMapBlock::SaveBin();
 
-	// 障害物保存
-	CMapBlock::SaveBin_Obstacle();
+	//// チェックポイント保存
+	//CMapBlock::SaveBin_CheckPoint();
+
+	//// 障害物保存
+	//CMapBlock::SaveBin_Obstacle();
+
+	//// 水中岩保存
+	//CMapBlock::SaveBin_WaterStone();
 }
 
 //==========================================================================
@@ -330,7 +336,7 @@ void CCourseManager::Load()
 
 	//この中で障害物、チェックポイント
 
-#if 1
+#if 0
 	//=============================
 	// 石垣(奥)
 	//=============================

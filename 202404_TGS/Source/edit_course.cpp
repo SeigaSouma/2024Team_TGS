@@ -15,6 +15,7 @@
 #include "map_obstacle.h"
 #include "checkpoint.h"
 #include "map_block.h"
+#include "waterstone.h"
 
 //==========================================================================
 // 定数定義
@@ -43,6 +44,7 @@ CEdit_Course::CEdit_Course()
 	m_bSetMode = false;		// 設定モード判定
 	m_bAutoCreateMode = false;		// 自動生成判定
 	m_pEditObstacle = nullptr;	// 障害物エディター
+	m_pEditWaterStone = nullptr;	// 水中岩エディター
 }
 
 //==========================================================================
@@ -61,6 +63,9 @@ HRESULT CEdit_Course::Init()
 
 	// 障害物エディター
 	m_pEditObstacle = CEdit::Create(CGame::EditType::EDITTYPE_OBSTACLE);
+
+	// 水中岩エディター
+	m_pEditWaterStone = CEdit::Create(CGame::EditType::EDITTYPE_WATERSTONE);
 	return S_OK;
 }
 
@@ -115,6 +120,8 @@ void CEdit_Course::Update()
 	// 障害物エディット
 	ObstacleEdit();
 
+	// 水中岩エディット
+	WaterStoneEdit();
 }
 
 //==========================================================================
@@ -136,6 +143,7 @@ void CEdit_Course::FileControl()
 	if (ImGui::Button("Save"))
 	{
 		SaveObstacle();
+		SaveWaterStone();
 		pCourceManager->Save();
 	}
 	ImGui::SameLine();
@@ -172,6 +180,9 @@ void CEdit_Course::ChangeEditCourse()
 	{
 		// 障害物リセット
 		ResetObstacle();
+
+		// 水中岩リセット
+		ResetWaterStone();
 
 		std::vector<MyLib::Vector3> vecpos = pCourceManager->GetSegmentPos(m_nCourseEditIdx);
 		vecpos.insert(vecpos.begin(), MyLib::Vector3(-10.0f, 0.0f, 0.0f));
@@ -792,7 +803,6 @@ void CEdit_Course::ResetObstacle()
 void CEdit_Course::SaveObstacle()
 {
 	
-
 	// 障害物のリスト取得
 	CListManager<CMap_Obstacle> list = CMap_Obstacle::GetListObj();
 
@@ -832,6 +842,82 @@ void CEdit_Course::SaveObstacle()
 
 	// 障害物のリスト設定
 	CMapBlock::GetInfoList().GetData(m_nCourseEditIdx)->SetObstacleInfo(savedate);
+}
+
+//==========================================================================
+// 水中岩エディット
+//==========================================================================
+void CEdit_Course::WaterStoneEdit()
+{
+	ImGui::Dummy(ImVec2(0.0f, 10.0f));
+	if (ImGui::TreeNode("WaterStoneEdit"))
+	{
+		// 水中岩エディット更新
+		m_pEditWaterStone->Update();
+
+		ImGui::TreePop();
+	}
+}
+
+//==========================================================================
+// 水中岩リセット
+//==========================================================================
+void CEdit_Course::ResetWaterStone()
+{
+	// 障害物マネージャ取得
+	CMap_ObstacleManager* pObstacleMgr = CMap_ObstacleManager::GetInstance();
+
+	// 水中岩のリスト取得
+	CListManager<CWaterStone> list = CWaterStone::GetListObj();
+
+	// 先頭を保存
+	std::list<CWaterStone*>::iterator itr = list.GetEnd();
+	CMap_Obstacle* pObj = nullptr;
+
+	while (list.ListLoop(itr))
+	{
+		CWaterStone* pObj = *itr;
+		pObj->Kill();
+	}
+
+	// 障害物のリスト取得
+	std::vector<CWaterStone_Manager::SStoneInfo> obstacleInfo = CMapBlock::GetInfoList().GetData(m_nCourseEditIdx)->GetWaterStoneInfo();
+
+	// 障害物情報
+	for (const auto& info : obstacleInfo)
+	{
+		CWaterStone* pObj = CWaterStone::Create(info);
+		pObj->CalWorldMtx();
+	}
+}
+
+//==========================================================================
+// 水中岩セーブ
+//==========================================================================
+void CEdit_Course::SaveWaterStone()
+{
+	// 水中岩のリスト取得
+	CListManager<CWaterStone> list = CWaterStone::GetListObj();
+
+	// 先頭を保存
+	std::list<CWaterStone*>::iterator itr = list.GetEnd();
+	CWaterStone* pObj = nullptr;
+
+	std::vector<CWaterStone_Manager::SStoneInfo> savedate;
+
+	while (list.ListLoop(itr))
+	{
+		CWaterStone* pObj = *itr;
+
+		// 障害物マネージャ取得
+		CWaterStone_Manager::SStoneInfo info = pObj->GetStoneInfo();
+
+		// セーブ情報追加
+		savedate.push_back(info);
+	}
+
+	// 障害物のリスト設定
+	CMapBlock::GetInfoList().GetData(m_nCourseEditIdx)->SetWaterStoneInfo(savedate);
 }
 
 //==========================================================================

@@ -61,6 +61,11 @@ private:
 	void ResetObstacle();	// 障害物リセット
 	void SaveObstacle();	// 障害物セーブ
 
+	void WaterStoneEdit();	// 水中岩エディット
+	void ResetWaterStone();	// 水中岩リセット
+	void SaveWaterStone();	// 水中岩セーブ
+
+
 	//=============================
 	// メンバ変数
 	//=============================
@@ -75,6 +80,7 @@ private:
 	bool m_bSetMode;		// 設定モード判定
 	bool m_bAutoCreateMode;	// 自動生成判定
 	CEdit* m_pEditObstacle;	// 障害物エディター
+	CEdit* m_pEditWaterStone;	// 水中岩エディター
 };
 
 

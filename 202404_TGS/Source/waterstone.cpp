@@ -8,6 +8,7 @@
 #include "manager.h"
 #include "calculation.h"
 #include "3D_effect.h"
+#include "player.h"
 
 //==========================================================================
 // 定数定義
@@ -15,6 +16,7 @@
 namespace
 {
 	float DEFAULT_SPLASHTIME = 0.14f;	// 通常のしぶき時間
+	const float UPDATE_LEN = 8000.0f;	// 更新の距離
 }
 CListManager<CWaterStone> CWaterStone::m_List = {};				// リスト
 const std::vector<std::string> CWaterStone::m_vecModelFile =	// モデルファイルのコンテナ
@@ -105,6 +107,9 @@ void CWaterStone::Uninit()
 //==========================================================================
 void CWaterStone::Kill()
 {
+	// リスト削除
+	m_List.Delete(this);
+
 	// 終了処理
 	CObjectX::Uninit();
 }
@@ -114,6 +119,15 @@ void CWaterStone::Kill()
 //==========================================================================
 void CWaterStone::Update()
 {
+	CPlayer* pPlayer = CPlayer::GetListObj().GetData(0);
+	MyLib::Vector3 playerPos = pPlayer->GetPosition();
+
+	if (GetPosition().x > playerPos.x + UPDATE_LEN ||
+		GetPosition().x < playerPos.x - UPDATE_LEN)
+	{
+		return;
+	}
+
 	// しぶきタイマー加算
 	m_fSplashTimer += CManager::GetInstance()->GetDeltaTime();
 
@@ -170,7 +184,7 @@ void CWaterStone::Update()
 	}
 #endif
 
-#ifndef _DEBUG
+//#ifndef _DEBUG
 	// スプラッシュ！
 	if (m_fIntervalSplash <= m_fSplashTimer)
 	{
@@ -238,7 +252,7 @@ void CWaterStone::Update()
 		// しぶきタイマー
 		m_fSplashTimer = 0.0f;
 	}
-#endif
+//#endif
 
 	m_StoneInfo.pos = GetPosition();
 }

@@ -9,10 +9,12 @@
 #define _MAPBLOCK_H_		// 二重インクルード防止
 
 #include "listmanager.h"
+#include "waterstoneManager.h"
 
 // 前方宣言
 class CCheckpoint;
 class CMap_Obstacle;
+
 
 //==========================================================================
 // クラス定義
@@ -43,16 +45,21 @@ public:
 	void SaveBin();	// セーブ
 	void Load(std::ifstream* pFile);	// ロード
 	void ObstacleLoad(std::ifstream* pFile); // 障害物読み込み
+	
+	// リスト
 	void SetObstacleInfo(const std::vector<SObsacleInfo>& info) { m_ObstacleList = info; }
 	std::vector<SObsacleInfo> GetObstacleInfo() { return m_ObstacleList; }
 	void SetCheckpointInfo(const std::vector<float>& list) { m_CheckpointList = list; }
 	std::vector<float> GetCheckpointInfo() { return m_CheckpointList; }
+	void SetWaterStoneInfo(const std::vector<CWaterStone_Manager::SStoneInfo>& list) { m_WaterStoneList = list; }	// 水中岩
+	std::vector<CWaterStone_Manager::SStoneInfo> GetWaterStoneInfo() { return m_WaterStoneList; }					// 水中岩
 
 private:
 
 	// 配置情報リスト
 	std::vector<SObsacleInfo> m_ObstacleList;	// 障害物
 	std::vector<float> m_CheckpointList;	// チェックポイント
+	std::vector<CWaterStone_Manager::SStoneInfo> m_WaterStoneList;	// 水中岩
 	int m_nLevel;
 };
 
@@ -87,6 +94,7 @@ public:
 	static void SaveBin();	// セーブ
 	static void SaveBin_CheckPoint();	// チェックポイントセーブ
 	static void SaveBin_Obstacle();		// 障害物セーブ
+	static void SaveBin_WaterStone();	// 水中岩セーブ
 	static void LoadBin();	// ロード
 	static void Kill();	// 開放
 	static CListManager<CMapBlock> GetList() { return m_List; }
@@ -102,6 +110,7 @@ private:
 	//=============================
 	static std::vector<std::vector<float>> LoadBin_CheckPoint();	// チェックポイント読み込み
 	static std::vector<std::vector<CMapBlockInfo::SObsacleInfo>> LoadBin_Obstacle();	// 障害物読み込み
+	static std::vector<std::vector<CWaterStone_Manager::SStoneInfo>> LoadBin_WaterStone();	// 水中岩読み込み
 	void DataDelete();
 	void InfoDelete();
 

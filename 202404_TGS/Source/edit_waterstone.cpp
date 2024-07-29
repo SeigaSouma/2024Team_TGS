@@ -106,14 +106,14 @@ void CEdit_WaterStone::FileControl()
 	ImGui::SetNextItemWidth(width);
 	if (ImGui::Button("Save"))
 	{
-		pMgr->Save();
+		//pMgr->Save();
 	}
 	ImGui::SameLine();
 
 	ImGui::SetNextItemWidth(width);
 	if (ImGui::Button("Save_as"))
 	{
-		pMgr->Save();
+		//pMgr->Save();
 	}
 	ImGui::SameLine();
 
@@ -224,6 +224,7 @@ void CEdit_WaterStone::DragLine()
 	// áŠQ•¨‚ÌƒŠƒXƒgæ“¾
 	CListManager<CWaterStone> list = CWaterStone::GetListObj();
 	CWaterStone* pObj = list.GetData(m_nEditIdx);
+	if (pObj == nullptr) return;
 
 	MyLib::Vector3 ObjPos = pObj->GetPosition();
 
