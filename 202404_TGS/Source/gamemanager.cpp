@@ -140,7 +140,7 @@ HRESULT CGameManager::Init()
 
 	m_OldSceneType = m_SceneType;
 
-#if 0
+#if 1
 	// ˆË—Šl¶¬
 	m_pRequestPeople = CRequestPeople::Create(MyLib::Vector3(500.0f, 0.0f, 900.0f));
 	m_pRequestPeople->SetState(CRequestPeople::STATE::STATE_WAIT);

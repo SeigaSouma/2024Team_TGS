@@ -139,6 +139,11 @@ Effekseer::Handle CMyEffekseer::SetEffect(EFKLABEL label, MyLib::Vector3 pos, My
 //==========================================================================
 Effekseer::Handle CMyEffekseer::SetEffect(Effekseer::Handle** pHandle, EFKLABEL label, MyLib::Vector3 pos, MyLib::Vector3 rot, MyLib::Vector3 move, float scale, bool bAutoDeath)
 {
+	if (label == EFKLABEL::EFKLABEL_PLAYERMOVE_LINE)
+	{
+		int n = 0;
+	}
+
 	MyEffekseerInfo loacalInfo = {};
 
 	// ì«Ç›çûÇ›

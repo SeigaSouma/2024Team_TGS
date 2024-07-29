@@ -234,7 +234,8 @@ private:
 	bool m_bDash;					// ダッシュ判定
 	float m_fDashTime;				// ダッシュ時間
 	float m_fMoveLength;			// 移動距離
-	bool m_bMotionAutoSet;			// モーションの自動設定
+	int m_nCntWaterLine;			// 搔き分け線のカウンター
+	int m_bMotionAutoSet;			// モーションの自動設定
 	Effekseer::Handle m_WeaponHandle;
 
 	sPlayerStatus m_PlayerStatus;	// プレイヤーステータス

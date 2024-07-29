@@ -657,6 +657,8 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 			// 息エフェクト生成
 			MyLib::Vector3 d = pos;
 			d.y = posBaggageOrigin.y;
+
+
 			CMyEffekseer::GetInstance()->SetEffect(
 				&m_BressHandle,
 				CMyEffekseer::EFKLABEL::EFKLABEL_BRESS,

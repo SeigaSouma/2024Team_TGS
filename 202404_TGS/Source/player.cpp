@@ -80,6 +80,7 @@ namespace
 	const float MULTIPLY_CHARGEATK = 2.0f;				// チャージ攻撃の倍率
 	const float MAX_HEIGHT = 200.0f;					// 最大高さ
 	const ImVec4 WATERCOLOR = ImVec4(0.658f, 0.658f, 1.0, 0.87f); // RGBA
+	const int INTERVAL_WATERLINE = 2;					// 水搔き分け線の間隔
 }
 
 //==========================================================================
@@ -147,6 +148,7 @@ CPlayer::CPlayer(int nPriority) : CObjectChara(nPriority)
 	m_posKnokBack = mylib_const::DEFAULT_VECTOR3;	// ノックバックの位置
 	m_KnokBackMove = mylib_const::DEFAULT_VECTOR3;	// ノックバックの移動量
 	m_nCntState = 0;								// 状態遷移カウンター
+	m_nCntWaterLine = 0;							// 搔き分け線のカウンター
 	m_bDash = false;								// ダッシュ判定
 	m_fDashTime = 0.0f;								// ダッシュ時間
 	m_fMoveLength = 0.0f;							// 移動距離
@@ -508,8 +510,11 @@ void CPlayer::Controll()
 
 
 			// 移動時の水搔き分け線
-			MovingWaterLine();
-			
+			m_nCntWaterLine = (m_nCntWaterLine + 1) % INTERVAL_WATERLINE;	// 搔き分け線のカウンター
+			if (m_nCntWaterLine == 0)
+			{
+				MovingWaterLine();
+			}
 
 			//// 入水
 			//CMyEffekseer::GetInstance()->SetEffect(

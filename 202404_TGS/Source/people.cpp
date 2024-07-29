@@ -26,7 +26,7 @@
 //==========================================================================
 namespace
 {
-	const float MOVE_VELOCITY = 1.0f;	// 移動速度
+	const float MOVE_VELOCITY = 15.0f;	// 移動速度
 	const int TURN_RIGHT = 100;	// 回れ右間隔
 }
 
@@ -130,7 +130,7 @@ HRESULT CPeople::Init()
 	}
 
 	// 移動速度
-	m_fMoveVelocity = MOVE_VELOCITY + UtilFunc::Transformation::Random(-20, 50) * 0.01f;
+	m_fMoveVelocity = MOVE_VELOCITY + UtilFunc::Transformation::Random(-20, 50) * 0.1f;
 
 	MyLib::Vector3 move, rot = GetRotation();
 	move.x = sinf(D3DX_PI + rot.y) * m_fMoveVelocity;
@@ -207,6 +207,8 @@ void CPeople::Update()
 	MyLib::Vector3 pos = GetPosition();
 	MyLib::Vector3 rot = GetRotation();
 
+	float deltaTime = CManager::GetInstance()->GetDeltaTime();
+
 	if (pMotion->IsGetMove(pMotion->GetType()) == 1)
 	{// 歩きモーションの時
 
@@ -217,8 +219,8 @@ void CPeople::Update()
 		rot.y += rotDiff * 0.2f;
 		UtilFunc::Transformation::RotNormalize(rot.y);
 
-		move.x += sinf(D3DX_PI + rot.y) * m_fMoveVelocity;
-		move.z += cosf(D3DX_PI + rot.y) * m_fMoveVelocity;
+		move.x += sinf(D3DX_PI + rot.y) * (m_fMoveVelocity * deltaTime);
+		move.z += cosf(D3DX_PI + rot.y) * (m_fMoveVelocity * deltaTime);
 
 		pos += move;
 		m_flame++;

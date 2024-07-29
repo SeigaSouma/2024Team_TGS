@@ -593,6 +593,7 @@ HRESULT CMapBlockInfo::Init()
 {
 	m_CheckpointList.clear();
 	m_ObstacleList.clear();
+	m_WaterStoneList.clear();
 
 	return S_OK;
 }
@@ -604,6 +605,7 @@ void CMapBlockInfo::Uninit()
 {
 	m_CheckpointList.clear();
 	m_ObstacleList.clear();
+	m_WaterStoneList.clear();
 
 	delete this;
 }
