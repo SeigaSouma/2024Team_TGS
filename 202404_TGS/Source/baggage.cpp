@@ -614,7 +614,7 @@ bool CBaggage::Hit()
 					m_state = STATE::STATE_DAMAGE;
 
 					// ヒットエフェクト
-					CMyEffekseer::GetInstance()->SetEffect(
+					CEffekseerObj::Create(
 						CMyEffekseer::EFKLABEL::EFKLABEL_IMPACT,
 						GetWorldMtx().GetWorldPosition(), MyLib::Vector3(0.0f, 0.0f, 0.0f), 0.0f, 30.0f, true);
 					m_bHit = true;

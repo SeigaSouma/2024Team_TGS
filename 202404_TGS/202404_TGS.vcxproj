@@ -173,6 +173,7 @@
     <ClCompile Include="Source\catchresult_OK.cpp" />
     <ClCompile Include="Source\clearrank.cpp" />
     <ClCompile Include="Source\countdown_start.cpp" />
+    <ClCompile Include="Source\EffekseerObj.cpp" />
     <ClCompile Include="Source\map_obstacle_motion.cpp" />
     <ClCompile Include="Source\map_obstacle_obj.cpp" />
     <ClCompile Include="Source\obstacle_birdcircle.cpp" />
@@ -360,6 +361,7 @@
     <ClInclude Include="Source\catchresult_OK.h" />
     <ClInclude Include="Source\clearrank.h" />
     <ClInclude Include="Source\countdown_start.h" />
+    <ClInclude Include="Source\EffekseerObj.h" />
     <ClInclude Include="Source\map_obstacle_motion.h" />
     <ClInclude Include="Source\map_obstacle_obj.h" />
     <ClInclude Include="Source\obstacle_birdcircle.h" />

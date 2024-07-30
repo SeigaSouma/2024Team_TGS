@@ -18,6 +18,7 @@
 #include "waterripple.h"
 #include "course.h"
 #include "spline.h"
+#include "EffekseerObj.h"
 
 namespace
 {
@@ -646,23 +647,25 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 			pBaggage->SetForce(0.0f);
 
 
-			if (m_BressHandle != nullptr)
+			if (m_pEffekseerObj != nullptr)
 			{
 				// SEストップ
 				CSound::GetInstance()->StopSound(CSound::LABEL::LABEL_SE_BRESS_STREAM);
 
-				CMyEffekseer::GetInstance()->SetTrigger(*m_BressHandle, 1);
+				// トリガー送信
+				m_pEffekseerObj->SetTrigger(1);
 			}
 
 			// 息エフェクト生成
 			MyLib::Vector3 d = pos;
 			d.y = posBaggageOrigin.y;
 
-
-			CMyEffekseer::GetInstance()->SetEffect(
-				&m_BressHandle,
-				CMyEffekseer::EFKLABEL::EFKLABEL_BRESS,
-				d, 0.0f, 0.0f, DEFAULT_BRESSSCALE_EFFECT, true);
+			if (m_pEffekseerObj == nullptr)
+			{
+				m_pEffekseerObj = CEffekseerObj::Create(
+					CMyEffekseer::EFKLABEL::EFKLABEL_BRESS,
+					d, 0.0f, 0.0f, DEFAULT_BRESSSCALE_EFFECT, false);
+			}
 
 			// SE再生
 			CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_BRESS_STREAM);
@@ -750,9 +753,11 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	}
 
 	// 息エフェクト状態変更
-	if (m_bFall && m_BressHandle != nullptr)
+	if (m_bFall && m_pEffekseerObj != nullptr)
 	{
-		CMyEffekseer::GetInstance()->SetTrigger(*m_BressHandle, 0);
+		m_pEffekseerObj->SetTrigger(0);
+		m_pEffekseerObj->Uninit();
+		m_pEffekseerObj = nullptr;
 
 		// SEストップ
 		CSound::GetInstance()->StopSound(CSound::LABEL::LABEL_SE_BRESS_STREAM);
@@ -763,14 +768,14 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	d.y = posBaggageOrigin.y;
 
 	// 位置設定
-	if (m_BressHandle != nullptr)
+	if (m_pEffekseerObj != nullptr)
 	{
 		// 高さの割合
 		float ratio = m_fHeight / m_fMaxHeight;
 		ratio = UtilFunc::Transformation::Clamp(ratio, MIN_RATIO_HEIGHT_BRESS, 1.0f);
 
-		CMyEffekseer::GetInstance()->SetPosition(*m_BressHandle, d);
-		CMyEffekseer::GetInstance()->SetScale(*m_BressHandle, DEFAULT_BRESSSCALE_EFFECT * ratio);
+		m_pEffekseerObj->SetPosition(d);
+		m_pEffekseerObj->SetScale(DEFAULT_BRESSSCALE_EFFECT * ratio);
 
 	}
 }
@@ -1032,10 +1037,12 @@ void CPlayerControlBaggage::Reset(CPlayer* player, CBaggage* pBaggage)
 void CPlayerControlBaggage::EffectStop()
 {
 	// 息が使用されている
-	if (m_BressHandle != nullptr)
+	if (m_pEffekseerObj != nullptr)
 	{
 		// エフェクト停止
-		CMyEffekseer::GetInstance()->SetTrigger(*m_BressHandle, 0);
+		m_pEffekseerObj->SetTrigger(0);
+		m_pEffekseerObj->Uninit();
+		m_pEffekseerObj = nullptr;
 
 		// SEストップ
 		CSound::GetInstance()->StopSound(CSound::LABEL::LABEL_SE_BRESS_STREAM);

@@ -206,7 +206,7 @@ void CObstacle_FishArch::ControllFish()
 				setpos.y <= 0.0f)
 			{
 				// “ü…
-				CMyEffekseer::GetInstance()->SetEffect(
+				CEffekseerObj::Create(
 					CMyEffekseer::EFKLABEL::EFKLABEL_WATERJUMP,
 					setpos, MyLib::Vector3(0.0f, 0.0f, 0.0f), 0.0f, 40.0f, true);
 			}

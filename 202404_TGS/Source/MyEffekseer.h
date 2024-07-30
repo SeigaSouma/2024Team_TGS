@@ -23,18 +23,32 @@ class CMyEffekseer
 {
 public:
 	
+	//=============================
+	// 構造体定義
+	//=============================
 	struct MyEffekseerInfo
 	{
-
 		MyLib::Vector3 pos;
 		MyLib::Vector3 rot;
-		float scale;
 		MyLib::Vector3 move;		// 移動量
+		float scale;
 		Effekseer::EffectRef efcRef;
 		Effekseer::Handle handle;	// エフェクトのオブジェクト
 		bool bAutoDeath;			// 自動削除のフラグ
+
+		// デフォルトコンストラクタ
+		MyEffekseerInfo() : pos(), rot(), move(), scale(), efcRef(), handle(), bAutoDeath() {}
+
+		// 引数付きコンストラクタ
+		MyEffekseerInfo(
+			const MyLib::Vector3& _pos, const MyLib::Vector3& _rot, const MyLib::Vector3& _move, float _scale,
+			const Effekseer::EffectRef& _efcRef, const Effekseer::Handle _handle, bool _bAutoDeath) : 
+			pos(_pos), rot(_rot), move(_move), scale(_scale), efcRef(_efcRef), handle(_handle), bAutoDeath(_bAutoDeath) {}
 	};
 
+	//=============================
+	// 列挙型定義
+	//=============================
 	enum EFKLABEL
 	{
 		EFKLABEL_SAMPLE_LASER = 0,	// サンプルのレーザー
@@ -55,31 +69,13 @@ public:
 
 	void Uninit();
 	void Update();
-
-	/**
-	@brief	エフェクトの設定
-	@details パスの拡張子は[.efkefc]です
-	@param	efkpath		[in]	読み込むエフェクトのパス
-	@param	pos			[in]	位置
-	@param	rot			[in]	向き
-	@param	move		[in]	移動量
-	@param	scale		[in]	拡大率
-	@param	bAutoDeath	[in]	自動削除
-	@return	Effekseer::Handle
-	*/
-	Effekseer::Handle SetEffect(EFKLABEL label, MyLib::Vector3 pos, MyLib::Vector3 rot, MyLib::Vector3 move, float scale, bool bAutoDeath = true);
-	Effekseer::Handle SetEffect(Effekseer::Handle **pHandle, EFKLABEL label, MyLib::Vector3 pos, MyLib::Vector3 rot, MyLib::Vector3 move, float scale, bool bAutoDeath = true);
-	void SetPosition(Effekseer::Handle handle, MyLib::Vector3 pos);	// 位置設定
-	void SetRotation(Effekseer::Handle handle, MyLib::Vector3 rot);	// 向き設定
-	void SetMatrix(Effekseer::Handle handle, D3DXMATRIX mtx);	// マトリックス設定
-	void SetScale(Effekseer::Handle handle, float scale);	// スケール設定
-	Effekseer::Matrix43 GetMatrix(Effekseer::Handle handle);	// マトリックス取得
-	void SetTransform(Effekseer::Handle handle, MyLib::Vector3 pos, MyLib::Vector3 rot);	// マトリックス設定
-	bool IsDeath(Effekseer::Handle handle);	// 死亡フラグ
 	void StopAll();	// 全て停止
-	void Stop(Effekseer::Handle handle);	// 停止
-	void SetTrigger(Effekseer::Handle handle, int idx);
 
+	Effekseer::EffectRef LoadEffect(std::string efkpath);	// エフェクト読み込み
+	Effekseer::EffectRef LoadEffect(EFKLABEL label);		// エフェクト読み込み
+	Effekseer::ManagerRef GetEfkManager() { return m_efkManager; }	// エフェクトのマネージャー取得
+
+	// 静的関数
 	static CMyEffekseer* GetInstance() { return m_pMyEffekseer; }	// インスタンス取得
 	static CMyEffekseer* Create();								// インスタンス生成
 
@@ -88,15 +84,17 @@ private:
 	// メンバ関数
 	HRESULT Init();
 	void Draw();
+	void UpdateAll();
+
 	void SetupEffekseerModules(::Effekseer::ManagerRef efkManager);	// モジュールのセットアップ
 	::EffekseerRendererDX9::RendererRef GetEffekseerRenderer() { return efkRenderer; }	// エフェクシアのレンダラー取得
-	Effekseer::EffectRef LoadEffect(std::string efkpath);
-	
+	Effekseer::EffectRef LoadProcess(const std::u16string& efkpath);	// 読み込み処理
+
 	// メンバ変数
 	int32_t time = 0;
 	Effekseer::Handle efkHandle = 0;
 	EffekseerRendererDX9::RendererRef efkRenderer;
-	Effekseer::ManagerRef efkManager;
+	Effekseer::ManagerRef m_efkManager;
 	Effekseer::Vector3D viewerPosition;
 	Effekseer::Matrix44 projectionMatrix;
 	Effekseer::Matrix44 cameraMatrix;
@@ -104,9 +102,6 @@ private:
 	std::function<void()> onResetDevice;
 
 	// 自作変数
-	Effekseer::EffectRef m_LoadEffect;				// 読み込んだエフェクトのスマートポインタ
-	std::vector<MyEffekseerInfo> m_EffectObj;		// エフェクトのオブジェクト
-	std::vector<Effekseer::Handle> m_Handle;		// エフェクトのハンドル
 	static std::string m_EffectName[EFKLABEL_MAX];	// エフェクトのファイル名
 	static CMyEffekseer* m_pMyEffekseer;			// 自身のポインタ
 };
