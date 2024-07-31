@@ -19,6 +19,8 @@
 #include "debug_bressrange.h"
 #endif
 
+class CEffekseerObj;
+
 //==========================================================================
 // プレイヤーコントロールクラス定義
 //==========================================================================
@@ -62,7 +64,7 @@ public:
 	// コンストラクタ
 	CPlayerControlBaggage() 
 	{
-		m_BressHandle = nullptr;
+		m_pEffekseerObj = nullptr;
 		m_bFall = true;
 		m_state = STATE::STATE_NONE;
 	}
@@ -81,7 +83,7 @@ private:
 	void BressEffect(CPlayer* player, CBaggage* pBaggage);		// 息エフェクト
 
 	// メンバ変数
-	Effekseer::Handle* m_BressHandle = nullptr;
+	CEffekseerObj* m_pEffekseerObj = nullptr;
 
 #if BRESSRANGE
 	CDebugBressRange* m_pBressRange = nullptr;		// 息範囲

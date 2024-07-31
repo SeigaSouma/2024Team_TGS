@@ -15,7 +15,7 @@ SCRIPT			# この行は絶対消さないこと！
 #------------------------------------------------------------------
 # 石ころ（ふつう）
 BAGGAGESET
-	MODEL = data\\MODEL\\map_object\\rock_02.x
+	MODEL = data\\MODEL\\baggage\\japanese_style.x
 	WEIGHT = 1.0
 	WIDTH = 40.0
 	CYCLE = 0.06

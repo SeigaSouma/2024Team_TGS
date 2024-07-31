@@ -60,7 +60,7 @@ CWaterStone_Manager *CWaterStone_Manager::Create()
 HRESULT CWaterStone_Manager::Init()
 {
 	// “Ç‚İ‚İ
-	Load();
+	//Load();
 	return S_OK;
 }
 

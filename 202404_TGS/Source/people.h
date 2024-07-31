@@ -119,6 +119,7 @@ private:
 	//=============================
 	// メンバ変数
 	//=============================
+	float m_fMoveVelocity;	// 移動速度
 	CShadow *m_pShadow;			// 影の情報
 	static CListManager<CPeople> m_List;	// リスト
 };

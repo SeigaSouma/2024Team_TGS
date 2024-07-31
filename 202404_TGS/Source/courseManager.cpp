@@ -149,11 +149,17 @@ void CCourseManager::Save()
 	// ファイルを閉じる
 	File.close();
 
-	// チェックポイント保存
-	CMapBlock::SaveBin_CheckPoint();
+	// バイナリ保存
+	CMapBlock::SaveBin();
 
-	// 障害物保存
-	CMapBlock::SaveBin_Obstacle();
+	//// チェックポイント保存
+	//CMapBlock::SaveBin_CheckPoint();
+
+	//// 障害物保存
+	//CMapBlock::SaveBin_Obstacle();
+
+	//// 水中岩保存
+	//CMapBlock::SaveBin_WaterStone();
 }
 
 //==========================================================================
@@ -408,20 +414,7 @@ void CCourseManager::Load()
 	//=============================
 	// 固定平面街フィールド
 	//=============================
-	std::vector<MyLib::Vector3> vecFixedPlanePos =
-	{
-		MyLib::Vector3(-30000.0f, 300.0f, 33000.0f),
-		MyLib::Vector3(100000.0f, 300.0f, 33000.0f),
-		MyLib::Vector3(-30000.0f, 300.0f, 3000.0f),
-		MyLib::Vector3(100000.0f, 300.0f, 3000.0f)
-	};
 	CMapMesh* pTownFieldFixed = CMapMesh::Create(CMapMesh::MeshType::TYPE_TOWNFIELD_FIXEDPLANE);
-	pTownFieldFixed->SetVecPosition(vecFixedPlanePos);
-	pTownFieldFixed->Reset();
-
-	// 石垣の頂上に頂点をそろえる
-	pTownFieldFixed->SetVecVtxPosition(vecFixedPlanePos);
-	pTownFieldFixed->BindVtxPosition();
 #endif
 }
 

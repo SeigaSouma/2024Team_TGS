@@ -11,6 +11,7 @@
 #include "input.h"
 #include "pause.h"
 #include <Effekseer.h>
+#include "EffekseerObj.h"
 
 //==========================================================================
 // 静的メンバ変数宣言
@@ -22,6 +23,8 @@ std::string CMyEffekseer::m_EffectName[CMyEffekseer::EFKLABEL_MAX] =	// エフェク
 	"data/Effekseer/sample_river.efkefc",			// 川サンプル
 	"data/Effekseer/impact.efkefc",			// 衝撃
 	"data/Effekseer/spraywater.efkefc",			// 衝撃
+	"data/Effekseer/waterjump.efkefc",			// 魚入水
+	"data/Effekseer/playermoveLine.efkefc",		// プレイヤーの移動線
 };
 CMyEffekseer* CMyEffekseer::m_pMyEffekseer = nullptr;	// 自身のポインタ
 
@@ -33,7 +36,6 @@ CMyEffekseer::CMyEffekseer()
 	// 変数のクリア
 	time = 0;
 	efkHandle = 0;
-	m_Handle.clear();		// エフェクトのハンドル
 }
 
 //==========================================================================
@@ -81,14 +83,14 @@ HRESULT CMyEffekseer::Init()
 	// Effekseerのオブジェクトはスマートポインタで管理される。変数がなくなると自動的に削除される。
 
 	// エフェクトのマネージャーの作成
-	efkManager = ::Effekseer::Manager::Create(8000);
+	m_efkManager = ::Effekseer::Manager::Create(8000);
 
 	// Effekseerのモジュールをセットアップする
-	SetupEffekseerModules(efkManager);
+	SetupEffekseerModules(m_efkManager);
 	auto efkRenderer = GetEffekseerRenderer();
 
 	// 座標系を設定する。アプリケーションと一致させる必要がある。
-	efkManager->SetCoordinateSystem(Effekseer::CoordinateSystem::LH);
+	m_efkManager->SetCoordinateSystem(Effekseer::CoordinateSystem::LH);
 
 	// 視点位置を確定
 	viewerPosition = ::Effekseer::Vector3D(10.0f, 5.0f, 20.0f);
@@ -103,69 +105,6 @@ HRESULT CMyEffekseer::Init()
 }
 
 //==========================================================================
-// エフェクトの設定
-//==========================================================================
-Effekseer::Handle CMyEffekseer::SetEffect(EFKLABEL label, MyLib::Vector3 pos, MyLib::Vector3 rot, MyLib::Vector3 move, float scale, bool bAutoDeath)
-{
-	MyEffekseerInfo loacalInfo = {};
-
-	// 読み込み
-	loacalInfo.efcRef = LoadEffect(m_EffectName[label]);
-
-	// エフェクトの再生
-	loacalInfo.handle = efkManager->Play(m_LoadEffect, 0.0f, 0.0f, 0.0f);
-
-	// 引数情報設定
-	loacalInfo.pos = pos;
-	loacalInfo.rot = rot;
-	loacalInfo.move = move;
-	loacalInfo.scale = scale;
-	loacalInfo.bAutoDeath = bAutoDeath;
-	efkManager->SetLocation(loacalInfo.handle, pos.x, pos.y, pos.z);
-	efkManager->SetRotation(loacalInfo.handle, rot.x, rot.y, rot.z);
-	efkManager->SetScale(loacalInfo.handle, scale, scale, scale);
-
-	// 要素追加
-	m_EffectObj.push_back(loacalInfo);
-	m_Handle.push_back(loacalInfo.handle);		// エフェクトのハンドル
-
-	return loacalInfo.handle;
-}
-
-//==========================================================================
-// エフェクトの設定
-//==========================================================================
-Effekseer::Handle CMyEffekseer::SetEffect(Effekseer::Handle** pHandle, EFKLABEL label, MyLib::Vector3 pos, MyLib::Vector3 rot, MyLib::Vector3 move, float scale, bool bAutoDeath)
-{
-	MyEffekseerInfo loacalInfo = {};
-
-	// 読み込み
-	loacalInfo.efcRef = LoadEffect(m_EffectName[label]);
-
-	// エフェクトの再生
-	loacalInfo.handle = efkManager->Play(m_LoadEffect, 0.0f, 0.0f, 0.0f);
-
-	// 引数情報設定
-	loacalInfo.pos = pos;
-	loacalInfo.rot = rot;
-	loacalInfo.move = move;
-	loacalInfo.scale = scale;
-	loacalInfo.bAutoDeath = bAutoDeath;
-	efkManager->SetLocation(loacalInfo.handle, pos.x, pos.y, pos.z);
-	efkManager->SetRotation(loacalInfo.handle, rot.x, rot.y, rot.z);
-	efkManager->SetScale(loacalInfo.handle, scale, scale, scale);
-
-	// 要素追加
-	m_EffectObj.push_back(loacalInfo);
-	m_Handle.push_back(loacalInfo.handle);		// エフェクトのハンドル
-
-	int idx = m_Handle.size() - 1;
-	*pHandle = &m_Handle[idx];	// ポインタに最後の情報を渡す
-
-	return loacalInfo.handle;
-}
-
-//==========================================================================
 // 読み込み処理
 //==========================================================================
 Effekseer::EffectRef CMyEffekseer::LoadEffect(std::string efkpath)
@@ -174,9 +113,28 @@ Effekseer::EffectRef CMyEffekseer::LoadEffect(std::string efkpath)
 	std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> converter;
 	std::u16string string16t = converter.from_bytes(efkpath);
 
+	return LoadProcess(string16t);
+}
+
+//==========================================================================
+// エフェクト読み込み
+//==========================================================================
+Effekseer::EffectRef CMyEffekseer::LoadEffect(EFKLABEL label)
+{
+	// char16_tに変換
+	std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> converter;
+	std::u16string string16t = converter.from_bytes(m_EffectName[label]);
+
+	return LoadProcess(string16t);
+}
+
+//==========================================================================
+// 読み込み処理
+//==========================================================================
+Effekseer::EffectRef CMyEffekseer::LoadProcess(const std::u16string& efkpath)
+{
 	// エフェクトの読込
-	auto effect = Effekseer::Effect::Create(efkManager, string16t.c_str());
-	m_LoadEffect = effect;
+	auto effect = Effekseer::Effect::Create(m_efkManager, efkpath.c_str());
 
 	onLostDevice = [effect]() -> void
 	{
@@ -204,30 +162,11 @@ Effekseer::EffectRef CMyEffekseer::LoadEffect(std::string efkpath)
 //==========================================================================
 void CMyEffekseer::Uninit()
 {
-	efkManager->StopAllEffects();
+	// 全停止
+	m_efkManager->StopAllEffects();
 
 	delete m_pMyEffekseer;
 	m_pMyEffekseer = nullptr;
-}
-
-//==========================================================================
-// 停止
-//==========================================================================
-void CMyEffekseer::Stop(Effekseer::Handle handle)
-{
-	for (int i = 0; i < static_cast<int>(m_EffectObj.size()); i++)
-	{
-		Effekseer::Handle loacalhandle = m_EffectObj[i].handle;
-		if (loacalhandle == handle)
-		{
-			// 削除
-			m_EffectObj.erase(m_EffectObj.begin() + i);
-			m_Handle.erase(m_Handle.begin() + i);
-		}
-	}
-
-	// 停止
-	efkManager->StopEffect(handle);
 }
 
 //==========================================================================
@@ -236,21 +175,9 @@ void CMyEffekseer::Stop(Effekseer::Handle handle)
 void CMyEffekseer::StopAll()
 {
 	// 全て停止
-	efkManager->StopAllEffects();
+	m_efkManager->StopAllEffects();
 
-	for (int i = 0; i < static_cast<int>(m_EffectObj.size()); i++)
-	{
-		Effekseer::Handle loacalhandle = m_EffectObj[i].handle;
-		efkManager->StopEffect(loacalhandle);
-	}
-
-	int size = static_cast<int>(m_EffectObj.size());
-	for (int i = 0; i < size; i++)
-	{
-		m_EffectObj[i].bAutoDeath = true;
-	}
-	m_EffectObj.clear();
-	m_Handle.clear();
+	
 }
 
 //==========================================================================
@@ -258,213 +185,50 @@ void CMyEffekseer::StopAll()
 //==========================================================================
 void CMyEffekseer::Update()
 {
-	if (!CManager::GetInstance()->GetPause()->IsPause())
+	bool bPause = CManager::GetInstance()->GetPause()->IsPause();
+	if (!bPause)
 	{
-
-		// キーボード情報取得
-		CInputKeyboard* pInputKeyboard = CInputKeyboard::GetInstance();
-		float size = 10.0f;
-
-		for (int i = 0; i < static_cast<int>(m_EffectObj.size()); i++)
-		{
-			Effekseer::Handle loacalhandle = m_EffectObj[i].handle;
-
-			if (!efkManager->Exists(loacalhandle))
-			{// 再生終了
-
-				efkManager->StopEffect(loacalhandle);
-
-				// 削除
-				if (m_EffectObj[i].bAutoDeath)
-				{
-					m_EffectObj.erase(m_EffectObj.begin() + i);
-					m_Handle.erase(m_Handle.begin() + i);
-				}
-				else
-				{
-
-					// 新たにエフェクトを再生し直す。座標はエフェクトを表示したい場所を設定する
-					// (位置や回転、拡大縮小も設定しなおす必要がある)
-					m_Handle[i] = efkManager->Play(m_EffectObj[i].efcRef, 0.0f, 0.0f, 0.0f);
-					m_EffectObj[i].handle = m_Handle[i];
-					efkManager->SetLocation(m_EffectObj[i].handle, m_EffectObj[i].pos.x, m_EffectObj[i].pos.y, m_EffectObj[i].pos.z);
-					efkManager->SetRotation(m_EffectObj[i].handle, m_EffectObj[i].rot.x, m_EffectObj[i].rot.y, m_EffectObj[i].rot.z);
-					efkManager->SetScale(m_EffectObj[i].handle, m_EffectObj[i].scale, m_EffectObj[i].scale, m_EffectObj[i].scale);
-				}
-			}
-			else
-			{// 再生中
-
-				if (!m_EffectObj[i].move.IsNearlyZero(0.01f))
-				{
-					// エフェクトの移動
-					efkManager->AddLocation(
-						loacalhandle,
-						Effekseer::Vector3D(m_EffectObj[i].move.x, m_EffectObj[i].move.y, m_EffectObj[i].move.z));
-				}
-
-
-				Effekseer::Vector3D scale;
-
-				efkManager->GetMatrix(m_EffectObj[i].handle).GetScale(scale);
-
-				efkManager->SetScale(m_EffectObj[i].handle, m_EffectObj[i].scale, m_EffectObj[i].scale, m_EffectObj[i].scale);
-			}
-		}
+		// 全更新
+		UpdateAll();
 
 		// レイヤーパラメータの設定
 		Effekseer::Manager::LayerParameter layerParameter;
 		::Effekseer::Matrix44 invEfkCameraMatrix;
 		::Effekseer::Matrix44::Inverse(invEfkCameraMatrix, cameraMatrix);
 		layerParameter.ViewerPosition = ::Effekseer::Vector3D(invEfkCameraMatrix.Values[3][0], invEfkCameraMatrix.Values[3][1], invEfkCameraMatrix.Values[3][2]);
-		efkManager->SetLayerParameter(0, layerParameter);
+		m_efkManager->SetLayerParameter(0, layerParameter);
 
 		// マネージャーの更新
 		Effekseer::Manager::UpdateParameter updateParameter;
-		efkManager->Update(updateParameter);
+		m_efkManager->Update(updateParameter);
 	}
 
 	// 描画処理
 	Draw();
 
-	if (!CManager::GetInstance()->GetPause()->IsPause())
+	if (!bPause)
 	{
 		time++;
 	}
 }
 
 //==========================================================================
-// トリガー送信
+// 全更新
 //==========================================================================
-void CMyEffekseer::SetTrigger(Effekseer::Handle handle, int idx)
+void CMyEffekseer::UpdateAll()
 {
-	if (!efkManager->Exists(handle))
-	{// 再生終了
-		return;
-	}
+	// 障害物のリスト取得
+	CListManager<CEffekseerObj> list = CEffekseerObj::GetListObj();
 
-	efkManager->SendTrigger(handle, idx);
-}
+	// 先頭を保存
+	std::list<CEffekseerObj*>::iterator itr = list.GetEnd();
+	CEffekseerObj* pObj = nullptr;
 
-//==========================================================================
-// 位置更新
-//==========================================================================
-void CMyEffekseer::SetPosition(Effekseer::Handle handle, MyLib::Vector3 pos)
-{
-	if (!efkManager->Exists(handle))
-	{// 再生終了
-		return;
-	}
-
-	// インデックス検索
-	std::vector<Effekseer::Handle>::iterator itr = std::find(m_Handle.begin(), m_Handle.end(), handle);
-	int idx = std::distance(m_Handle.begin(), itr);
-
-	// 位置情報設定
-	m_EffectObj[idx].pos = pos;
-
-	efkManager->SetLocation(handle, Effekseer::Vector3D(pos.x, pos.y, pos.z));
-}
-
-//==========================================================================
-// 向き更新
-//==========================================================================
-void CMyEffekseer::SetRotation(Effekseer::Handle handle, MyLib::Vector3 rot)
-{
-	if (!efkManager->Exists(handle))
-	{// 再生終了
-		return;
-	}
-
-	efkManager->SetRotation(handle, rot.x, rot.y, rot.z);
-}
-
-//==========================================================================
-// マトリックス設定
-//==========================================================================
-void CMyEffekseer::SetMatrix(Effekseer::Handle handle, D3DXMATRIX mtx)
-{
-	if (!efkManager->Exists(handle))
-	{// 再生終了
-		return;
-	}
-
-	// 軌跡のマトリックス取得
-	Effekseer::Matrix43 efcmtx;
-	efcmtx = CMyEffekseer::GetInstance()->GetMatrix(handle);
-
-	// 4x3行列に向きを設定
-	for (int i = 0; i < 4; i++)
+	// リストループ
+	while (list.ListLoop(itr))
 	{
-		for (int j = 0; j < 3; j++)
-		{
-			efcmtx.Value[i][j] = mtx.m[i][j];
-		}
+		(*itr)->Update();
 	}
-
-	// エフェクトのインスタンスに変換行列を設定
-	efkManager->SetMatrix(handle, efcmtx);
-
-	// インデックス検索
-	std::vector<Effekseer::Handle>::iterator itr = std::find(m_Handle.begin(), m_Handle.end(), handle);
-	int idx = std::distance(m_Handle.begin(), itr);
-
-	// スケール情報設定
-	float scale = m_EffectObj[idx].scale;
-	efkManager->SetScale(handle, scale, scale, scale);
-}
-
-//==========================================================================
-// マトリックス取得
-//==========================================================================
-Effekseer::Matrix43 CMyEffekseer::GetMatrix(Effekseer::Handle handle)
-{
-	return efkManager->GetMatrix(handle);
-}
-
-//==========================================================================
-// スケール設定
-//==========================================================================
-void CMyEffekseer::SetScale(Effekseer::Handle handle, float scale)
-{
-	if (!efkManager->Exists(handle))
-	{// 再生終了
-		return;
-	}
-
-	// インデックス検索
-	std::vector<Effekseer::Handle>::iterator itr = std::find(m_Handle.begin(), m_Handle.end(), handle);
-	int idx = std::distance(m_Handle.begin(), itr);
-
-	// 位置情報設定
-	m_EffectObj[idx].scale = scale;
-
-	efkManager->SetScale(handle, scale, scale, scale);
-}
-
-//==========================================================================
-// マトリックス設定
-//==========================================================================
-void CMyEffekseer::SetTransform(Effekseer::Handle handle, MyLib::Vector3 pos, MyLib::Vector3 rot)
-{
-	Effekseer::Matrix43 a;
-	a.Translation(pos.x, pos.y, pos.z);
-	a.RotationZXY(rot.x, rot.y, rot.z);
-
-	Effekseer::Matrix43 Weapon = efkManager->GetMatrix(handle);
-	//Weapon.Indentity();
-
-	Weapon.Multiple(Weapon, Weapon, a);
-
-	efkManager->SetMatrix(handle, Weapon);
-}
-
-//==========================================================================
-// 終了フラグ取得
-//==========================================================================
-bool CMyEffekseer::IsDeath(Effekseer::Handle handle)
-{
-	return !efkManager->Exists(handle);
 }
 
 //==========================================================================
@@ -505,7 +269,7 @@ void CMyEffekseer::Draw()
 	drawParameter.ZNear = 0.0f;
 	drawParameter.ZFar = 1.0f;
 	drawParameter.ViewProjectionMatrix = efkRenderer->GetCameraProjectionMatrix();
-	efkManager->Draw(drawParameter);
+	m_efkManager->Draw(drawParameter);
 
 	// エフェクトの描画終了処理
 	efkRenderer->EndRendering();
@@ -514,7 +278,7 @@ void CMyEffekseer::Draw()
 //==========================================================================
 // モジュールのセットアップ
 //==========================================================================
-void CMyEffekseer::SetupEffekseerModules(::Effekseer::ManagerRef efkManager)
+void CMyEffekseer::SetupEffekseerModules(::Effekseer::ManagerRef m_efkManager)
 {
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
 
@@ -525,16 +289,16 @@ void CMyEffekseer::SetupEffekseerModules(::Effekseer::ManagerRef efkManager)
 	efkRenderer = ::EffekseerRendererDX9::Renderer::Create(graphicsDevice, 8000);
 
 	// 描画モジュールの設定
-	efkManager->SetSpriteRenderer(efkRenderer->CreateSpriteRenderer());
-	efkManager->SetRibbonRenderer(efkRenderer->CreateRibbonRenderer());
-	efkManager->SetRingRenderer(efkRenderer->CreateRingRenderer());
-	efkManager->SetTrackRenderer(efkRenderer->CreateTrackRenderer());
-	efkManager->SetModelRenderer(efkRenderer->CreateModelRenderer());
+	m_efkManager->SetSpriteRenderer(efkRenderer->CreateSpriteRenderer());
+	m_efkManager->SetRibbonRenderer(efkRenderer->CreateRibbonRenderer());
+	m_efkManager->SetRingRenderer(efkRenderer->CreateRingRenderer());
+	m_efkManager->SetTrackRenderer(efkRenderer->CreateTrackRenderer());
+	m_efkManager->SetModelRenderer(efkRenderer->CreateModelRenderer());
 
 	// テクスチャ、モデル、カーブ、マテリアルローダーの設定する。
 	// ユーザーが独自で拡張できる。現在はファイルから読み込んでいる。
-	efkManager->SetTextureLoader(efkRenderer->CreateTextureLoader());
-	efkManager->SetModelLoader(efkRenderer->CreateModelLoader());
-	efkManager->SetMaterialLoader(efkRenderer->CreateMaterialLoader());
-	efkManager->SetCurveLoader(Effekseer::MakeRefPtr<Effekseer::CurveLoader>());
+	m_efkManager->SetTextureLoader(efkRenderer->CreateTextureLoader());
+	m_efkManager->SetModelLoader(efkRenderer->CreateModelLoader());
+	m_efkManager->SetMaterialLoader(efkRenderer->CreateMaterialLoader());
+	m_efkManager->SetCurveLoader(Effekseer::MakeRefPtr<Effekseer::CurveLoader>());
 }

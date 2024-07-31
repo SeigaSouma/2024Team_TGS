@@ -26,8 +26,7 @@
 //==========================================================================
 namespace
 {
-	const float PLAYER_SERCH = 800.0f;	// プレイヤー探索範囲
-	const float CHACE_DISTABCE = 50.0f;	// 追い掛ける時の間隔
+	const float MOVE_VELOCITY = 15.0f;	// 移動速度
 	const int TURN_RIGHT = 100;	// 回れ右間隔
 }
 
@@ -120,9 +119,6 @@ HRESULT CPeople::Init()
 	// 種類の設定
 	SetType(CObject::TYPE::TYPE_ENEMY);
 
-	// 向き設定
-	SetRotation(MyLib::Vector3(0.0f, 0.0f, 0.0f));
-
 	// リストに追加
 	m_List.Regist(this);
 
@@ -132,6 +128,17 @@ HRESULT CPeople::Init()
 	{
 		pMotion->Set(UtilFunc::Transformation::Random(0, pMotion->GetNumMotion() - 1));
 	}
+
+	// 移動速度
+	m_fMoveVelocity = MOVE_VELOCITY + UtilFunc::Transformation::Random(-20, 50) * 0.1f;
+
+	MyLib::Vector3 move, rot = GetRotation();
+	move.x = sinf(D3DX_PI + rot.y) * m_fMoveVelocity;
+	move.z = cosf(D3DX_PI + rot.y) * m_fMoveVelocity;
+	SetMove(move);
+
+	// 初期フレーム
+	m_flame = UtilFunc::Transformation::Random(0, TURN_RIGHT / 2);
 
 	return S_OK;
 }
@@ -196,30 +203,56 @@ void CPeople::Update()
 	}
 
 	CMotion* pMotion = GetMotion();
-	D3DXVECTOR3 move = GetMove();
-	D3DXVECTOR3 pos = GetPosition();
+	MyLib::Vector3 move = GetMove();
+	MyLib::Vector3 pos = GetPosition();
+	MyLib::Vector3 rot = GetRotation();
+
+	float deltaTime = CManager::GetInstance()->GetDeltaTime();
 
 	if (pMotion->IsGetMove(pMotion->GetType()) == 1)
 	{// 歩きモーションの時
 
-		pos += move;
+		// 向き補正
+		float rotDiff = GetRotDest() - rot.y;
+		UtilFunc::Transformation::RotNormalize(rotDiff);
 
-		move.x -= 2.0f;
+		rot.y += rotDiff * 0.2f;
+		UtilFunc::Transformation::RotNormalize(rot.y);
+
+		move.x += sinf(D3DX_PI + rot.y) * (m_fMoveVelocity * deltaTime);
+		move.z += cosf(D3DX_PI + rot.y) * (m_fMoveVelocity * deltaTime);
+
+		pos += move;
 		m_flame++;
 
 		if (m_flame >= TURN_RIGHT)
 		{// フレーム数超過
-			move.z -= 2.0f;
 
-			if (m_flame >= TURN_RIGHT * 2)
+			if (m_flame == TURN_RIGHT)
+			{// フレーム数超過
+				
+				// 右回転
+				float dest = rot.y + D3DX_PI * 0.5f;
+				UtilFunc::Transformation::RotNormalize(dest);
+				SetRotDest(dest);
+			}
+
+			if (m_flame >= TURN_RIGHT + 20)
 			{
-				move.z = 0.0f;
+				// 右回転
+				float dest = rot.y + D3DX_PI * 0.5f;
+				UtilFunc::Transformation::RotNormalize(dest);
+				SetRotDest(dest);
+
+				// フレームリセット
+				m_flame = UtilFunc::Transformation::Random(0, TURN_RIGHT / 2);
 			}
 		}
 	}
 
 	SetMove(move);
 	SetPosition(pos);
+	SetRotation(rot);
 
 	// 過去の位置設定
 	SetOldPosition(GetPosition());

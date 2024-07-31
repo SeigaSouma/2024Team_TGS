@@ -613,9 +613,10 @@ bool CBaggage::Hit()
 					// ダメージ
 					m_state = STATE::STATE_DAMAGE;
 
-					/*CMyEffekseer::GetInstance()->SetEffect(
+					// ヒットエフェクト
+					CEffekseerObj::Create(
 						CMyEffekseer::EFKLABEL::EFKLABEL_IMPACT,
-						GetWorldMtx().GetWorldPosition(), MyLib::Vector3(0.0f, 0.0f, 0.0f), 0.0f, 30.0f, true);*/
+						GetWorldMtx().GetWorldPosition(), MyLib::Vector3(0.0f, 0.0f, 0.0f), 0.0f, 30.0f, true);
 					m_bHit = true;
 				}
 				SetMove(move);
