@@ -403,7 +403,10 @@ void CRenderer::Draw()
 			// ƒ|[ƒY•`‰æˆ—
 			if (bDisp)
 			{
-				CManager::GetInstance()->GetPause()->Draw();
+				if (CManager::GetInstance()->GetPause() != nullptr)
+				{
+					CManager::GetInstance()->GetPause()->Draw();
+				}
 			}
 
 		}

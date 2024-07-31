@@ -1899,7 +1899,7 @@ void CStateCameraV_Distance::Distance(CCamera* pCamera)
 	// ·•ªŠm”F
 	if (m_fMultiPly >= 1.0f)
 	{
-		pCamera->SetStateCameraV(new CStateCameraV);
+		pCamera->SetStateCameraV(DEBUG_NEW CStateCameraV);
 	}
 	else m_fMultiPly += DISTANCE_TIMER;
 }

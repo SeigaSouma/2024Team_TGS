@@ -469,8 +469,8 @@ void CReceiverPeople::StateReturn()
 		pMotion->Set(MOTION::MOTION_RETURN);
 	}
 
-	if (((pMotion->GetType() == MOTION::MOTION_GET && pMotion->IsFinish()) ||
-		pMotion->GetType() != MOTION::MOTION_GET) && !m_bEnd)
+	if (((pMotion->GetType() == MOTION::MOTION_RETURN && pMotion->IsFinish()) ||
+		pMotion->GetType() != MOTION::MOTION_RETURN) && !m_bEnd)
 	{// パス終了 or パス以外
 		m_bEnd = true;
 		CCatchResult::Create(MyLib::Vector3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f), CCatchResult::TYPE::TYPE_FAIL);
@@ -640,6 +640,17 @@ void CReceiverPeople::AttackInDicision(CMotion::AttackInfo* pATKInfo, int nCntAT
 		}
 	}
 		break;
+
+	case MOTION::MOTION_RETURN:
+	{
+		CBaggage* pBaggage = CBaggage::GetListObj().GetData(0);
+
+		if (pBaggage->GetState() != CBaggage::STATE::STATE_PASS)
+		{
+			pBaggage->SetPosition(weponpos);
+		}
+	}
+	break;
 
 	default:
 		break;

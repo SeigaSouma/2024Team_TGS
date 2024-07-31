@@ -182,18 +182,18 @@ void CJudgeObj::CreateState()
 {
 	if (m_Judge == CJudge::JUDGE::JUDGE_AAA)
 	{
-		m_pStateFunc = new CJudgeStateFunc_AAA(this);
+		m_pStateFunc = DEBUG_NEW CJudgeStateFunc_AAA(this);
 	}
 	else if (m_Judge == CJudge::JUDGE::JUDGE_BBB)
 	{
-		m_pStateFunc = new CJudgeStateFunc_BBB(this);
+		m_pStateFunc = DEBUG_NEW CJudgeStateFunc_BBB(this);
 	}
 	else if (m_Judge == CJudge::JUDGE::JUDGE_CCC)
 	{
-		m_pStateFunc = new CJudgeStateFunc_CCC(this);
+		m_pStateFunc = DEBUG_NEW CJudgeStateFunc_CCC(this);
 	}
 	else if (m_Judge == CJudge::JUDGE::JUDGE_DDD)
 	{
-		m_pStateFunc = new CJudgeStateFunc_DDD(this);
+		m_pStateFunc = DEBUG_NEW CJudgeStateFunc_DDD(this);
 	}
 }

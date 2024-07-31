@@ -750,22 +750,25 @@ void CManager::Update()
 			m_pPause->SetPause();
 		}
 
-		// ポーズの更新処理
-		if (m_pPause->IsPause())
-		{// ポーズ中だったら
-			m_pPause->Update();
+		if (m_pPause != nullptr)
+		{
+			// ポーズの更新処理
+			if (m_pPause->IsPause())
+			{// ポーズ中だったら
+				m_pPause->Update();
 
-			if (!GetLoadManager()->IsLoadComplete())
-			{
-				return;
-			}
+				if (!GetLoadManager()->IsLoadComplete())
+				{
+					return;
+				}
 //#if _DEBUG
 
-			// カメラの更新処理
-			m_pCamera->Update();
+							// カメラの更新処理
+				m_pCamera->Update();
 //#endif
 
-			return;
+				return;
+			}
 		}
 
 		if (m_bHitStop)

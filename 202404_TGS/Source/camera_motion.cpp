@@ -287,6 +287,17 @@ void CCameraMotion::LoadMotion(const std::string& filename)
 //==========================================================================
 void CCameraMotion::Uninit()
 {
+	for (int i = 0; i < MOTION_MAX; i++)
+	{
+		if (m_pCameraMotion_Trigger[i] == nullptr)
+		{
+			continue;
+		}
+
+		delete m_pCameraMotion_Trigger[i];
+		m_pCameraMotion_Trigger[i] = nullptr;
+	}
+
 	delete this;
 }
 

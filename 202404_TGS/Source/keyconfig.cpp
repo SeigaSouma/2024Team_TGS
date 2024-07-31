@@ -43,7 +43,7 @@ CKeyConfigManager::CKeyConfigManager()
 CKeyConfigManager* CKeyConfigManager::Create()
 {
 	if (m_pInstance != nullptr) { return m_pInstance; }	// インスタンスが存在
-	m_pInstance = new CKeyConfigManager;
+	m_pInstance = DEBUG_NEW CKeyConfigManager;
 	m_pInstance->ConfigCreate();	// コンフィグ生成
 	return m_pInstance;
 }
@@ -97,11 +97,11 @@ void CKeyConfigManager::ConfigCreate()
 		switch (i) 
 		{
 		case Control::CONTROL_INPAD:
-			p = new CkeyConfigPad;
+			p = DEBUG_NEW CkeyConfigPad;
 			break;
 
 		case Control::CONTROL_OUTPAD:
-			p = new CkeyConfigPad;
+			p = DEBUG_NEW CkeyConfigPad;
 			break;
 
 		case Control::CONTROL_INKEY:
