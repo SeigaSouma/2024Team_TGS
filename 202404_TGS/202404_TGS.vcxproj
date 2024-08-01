@@ -313,6 +313,7 @@
     <ClCompile Include="Source\scene.cpp" />
     <ClCompile Include="Source\score.cpp" />
     <ClCompile Include="Source\shadow.cpp" />
+    <ClCompile Include="Source\skip_ui.cpp" />
     <ClCompile Include="Source\sound.cpp" />
     <ClCompile Include="Source\splashwater.cpp" />
     <ClCompile Include="Source\splashwater_bg.cpp" />
@@ -501,6 +502,7 @@
     <ClInclude Include="Source\scene.h" />
     <ClInclude Include="Source\score.h" />
     <ClInclude Include="Source\shadow.h" />
+    <ClInclude Include="Source\skip_ui.h" />
     <ClInclude Include="Source\sound.h" />
     <ClInclude Include="Source\splashwater.h" />
     <ClInclude Include="Source\splashwater_bg.h" />

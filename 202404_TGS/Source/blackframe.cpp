@@ -211,6 +211,14 @@ void CBlackFrame::UpdateState(int nCntVtx)
 		break;
 
 	case CBlackFrame::STATE_OUTCOMPLETION:
+		if (nCntVtx == VTX_UP)
+		{
+			m_pObj3D[nCntVtx]->SetPosition(START_UP);
+		}
+		else if (nCntVtx == VTX_DOWN)
+		{
+			m_pObj3D[nCntVtx]->SetPosition(START_DOWN);
+		}
 		break;
 	}
 }

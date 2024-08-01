@@ -14,6 +14,7 @@
 
 class CRequestPeople;
 class CReceiverPeople;
+class CSkip_UI;
 
 //==========================================================================
 // クラス定義
@@ -28,6 +29,7 @@ public:
 	{
 		SCENE_MAIN = 0,			// メイン
 		SCENE_START,			// 開始演出
+		SCENE_SKIP,				// スキップ
 		SCENE_COUNTDOWN,		// カウントダウン
 		SCENE_MAINRESULT,		// メインリザルト
 		SCENE_DURING_MAINRESULT,		// メインリザルト中
@@ -74,6 +76,7 @@ public:
 	int GetNumStage() { return m_nNumStage; }	// ステージの総数取得
 	int GetJudgeRank() { return m_nJudgeRank; }
 
+	void StartSetting();		// スタート時の設定
 	void GameClearSettings();	// ゲームクリア時の設定
 	void GameResultSettings();	// ゲームリザルトの設定
 
@@ -81,7 +84,6 @@ public:
 	void AddEvaluationPoint(int point) { m_nEvaluationPoint += point; }	// ポイント加算
 
 	void SetReceiverPeople(CReceiverPeople* pPeople) { m_pReceiverPeople = pPeople; }
-
 
 	static CGameManager *Create(CScene::MODE mode);	// 生成処理
 
@@ -92,6 +94,7 @@ protected:
 	virtual void SceneTransition();	// 遷移中
 	virtual void SceneWaitAirPush();
 	virtual void SceneStart();			// 開始演出
+	virtual void SceneSkip();			// スキップ
 	virtual void SceneGoal();
 	virtual void ContainPlayerBaggage();
 	virtual void TurnAway();
@@ -115,6 +118,7 @@ protected:
 	int m_nJudgeRank;		// クリアランク
 	CRequestPeople* m_pRequestPeople;	// 依頼人のポインタ
 	CReceiverPeople* m_pReceiverPeople;	// 届け先のポインタ
+	CSkip_UI* m_pSkipUI;				// スキップUIのポインタ
 };
 
 

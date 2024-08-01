@@ -32,6 +32,8 @@
 #include "request_people.h"
 #include "subtitle.h"
 #include "receiver_people.h"
+#include "skip_ui.h"
+#include "countdown_start.h"
 
 //==========================================================================
 // 定数定義
@@ -79,6 +81,7 @@ CGameManager::CGameManager()
 	m_pRequestPeople = nullptr;	// 依頼人のポインタ
 	m_pReceiverPeople = nullptr;
 	m_nJudgeRank = 0;
+	m_pSkipUI = nullptr;		// スキップUIのポインタ
 }
 
 //==========================================================================
@@ -191,6 +194,11 @@ void CGameManager::Update()
 		SceneStart();
 		break;
 
+	case CGameManager::SceneType::SCENE_SKIP:
+		m_bControll = false;
+		SceneSkip();
+		break;
+
 	case CGameManager::SceneType::SCENE_COUNTDOWN:		// カウントダウン
 		TurnAway();
 		break;
@@ -276,6 +284,34 @@ void CGameManager::Update()
 }
 
 //==========================================================================
+// スタート時の設定
+//==========================================================================
+void CGameManager::StartSetting()
+{
+	// カウントダウン生成
+	CManager::GetInstance()->GetCamera()->GetCameraMotion()->SetFinish(true);
+	m_SceneType = SceneType::SCENE_COUNTDOWN;
+
+	// カウントダウン開始
+	CCountdown_Start::Create();
+
+	// 黒フレーム削除
+	CBlackFrame::GetInstance()->SetState(CBlackFrame::STATE::STATE_OUTCOMPLETION);
+
+	// 荷物
+	CBaggage* pBaggage = CBaggage::GetListObj().GetData(0);
+	pBaggage->SetScale(1.0f);
+	pBaggage->SetState(CBaggage::STATE::STATE_NONE);
+
+	// 依頼人
+	m_pRequestPeople->SetState(CRequestPeople::STATE::STATE_BYEBYE);
+
+	// スキップUI削除
+	m_pSkipUI->Kill();
+	m_pSkipUI = nullptr;
+}
+
+//==========================================================================
 // ゲームクリア時の設定
 //==========================================================================
 void CGameManager::GameClearSettings()
@@ -287,11 +323,56 @@ void CGameManager::GameClearSettings()
 
 }
 
+
+//==========================================================================
+// スキップ
+//==========================================================================
+void CGameManager::SceneSkip()
+{
+	// フェード完了時以外フェード
+	CInstantFade* pInstantFade = CManager::GetInstance()->GetInstantFade();
+	if (pInstantFade->GetState() != CInstantFade::STATE::STATE_FADECOMPLETION) return;
+
+	switch (m_OldSceneType)
+	{
+	case CGameManager::SceneType::SCENE_START:
+
+		// スタート時の設定
+		StartSetting();
+		break;
+
+	default:
+		break;
+	}
+}
+
 //==========================================================================
 // 開始演出
 //==========================================================================
 void CGameManager::SceneStart()
 {
+	// 遷移なしフェード
+	CInstantFade* pInstantFade = CManager::GetInstance()->GetInstantFade();
+	if (pInstantFade->GetState() != CInstantFade::STATE::STATE_NONE) return;
+
+	if (m_pSkipUI == nullptr)
+	{
+		m_pSkipUI = CSkip_UI::Create();
+	}
+
+	if (m_pSkipUI != nullptr &&
+		m_pSkipUI->IsComplete())
+	{// スキップ完了
+
+		// フェード設定
+		pInstantFade->SetFade();
+
+		// スキップ状態
+		m_OldSceneType = m_SceneType;
+		m_SceneType = SceneType::SCENE_SKIP;
+		return;
+	}
+
 	if (m_fSceneTimer >= SceneTime::RequestStart &&
 		m_pRequestPeople->GetState() == CRequestPeople::STATE::STATE_WAIT)
 	{
