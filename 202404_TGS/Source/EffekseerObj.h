@@ -27,9 +27,10 @@ public:
 	virtual void Draw();
 
 	void Stop();	// 停止
+	void DeleteLater(float time);	// 後で消す
 	Effekseer::Handle GetHandle() { return m_EffekseerInfo.handle; }	// ハンドル取得
 
-	void SetTrigger(int trigger);					// トリガー送信
+	void SetTrigger(int trigger);					// トリガー送信 
 	void SetPosition(const MyLib::Vector3& pos);	// 位置設定
 	void SetRotation(const MyLib::Vector3& rot);	// 向き設定
 	void SetMatrix(const MyLib::Matrix& mtx);		// マトリックス設定
@@ -54,7 +55,9 @@ private:
 
 	CMyEffekseer::EFKLABEL m_Label;	// エフェクトのラベル
 	CMyEffekseer::MyEffekseerInfo m_EffekseerInfo;	// エフェクト情報
-	bool m_bDeath;	// 死亡フラグ
+	bool m_bDeath;			// 死亡フラグ
+	bool m_bDeleteLater;	// 後で死亡フラグ
+	float m_fDeleteTimer;	// 死亡タイマー
 	static CListManager<CEffekseerObj> m_List;	// リスト
 };
 

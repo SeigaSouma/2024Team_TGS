@@ -5,6 +5,7 @@
 // 
 //=============================================================================
 #include "EffekseerObj.h"
+#include "manager.h"
 
 //==========================================================================
 // 定数定義
@@ -21,7 +22,9 @@ CListManager<CEffekseerObj> CEffekseerObj::m_List = {};	// リスト
 CEffekseerObj::CEffekseerObj()
 {
 	m_Label = CMyEffekseer::EFKLABEL::EFKLABEL_SAMPLE_LASER;	// エフェクトのラベル
-	m_bDeath = false;	// 死亡フラグ
+	m_bDeath = false;		// 死亡フラグ
+	m_bDeleteLater = false;	// 後で死亡フラグ
+	m_fDeleteTimer = 0.0f;	// 死亡タイマー
 }
 
 //==========================================================================
@@ -122,6 +125,18 @@ void CEffekseerObj::Update()
 		return;
 	}
 
+	// 後で消す
+	if (m_bDeleteLater)
+	{
+		m_fDeleteTimer -= CManager::GetInstance()->GetDeltaTime();
+		if (m_fDeleteTimer <= 0.0f)
+		{// 削除
+			m_bDeath = true;
+			Uninit();
+			return;
+		}
+	}
+
 	if (!efkManager->Exists(m_EffekseerInfo.handle))
 	{// 再生終了
 
@@ -178,6 +193,15 @@ void CEffekseerObj::SetTrigger(int trigger)
 
 	// トリガー送信
 	efkManager->SendTrigger(m_EffekseerInfo.handle, trigger);
+}
+
+//==========================================================================
+// 後で消す
+//==========================================================================
+void CEffekseerObj::DeleteLater(float time)
+{
+	m_bDeleteLater = true;	// 後で死亡フラグ
+	m_fDeleteTimer = time;	// 死亡タイマー
 }
 
 //==========================================================================

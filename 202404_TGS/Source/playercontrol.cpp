@@ -654,6 +654,8 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 
 				// トリガー送信
 				m_pEffekseerObj->SetTrigger(1);
+				m_pEffekseerObj->Uninit();
+				m_pEffekseerObj = nullptr;
 			}
 
 			// 息エフェクト生成
@@ -755,8 +757,9 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	// 息エフェクト状態変更
 	if (m_bFall && m_pEffekseerObj != nullptr)
 	{
+		// ゆっくり消す
 		m_pEffekseerObj->SetTrigger(0);
-		m_pEffekseerObj->Uninit();
+		m_pEffekseerObj->DeleteLater(1.0f);
 		m_pEffekseerObj = nullptr;
 
 		// SEストップ
@@ -1039,9 +1042,9 @@ void CPlayerControlBaggage::EffectStop()
 	// 息が使用されている
 	if (m_pEffekseerObj != nullptr)
 	{
-		// エフェクト停止
+		// ゆっくりけす
 		m_pEffekseerObj->SetTrigger(0);
-		m_pEffekseerObj->Uninit();
+		m_pEffekseerObj->DeleteLater(1.0f);
 		m_pEffekseerObj = nullptr;
 
 		// SEストップ

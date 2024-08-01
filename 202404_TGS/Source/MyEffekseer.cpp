@@ -165,6 +165,24 @@ void CMyEffekseer::Uninit()
 	// 全停止
 	m_efkManager->StopAllEffects();
 
+	// 先頭を保存
+	CListManager<CEffekseerObj> list = CEffekseerObj::GetListObj();
+	std::list<CEffekseerObj*>::iterator itr = list.GetEnd();
+	CEffekseerObj* pObj = nullptr;
+
+	std::vector<CEffekseerObj*> deletelist;
+
+	// リストループ
+	while (list.ListLoop(itr))
+	{
+		deletelist.push_back((*itr));
+	}
+
+	for (const auto& obj : deletelist)
+	{
+		obj->Uninit();
+	}
+
 	delete m_pMyEffekseer;
 	m_pMyEffekseer = nullptr;
 }
