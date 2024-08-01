@@ -187,6 +187,7 @@ void CObject::UpdateAll()
 			{
 				// ‘”Œ¸ŽZ
 				m_nNumAll--;
+				obj->Uninit();
 				delete obj;
 			}
 		}

@@ -118,6 +118,8 @@ void CMapUI::Uninit()
 
 	m_pMyPlayer = nullptr;
 	m_pInstance = nullptr;
+
+	CObject::Release();
 }
 
 //=============================================================================

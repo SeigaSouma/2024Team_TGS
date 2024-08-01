@@ -126,6 +126,9 @@
     <Filter Include="movie">
       <UniqueIdentifier>{e2482c0c-32f9-41d9-a54c-3f7ab6957689}</UniqueIdentifier>
     </Filter>
+    <Filter Include="direction\splash">
+      <UniqueIdentifier>{443db5dc-5c30-41a3-8979-4f0e5a88dee6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\ballast.cpp">
@@ -662,20 +665,20 @@
     <ClCompile Include="Source\townfield_fixedplane.cpp">
       <Filter>map\mesh</Filter>
     </ClCompile>
-    <ClCompile Include="Source\splashwater.cpp">
-      <Filter>direction</Filter>
-    </ClCompile>
     <ClCompile Include="Source\EffekseerObj.cpp">
       <Filter>effect</Filter>
     </ClCompile>
     <ClCompile Include="Source\movie.cpp">
       <Filter>movie</Filter>
     </ClCompile>
+    <ClCompile Include="Source\splashwater.cpp">
+      <Filter>direction\splash</Filter>
+    </ClCompile>
     <ClCompile Include="Source\splashwater_bg.cpp">
-      <Filter>direction</Filter>
+      <Filter>direction\splash</Filter>
     </ClCompile>
     <ClCompile Include="Source\splashwater_manager.cpp">
-      <Filter>direction</Filter>
+      <Filter>direction\splash</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1222,20 +1225,20 @@
     <ClInclude Include="Source\townfield_fixedplane.h">
       <Filter>map\mesh</Filter>
     </ClInclude>
-    <ClInclude Include="Source\splashwater.h">
-      <Filter>direction</Filter>
-    </ClInclude>
     <ClInclude Include="Source\EffekseerObj.h">
       <Filter>effect</Filter>
     </ClInclude>
     <ClInclude Include="Source\movie.h">
       <Filter>movie</Filter>
     </ClInclude>
+    <ClInclude Include="Source\splashwater.h">
+      <Filter>direction\splash</Filter>
+    </ClInclude>
     <ClInclude Include="Source\splashwater_bg.h">
-      <Filter>direction</Filter>
+      <Filter>direction\splash</Filter>
     </ClInclude>
     <ClInclude Include="Source\splashwater_manager.h">
-      <Filter>direction</Filter>
+      <Filter>direction\splash</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
