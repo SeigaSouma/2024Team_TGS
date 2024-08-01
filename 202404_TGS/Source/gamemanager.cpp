@@ -265,13 +265,6 @@ void CGameManager::Update()
 		CPeopleManager::GetInstance()->SetRank(CJudge::JUDGE::JUDGE_MAX);
 	}
 
-	if (CInputKeyboard::GetInstance()->GetTrigger(DIK_4))
-	{
-		CSubTitle* pSubTitle = CSubTitle::Create(MyLib::Vector3(640.0f, 670.0f, 0.0f), 2.0f);
-		pSubTitle->BindSubtitle("data\\TEXTURE\\subtitle\\sample.png");
-		pSubTitle->SetSizeByHeight(40.0f);
-	}
-
 
 	// テキストの描画
 	CManager::GetInstance()->GetDebugProc()->Print(

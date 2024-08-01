@@ -36,6 +36,8 @@ public:
 
 	virtual void SetColor(const D3DXCOLOR col);			// 色設定
 	virtual D3DXCOLOR GetColor() const;					// 色取得
+	virtual void SetOriginColor(const D3DXCOLOR& col) { m_colOrigin = col; }			// 元の色設定
+	virtual D3DXCOLOR GetOriginColor() const { return m_colOrigin; }					// 元の色取得
 	virtual void SetAlpha(const float col);				// 不透明度設定
 	virtual float GetAlpha() const;						// 不透明度取得
 	virtual void SetSize(const D3DXVECTOR2 size);		// サイズの設定
@@ -62,6 +64,7 @@ private:
 	float GetAngle() const;					// 対角線の向き取得
 
 	D3DXCOLOR m_col;			// 色
+	D3DXCOLOR m_colOrigin;		// 元の色
 	D3DXVECTOR2 m_size;			// サイズ
 	D3DXVECTOR2 m_sizeOrigin;	// 元のサイズ
 	D3DXVECTOR2 m_fTex[32];		// テクスチャ座標

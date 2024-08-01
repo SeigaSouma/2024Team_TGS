@@ -55,7 +55,7 @@
 #include "peoplemanager.h"
 #include "subtitle.h"
 #include "receiver_people.h"
-#include "splashwater.h"
+#include "splashwater_manager.h"
 
 //==========================================================================
 // Ã“Iƒƒ“ƒo•Ï”éŒ¾
@@ -521,10 +521,12 @@ void CGame::Update()
 
 	if (pInputKeyboard->GetTrigger(DIK_4))
 	{
-		CSubTitle* pSubTitle = CSubTitle::Create(MyLib::Vector3(640.0f, 670.0f, 0.0f), 2.0f);
+		/*CSubTitle* pSubTitle = CSubTitle::Create(MyLib::Vector3(640.0f, 670.0f, 0.0f), 2.0f);
 		pSubTitle->BindSubtitle("data\\TEXTURE\\subtitle\\sample.png");
-		pSubTitle->SetSizeByHeight(40.0f);
-		CSplashwater::Create();
+		pSubTitle->SetSizeByHeight(40.0f);*/
+
+		CSplashwater_Manager::Create();
+
 	}
 
 #if _DEBUG

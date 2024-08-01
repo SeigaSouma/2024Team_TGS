@@ -72,8 +72,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;C:\opencv\build\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;C:\opencv\build\x86\vc15\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -102,7 +102,8 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>.\Libraries\Effekseer\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>.\Libraries\Effekseer\Lib;.\Libraries\FFmpeg\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Strmiids.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -176,6 +177,7 @@
     <ClCompile Include="Source\EffekseerObj.cpp" />
     <ClCompile Include="Source\map_obstacle_motion.cpp" />
     <ClCompile Include="Source\map_obstacle_obj.cpp" />
+    <ClCompile Include="Source\movie.cpp" />
     <ClCompile Include="Source\obstacle_birdcircle.cpp" />
     <ClCompile Include="Source\obstacle_fisharch.cpp" />
     <ClCompile Include="Source\map_block.cpp" />
@@ -313,6 +315,8 @@
     <ClCompile Include="Source\shadow.cpp" />
     <ClCompile Include="Source\sound.cpp" />
     <ClCompile Include="Source\splashwater.cpp" />
+    <ClCompile Include="Source\splashwater_bg.cpp" />
+    <ClCompile Include="Source\splashwater_manager.cpp" />
     <ClCompile Include="Source\spline.cpp" />
     <ClCompile Include="Source\stage.cpp" />
     <ClCompile Include="Source\stagecleartext.cpp" />
@@ -364,6 +368,7 @@
     <ClInclude Include="Source\EffekseerObj.h" />
     <ClInclude Include="Source\map_obstacle_motion.h" />
     <ClInclude Include="Source\map_obstacle_obj.h" />
+    <ClInclude Include="Source\movie.h" />
     <ClInclude Include="Source\obstacle_birdcircle.h" />
     <ClInclude Include="Source\obstacle_fisharch.h" />
     <ClInclude Include="Source\map_block.h" />
@@ -498,6 +503,8 @@
     <ClInclude Include="Source\shadow.h" />
     <ClInclude Include="Source\sound.h" />
     <ClInclude Include="Source\splashwater.h" />
+    <ClInclude Include="Source\splashwater_bg.h" />
+    <ClInclude Include="Source\splashwater_manager.h" />
     <ClInclude Include="Source\spline.h" />
     <ClInclude Include="Source\stage.h" />
     <ClInclude Include="Source\stagecleartext.h" />
