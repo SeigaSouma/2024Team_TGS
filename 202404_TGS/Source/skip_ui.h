@@ -40,7 +40,8 @@ public:
 	void Draw() override;
 
 
-	void Kill();	// íœ
+	void Kill();		// íœ
+	void SetState(State state);	// ó‘Ôİ’è
 	bool IsComplete() { return m_bCompleteSkip; }	// Š®—¹”»’è
 
 	//=============================

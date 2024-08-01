@@ -351,13 +351,17 @@ void CGameManager::SceneSkip()
 //==========================================================================
 void CGameManager::SceneStart()
 {
-	// 遷移なしフェード
-	CInstantFade* pInstantFade = CManager::GetInstance()->GetInstantFade();
-	if (pInstantFade->GetState() != CInstantFade::STATE::STATE_NONE) return;
-
 	if (m_pSkipUI == nullptr)
 	{
 		m_pSkipUI = CSkip_UI::Create();
+	}
+
+	// 遷移なしフェード
+	CInstantFade* pInstantFade = CManager::GetInstance()->GetInstantFade();
+	if (pInstantFade->GetState() != CInstantFade::STATE::STATE_NONE)
+	{
+		m_pSkipUI->SetState(CSkip_UI::State::STATE_FADEOUT);
+		return;
 	}
 
 	if (m_pSkipUI != nullptr &&

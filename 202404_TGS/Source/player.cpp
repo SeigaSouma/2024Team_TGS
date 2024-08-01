@@ -42,6 +42,7 @@
 #include "spline.h"
 #include "course.h"
 #include "meshbubble.h"
+#include "discovery.h"
 
 // 使用クラス
 #include "playercontrol.h"
@@ -886,6 +887,10 @@ void CPlayer::AttackAction(CMotion::AttackInfo ATKInfo, int nCntATK)
 
 			CSound::GetInstance()->PlaySound(CSound::LABEL_SE_WALK2);
 		}*/
+		break;
+
+	case MOTION::MOTION_START:
+		CDiscovery::Create(pos + MyLib::Vector3(80.0f, 150.0f, -80.0f));
 		break;
 
 	default:

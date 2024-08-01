@@ -686,6 +686,9 @@
     <ClCompile Include="Source\skip_ui.cpp">
       <Filter>ui</Filter>
     </ClCompile>
+    <ClCompile Include="Source\discovery.cpp">
+      <Filter>direction</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ballast.h">
@@ -1248,6 +1251,9 @@
     </ClInclude>
     <ClInclude Include="Source\skip_ui.h">
       <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\discovery.h">
+      <Filter>direction</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

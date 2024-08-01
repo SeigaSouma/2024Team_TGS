@@ -77,7 +77,7 @@ HRESULT CSkip_UI::Init()
 	SetType(CObject::TYPE::TYPE_OBJECT2D);
 
 	// 位置
-	SetPosition(MyLib::Vector3(1100.0f, 650.0f, 0.0f));
+	SetPosition(MyLib::Vector3(1100.0f, 670.0f, 0.0f));
 
 	m_state = State::STATE_FADEOUT;	// 状態
 	m_fStateTime = 0.0f;	// 状態タイマー
@@ -102,7 +102,11 @@ void CSkip_UI::CreateUI()
 //==========================================================================
 void CSkip_UI::CreateButton()
 {
-	if (m_pButton != nullptr) return;
+	if (m_pButton != nullptr)
+	{
+		m_pButton->SetAlpha(1.0f);
+		return;
+	}
 
 	// 作成
 	m_pButton = CObject2D::Create(GetPriority());
@@ -124,6 +128,7 @@ void CSkip_UI::CreateButton()
 
 	// 位置
 	m_pButton->SetPosition(GetPosition());
+	m_pButton->SetVtx();
 }
 
 //==========================================================================
@@ -222,7 +227,6 @@ void CSkip_UI::Update()
 
 		// 状態設定
 		m_state = State::STATE_FADEOUT;
-		m_fStateTime += deltaTime;
 
 		// タイマーリセット
 		m_fPressTimer = 0.0f;
@@ -270,4 +274,13 @@ void CSkip_UI::StateFadeout()
 void CSkip_UI::Draw()
 {
 	
+}
+
+//==========================================================================
+// 状態設定
+//==========================================================================
+void CSkip_UI::SetState(State state)
+{
+	m_state = state;
+	m_fStateTime = 0.0f;
 }
