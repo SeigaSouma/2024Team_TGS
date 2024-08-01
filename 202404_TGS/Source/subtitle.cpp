@@ -124,6 +124,11 @@ void CSubTitle::Update()
 	// ó‘ÔXV
 	UpdateState();
 
+	if (CManager::GetInstance()->GetInstantFade()->GetState() != CInstantFade::STATE::STATE_NONE)
+	{
+		Uninit();
+	}
+
 	if (IsDeath())
 	{
 		return;

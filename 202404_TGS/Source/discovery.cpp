@@ -7,6 +7,7 @@
 #include "discovery.h"
 #include "manager.h"
 #include "calculation.h"
+#include "instantfade.h"
 
 //==========================================================================
 // ’è”’è‹`
@@ -127,6 +128,11 @@ void CDiscovery::Update()
 {
 	// ó‘ÔXV
 	UpdateState();
+
+	if (CManager::GetInstance()->GetInstantFade()->GetState() != CInstantFade::STATE::STATE_NONE)
+	{
+		Uninit();
+	}
 
 	if (IsDeath()) return;
 

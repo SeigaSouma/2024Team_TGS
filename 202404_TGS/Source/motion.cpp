@@ -217,6 +217,7 @@ void CMotion::SetModel(CModel **pModel, int nNumModel)
 //==========================================================================
 void CMotion::ResetPose(int nType)
 {
+	
 
 	int nStartIdx = m_pObjChara->GetMotionStartIdx();
 	for (int nCntParts = nStartIdx; nCntParts < m_nNumModel + nStartIdx + 1; nCntParts++)
@@ -258,6 +259,8 @@ void CMotion::ResetPose(int nType)
 	}
 
 	m_pPartsOld[0].pos = m_pInfo[nType].aKey[0].aParts[0].pos;
+
+	Set(nType);
 }
 
 //==========================================================================

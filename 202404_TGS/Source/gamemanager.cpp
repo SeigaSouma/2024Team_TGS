@@ -200,6 +200,13 @@ void CGameManager::Update()
 		break;
 
 	case CGameManager::SceneType::SCENE_COUNTDOWN:		// カウントダウン
+		
+		// スキップUI削除
+		if (m_pSkipUI != nullptr)
+		{
+			m_pSkipUI->Kill();
+			m_pSkipUI = nullptr;
+		}
 		TurnAway();
 		break;
 
@@ -309,6 +316,8 @@ void CGameManager::StartSetting()
 	// スキップUI削除
 	m_pSkipUI->Kill();
 	m_pSkipUI = nullptr;
+
+	CPlayer::GetListObj().GetData(0)->GetMotion()->ResetPose(0);
 }
 
 //==========================================================================
