@@ -158,7 +158,7 @@ void CGoalflagX::Update()
 
 		// ƒJƒƒ‰Ý’è
 		CCamera* pCamera = CManager::GetInstance()->GetCamera();
-		pCamera->SetStateCameraV(new CStateCameraV_Goal);
+		pCamera->SetStateCameraV(DEBUG_NEW CStateCameraV_Goal);
 		pCamera->GetMotion()->SetPosition(Playerpos);
 		pCamera->GetMotion()->SetMotion(CCameraMotion::MOTION::MOTION_GOAL, CCameraMotion::EASING::Linear);
 		CStageClearText::Create(MyLib::Vector3(640.0f, 400.0f, 0.0f));

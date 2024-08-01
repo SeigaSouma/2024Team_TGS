@@ -50,6 +50,7 @@ CScene::CScene()
 {
 	// 変数のクリア
 	m_mode = MODE_TITLE;
+	m_pEditMap = nullptr;
 }
 
 //==========================================================================
@@ -141,7 +142,7 @@ HRESULT CScene::Init()
 	// マップの生成
 	//**********************************
 #ifdef LOADMAP
-	CEdit_Map_Release::Create(MAP_TEXT, CManager::BuildMode::MODE_RELEASE);
+	m_pEditMap = CEdit_Map_Release::Create(MAP_TEXT, CManager::BuildMode::MODE_RELEASE);
 #endif
 
 	//**********************************
@@ -157,7 +158,23 @@ HRESULT CScene::Init()
 //==========================================================================
 void CScene::Uninit()
 {
+	//**********************************
+	// 破棄フェーズ
+	//**********************************
+	// エディットマップ
+	if (m_pEditMap != nullptr)
+	{
+		m_pEditMap->Uninit();
+		m_pEditMap = nullptr;
+	}
 
+	// マップ
+	//MyMap::Release();
+
+	if (CBlackFrame::GetInstance() != nullptr)
+	{
+		CBlackFrame::GetInstance()->Uninit();
+	}
 }
 
 //==========================================================================
@@ -191,6 +208,18 @@ void CScene::ResetScene()
 		m_pObject3DMesh = nullptr;
 	}
 
+	// エディットマップ
+	if (m_pEditMap != nullptr)
+	{
+		m_pEditMap->Uninit();
+		m_pEditMap = nullptr;
+	}
+
+	if (CBlackFrame::GetInstance() != nullptr)
+	{
+		CBlackFrame::GetInstance()->Uninit();
+	}
+
 	// マップ
 	MyMap::Release();
 
@@ -203,7 +232,7 @@ void CScene::ResetScene()
 		return;
 	}
 #ifdef LOADMAP
-	CEdit_Map_Release::Create(MAP_TEXT, CManager::BuildMode::MODE_RELEASE);
+	m_pEditMap = CEdit_Map_Release::Create(MAP_TEXT, CManager::BuildMode::MODE_RELEASE);
 #endif
 
 	// ボスステージの起伏生成

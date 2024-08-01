@@ -1284,7 +1284,7 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 		// 死亡時の設定
 		DeadSetting(&hitresult);
 		pCamera->SetLenDest(pCamera->GetOriginDistance(), 1800, 0.0025f, 0.0025f);	// 距離を近づける
-		pCamera->SetStateCameraV(new CStateCameraV_Distance);
+		pCamera->SetStateCameraV(DEBUG_NEW CStateCameraV_Distance);
 
 		// フィードバックエフェクトOFF
 		CManager::GetInstance()->GetRenderer()->SetEnableDrawMultiScreen(
@@ -1309,7 +1309,7 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 	else if (nLife <= camlife)
 	{
 		pCamera->SetLenDest(600.0f, 10, -20.0f, 0.07f);	// 距離を近づける
-		CStateCameraV_Distance* pstate = new CStateCameraV_Distance;
+		CStateCameraV_Distance* pstate = DEBUG_NEW CStateCameraV_Distance;
 		pstate->SetStartDistance(pCamera->GetDistance());
 		pCamera->SetStateCameraV(pstate);
 
@@ -1861,7 +1861,7 @@ void CPlayer::ScreenReset()
 
 	// カメラの状態を元に戻す
 	CCamera* pCamera = CManager::GetInstance()->GetCamera();
-	pCamera->SetStateCameraV(new CStateCameraV);
+	pCamera->SetStateCameraV(DEBUG_NEW CStateCameraV);
 
 	// モーションをリセットする
 	GetMotion()->ToggleFinish(true);

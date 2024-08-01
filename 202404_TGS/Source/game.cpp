@@ -387,6 +387,13 @@ void CGame::Uninit()
 {
 	m_pThisPtr = nullptr;
 
+	// エディットの廃棄
+	if (m_pEdit != nullptr)
+	{
+		m_pEdit->Uninit();
+		m_pEdit = nullptr;
+	}
+
 	// スコアの破棄
 	if (m_pScore != nullptr)
 	{// メモリの確保が出来ていたら

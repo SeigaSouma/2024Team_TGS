@@ -85,7 +85,7 @@ HRESULT CMapUI::Init()
 	}
 
 	// •`‰æ—pƒJƒƒ‰‚Ì¶¬‚ÆÝ’è
-	m_pMyCamera = new CCamera;
+	m_pMyCamera = DEBUG_NEW CCamera;
 	m_pMyCamera->Init();
 	m_pMyCamera->SetRotation(MyLib::Vector3(0.0f, ROTY, 0.0f));
 	m_pMyCamera->SetDistance(DISTANCE);
@@ -214,7 +214,7 @@ void CMapUI::Draw()
 CMapUI* CMapUI::Create()
 {
 	if (m_pInstance != nullptr) { return m_pInstance; }
-	m_pInstance = new CMapUI;
+	m_pInstance = DEBUG_NEW CMapUI;
 
 	if (m_pInstance->Init() == E_FAIL)
 	{

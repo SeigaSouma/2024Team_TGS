@@ -212,7 +212,7 @@ void CEdit_Course::ChangeEditCourse()
 		pCourceManager->AddSegmentPos();
 
 		// ¶¬‚µ‚ÄƒŠƒXƒg‚ÌŠÇ—‰º‚É
-		CMapBlockInfo* pBlock = new CMapBlockInfo;
+		CMapBlockInfo* pBlock = DEBUG_NEW CMapBlockInfo;
 		pBlock->Init();
 		CMapBlock::GetInfoListPtr()->Regist(pBlock);
 	}

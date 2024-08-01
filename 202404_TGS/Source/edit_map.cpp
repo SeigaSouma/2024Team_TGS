@@ -49,7 +49,6 @@ CEdit_Map::CEdit_Map()
 	m_pHandle = nullptr;	// 移動ハンドル
 	m_HandleType = CHandle::HandleType::TYPE_MOVE;	// ハンドルの種類
 	m_moveAngle = CHandle::HandleAngle::ANGLE_X;	// 移動の向き
-
 	memset(m_HandleTex, 0, sizeof(m_HandleTex));// テクスチャのポインタ
 }
 
@@ -151,6 +150,11 @@ void CEdit_Map::Uninit()
 		m_HandleTex[i]->Release();
 		m_HandleTex[i] = nullptr;
 	}
+
+	//m_List.Uninit();
+
+	m_nModelIdx.clear();	// モデルインデックス
+	m_pObjX.clear();		// オブジェクトXのポインタ
 
 	// 終了処理
 	CEdit::Uninit();
@@ -1032,217 +1036,212 @@ void CEdit_Map::Load(const std::string& file)
 		return;
 	}
 
-	while (1)
-	{// END_SCRIPTが来るまで繰り返す
-
-		// 文字列の読み込み
-		fscanf(pFile, "%s", &aComment[0]);
-
-
-
-
-#ifndef _DEBUG
-		// メッシュフィールドの設定
-		if (strcmp(&aComment[0], "FIELDSET") == 0)
-		{// モデルの読み込みを開始
-
-			MyLib::Vector3 pos, rot;
-			int width, height;
-			float widthlen, heightlen;
-			int type;
-			while (strcmp(&aComment[0], "END_FIELDSET"))
-			{// END_FIELDSETが来るまで繰り返し
-
-				fscanf(pFile, "%s", &aComment[0]);	// 確認する
-
-				if (strcmp(&aComment[0], "TEXTYPE") == 0)
-				{// TEXTYPEが来たら種類読み込み
-
-					fscanf(pFile, "%s", &aComment[0]);	// =の分
-					fscanf(pFile, "%d", &type);		// モデル種類の列挙
-				}
-
-				if (strcmp(&aComment[0], "POS") == 0)
-				{// POSが来たら位置読み込み
-
-					fscanf(pFile, "%s", &aComment[0]);	// =の分
-					fscanf(pFile, "%f", &pos.x);		// X座標
-					fscanf(pFile, "%f", &pos.y);		// Y座標
-					fscanf(pFile, "%f", &pos.z);		// Z座標
-				}
-
-				if (strcmp(&aComment[0], "ROT") == 0)
-				{// ROTが来たら向き読み込み
-
-					fscanf(pFile, "%s", &aComment[0]);		 // =の分
-					fscanf(pFile, "%f", &rot.x);		 // Xの向き
-					fscanf(pFile, "%f", &rot.y);		 // Yの向き
-					fscanf(pFile, "%f", &rot.z);		 // Zの向き
-					rot.x = D3DXToRadian(rot.x); // 360度形式から変換
-					rot.y = D3DXToRadian(rot.y); // 360度形式から変換
-					rot.z = D3DXToRadian(rot.z); // 360度形式から変換
-				}
-
-				if (strcmp(&aComment[0], "BLOCK") == 0)
-				{//BLOCKが来たら向き読み込み
-
-					fscanf(pFile, "%s", &aComment[0]);		// =の分
-					fscanf(pFile, "%d", &width);		// 横の分割数
-					fscanf(pFile, "%d", &height);	// 縦の分割数
-				}
-
-				if (strcmp(&aComment[0], "SIZE") == 0)
-				{//SIZEが来たら向き読み込み
-
-					fscanf(pFile, "%s", &aComment[0]);		// =の分
-					fscanf(pFile, "%f", &widthlen);		// 横の長さ
-					fscanf(pFile, "%f", &heightlen);	// 縦の長さ
-				}
-
-			}// END_FIELDSETのかっこ
-
-			//**********************************
-			// 生成処理
-			//**********************************
-			CMeshField::Create(
-				pos, rot,
-				widthlen, heightlen,
-				width, height,
-				(CMeshField::TYPE)type, m_TextureFile[type].c_str());
-		}
-
-		// メッシュシリンダーの設定
-		if (strcmp(&aComment[0], "MOUNTAINSET") == 0)
-		{// モデルの読み込みを開始
-
-			int type;
-			while (strcmp(&aComment[0], "END_MOUNTAINSET"))
-			{// END_MOUNTAINSETが来るまで繰り返し
-
-				fscanf(pFile, "%s", &aComment[0]);	// 確認する
-
-				if (strcmp(&aComment[0], "TEXTYPE") == 0)
-				{// TEXTYPEが来たら種類読み込み
-
-					fscanf(pFile, "%s", &aComment[0]);	// =の分
-					fscanf(pFile, "%d", &type);	// モデル種類の列挙
-				}
-
-			}// END_MOUNTAINSETのかっこ
-
-			//**********************************
-			// 生成処理
-			//**********************************
-			CMeshCylinder::Create(m_TextureFile[type].c_str());
-
-		}
-
-		// メッシュドームの設定
-		if (strcmp(&aComment[0], "SKYSET") == 0)
-		{// モデルの読み込みを開始
-
-			int type;
-			float move;
-			while (strcmp(&aComment[0], "END_SKYSET"))
-			{// END_MOUNTAINSETが来るまで繰り返し
-
-				fscanf(pFile, "%s", &aComment[0]);	// 確認する
-
-				if (strcmp(&aComment[0], "TEXTYPE") == 0)
-				{// TEXTYPEが来たら種類読み込み
-
-					fscanf(pFile, "%s", &aComment[0]);	// =の分
-					fscanf(pFile, "%d", &type);		// モデル種類の列挙
-				}
-
-				if (strcmp(&aComment[0], "MOVE") == 0)
-				{//MOVEが来たら移動読み込み
-
-					fscanf(pFile, "%s", &aComment[0]);	// =の分
-					fscanf(pFile, "%f", &move);			// 移動量
-				}
-
-			}// END_SKYSETのかっこ
-
-			//**********************************
-			// 生成処理
-			//**********************************
-			CMeshDome::Create(move, m_TextureFile[type].c_str());
-
-		}
-
-		if (strcmp(&aComment[0], "END_SCRIPT") == 0)
-		{// 終了文字でループを抜ける
-
-			break;
-		}
-#endif
-
-
-
-		// モデルの設定
-		if (strcmp(&aComment[0], "MODELSET") == 0)
-		{
-			int nType = 0, nShadow = 0;
-			MyLib::Vector3 pos, rot;
-			float scale = 1.0f;
-
-			while (strcmp(&aComment[0], "END_MODELSET"))
-			{// END_MODELSETが来るまで繰り返し
-
-				fscanf(pFile, "%s", &aComment[0]);	// 確認する
-
-				if (strcmp(&aComment[0], "TYPE") == 0)
-				{// TYPEが来たら種類読み込み
-
-					fscanf(pFile, "%s", &aComment[0]);	// =の分
-					fscanf(pFile, "%d", &nType);		// モデル種類の列挙
-				}
-
-				if (strcmp(&aComment[0], "POS") == 0)
-				{// POSが来たら位置読み込み
-
-					fscanf(pFile, "%s", &aComment[0]);	// =の分
-					fscanf(pFile, "%f", &pos.x);	// X座標
-					fscanf(pFile, "%f", &pos.y);	// Y座標
-					fscanf(pFile, "%f", &pos.z);	// Z座標
-				}
-
-				if (strcmp(&aComment[0], "ROT") == 0)
-				{// ROTが来たら向き読み込み
-
-					fscanf(pFile, "%s", &aComment[0]);	// =の分
-					fscanf(pFile, "%f", &rot.x);	// Xの向き
-					fscanf(pFile, "%f", &rot.y);	// Yの向き
-					fscanf(pFile, "%f", &rot.z);	// Zの向き
-				}
-
-				if (strcmp(&aComment[0], "SCALE") == 0)
-				{// SCALEが来たら拡大率読み込み
-
-					fscanf(pFile, "%s", &aComment[0]);	// =の分
-					fscanf(pFile, "%f", &scale);		// スケール
-				}
-
-				if (strcmp(&aComment[0], "SHADOW") == 0)
-				{// SHADOWが来たら影使用
-
-					fscanf(pFile, "%s", &aComment[0]);		// =の分
-					fscanf(pFile, "%d", &nShadow);			// 影を使うかどうか
-				}
-
-			}// END_MODELSETのかっこ
-
-			// 追加
-			bool bShadow = (nShadow == 1);
-			Regist(nType, pos, rot, scale, bShadow);
-		}
-
-		if (strcmp(&aComment[0], "END_SCRIPT") == 0)
-		{// 終了文字でループを抜ける
-			break;
-		}
-	}
+//	while (1)
+//	{// END_SCRIPTが来るまで繰り返す
+//
+//		// 文字列の読み込み
+//		fscanf(pFile, "%s", &aComment[0]);
+//
+//#ifndef _DEBUG
+//		// メッシュフィールドの設定
+//		if (strcmp(&aComment[0], "FIELDSET") == 0)
+//		{// モデルの読み込みを開始
+//
+//			MyLib::Vector3 pos, rot;
+//			int width, height;
+//			float widthlen, heightlen;
+//			int type;
+//			while (strcmp(&aComment[0], "END_FIELDSET"))
+//			{// END_FIELDSETが来るまで繰り返し
+//
+//				fscanf(pFile, "%s", &aComment[0]);	// 確認する
+//
+//				if (strcmp(&aComment[0], "TEXTYPE") == 0)
+//				{// TEXTYPEが来たら種類読み込み
+//
+//					fscanf(pFile, "%s", &aComment[0]);	// =の分
+//					fscanf(pFile, "%d", &type);		// モデル種類の列挙
+//				}
+//
+//				if (strcmp(&aComment[0], "POS") == 0)
+//				{// POSが来たら位置読み込み
+//
+//					fscanf(pFile, "%s", &aComment[0]);	// =の分
+//					fscanf(pFile, "%f", &pos.x);		// X座標
+//					fscanf(pFile, "%f", &pos.y);		// Y座標
+//					fscanf(pFile, "%f", &pos.z);		// Z座標
+//				}
+//
+//				if (strcmp(&aComment[0], "ROT") == 0)
+//				{// ROTが来たら向き読み込み
+//
+//					fscanf(pFile, "%s", &aComment[0]);		 // =の分
+//					fscanf(pFile, "%f", &rot.x);		 // Xの向き
+//					fscanf(pFile, "%f", &rot.y);		 // Yの向き
+//					fscanf(pFile, "%f", &rot.z);		 // Zの向き
+//					rot.x = D3DXToRadian(rot.x); // 360度形式から変換
+//					rot.y = D3DXToRadian(rot.y); // 360度形式から変換
+//					rot.z = D3DXToRadian(rot.z); // 360度形式から変換
+//				}
+//
+//				if (strcmp(&aComment[0], "BLOCK") == 0)
+//				{//BLOCKが来たら向き読み込み
+//
+//					fscanf(pFile, "%s", &aComment[0]);		// =の分
+//					fscanf(pFile, "%d", &width);		// 横の分割数
+//					fscanf(pFile, "%d", &height);	// 縦の分割数
+//				}
+//
+//				if (strcmp(&aComment[0], "SIZE") == 0)
+//				{//SIZEが来たら向き読み込み
+//
+//					fscanf(pFile, "%s", &aComment[0]);		// =の分
+//					fscanf(pFile, "%f", &widthlen);		// 横の長さ
+//					fscanf(pFile, "%f", &heightlen);	// 縦の長さ
+//				}
+//
+//			}// END_FIELDSETのかっこ
+//
+//			//**********************************
+//			// 生成処理
+//			//**********************************
+//			CMeshField::Create(
+//				pos, rot,
+//				widthlen, heightlen,
+//				width, height,
+//				(CMeshField::TYPE)type, m_TextureFile[type].c_str());
+//		}
+//
+//		// メッシュシリンダーの設定
+//		if (strcmp(&aComment[0], "MOUNTAINSET") == 0)
+//		{// モデルの読み込みを開始
+//
+//			int type;
+//			while (strcmp(&aComment[0], "END_MOUNTAINSET"))
+//			{// END_MOUNTAINSETが来るまで繰り返し
+//
+//				fscanf(pFile, "%s", &aComment[0]);	// 確認する
+//
+//				if (strcmp(&aComment[0], "TEXTYPE") == 0)
+//				{// TEXTYPEが来たら種類読み込み
+//
+//					fscanf(pFile, "%s", &aComment[0]);	// =の分
+//					fscanf(pFile, "%d", &type);	// モデル種類の列挙
+//				}
+//
+//			}// END_MOUNTAINSETのかっこ
+//
+//			//**********************************
+//			// 生成処理
+//			//**********************************
+//			CMeshCylinder::Create(m_TextureFile[type].c_str());
+//
+//		}
+//
+//		// メッシュドームの設定
+//		if (strcmp(&aComment[0], "SKYSET") == 0)
+//		{// モデルの読み込みを開始
+//
+//			int type;
+//			float move;
+//			while (strcmp(&aComment[0], "END_SKYSET"))
+//			{// END_MOUNTAINSETが来るまで繰り返し
+//
+//				fscanf(pFile, "%s", &aComment[0]);	// 確認する
+//
+//				if (strcmp(&aComment[0], "TEXTYPE") == 0)
+//				{// TEXTYPEが来たら種類読み込み
+//
+//					fscanf(pFile, "%s", &aComment[0]);	// =の分
+//					fscanf(pFile, "%d", &type);		// モデル種類の列挙
+//				}
+//
+//				if (strcmp(&aComment[0], "MOVE") == 0)
+//				{//MOVEが来たら移動読み込み
+//
+//					fscanf(pFile, "%s", &aComment[0]);	// =の分
+//					fscanf(pFile, "%f", &move);			// 移動量
+//				}
+//
+//			}// END_SKYSETのかっこ
+//
+//			//**********************************
+//			// 生成処理
+//			//**********************************
+//			CMeshDome::Create(move, m_TextureFile[type].c_str());
+//
+//		}
+//
+//		if (strcmp(&aComment[0], "END_SCRIPT") == 0)
+//		{// 終了文字でループを抜ける
+//
+//			break;
+//		}
+//#endif
+//
+//		// モデルの設定
+//		if (strcmp(&aComment[0], "MODELSET") == 0)
+//		{
+//			int nType = 0, nShadow = 0;
+//			MyLib::Vector3 pos, rot;
+//			float scale = 1.0f;
+//
+//			while (strcmp(&aComment[0], "END_MODELSET"))
+//			{// END_MODELSETが来るまで繰り返し
+//
+//				fscanf(pFile, "%s", &aComment[0]);	// 確認する
+//
+//				if (strcmp(&aComment[0], "TYPE") == 0)
+//				{// TYPEが来たら種類読み込み
+//
+//					fscanf(pFile, "%s", &aComment[0]);	// =の分
+//					fscanf(pFile, "%d", &nType);		// モデル種類の列挙
+//				}
+//
+//				if (strcmp(&aComment[0], "POS") == 0)
+//				{// POSが来たら位置読み込み
+//
+//					fscanf(pFile, "%s", &aComment[0]);	// =の分
+//					fscanf(pFile, "%f", &pos.x);	// X座標
+//					fscanf(pFile, "%f", &pos.y);	// Y座標
+//					fscanf(pFile, "%f", &pos.z);	// Z座標
+//				}
+//
+//				if (strcmp(&aComment[0], "ROT") == 0)
+//				{// ROTが来たら向き読み込み
+//
+//					fscanf(pFile, "%s", &aComment[0]);	// =の分
+//					fscanf(pFile, "%f", &rot.x);	// Xの向き
+//					fscanf(pFile, "%f", &rot.y);	// Yの向き
+//					fscanf(pFile, "%f", &rot.z);	// Zの向き
+//				}
+//
+//				if (strcmp(&aComment[0], "SCALE") == 0)
+//				{// SCALEが来たら拡大率読み込み
+//
+//					fscanf(pFile, "%s", &aComment[0]);	// =の分
+//					fscanf(pFile, "%f", &scale);		// スケール
+//				}
+//
+//				if (strcmp(&aComment[0], "SHADOW") == 0)
+//				{// SHADOWが来たら影使用
+//
+//					fscanf(pFile, "%s", &aComment[0]);		// =の分
+//					fscanf(pFile, "%d", &nShadow);			// 影を使うかどうか
+//				}
+//
+//			}// END_MODELSETのかっこ
+//
+//			// 追加
+//			bool bShadow = (nShadow == 1);
+//			//Regist(nType, pos, rot, scale, bShadow);
+//		}
+//
+//		if (strcmp(&aComment[0], "END_SCRIPT") == 0)
+//		{// 終了文字でループを抜ける
+//			break;
+//		}
+//	}
 
 	// ファイルを閉じる
 	fclose(pFile);
