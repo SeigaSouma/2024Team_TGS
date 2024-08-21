@@ -6,6 +6,7 @@
 //=============================================================================
 #include "keyconfig.h"
 #include "keyconfig_gamepad.h"
+#include "keyconfig_keyboard.h"
 
 //==========================================================================
 // ’è”’è‹`
@@ -105,11 +106,11 @@ void CKeyConfigManager::ConfigCreate()
 			break;
 
 		case Control::CONTROL_INKEY:
-
+			p = DEBUG_NEW CkeyConfigKeyboard;
 			break;
 
 		case Control::CONTROL_OUTKEY:
-
+			p = DEBUG_NEW CkeyConfigKeyboard;
 			break;
 
 		default:
@@ -119,6 +120,7 @@ void CKeyConfigManager::ConfigCreate()
 
 		if (p == nullptr) { continue; }	// ¶¬Ž¸”s
 		p->Load(CONFIGFILE[i]);
+		int h = DIK_SPACE;
 		if (!m_pInstance->Bind(p, i))	// “o˜^Ž¸”s
 		{
 			p->Uninit();

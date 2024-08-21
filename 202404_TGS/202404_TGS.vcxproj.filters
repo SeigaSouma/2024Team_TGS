@@ -689,6 +689,9 @@
     <ClCompile Include="Source\discovery.cpp">
       <Filter>direction</Filter>
     </ClCompile>
+    <ClCompile Include="Source\keyconfig_keyboard.cpp">
+      <Filter>keyconfig</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ballast.h">
@@ -1254,6 +1257,9 @@
     </ClInclude>
     <ClInclude Include="Source\discovery.h">
       <Filter>direction</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\keyconfig_keyboard.h">
+      <Filter>keyconfig</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

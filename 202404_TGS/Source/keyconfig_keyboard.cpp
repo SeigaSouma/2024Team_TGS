@@ -1,15 +1,16 @@
 //=============================================================================
 //
-// ゲームパッドキーコンフィグ処理 [keyconfig_gamepad.cpp]
+// キーボードキーコンフィグ処理 [keyconfig_keyboard.cpp]
 // Author : Ibuki Okusada
 //
 //=============================================================================
-#include "keyconfig_gamepad.h"
+#include "keyconfig_keyboard.h"
+#include "input_keyboard.h"
 
 //==========================================================================
 // コンストラクタ
 //==========================================================================
-CkeyConfigPad::CkeyConfigPad()
+CkeyConfigKeyboard::CkeyConfigKeyboard()
 {
 	m_Info.clear();
 }
@@ -17,77 +18,65 @@ CkeyConfigPad::CkeyConfigPad()
 //==========================================================================
 // プレス取得
 //==========================================================================
-bool CkeyConfigPad::GetPress(const int type, const int nId)
+bool CkeyConfigKeyboard::GetPress(const int type, const int nId)
 {
 	if (m_Info.find(type) == m_Info.end()) { return false; }	// 存在しない
 
-	CInputGamepad* pInputPad = CInputGamepad::GetInstance();
+	CInputKeyboard* pInputKeyboard = CInputKeyboard::GetInstance();
 
-	if (m_Info[type] == CInputGamepad::BUTTON_LT) {
-		return pInputPad->GetPressLT(0);
-	}
-	else if (m_Info[type] == CInputGamepad::BUTTON_RT) {
-		return pInputPad->GetPressRT(0);
-	}
-
-	return pInputPad->GetPress(m_Info[type], nId);
+	return pInputKeyboard->GetPress(m_Info[type]);
 }
 
 //==========================================================================
 // トリガー取得
 //==========================================================================
-bool CkeyConfigPad::GetTrigger(const int type, const int nId)
+bool CkeyConfigKeyboard::GetTrigger(const int type, const int nId)
 {
 	// 確認
 	if (m_Info.find(type) == m_Info.end()) { return false; }	// 存在しない
 
-	CInputGamepad* pInputPad = CInputGamepad::GetInstance();
+	CInputKeyboard* pInputKeyboard = CInputKeyboard::GetInstance();
 
-	if (m_Info[type] == CInputGamepad::BUTTON_LT) {
-		return pInputPad->GetTriggerLT(0);
-	}
-	else if (m_Info[type] == CInputGamepad::BUTTON_RT) {
-		return pInputPad->GetTriggerRT(0);
-	}
-
-	return pInputPad->GetTrigger(m_Info[type], nId);
+	return pInputKeyboard->GetTrigger(m_Info[type]);
 }
 
 //==========================================================================
 // リリース取得
 //==========================================================================
-bool CkeyConfigPad::GetRelease(const int type, const int nId)
+bool CkeyConfigKeyboard::GetRelease(const int type, const int nId)
 {
 	// 確認
 	if (m_Info.find(type) == m_Info.end()) { return false; }	// 存在しない
 
-	CInputGamepad* pInputPad = CInputGamepad::GetInstance();
-	return pInputPad->GetRelease(m_Info[type], nId);
+	CInputKeyboard* pInputKeyboard = CInputKeyboard::GetInstance();
+
+	return pInputKeyboard->GetRelease(m_Info[type]);
 }
 
 //==========================================================================
 // リピート処理
 //==========================================================================
-bool CkeyConfigPad::GetRepeat(const int type, const int nId)
+bool CkeyConfigKeyboard::GetRepeat(const int type, const int nId)
 {
 	// 確認
 	if (m_Info.find(type) == m_Info.end()) { return false; }	// 存在しない
 
-	CInputGamepad* pInputPad = CInputGamepad::GetInstance();
-	return pInputPad->GetRepeat(m_Info[type], nId);
+	CInputKeyboard* pInputKeyboard = CInputKeyboard::GetInstance();
+
+	return pInputKeyboard->GetRepeat(m_Info[type], 50);
 }
 
 //==========================================================================
 // 終了処理
 //==========================================================================
-void CkeyConfigPad::Uninit() {
+void CkeyConfigKeyboard::Uninit() {
 	m_Info.clear();
 }
 
 //==========================================================================
 // キー情報登録
 //==========================================================================
-void CkeyConfigPad::Join(const int action, const CInputGamepad::BUTTON key)
+void CkeyConfigKeyboard::Join(const int action, const int key)
 {
 	m_Info[action] = key;
 }
@@ -95,7 +84,7 @@ void CkeyConfigPad::Join(const int action, const CInputGamepad::BUTTON key)
 //==========================================================================
 // 保存情報読み込み
 //==========================================================================
-void CkeyConfigPad::Load(const std::string& file)
+void CkeyConfigKeyboard::Load(const std::string& file)
 {
 	// ファイルを開く
 	std::ifstream File(file);
@@ -162,7 +151,7 @@ void CkeyConfigPad::Load(const std::string& file)
 			// 生成
 			if (process >= 0 && button >= 0)
 			{
-				Join(process, static_cast<CInputGamepad::BUTTON>(button));
+				Join(process, button);
 			}
 		}
 
@@ -179,24 +168,24 @@ void CkeyConfigPad::Load(const std::string& file)
 //==========================================================================
 // 設定
 //==========================================================================
-void CkeyConfigPad::Setting(const int type, const int nId)
+void CkeyConfigKeyboard::Setting(const int type, const int nId)
 {
-	CInputGamepad* pPad = CInputGamepad::GetInstance();
+	CInputGamepad* pKeyboard = CInputGamepad::GetInstance();
 
 	while (1)
 	{
 		for (int i = 0; i < CInputGamepad::BUTTON_MAX; i++) {
-			if (pPad->GetTrigger(static_cast<CInputGamepad::BUTTON>(i), 0))
+			if (pKeyboard->GetTrigger(static_cast<CInputGamepad::BUTTON>(i), 0))
 			{
 				Join(type, static_cast<CInputGamepad::BUTTON>(i));
 				return;
 			}
-			else if (pPad->GetPressLT(0))
+			else if (pKeyboard->GetPressLT(0))
 			{
 				Join(type, CInputGamepad::BUTTON_LT);
 				return;
 			}
-			else if (pPad->GetPressRT(0))
+			else if (pKeyboard->GetPressRT(0))
 			{
 				Join(type, CInputGamepad::BUTTON_RT);
 				return;

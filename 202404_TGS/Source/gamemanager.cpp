@@ -465,12 +465,13 @@ void CGameManager::SceneTransition()
 void CGameManager::SceneWaitAirPush()
 {
 	CTimer* pTimer = CGame::GetInstance()->GetTimer();
+	CKeyConfig* pConfigKeyboard = CKeyConfigManager::GetInstance()->GetConfig(CKeyConfigManager::CONTROL_INKEY);
 	CKeyConfig* pConfigPad = CKeyConfigManager::GetInstance()->GetConfig(CKeyConfigManager::CONTROL_INPAD);
 	CInputGamepad* pInputGamepad = CInputGamepad::GetInstance();
 
 	if (pTimer != nullptr &&
 		pConfigPad->GetTrigger(INGAME::ACT_AIR) ||
-		CInputKeyboard::GetInstance()->GetTrigger(DIK_RETURN))
+		pConfigKeyboard->GetTrigger(INGAME::ACT_AIR))
 	{
 		pTimer->SetEnableAddTime(true);
 		SetType(SceneType::SCENE_MAIN);

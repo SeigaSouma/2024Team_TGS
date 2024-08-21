@@ -14,11 +14,14 @@
 #include "keyconfig_gamepad.h"
 #include "map_obstacle.h"
 #include "collisionLine_Box.h"
-#include "keyconfig.h"
 #include "waterripple.h"
 #include "course.h"
 #include "spline.h"
 #include "EffekseerObj.h"
+
+// キーコンフィグ
+#include "keyconfig_keyboard.h"
+#include "keyconfig.h"
 
 namespace
 {
@@ -421,14 +424,14 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	}
 
 	// インプット情報取得
-	CInputKeyboard* pInputKeyboard = CInputKeyboard::GetInstance();
 	CInputGamepad* pInputGamepad = CInputGamepad::GetInstance();
 	CKeyConfigManager* pKeyConfigManager = CKeyConfigManager::GetInstance();
 	CKeyConfig* pKeyConfigPad = pKeyConfigManager->GetConfig(CKeyConfigManager::CONTROL_INPAD);
+	CKeyConfig* pKeyConfigKeyboard = pKeyConfigManager->GetConfig(CKeyConfigManager::CONTROL_INKEY);
 	CGameManager* pGameMgr = CGame::GetInstance()->GetGameManager();
 
 	if (pGameMgr->GetType() == CGameManager::SceneType::SCENE_WAIT_AIRPUSH &&
-		(CInputKeyboard::GetInstance()->GetTrigger(DIK_RETURN) ||
+		(pKeyConfigKeyboard->GetTrigger(INGAME::ACTION::ACT_AIR) ||
 			pKeyConfigPad->GetTrigger(INGAME::ACTION::ACT_AIR)))
 	{// 空気送り待ちで空気発射
 
@@ -436,8 +439,8 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 		pGameMgr->SetType(CGameManager::SceneType::SCENE_MAIN);
 	}
 
-	if (pInputKeyboard->GetTrigger(DIK_LSHIFT)) {
-		std::thread th(&CKeyConfig::Setting, pKeyConfigPad, INGAME::ACTION::ACT_AIR);
+	if (pKeyConfigKeyboard->GetTrigger(INGAME::ACTION::ACT_AIR)) {
+		std::thread th(&CKeyConfig::Setting, pKeyConfigPad, 0, INGAME::ACTION::ACT_AIR);
 		th.detach();
 	}
 
@@ -536,7 +539,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 
 #if _DEBUG
 	if (!pInputGamepad->GetPress(CInputGamepad::BUTTON::BUTTON_BACK, 0) &&
-		!pInputKeyboard->GetPress(DIK_S))
+		!CInputKeyboard::GetInstance()->GetPress(DIK_S))
 #endif
 	{
 		// 高さ制限
@@ -591,7 +594,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 		}
 	}
 
-	if (pInputKeyboard->GetTrigger(DIK_4))
+	if (CInputKeyboard::GetInstance()->GetTrigger(DIK_4))
 	{
 		CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_DROWN);
 	}
@@ -633,7 +636,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 	//=============================
 	BressEffect(player, pBaggage);
 	bool bKantsu = CollisionObstacle(player, pBaggage);
-	if (CInputKeyboard::GetInstance()->GetPress(DIK_RETURN) ||
+	if (pKeyConfigKeyboard->GetPress(INGAME::ACTION::ACT_AIR) ||
 		pKeyConfigPad->GetPress(INGAME::ACT_AIR))
 	{
 
@@ -789,9 +792,9 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 void CPlayerControlBaggage::GoalAction(CPlayer* player, CBaggage* pBaggage)
 {
 	// インプット情報取得
-	CInputKeyboard* pInputKeyboard = CInputKeyboard::GetInstance();
 	CKeyConfigManager* pKeyConfigManager = CKeyConfigManager::GetInstance();
 	CKeyConfig* pKeyConfigPad = pKeyConfigManager->GetConfig(CKeyConfigManager::CONTROL_INPAD);
+	CKeyConfig* pKeyConfigKeyBoard = pKeyConfigManager->GetConfig(CKeyConfigManager::CONTROL_INKEY);
 	CCamera* pCamera = CManager::GetInstance()->GetCamera();
 	CCameraMotion* pCamMotion = pCamera->GetMotion();
 	pBaggage->SetState(CBaggage::STATE::STATE_GOAL);
@@ -802,7 +805,7 @@ void CPlayerControlBaggage::GoalAction(CPlayer* player, CBaggage* pBaggage)
 	// 息エフェクト
 	//=============================
 	BressEffect(player, pBaggage);
-	if ((m_state == STATE::STATE_WAIT || m_state == STATE::STATE_PRESS) && (CInputKeyboard::GetInstance()->GetPress(DIK_RETURN) ||
+	if ((m_state == STATE::STATE_WAIT || m_state == STATE::STATE_PRESS) && (pKeyConfigKeyBoard->GetPress(INGAME::ACT_AIR) ||
 		pKeyConfigPad->GetPress(INGAME::ACT_AIR)))
 	{
 		if (m_state == STATE::STATE_WAIT)
@@ -813,7 +816,7 @@ void CPlayerControlBaggage::GoalAction(CPlayer* player, CBaggage* pBaggage)
 		m_state = STATE::STATE_PRESS;
 	}
 	// 入力されていない
-	else if(!CInputKeyboard::GetInstance()->GetPress(DIK_RETURN) ||
+	else if(!pKeyConfigKeyBoard->GetPress(INGAME::ACT_AIR) ||
 		!pKeyConfigPad->GetPress(INGAME::ACT_AIR))
 	{
 		// 状態ごとに設定
@@ -1134,10 +1137,9 @@ bool CPlayerControlBaggage::CollisionObstacle(CPlayer* player, CBaggage* pBaggag
 float CPlayerControlSurfacing::Surfacing(CPlayer* player)
 {
 	// インプット情報取得
-	CInputKeyboard* pInputKeyboard = CInputKeyboard::GetInstance();
-	CInputGamepad* pInputGamepad = CInputGamepad::GetInstance();
 	CKeyConfigManager* pKeyConfigManager = CKeyConfigManager::GetInstance();
 	CKeyConfig* pKeyConfigPad = pKeyConfigManager->GetConfig(CKeyConfigManager::CONTROL_INPAD);
+	CKeyConfig* pKeyConfigKeyboard = pKeyConfigManager->GetConfig(CKeyConfigManager::CONTROL_INKEY);
 
 	// 浮上判定
 	bool bUp = false;
@@ -1149,7 +1151,7 @@ float CPlayerControlSurfacing::Surfacing(CPlayer* player)
 	//	return m_fHeight;
 	//}
 
-	if (CInputKeyboard::GetInstance()->GetPress(DIK_W) ||
+	if (pKeyConfigKeyboard->GetPress(INGAME::ACTION::ACT_UPDOWN) ||
 		pKeyConfigPad->GetPress(INGAME::ACTION::ACT_UPDOWN))
 	{// 入力している
 		bUp = true;

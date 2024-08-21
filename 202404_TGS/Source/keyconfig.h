@@ -50,12 +50,12 @@ public:
 	// ÉÅÉìÉoä÷êî
 	//============================= 
 	virtual void Uninit() = 0;
-	virtual bool GetPress(const int type) = 0;
-	virtual bool GetTrigger(const int type) = 0;
-	virtual bool GetRelease(const int type) = 0;
-	virtual bool GetRepeat(const int type) = 0;
+	virtual bool GetPress(const int type, const int nId = 0) = 0;
+	virtual bool GetTrigger(const int type, const int nId = 0) = 0;
+	virtual bool GetRelease(const int type, const int nId = 0) = 0;
+	virtual bool GetRepeat(const int type, const int nId = 0) = 0;
 	virtual void Load(const std::string& file) = 0;
-	virtual void Setting(const int type) = 0;
+	virtual void Setting(const int type, const int nId = 0) = 0;
 };
 
 //==========================================================================
