@@ -17,6 +17,7 @@ MOTION_FILENAME = data/TEXT/character/mob/person_01/setup_humanblue.txt	# [3]ÉXÉ
 MOTION_FILENAME = data/TEXT/character/mob/person_01/setup_humanchild.txt	# [3]ÉXÉCÉJ
 MOTION_FILENAME = data/TEXT/character/mob/person_01/setup_humangirl.txt	# [3]ÉXÉCÉJ
 MOTION_FILENAME = data/TEXT/character/horse/setup_horse.txt	# [3]ÉXÉCÉJ
+MOTION_FILENAME = data/TEXT/character/kite/setup_kite.txt	# [3]ÉXÉCÉJ
 
 #===================================================================================================
 # åQèÓïÒ
