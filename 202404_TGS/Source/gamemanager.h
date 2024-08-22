@@ -112,6 +112,7 @@ protected:
 	int m_nNowStage;		// 現在のステージ
 	int m_nNumStage;		// ステージの総数
 	int m_nEvaluationPoint;	// 評価ポイント
+	int m_nGuideTimer;		//ガイドのタイマー
 	float m_fCameraLengthOld;	// 前のカメラの距離
 	float m_fPosRY;			// プレイヤーと荷物を画面内に収めるときに使うposRのY座標
 	float m_fSceneTimer;	// シーンタイマー

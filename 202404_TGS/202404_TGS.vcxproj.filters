@@ -132,6 +132,9 @@
     <Filter Include="ui">
       <UniqueIdentifier>{5e89cb79-2b0e-4eaf-83b1-a777349b7e7c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ui\guide">
+      <UniqueIdentifier>{309beb60-8c7f-478a-98a0-4b8baa1e0d42}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\ballast.cpp">
@@ -691,6 +694,9 @@
     </ClCompile>
     <ClCompile Include="Source\keyconfig_keyboard.cpp">
       <Filter>keyconfig</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\guide.cpp">
+      <Filter>ui\guide</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1260,6 +1266,9 @@
     </ClInclude>
     <ClInclude Include="Source\keyconfig_keyboard.h">
       <Filter>keyconfig</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\guide.h">
+      <Filter>ui\guide</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
