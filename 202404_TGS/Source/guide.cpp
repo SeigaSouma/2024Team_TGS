@@ -59,15 +59,15 @@ CGuide::~CGuide()
 //==========================================================================
 // ¶¬ˆ—
 //==========================================================================
-CGuide* CGuide::Create(const MyLib::Vector3& pos, float life)
+CGuide* CGuide::Create()
 {
 	// ƒƒ‚ƒŠ‚ÌŠm•Û
 	CGuide* pObj = DEBUG_NEW CGuide;
 
 	if (pObj != nullptr)
 	{
-		pObj->m_fLifeTimer = life;
-		pObj->SetPosition(pos);
+		//pObj->m_fLifeTimer = life;
+		pObj->SetPosition(MyLib::Vector3(SCREEN_WIDTH * 0.5f,SCREEN_HEIGHT * 0.5f,0.0f));
 
 		// ‰Šú‰»ˆ—
 		pObj->Init();

@@ -15,6 +15,7 @@
 class CRequestPeople;
 class CReceiverPeople;
 class CSkip_UI;
+class CGuide;
 
 //==========================================================================
 // クラス定義
@@ -117,6 +118,7 @@ protected:
 	float m_fPosRY;			// プレイヤーと荷物を画面内に収めるときに使うposRのY座標
 	float m_fSceneTimer;	// シーンタイマー
 	int m_nJudgeRank;		// クリアランク
+	CGuide* m_pGuide;
 	CRequestPeople* m_pRequestPeople;	// 依頼人のポインタ
 	CReceiverPeople* m_pReceiverPeople;	// 届け先のポインタ
 	CSkip_UI* m_pSkipUI;				// スキップUIのポインタ
