@@ -152,7 +152,7 @@ HRESULT CMap_Obstacle::Init()
 #endif
 
 	// ’¸“_‘å¬ŒvZ
-	CalVtxMinMax();
+	//CalVtxMinMax();
 
 	return S_OK;
 }
