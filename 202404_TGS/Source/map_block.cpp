@@ -19,6 +19,7 @@ namespace
 	const std::string FILE_CHECKPOINT = "data\\TEXT\\map\\checkpoint.bin";	// チェックポイントのセーブファイル
 	const std::string FILE_OBSTACLE = "data\\TEXT\\map\\obstacle.bin";		// 障害物のセーブファイル
 	const std::string FILE_WATERSTONE = "data\\TEXT\\map\\waterstone.bin";		// 水中岩のセーブファイル
+	const std::string FILE_LEVEL = "data\\TEXT\\map\\level.bin";			// レベルのセーブファイル
 	const int NUM_CHUNK = 5;	// チャンクの数
 
 }
@@ -134,19 +135,31 @@ void CMapBlock::Uninit()
 void CMapBlock::Kill()
 {
 	// マップブロックの終了
+	std::vector<CMapBlock*> vecDeleteBlock;
 	for (int i = 0; i < m_List.GetNumAll(); i++)
 	{
-		m_List.GetData(i)->Uninit();
+		CMapBlock* pBlock = m_List.GetData(i);
+		vecDeleteBlock.push_back(pBlock);
+		pBlock->Uninit();
 	}
-	m_List.Uninit();
+	for (const auto& block : vecDeleteBlock)
+	{
+		m_List.Delete(block);
+	}
 
 	// ブロック配置情報の終了
+	std::vector<CMapBlockInfo*> vecDeleteBlockInfo;
 	for (int i = 0; i < m_InfoList.GetNumAll(); i++)
 	{
-		m_InfoList.GetData(i)->Uninit();
+		CMapBlockInfo* pBlockInfo = m_InfoList.GetData(i);
+		vecDeleteBlockInfo.push_back(pBlockInfo);
+		pBlockInfo->Uninit();
+	}
+	for (const auto& blockInfo : vecDeleteBlockInfo)
+	{
+		m_InfoList.Delete(blockInfo);
 	}
 
-	m_List.Uninit();
 }
 
 //==========================================================================
@@ -299,6 +312,45 @@ void CMapBlock::SaveBin_WaterStone()
 }
 
 //==========================================================================
+// レベルセーブ
+//==========================================================================
+void CMapBlock::SaveBin_Level()
+{
+	// ファイルを開く
+	std::ofstream File(FILE_LEVEL, std::ios::binary);
+	if (!File.is_open()) {
+		return;
+	}
+
+	// 先頭を保存
+	std::list<CMapBlockInfo*>::iterator itr = m_InfoList.GetEnd();
+	CMapBlockInfo* pObj = nullptr;
+
+	std::vector<int> savedata;
+
+	// データコピー
+	while (m_InfoList.ListLoop(itr))
+	{
+		savedata.push_back((*itr)->GetLevel());
+	}
+
+	// 外側ベクトルのサイズを書き込む
+	size_t outer_size = savedata.size();
+	File.write(reinterpret_cast<const char*>(&outer_size), sizeof(outer_size));
+
+
+	for (const auto& inner : savedata)
+	{
+		// 要素をセーブ
+		File.write(reinterpret_cast<const char*>(&inner), sizeof(int));
+	}
+
+
+	// ファイルを閉じる
+	File.close();
+}
+
+//==========================================================================
 // セーブ
 //==========================================================================
 void CMapBlock::SaveBin()
@@ -311,6 +363,9 @@ void CMapBlock::SaveBin()
 
 	// 水中岩セーブ
 	SaveBin_WaterStone();
+
+	// レベルセーブ
+	SaveBin_Level();
 }
 
 //==========================================================================
@@ -325,6 +380,7 @@ void CMapBlock::LoadBin()
 		checkpoint.emplace_back();
 		checkpoint.back().push_back(0.0f);
 	}
+	size_t checkpointSize = checkpoint.size();
 
 	// 障害物ロード
 	std::vector<std::vector<CMapBlockInfo::SObsacleInfo>> obstacle = LoadBin_Obstacle();
@@ -342,19 +398,27 @@ void CMapBlock::LoadBin()
 		waterstone.back().push_back(CWaterStone_Manager::SStoneInfo());
 	}
 
+	// レベルロード
+	std::vector<int> level = LoadBin_Level(checkpointSize);
+	if (level.empty())
+	{
+		level.resize(checkpointSize);
+	}
+
 	// 全削除
 	m_InfoList.KillAll();
 
 	// ブロック生成
 	int i = 0;
-	for (int i = 0; i < static_cast<int>(checkpoint.size()); i++)
+	for (int i = 0; i < static_cast<int>(checkpointSize); i++)
 	{
 		// 生成してリストの管理下に
 		CMapBlockInfo* pBlock = DEBUG_NEW CMapBlockInfo;
 		pBlock->Init();
 
-		pBlock->SetCheckpointInfo(checkpoint[i]);
-		pBlock->SetObstacleInfo(obstacle[i]);
+		pBlock->SetCheckpointInfo(checkpoint[i]);	// チェックポイント設定
+		pBlock->SetObstacleInfo(obstacle[i]);		// 障害物設定
+		pBlock->SetLevel(level[i]);					// レベル設定
 
 		if (static_cast<int>(waterstone.size()) > i)
 		{
@@ -468,6 +532,39 @@ std::vector<std::vector<CWaterStone_Manager::SStoneInfo>> CMapBlock::LoadBin_Wat
 
 		// データ読み込み
 		File.read(reinterpret_cast<char*>(inner_vector.data()), inner_size * sizeof(CWaterStone_Manager::SStoneInfo));
+	}
+
+	// ファイルを閉じる
+	File.close();
+
+	return loaddata;
+}
+
+//==========================================================================
+// レベル読み込み
+//==========================================================================
+std::vector<int> CMapBlock::LoadBin_Level(size_t courseSize)
+{
+	// ファイルを開く
+	std::ifstream File(FILE_LEVEL, std::ios::binary);
+	if (!File.is_open()) {
+		// 例外処理
+
+		std::vector<int> returndata(courseSize);
+		return returndata;
+	}
+
+	// ベクトルのサイズを読み込む
+	size_t outer_size;
+	File.read(reinterpret_cast<char*>(&outer_size), sizeof(outer_size));
+
+	std::vector<int> loaddata(outer_size);
+
+	// ベクトルに対してデータを読み込む
+	for (auto& inner : loaddata)
+	{
+		// データ読み込み
+		File.read(reinterpret_cast<char*>(inner), sizeof(int));
 	}
 
 	// ファイルを閉じる
