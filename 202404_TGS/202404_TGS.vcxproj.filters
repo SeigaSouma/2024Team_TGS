@@ -698,6 +698,9 @@
     <ClCompile Include="Source\guide.cpp">
       <Filter>ui\guide</Filter>
     </ClCompile>
+    <ClCompile Include="Source\deadplayer.cpp">
+      <Filter>player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ballast.h">
@@ -1269,6 +1272,9 @@
     </ClInclude>
     <ClInclude Include="Source\guide.h">
       <Filter>ui\guide</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\deadplayer.h">
+      <Filter>player</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

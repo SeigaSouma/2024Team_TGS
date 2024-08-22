@@ -1,24 +1,19 @@
 //=============================================================================
 // 
-//  プレイヤー処理 [people.cpp]
+//  死亡プレイヤー処理 [deadplayer.cpp]
 //  Author : 相馬靜雅
 // 
 //=============================================================================
-#include "people.h"
+#include "deadplayer.h"
 #include "manager.h"
 #include "game.h"
 #include "input.h"
 #include "model.h"
 #include "player.h"
-#include "camera.h"
-#include "3D_Effect.h"
 #include "shadow.h"
 #include "sound.h"
-#include "stage.h"
-#include "objectX.h"
 #include "limitarea.h"
 #include "debugproc.h"
-#include "motion.h"
 
 
 //==========================================================================
@@ -28,51 +23,49 @@ namespace
 {
 	const float MOVE_VELOCITY = 15.0f;	// 移動速度
 	const int TURN_RIGHT = 100;	// 回れ右間隔
+	const std::string CHARAFILE = "data\\TEXT\\character\\player\\tyuuni\\setup_raou.txt";	// キャラクターファイル
 }
 
 namespace STATE_TIME
 {
-	const float FADEOUT = 0.6f;	// 死亡時間
+	const float UP = 5.0f;	// 上昇時間
+	const float FADEOUT = 1.5f;	// 死亡時間
 }
 
 //==========================================================================
 // 関数ポインタ
 //==========================================================================
 // 状態関数
-CPeople::STATE_FUNC CPeople::m_StateFunc[] =
+CDeadPlayer::STATE_FUNC CDeadPlayer::m_StateFunc[] =
 {
-	&CPeople::StateNone,	// なし
-	&CPeople::StateFadeIn,	// フェードイン
-	&CPeople::StateFadeOut,	// フェードアウト
+	&CDeadPlayer::StateNone,	// なし
+	&CDeadPlayer::StateUP,		// 上昇
+	&CDeadPlayer::StateFadeOut,	// フェードアウト
 };
 
 //==========================================================================
 // 静的メンバ変数宣言
 //==========================================================================
-CListManager<CPeople> CPeople::m_List = {};	// リスト
+CListManager<CDeadPlayer> CDeadPlayer::m_List = {};	// リスト
 
 //==========================================================================
 // コンストラクタ
 //==========================================================================
-CPeople::CPeople(int nPriority) : CObjectChara(nPriority)
+CDeadPlayer::CDeadPlayer(int nPriority) : CObjectChara(nPriority)
 {
 	// 値のクリア
 	m_state = STATE::STATE_NONE;	// 状態
 	m_Oldstate = m_state;	// 前回の状態
 	m_mMatcol = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);	// マテリアルの色
-	m_TargetPosition = mylib_const::DEFAULT_VECTOR3;	// 目標の位置
 
-	
 	m_fStateTime = 0.0f;		// 状態遷移カウンター
-	m_sMotionFrag = SMotionFrag();		// モーションのフラグ
 	m_pShadow = nullptr;
-	m_flame = 0;
 }
 
 //==========================================================================
 // デストラクタ
 //==========================================================================
-CPeople::~CPeople()
+CDeadPlayer::~CDeadPlayer()
 {
 
 }
@@ -80,10 +73,10 @@ CPeople::~CPeople()
 //==========================================================================
 // 生成処理
 //==========================================================================
-CPeople* CPeople::Create(const std::string& pFileName, MyLib::Vector3 pos)
+CDeadPlayer* CDeadPlayer::Create(const MyLib::Vector3& pos)
 {
 	// メモリの確保
-	CPeople* pPeople = DEBUG_NEW CPeople;
+	CDeadPlayer* pPeople = DEBUG_NEW CDeadPlayer;
 
 	if (pPeople != nullptr)
 	{// メモリの確保が出来ていたら
@@ -91,13 +84,6 @@ CPeople* CPeople::Create(const std::string& pFileName, MyLib::Vector3 pos)
 		// 位置設定
 		pPeople->SetPosition(pos);
 		pPeople->CObject::SetOriginPosition(pos);
-
-		// テキスト読み込み
-		HRESULT hr = pPeople->LoadText(pFileName.c_str());
-		if (FAILED(hr))
-		{// 失敗していたら
-			return nullptr;
-		}
 
 		// 初期化処理
 		pPeople->Init();
@@ -109,36 +95,33 @@ CPeople* CPeople::Create(const std::string& pFileName, MyLib::Vector3 pos)
 //==========================================================================
 // 初期化処理
 //==========================================================================
-HRESULT CPeople::Init()
+HRESULT CDeadPlayer::Init()
 {
+
+	// テキスト読み込み
+	HRESULT hr = LoadText(CHARAFILE);
+	if (FAILED(hr))
+	{// 失敗していたら
+		return E_FAIL;
+	}
+
 	// 各種変数の初期化
-	m_state = STATE::STATE_FADEIN;	// 状態
+	m_state = STATE::STATE_UP;	// 状態
 	m_Oldstate = m_state;
 	m_fStateTime = 0.0f;			// 状態遷移カウンター
 
 	// 種類の設定
-	SetType(CObject::TYPE::TYPE_ENEMY);
+	SetType(CObject::TYPE::TYPE_PLAYER);
 
 	// リストに追加
 	m_List.Regist(this);
 
-	// デフォルト設定
+	// 昇天設定
 	CMotion* pMotion = GetMotion();
 	if (pMotion != nullptr)
 	{
-		pMotion->Set(UtilFunc::Transformation::Random(0, pMotion->GetNumMotion() - 1));
+		pMotion->Set(MOTION::MOTION_DEAD);
 	}
-
-	// 移動速度
-	m_fMoveVelocity = MOVE_VELOCITY + UtilFunc::Transformation::Random(-20, 50) * 0.1f;
-
-	MyLib::Vector3 move, rot = GetRotation();
-	move.x = sinf(D3DX_PI + rot.y) * m_fMoveVelocity;
-	move.z = cosf(D3DX_PI + rot.y) * m_fMoveVelocity;
-	SetMove(move);
-
-	// 初期フレーム
-	m_flame = UtilFunc::Transformation::Random(0, TURN_RIGHT / 2);
 
 	return S_OK;
 }
@@ -146,10 +129,10 @@ HRESULT CPeople::Init()
 //==========================================================================
 // テキスト読み込み
 //==========================================================================
-HRESULT CPeople::LoadText(const char *pFileName)
+HRESULT CDeadPlayer::LoadText(const std::string& filename)
 {
 	// キャラ作成
-	HRESULT hr = SetCharacter(pFileName);
+	HRESULT hr = SetCharacter(filename);
 	if (FAILED(hr))
 	{// 失敗していたら
 		return E_FAIL;
@@ -161,7 +144,7 @@ HRESULT CPeople::LoadText(const char *pFileName)
 //==========================================================================
 // 終了処理
 //==========================================================================
-void CPeople::Uninit()
+void CDeadPlayer::Uninit()
 {
 	
 	// 影を消す
@@ -180,7 +163,7 @@ void CPeople::Uninit()
 //==========================================================================
 // 死亡処理
 //==========================================================================
-void CPeople::Kill()
+void CDeadPlayer::Kill()
 {
 	
 	// 影を消す
@@ -194,7 +177,7 @@ void CPeople::Kill()
 //==========================================================================
 // 更新処理
 //==========================================================================
-void CPeople::Update()
+void CDeadPlayer::Update()
 {
 	// 死亡の判定
 	if (IsDeath() == true)
@@ -202,66 +185,11 @@ void CPeople::Update()
 		return;
 	}
 
-	CMotion* pMotion = GetMotion();
-	MyLib::Vector3 move = GetMove();
-	MyLib::Vector3 pos = GetPosition();
-	MyLib::Vector3 rot = GetRotation();
-
-	float deltaTime = CManager::GetInstance()->GetDeltaTime();
-
-	if (pMotion->IsGetMove(pMotion->GetType()) == 1)
-	{// 歩きモーションの時
-
-		// 向き補正
-		float rotDiff = GetRotDest() - rot.y;
-		UtilFunc::Transformation::RotNormalize(rotDiff);
-
-		rot.y += rotDiff * 0.2f;
-		UtilFunc::Transformation::RotNormalize(rot.y);
-
-		move.x += sinf(D3DX_PI + rot.y) * (m_fMoveVelocity * deltaTime);
-		move.z += cosf(D3DX_PI + rot.y) * (m_fMoveVelocity * deltaTime);
-
-		pos += move;
-		m_flame++;
-
-		if (m_flame >= TURN_RIGHT)
-		{// フレーム数超過
-
-			if (m_flame == TURN_RIGHT)
-			{// フレーム数超過
-				
-				// 右回転
-				float dest = rot.y + D3DX_PI * 0.5f;
-				UtilFunc::Transformation::RotNormalize(dest);
-				SetRotDest(dest);
-			}
-
-			if (m_flame >= TURN_RIGHT + 20)
-			{
-				// 右回転
-				float dest = rot.y + D3DX_PI * 0.5f;
-				UtilFunc::Transformation::RotNormalize(dest);
-				SetRotDest(dest);
-
-				// フレームリセット
-				m_flame = UtilFunc::Transformation::Random(0, TURN_RIGHT / 2);
-			}
-		}
-	}
-
-	SetMove(move);
-	SetPosition(pos);
-	SetRotation(rot);
-
 	// 過去の位置設定
 	SetOldPosition(GetPosition());
 
 	// 親の処理
 	CObjectChara::Update();
-
-	// 当たり判定
-	Collision();
 
 	// 死亡の判定
 	if (IsDeath())
@@ -300,77 +228,9 @@ void CPeople::Update()
 }
 
 //==========================================================================
-// 当たり判定
-//==========================================================================
-void CPeople::Collision()
-{
-	// 位置取得
-	MyLib::Vector3 pos = GetPosition();
-
-	// 移動量取得
-	MyLib::Vector3 move = GetMove();
-
-	// 向き取得
-	MyLib::Vector3 rot = GetRotation();
-
-	// 重力処理
-	move.y -= mylib_const::GRAVITY;
-
-	// 位置更新
-	pos += move;
-
-	// 慣性補正
-	move.x += (0.0f - move.x) * 0.25f;
-	move.z += (0.0f - move.z) * 0.25f;
-
-	if (move.x >= 0.1f || move.x <= -0.1f ||
-		move.z >= 0.1f || move.z <= -0.1f)
-	{// 移動中
-		m_sMotionFrag.bMove = true;
-	}
-	else
-	{
-		m_sMotionFrag.bMove = false;
-	}
-
-	if (300.0f > pos.y)
-	{// 地面の方が自分より高かったら
-
-		// 地面の高さに補正
-		pos.y = 300.0f;
-		
-		// ジャンプ使用可能にする
-		move.y = 0.0f;
-		m_sMotionFrag.bJump = false;
-	}
-
-	// 位置設定
-	SetPosition(pos);
-
-	// 移動量設定
-	SetMove(move);
-}
-
-//==========================================================================
-// 着地時の処理
-//==========================================================================
-void CPeople::ProcessLanding()
-{
-	// 移動量取得
-	MyLib::Vector3 move = GetMove();
-
-	// ジャンプ使用可能にする
-	move.y = 0.0f;
-	m_sMotionFrag.bJump = false;
-
-	// 移動量設定
-	SetMove(move);
-}
-
-//==========================================================================
 // 状態更新処理
 //==========================================================================
-void CPeople::UpdateState()
+void CDeadPlayer::UpdateState()
 {
 	// 色設定
 	m_mMatcol = D3DXCOLOR(1.0f, 1.0f, 1.0f, m_mMatcol.a);
@@ -385,7 +245,7 @@ void CPeople::UpdateState()
 //==========================================================================
 // 何もない状態
 //==========================================================================
-void CPeople::StateNone()
+void CDeadPlayer::StateNone()
 {
 	// 色設定
 	m_mMatcol = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
@@ -393,16 +253,17 @@ void CPeople::StateNone()
 }
 
 //==========================================================================
-// フェードイン
+// 上昇
 //==========================================================================
-void CPeople::StateFadeIn()
+void CDeadPlayer::StateUP()
 {
 	// 色設定
-	m_mMatcol.a = m_fStateTime / STATE_TIME::FADEOUT;
+	m_mMatcol = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.6f);
 
-	if (m_fStateTime >= STATE_TIME::FADEOUT)
+	if (m_fStateTime >= STATE_TIME::UP)
 	{
-		m_state = STATE::STATE_NONE;
+		m_state = STATE::STATE_FADEOUT;
+		m_fStateTime = 0.0f;
 		return;
 	}
 }
@@ -410,10 +271,10 @@ void CPeople::StateFadeIn()
 //==========================================================================
 // フェードアウト
 //==========================================================================
-void CPeople::StateFadeOut()
+void CDeadPlayer::StateFadeOut()
 {
 	// 色設定
-	m_mMatcol.a = 1.0f - m_fStateTime / STATE_TIME::FADEOUT;
+	m_mMatcol.a = (1.0f - m_fStateTime / STATE_TIME::FADEOUT) * 0.6f;
 
 	if (m_fStateTime >= STATE_TIME::FADEOUT)
 	{
@@ -428,7 +289,7 @@ void CPeople::StateFadeOut()
 //==========================================================================
 // 大人の壁
 //==========================================================================
-void CPeople::LimitArea()
+void CDeadPlayer::LimitArea()
 {
 	return;
 
@@ -458,7 +319,7 @@ void CPeople::LimitArea()
 //==========================================================================
 // モーションの設定
 //==========================================================================
-void CPeople::SetMotion(int motionIdx)
+void CDeadPlayer::SetMotion(int motionIdx)
 {
 	// モーション取得
 	CMotion* pMotion = GetMotion();
@@ -472,7 +333,7 @@ void CPeople::SetMotion(int motionIdx)
 //==========================================================================
 // 攻撃時処理
 //==========================================================================
-void CPeople::AttackAction(CMotion::AttackInfo ATKInfo, int nCntATK)
+void CDeadPlayer::AttackAction(CMotion::AttackInfo ATKInfo, int nCntATK)
 {
 	return;
 }
@@ -480,7 +341,7 @@ void CPeople::AttackAction(CMotion::AttackInfo ATKInfo, int nCntATK)
 //==========================================================================
 // 攻撃判定中処理
 //==========================================================================
-void CPeople::AttackInDicision(CMotion::AttackInfo* pATKInfo, int nCntATK)
+void CDeadPlayer::AttackInDicision(CMotion::AttackInfo* pATKInfo, int nCntATK)
 {
 	//return;
 	// モーション取得
@@ -517,28 +378,16 @@ void CPeople::AttackInDicision(CMotion::AttackInfo* pATKInfo, int nCntATK)
 //==========================================================================
 // 描画処理
 //==========================================================================
-void CPeople::Draw()
+void CDeadPlayer::Draw()
 {
-	if (m_state == STATE_FADEOUT || m_state == STATE::STATE_FADEIN)
-	{
-		CObjectChara::Draw(m_mMatcol.a);
-	}
-	else if (m_mMatcol != D3DXCOLOR(1.0f, 1.0f, 1.0f, m_mMatcol.a))
-	{
-		// オブジェクトキャラの描画
-		CObjectChara::Draw(m_mMatcol);
-	}
-	else
-	{
-		// オブジェクトキャラの描画
-		CObjectChara::Draw();
-	}
+	// オブジェクトキャラの描画
+	CObjectChara::Draw(m_mMatcol);
 }
 
 //==========================================================================
 // 状態設定
 //==========================================================================
-void CPeople::SetState(STATE state)
+void CDeadPlayer::SetState(STATE state)
 {
 	m_state = state;
 }
