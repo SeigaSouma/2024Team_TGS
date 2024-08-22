@@ -120,6 +120,7 @@ private:
 	//=============================
 	// メンバ変数
 	//=============================
+	MyLib::Vector3 m_shotpos;	// 発射位置
 	CShadow *m_pShadow;			// 影の情報
 	bool m_bEnd;				// 終了
 	static CListManager<CReceiverPeople> m_List;	// リスト

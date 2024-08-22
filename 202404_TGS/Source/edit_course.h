@@ -45,6 +45,7 @@ private:
 	// メンバ関数
 	//=============================
 	void FileControl();			// ファイル操作
+	void ChangeLevel();			// レベル変更
 	void TransCheckPoint();		// チェックポイント編集
 	void TransObstacle();		// 障害物編集
 	void ChangeEditCourse();	// 編集するコース変更

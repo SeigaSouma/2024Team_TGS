@@ -96,6 +96,9 @@ void CEdit_Course::Update()
 	// ファイル操作
 	FileControl();
 
+	// レベル変更
+	ChangeLevel();
+
 	// 辺の総数変更
 	ChangeLineNum();
 
@@ -160,6 +163,25 @@ void CEdit_Course::FileControl()
 	{
 
 	}
+}
+
+//==========================================================================
+// レベル変更
+//==========================================================================
+void CEdit_Course::ChangeLevel()
+{
+	// 現在のブロック情報
+	CListManager<CMapBlockInfo> BlockInfoList = CMapBlock::GetInfoList();
+	CMapBlockInfo* pBlockInfo = BlockInfoList.GetData(m_nCourseEditIdx);
+	int level = pBlockInfo->GetLevel();
+
+	if (ImGui::SliderInt("Course Level", &level, 0, 2))
+	{
+
+	}
+
+	// レベル設定
+	pBlockInfo->SetLevel(level);
 }
 
 //==========================================================================

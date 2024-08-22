@@ -407,8 +407,11 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 {
 	if (!EndCheck(pBaggage))
 	{
-		// リトライUI生成
-		player->CreateRetryUI();
+		if (pBaggage->GetState() == CBaggage::STATE::STATE_DEAD)
+		{
+			// リトライUI生成
+			player->CreateRetryUI();
+		}
 		return;
 	}
 
@@ -438,12 +441,6 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 		// メインに移行
 		pGameMgr->SetType(CGameManager::SceneType::SCENE_MAIN);
 	}
-
-	if (pKeyConfigKeyboard->GetTrigger(INGAME::ACTION::ACT_AIR)) {
-		std::thread th(&CKeyConfig::Setting, pKeyConfigPad, 0, INGAME::ACTION::ACT_AIR);
-		th.detach();
-	}
-
 
 	// 情報取得
 	MyLib::Vector3 move = player->GetMove();
@@ -791,6 +788,10 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 //==========================================================================
 void CPlayerControlBaggage::GoalAction(CPlayer* player, CBaggage* pBaggage)
 {
+	if (pBaggage->GetState() == CBaggage::STATE::STATE_RETURN)
+	{
+		return;
+	}
 	// インプット情報取得
 	CKeyConfigManager* pKeyConfigManager = CKeyConfigManager::GetInstance();
 	CKeyConfig* pKeyConfigPad = pKeyConfigManager->GetConfig(CKeyConfigManager::CONTROL_INPAD);
@@ -909,9 +910,12 @@ void CPlayerControlBaggage::GoalAction(CPlayer* player, CBaggage* pBaggage)
 
 	}
 
-	pBaggage->SetMove(move);
-	pBaggage->SetPosition(pos);
-	pCamMotion->SetPosition(pos);
+	if (pBaggage->GetState() != CBaggage::STATE::STATE_RETURN)
+	{
+		pBaggage->SetMove(move);
+		pBaggage->SetPosition(pos);
+		pCamMotion->SetPosition(pos);
+	}
 }
 
 //==========================================================================

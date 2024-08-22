@@ -41,6 +41,8 @@ public:
 		STATE_PASS,			// パス
 		STATE_GOAL,			// ゴール
 		STATE_SEND,			// 届ける
+		STATE_RETURN,		// 反射
+		STATE_RECEIVE,		// receive
 		STATE_MAX
 	};
 
@@ -122,6 +124,8 @@ private:
 	void StatePass();		// パス
 	void StateGoal();		// ゴール
 	void StateSend();		// 届ける
+	void StateReturn();		// 反射
+	void StateReceive() {}	// 反射
 
 	// その他
 	void Controll();	// 操作

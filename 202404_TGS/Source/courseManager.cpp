@@ -22,6 +22,14 @@ namespace
 {
 	const std::string FILENAME = "data\\TEXT\\map\\chunkdata.bin";
 	const int NUM_CHUNK = 5;	// チャンクの数
+	const int DECIDE_LEVEL[] =	// レベル
+	{
+		0,
+		0,
+		0,
+		0,
+		0
+	};
 
 	const std::vector<MyLib::Vector3> DEFAULT_SEGMENTPOS =
 	{
@@ -258,7 +266,10 @@ void CCourseManager::Load()
 		}
 
 	}
+
+	// セーブ
 	Save();
+
 
 	//=============================
 	// ランダム選出
@@ -266,28 +277,46 @@ void CCourseManager::Load()
 	// 乱数の種を設定
 	srand((unsigned int)time(0));
 	int segmentSize = static_cast<int>(m_vecAllSegmentPos.size()) - 1;
-	
+
 	std::vector<int> randIdx;
+
+	// 選出したインデックスのブロック情報
+	CListManager<CMapBlockInfo> BlockInfoList = CMapBlock::GetInfoList();
+	int nowLevel = 0;
+
 	for (int i = 0; i < NUM_CHUNK; i++)
 	{
 		int idx = 0;
 		while (1)
 		{
 			idx = UtilFunc::Transformation::Random(0, segmentSize);
+			
+			// 選出したインデックスのレベル
+			nowLevel = BlockInfoList.GetData(idx)->GetLevel();
 
 			// 前回と違う番号にする
-			if (i != 0 && segmentSize > 1)
+			if ((i != 0 && segmentSize > 1))
 			{
 				if (idx == randIdx[i - 1]) continue;
+			}
+
+			// 該当レベルと違う場合
+			if (DECIDE_LEVEL[i] != nowLevel)
+			{
+				continue;
 			}
 
 			break;
 		}
 
+		// 選出された番号を追加
 		randIdx.push_back(idx);
 	}
 
+
+	//=============================
 	// 一本のコースにする
+	//=============================
 	std::vector<MyLib::Vector3> segmentpos;	// 基点の位置
 	MyLib::Vector3 start;
 	std::vector<MyLib::Vector3> vecstart;	// 基点の位置
@@ -313,6 +342,7 @@ void CCourseManager::Load()
 		vecstart.push_back(start);
 	}
 	segmentpos.push_back(segmentpos.back() + MyLib::Vector3(10.0f, 0.0f, 0.0f));
+
 
 	//=============================
 	// コース作成
