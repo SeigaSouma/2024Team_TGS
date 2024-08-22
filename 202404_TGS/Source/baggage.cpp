@@ -57,6 +57,8 @@ CBaggage::STATE_FUNC CBaggage::m_StateFunc[] =
 	&CBaggage::StatePass,		// パス
 	&CBaggage::StateGoal,		// ゴール
 	&CBaggage::StateSend,		// 届ける
+	&CBaggage::StateReturn,		// 反射
+	&CBaggage::StateReceive,	// receive
 };
 
 //==========================================================================
@@ -437,6 +439,46 @@ void CBaggage::StateGoal()
 void CBaggage::StateSend()
 {
 
+}
+
+//==========================================================================
+// 反射
+//==========================================================================
+void CBaggage::StateReturn()
+{
+	SetMove(0.0f);
+
+	// カメラ情報取得
+	CCamera* pCamera = CManager::GetInstance()->GetCamera();
+	MyLib::Vector3 posV = pCamera->GetPositionV();
+	MyLib::Vector3 posR = pCamera->GetPositionR();
+	MyLib::Vector3 ray = (posR - posV).Normal();
+
+	MyLib::Vector3 pos = GetPosition();
+	MyLib::Vector3 posDest = posV + (200.0f * ray);
+
+	pos = UtilFunc::Correction::EasingEaseIn(m_posAwayStart, posDest, 0.0f, StateTime::DEAD, m_fStateTimer);
+
+	if (m_fStateTimer >= StateTime::DEAD)
+	{
+		pos = posDest;
+		if (!m_bEnd)
+		{
+			//// フィードバックエフェクトON
+			//CManager::GetInstance()->GetRenderer()->SetEnableDrawMultiScreen(
+			//	MULTITARGET::START_ALPHA,
+			//	MULTITARGET::START_MULTI,
+			//	MULTITARGET::START_TIMER);
+
+			// SE再生
+			CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_CRACK_GRASS);
+
+			CGlassclush::Create();
+		}
+		m_bEnd = true;
+	}
+
+	SetPosition(pos);
 }
 
 //==========================================================================
