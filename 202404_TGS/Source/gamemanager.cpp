@@ -34,6 +34,7 @@
 #include "receiver_people.h"
 #include "skip_ui.h"
 #include "countdown_start.h"
+#include "guide.h"
 
 //==========================================================================
 // 定数定義
@@ -45,6 +46,7 @@ namespace
 	const float POSR_Y_PULL_SCREEN_POS = 210.0f;	// カメラが引き始めるスクリーン座標
 	const float POSR_Y_APPROACH_SCREEN_POS = SCREEN_HEIGHT * 0.5f;	// カメラが近づき始めるスクリーン座標
 	const float POSR_YDEST_BAGGTOPLAYER_RATIO = 0.4f;	// 荷物とプレイヤー距離の割合（posRYDest）
+	const int GUIDE_NUM = 100;
 
 	const int CHANGE_BASEPOINT[] =	// ポイント変更する基準
 	{
@@ -82,6 +84,7 @@ CGameManager::CGameManager()
 	m_pReceiverPeople = nullptr;
 	m_nJudgeRank = 0;
 	m_pSkipUI = nullptr;		// スキップUIのポインタ
+	m_nGuideTimer = 0;
 }
 
 //==========================================================================
@@ -475,10 +478,17 @@ void CGameManager::SceneWaitAirPush()
 	{
 		pTimer->SetEnableAddTime(true);
 		SetType(SceneType::SCENE_MAIN);
+		m_nGuideTimer++;
+
+		if (m_nGuideTimer >= GUIDE_NUM)
+		{
+			
+		}
 	}
 	else if (pTimer != nullptr)
 	{
 		pTimer->SetEnableAddTime(false);
+		m_nGuideTimer = 0;
 	}
 }
 
