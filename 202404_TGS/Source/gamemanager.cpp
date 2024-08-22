@@ -85,6 +85,7 @@ CGameManager::CGameManager()
 	m_nJudgeRank = 0;
 	m_pSkipUI = nullptr;		// スキップUIのポインタ
 	m_nGuideTimer = 0;
+	m_pGuide = nullptr;
 }
 
 //==========================================================================
@@ -478,17 +479,25 @@ void CGameManager::SceneWaitAirPush()
 	{
 		pTimer->SetEnableAddTime(true);
 		SetType(SceneType::SCENE_MAIN);
-		m_nGuideTimer++;
 
-		if (m_nGuideTimer >= GUIDE_NUM)
+		m_nGuideTimer = 0;
+
+		if (m_nGuideTimer == 0 && m_pGuide != nullptr)
 		{
-			
+			m_pGuide->Uninit();
+			m_pGuide = nullptr;
 		}
 	}
 	else if (pTimer != nullptr)
 	{
+		m_nGuideTimer++;
+
+		if (m_nGuideTimer >= GUIDE_NUM)
+		{
+			m_pGuide = CGuide::Create();
+		}
+
 		pTimer->SetEnableAddTime(false);
-		m_nGuideTimer = 0;
 	}
 }
 

@@ -45,7 +45,7 @@ public:
 	//=============================
 	// Ã“IŠÖ”
 	//=============================
-	static CGuide* Create(const MyLib::Vector3& pos, float life = 1.0f);	// ¶¬ˆ—
+	static CGuide* Create();	// ¶¬ˆ—
 
 private:
 
