@@ -15126,7 +15126,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "tyuuni_belt.png";
+    "data\\TEXTURE\\tyuuni\\tyuuni_belt.png";
    }
   }
   Material {
@@ -15135,7 +15135,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "tyuuni_fuku.png";
+    "data\\TEXTURE\\tyuuni\\tyuuni_fuku.png";
    }
   }
   Material {
@@ -15144,7 +15144,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "tyuuni_suit.png";
+    "data\\TEXTURE\\tyuuni\\tyuuni_suit.png";
    }
   }
   Material {
@@ -15153,7 +15153,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "tyuuni_metal.png";
+    "data\\TEXTURE\\tyuuni\\tyuuni_metal.png";
    }
   }
  }

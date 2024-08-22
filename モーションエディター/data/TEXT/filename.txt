@@ -15,10 +15,13 @@ SCRIPT			# この行は絶対消さないこと！
 1MOTION_FILENAME = data/TEXT/character/enemy/gorira/setup_gorira.txt
 1MOTION_FILENAME = data/TEXT/character/mob/setup_person_cherry.txt
 1MOTION_FILENAME = data/TEXT/character/mob/setup_person_watermelon.txt
-MOTION_FILENAME = data/TEXT/character/mob/setup_person_replay.txt
+1MOTION_FILENAME = data/TEXT/character/mob/setup_person_replay.txt
 1MOTION_FILENAME = data/TEXT/character/mob/setup_person_cherry.txt
 1MOTION_FILENAME = data/TEXT/character/horse/setup_horse.txt
 1MOTION_FILENAME = data/TEXT/character/bird/setup_bird.txt
-MOTION_FILENAME = data/TEXT/character/mob/person_01/setup_human.txt
+1MOTION_FILENAME = data/TEXT/character/mob/person_01/setup_human.txt
+1MOTION_FILENAME = data/TEXT/character/kite/setup_kite.txt
+MOTION_FILENAME = data/TEXT/character/player/tyuuni/setup_raou.txt
+
 
 END_SCRIPT		# この行は絶対消さないこと！

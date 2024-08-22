@@ -20,6 +20,7 @@
 #include "baggage.h"
 #include "receiver_people.h"
 #include "catchresult.h"
+#include "player.h"
 
 //==========================================================================
 // 定数定義
@@ -68,7 +69,7 @@ CReceiverPeople::CReceiverPeople(int nPriority) : CObjectChara(nPriority)
 	m_Oldstate = m_state;	// 前回の状態
 	m_fStateTime = 0.0f;		// 状態遷移カウンター
 	m_mMatcol = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	
+	m_shotpos = 0.0f;
 	m_pShadow = nullptr;
 	m_bEnd = false;
 }
@@ -384,6 +385,7 @@ void CReceiverPeople::StateWait()
 	else if (pBaggage->GetPosition().y >= GetPosition().y + HEAD_POSITION &&
 		pBaggage->GetPosition().x >= GetPosition().x)
 	{
+		pBaggage->SetState(CBaggage::STATE::STATE_RECEIVE);
 		SetState(STATE::STATE_RETURN);
 	}
 }
@@ -469,6 +471,7 @@ void CReceiverPeople::StateReturn()
 		pMotion->Set(MOTION::MOTION_RETURN);
 	}
 
+	// 終了確認
 	if (((pMotion->GetType() == MOTION::MOTION_RETURN && pMotion->IsFinish()) ||
 		pMotion->GetType() != MOTION::MOTION_RETURN) && !m_bEnd)
 	{// パス終了 or パス以外
@@ -501,6 +504,9 @@ void CReceiverPeople::StateDrown()
 		m_bEnd = true;
 		CCatchResult::Create(MyLib::Vector3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f), CCatchResult::TYPE::TYPE_FAIL);
 	}
+
+	CBaggage* pBaggage = CBaggage::GetListObj().GetData(0);
+	SetPosition(pBaggage->GetPosition());
 }
 
 //==========================================================================
@@ -582,6 +588,18 @@ void CReceiverPeople::AttackAction(CMotion::AttackInfo ATKInfo, int nCntATK)
 	}
 		break;
 
+	case MOTION::MOTION_RETURN:
+	{
+		CBaggage* pBaggage = CBaggage::GetListObj().GetData(0);
+		pBaggage->SetAwayStartPosition(pMotion->GetAttackPosition(GetModel(), ATKInfo));
+		pBaggage->SetForce(0.0f);
+		pBaggage->SetState(CBaggage::STATE::STATE_RETURN);
+		CCamera* pCamera = CManager::GetInstance()->GetCamera();
+		pCamera->SetPositionRDest(pCamera->GetPositionR());
+		pCamera->SetPositionVDest(pCamera->GetPositionV());
+	}
+	break;
+
 	default:
 		break;
 	}
@@ -647,7 +665,10 @@ void CReceiverPeople::AttackInDicision(CMotion::AttackInfo* pATKInfo, int nCntAT
 
 		if (pBaggage->GetState() != CBaggage::STATE::STATE_PASS)
 		{
-			pBaggage->SetPosition(weponpos);
+			MyLib::Vector3 pos = weponpos - pBaggage->GetPosition();
+			pos = pBaggage->GetPosition() + (pos * 0.5f);
+			pBaggage->SetPosition(pos);
+			m_shotpos = weponpos;
 		}
 	}
 	break;
