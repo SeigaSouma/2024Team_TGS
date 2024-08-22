@@ -1,19 +1,26 @@
 //=============================================================================
 // 
-//  メッシュシリンダー処理 [meshcylinder.cpp]
+//  目標地点処理 [ascensionCylinder.cpp]
 //  Author : 相馬靜雅
 // 
 //=============================================================================
-#include "meshcylinder.h"
+#include "ascensionCylinder.h"
+#include "input.h"
+#include "calculation.h"
+#include "camera.h"
 #include "manager.h"
 #include "renderer.h"
 #include "texture.h"
+#include "elevation.h"
+#include "game.h"
 
 //==========================================================================
 // マクロ定義
 //==========================================================================
-#define POS_MESHCYLINDER	(5000.0f)
-#define POS_MESHCYLINDER_Y	(3500.0f)
+namespace
+{
+	const std::string TEXTURE = "data\\TEXTURE\\GRADATION\\orange_02.jpg";
+}
 
 //==========================================================================
 // 静的メンバ変数宣言
@@ -22,15 +29,16 @@
 //==========================================================================
 // コンストラクタ
 //==========================================================================
-CMeshCylinder::CMeshCylinder(int nPriority) : CObject3DMesh(nPriority)
+CAscensionCylinder::CAscensionCylinder(int nPriority) : CMeshCylinder(nPriority)
 {
+	
 
 }
 
 //==========================================================================
 // デストラクタ
 //==========================================================================
-CMeshCylinder::~CMeshCylinder()
+CAscensionCylinder::~CAscensionCylinder()
 {
 
 }
@@ -38,19 +46,19 @@ CMeshCylinder::~CMeshCylinder()
 //==========================================================================
 // 生成処理
 //==========================================================================
-CMeshCylinder* CMeshCylinder::Create()
+CAscensionCylinder* CAscensionCylinder::Create(MyLib::Vector3 pos, float fWidthLen, float fHeightLen)
 {
 	// メモリの確保
-	CMeshCylinder* pObjMeshCylinder = DEBUG_NEW CMeshCylinder;
+	CAscensionCylinder* pObjMeshCylinder = DEBUG_NEW CAscensionCylinder;
 
 	if (pObjMeshCylinder != nullptr)
-	{// メモリの確保が出来ていたら
-
+	{
 		// 位置・向き
+		pObjMeshCylinder->SetPosition(pos);
 		pObjMeshCylinder->SetWidthBlock(16);
 		pObjMeshCylinder->SetHeightBlock(1);
-		pObjMeshCylinder->SetWidthLen(POS_MESHCYLINDER);
-		pObjMeshCylinder->SetHeightLen(POS_MESHCYLINDER_Y);
+		pObjMeshCylinder->SetWidthLen(fWidthLen);
+		pObjMeshCylinder->SetHeightLen(fHeightLen);
 
 		// 初期化処理
 		pObjMeshCylinder->Init();
@@ -60,49 +68,9 @@ CMeshCylinder* CMeshCylinder::Create()
 }
 
 //==========================================================================
-// 生成処理(オーバーロード)
-//==========================================================================
-CMeshCylinder *CMeshCylinder::Create(const char *aFileName)
-{
-	// 生成用のオブジェクト
-	CMeshCylinder *pObjMeshCylinder = nullptr;
-
-	if (pObjMeshCylinder == nullptr)
-	{// nullptrだったら
-
-		// メモリの確保
-		pObjMeshCylinder = DEBUG_NEW CMeshCylinder;
-
-		//if (pObjMeshCylinder->GetID() < 0)
-		//{// メモリ確保に失敗していたら
-
-		//	delete pObjMeshCylinder;
-		//	return nullptr;
-		//}
-
-		if (pObjMeshCylinder != nullptr)
-		{// メモリの確保が出来ていたら
-
-			// 位置・向き
-			pObjMeshCylinder->SetWidthBlock(32);
-			pObjMeshCylinder->SetHeightBlock(1);
-			pObjMeshCylinder->SetWidthLen(POS_MESHCYLINDER);
-			pObjMeshCylinder->SetHeightLen(POS_MESHCYLINDER_Y);
-
-			// 初期化処理
-			pObjMeshCylinder->Init();
-		}
-
-		return pObjMeshCylinder;
-	}
-
-	return nullptr;
-}
-
-//==========================================================================
 // 初期化処理
 //==========================================================================
-HRESULT CMeshCylinder::Init()
+HRESULT CAscensionCylinder::Init()
 {
 	HRESULT hr;
 
@@ -110,23 +78,23 @@ HRESULT CMeshCylinder::Init()
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
 
 	// 種類設定
-	SetType(TYPE_MESHCYLINDER);
+	SetType(CObject::TYPE_OBJECT3D);
 
-	// オブジェクト3Dメッシュの初期化処理
-	hr = CObject3DMesh::Init(CObject3DMesh::TYPE_CYLINDER);
+	// メッシュシリンダーの初期化処理
+	CMeshCylinder::Init();
 
-	if (FAILED(hr))
-	{// 失敗していたら
-		return E_FAIL;
-	}
+	// テクスチャの割り当て
+	int nTexIdx = CTexture::GetInstance()->Regist(TEXTURE);
+	BindTexture(nTexIdx);
 
+	SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.6f));
 	return S_OK;
 }
 
 //==========================================================================
 // 終了処理
 //==========================================================================
-void CMeshCylinder::Uninit()
+void CAscensionCylinder::Uninit()
 {
 	// 終了処理
 	CObject3DMesh::Uninit();
@@ -135,8 +103,9 @@ void CMeshCylinder::Uninit()
 //==========================================================================
 // 更新処理
 //==========================================================================
-void CMeshCylinder::Update()
+void CAscensionCylinder::Update()
 {
+
 	// 頂点情報設定
 	SetVtx();
 }
@@ -144,14 +113,13 @@ void CMeshCylinder::Update()
 //==========================================================================
 // 描画処理
 //==========================================================================
-void CMeshCylinder::Draw()
+void CAscensionCylinder::Draw()
 {
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
 
-	//// テクスチャの繰り返しを元に戻す
-	//pDevice->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_BORDER);
-	//pDevice->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_BORDER);
+	// 背面のカリングなし
+	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
 	// ライティングを無効にする
 	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
@@ -172,24 +140,6 @@ void CMeshCylinder::Draw()
 	// ライティングを有効にする
 	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
 
-	//// テクスチャの繰り返しを元に戻す
-	//pDevice->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
-	//pDevice->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
-}
-
-//==========================================================================
-// 頂点情報設定処理
-//==========================================================================
-void CMeshCylinder::SetVtx()
-{
-	// 頂点情報更新
-	CObject3DMesh::SetVtx();
-}
-
-//==========================================================================
-// メッシュシリンダーオブジェクトの取得
-//==========================================================================
-CMeshCylinder *CMeshCylinder::GetMyObject()
-{
-	return this;
+	// カリングデフォルト
+	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
