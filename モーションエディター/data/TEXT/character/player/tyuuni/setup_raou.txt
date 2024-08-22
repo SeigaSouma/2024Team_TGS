@@ -14,7 +14,7 @@ SCRIPT			# この行は絶対消さないこと！
 #------------------------------------------------------------------------------
 # モデル数
 #------------------------------------------------------------------------------
-NUM_MODEL = 12
+NUM_MODEL = 11
 
 #------------------------------------------------------------------------------
 # モデルファイル名
@@ -30,7 +30,6 @@ MODEL_FILENAME = data/MODEL/ninja/07_R_tigh.x		# [7]右太もも
 MODEL_FILENAME = data/MODEL/ninja/08_R_leg.x		# [8]右脚
 MODEL_FILENAME = data/MODEL/ninja/09_L_tigh.x		# [9]左太もも
 MODEL_FILENAME = data/MODEL/ninja/10_L_leg.x		# [10]左脚
-MODEL_FILENAME = data/MODEL/ninja/take_tutu.x		# [11]竹筒
 
 #------------------------------------------------------------------------------
 # キャラクター情報
@@ -129,14 +128,6 @@ CHARACTERSET
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
-
-	PARTSSET						# [11]武器
-		INDEX = 11
-		PARENT = 4					# (親)右上腕
-		POS = -41.00 -10.50 8.50
-		ROT = -1.57 0.00 0.00
-		START = 1
-	END_PARTSSET
 END_CHARACTERSET
 
 
@@ -155,15 +146,13 @@ COLLIDER_FILENAME = data/TEXT/character/player/tyuuni/sphere_collider.json
 #------------------------------------------------------------------------------
 # モーション数
 #------------------------------------------------------------------------------
-NUM_MOTION = 4
+NUM_MOTION = 2
 
 #------------------------------------------------------------------------------
 # モデルファイル名
 #------------------------------------------------------------------------------
 MOTION_FILENAME = data/TEXT/character/player/tyuuni/motion_def.txt			# [0]デフォルト
-MOTION_FILENAME = data/TEXT/character/player/tyuuni/motion_walk.txt			# [1]歩き
-MOTION_FILENAME = data/TEXT/character/player/tyuuni/motion_dead.txt			# [9]死亡
-MOTION_FILENAME = data/TEXT/character/player/tyuuni/motion_start.txt			# [9]死亡
+MOTION_FILENAME = data/TEXT/character/player/tyuuni/motion_raou.txt			# [1]歩き
 
 
 END_SCRIPT		# この行は絶対消さないこと！

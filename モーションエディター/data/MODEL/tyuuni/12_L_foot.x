@@ -11974,7 +11974,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "boot3.jpg";
+    "data\\TEXTURE\\tyuuni\\boot3.jpg";
    }
   }
   Material {
@@ -11983,7 +11983,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "boot5.jpg";
+    "data\\TEXTURE\\tyuuni\\boot5.jpg";
    }
   }
  }

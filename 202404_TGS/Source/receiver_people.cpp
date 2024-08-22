@@ -504,6 +504,9 @@ void CReceiverPeople::StateDrown()
 		m_bEnd = true;
 		CCatchResult::Create(MyLib::Vector3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f), CCatchResult::TYPE::TYPE_FAIL);
 	}
+
+	CBaggage* pBaggage = CBaggage::GetListObj().GetData(0);
+	SetPosition(pBaggage->GetPosition());
 }
 
 //==========================================================================

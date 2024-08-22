@@ -800,7 +800,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.150000;0.150000;0.150000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\モーションビューワ\\data\\TEXTURE\\tyuuni\\tyuuni_face.png";
+    "data\\TEXTURE\\tyuuni\\tyuuni_face.png";
    }
   }
  }
