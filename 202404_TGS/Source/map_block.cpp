@@ -564,7 +564,7 @@ std::vector<int> CMapBlock::LoadBin_Level(size_t courseSize)
 	for (auto& inner : loaddata)
 	{
 		// データ読み込み
-		File.read(reinterpret_cast<char*>(inner), sizeof(int));
+		File.read(reinterpret_cast<char*>(&inner), sizeof(int));
 	}
 
 	// ファイルを閉じる
