@@ -918,11 +918,11 @@ void CPlayer::AttackInDicision(CMotion::AttackInfo* pATKInfo, int nCntATK)
 	}
 
 #if _DEBUG
-	CEffect3D::Create(
+	/*CEffect3D::Create(
 		weponpos,
 		MyLib::Vector3(0.0f, 0.0f, 0.0f),
 		D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f),
-		pATKInfo->fRangeSize, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+		pATKInfo->fRangeSize, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);*/
 #endif
 
 	if (pATKInfo->bEndAtk)
@@ -1225,6 +1225,36 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 	CCamera* pCamera = CManager::GetInstance()->GetCamera();
 	CInputGamepad* pPad = CInputGamepad::GetInstance();
 
+	// 泡生成
+	for (int i = 0; i < 2; i++)
+	{
+		float randmoveX = UtilFunc::Transformation::Random(-50, 50) * 0.01f;
+		float randmoveY = UtilFunc::Transformation::Random(-20, 20) * 0.01f;
+		float randRadius = UtilFunc::Transformation::Random(-20, 20) * 0.01f;
+		float randDestRadius = UtilFunc::Transformation::Random(-30, 30) * 0.1f;
+		float randCycle = UtilFunc::Transformation::Random(-20, 20) * 0.001f;
+
+		// 移動距離加算
+		float len = m_fMoveLength + GetMove().x * 20.0f;
+		MyLib::Vector3 setpos = MySpline::GetSplinePosition_NonLoop(CGame::GetInstance()->GetCourse()->GetVecPosition(), len);
+		int x = UtilFunc::Transformation::Random(-15, 15) * 10.0f;
+		int z = UtilFunc::Transformation::Random(-15, 15) * 10.0f;
+
+		x += UtilFunc::Transformation::Random(-90, 90);
+		z += UtilFunc::Transformation::Random(-90, 90);
+
+		setpos.x += x;
+		setpos.z += z;
+		setpos.y -= 50.0f;
+
+		CMeshBubble::Create(
+			setpos,
+			MyLib::Vector3(8.0f + randmoveX, 3.0f + randmoveY, 0.0f),
+			1.0f + randRadius,
+			20.5f + randDestRadius,
+			0.08f + randCycle);
+	}
+
 	if (nLife <= camlife)
 	{
 		if (nLife == camlife)
@@ -1232,6 +1262,7 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 			CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_DROWN);
 		}
 
+		// カメラ振動
 		if (nLife % 4 == 0)
 		{
 			float ratioDest = 1.0f - static_cast<float>(nLife) / GetLifeOrigin();
@@ -1239,33 +1270,6 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 			UtilFunc::Transformation::Clamp(ratioDest, 0.0f, 0.7f);
 			UtilFunc::Transformation::Clamp(ratio, 0.1f, 1.0f);
 			pCamera->SetShake(3, 20.0f * ratio, 0.0f);	// 振動
-		}
-
-		
-		for (int i = 0; i < 2; i++)
-		{
-			float randmoveX = UtilFunc::Transformation::Random(-50, 50) * 0.01f;
-			float randmoveY = UtilFunc::Transformation::Random(-20, 20) * 0.01f;
-			float randRadius = UtilFunc::Transformation::Random(-20, 20) * 0.01f;
-			float randDestRadius = UtilFunc::Transformation::Random(-30, 30) * 0.1f;
-			float randCycle = UtilFunc::Transformation::Random(-20, 20) * 0.001f;
-
-			// 移動距離加算
-			float len = m_fMoveLength + GetMove().x * 20.0f;
-			MyLib::Vector3 setpos = MySpline::GetSplinePosition_NonLoop(CGame::GetInstance()->GetCourse()->GetVecPosition(), len);
-			int x = UtilFunc::Transformation::Random(-80, 80);
-			int z = UtilFunc::Transformation::Random(-80, 80);
-
-			setpos.x += x;
-			setpos.z += z;
-			setpos.y -= 50.0f;
-
-			CMeshBubble::Create(
-				setpos,
-				MyLib::Vector3(8.0f + randmoveX, 3.0f + randmoveY, 0.0f),
-				1.0f + randRadius,
-				10.5f + randDestRadius,
-				0.08f + randCycle);
 		}
 
 		// コントローラー振動させる

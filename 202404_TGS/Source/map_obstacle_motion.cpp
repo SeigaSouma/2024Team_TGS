@@ -133,6 +133,31 @@ void CMap_Obstacle_Motion::Kill()
 void CMap_Obstacle_Motion::Update()
 {
 	CMap_Obstacle::Update();
+
+	// モーション取得
+	CMotion* pMotion = m_pChara->GetMotion();
+	if (pMotion == nullptr) return;
+
+	if (pMotion->IsFinish())
+	{
+		// 通常モーション再生
+		pMotion->Set(MOTION::MOTION_DEF);
+	}
+}
+
+//==========================================================================
+// ヒット処理
+//==========================================================================
+void CMap_Obstacle_Motion::Hit()
+{
+	// モーション取得
+	CMotion* pMotion = m_pChara->GetMotion();
+	if (pMotion == nullptr) return;
+
+	// ヒットモーション再生
+	pMotion->Set(MOTION::MOTION_HIT);
+
+	return;
 }
 
 //==========================================================================

@@ -123,6 +123,11 @@ HRESULT CDeadPlayer::Init()
 		pMotion->Set(MOTION::MOTION_DEAD);
 	}
 
+
+	CEffekseerObj::Create(
+		CMyEffekseer::EFKLABEL::EFKLABEL_PHOTON,
+		GetPosition(), 0.0f, 0.0f, 100.0f, false);
+
 	return S_OK;
 }
 
