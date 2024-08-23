@@ -533,8 +533,8 @@ void CGame::Update()
 		pSubTitle->BindSubtitle("data\\TEXTURE\\subtitle\\sample.png");
 		pSubTitle->SetSizeByHeight(40.0f);*/
 
-		//CSplashwater_Manager::Create();
-		CAscensionCylinder::Create(MyLib::Vector3(), 100.0f, 1500.0f);
+		CSplashwater_Manager::Create();
+		//CAscensionCylinder::Create(MyLib::Vector3(), 100.0f, 1500.0f);
 
 	}
 

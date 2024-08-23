@@ -170,6 +170,8 @@ void CMapUI::Update()
 //=============================================================================
 void CMapUI::Draw()
 {
+	if (CManager::IsDisp_ImGui()) return;
+
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();	//デバイスへのポインタを取得
 	D3DXMATRIX mtxView, mtxProjection;
 	D3DVIEWPORT9 viewportDef;
