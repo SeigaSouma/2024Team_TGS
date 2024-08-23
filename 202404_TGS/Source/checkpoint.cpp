@@ -175,6 +175,9 @@ void CCheckpoint::Update()
 //==========================================================================
 void CCheckpoint::Draw()
 {
+	// ボックスコライダーの描画
+	if (!CManager::IsDisp_CheckPoint()) return;
+
 	// 描画
 	CObjectX::Draw();
 }
