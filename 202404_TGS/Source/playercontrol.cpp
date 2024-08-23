@@ -43,6 +43,7 @@ namespace
 	const float MIN_RATIO_HEIGHT_BRESS = 0.2f;	// ëßÇÃçÇÇ≥ÇÃç≈è¨äÑçá
 	const float GOAL_INER = 0.02f;
 	const float GOAL_GRAVITY = -0.7f;
+	const int GOAL_AIRTIMER = 180;
 }
 
 //==========================================================================
@@ -815,6 +816,11 @@ void CPlayerControlBaggage::GoalAction(CPlayer* player, CBaggage* pBaggage)
 		}
 
 		m_state = STATE::STATE_PRESS;
+		m_nGoalTimer--;
+		if (m_nGoalTimer <= 0)
+		{
+			m_state = STATE::STATE_RELEASE;
+		}
 	}
 	// ì¸óÕÇ≥ÇÍÇƒÇ¢Ç»Ç¢
 	else if(!pKeyConfigKeyBoard->GetPress(INGAME::ACT_AIR) ||
@@ -825,9 +831,11 @@ void CPlayerControlBaggage::GoalAction(CPlayer* player, CBaggage* pBaggage)
 		{
 		case STATE::STATE_NONE:
 			m_state = STATE::STATE_WAIT;
+			m_nGoalTimer = GOAL_AIRTIMER;
 			break;
 
 		case STATE::STATE_WAIT:
+			m_nGoalTimer = GOAL_AIRTIMER;
 			break;
 
 		case STATE::STATE_PRESS:

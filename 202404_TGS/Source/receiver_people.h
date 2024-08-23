@@ -22,6 +22,16 @@ class CBaggage;
 // 依頼人クラス
 class CReceiverPeople : public CObjectChara
 {
+private:
+
+	// 回収距離列挙
+	enum DISTANCE
+	{
+		DISTANCE_NEAR,	// 近い
+		DISTANCE_FAR,	// 遠い
+		DISTANCE_MAX
+	};
+
 public:
 	
 	// 状態列挙
@@ -35,6 +45,7 @@ public:
 		STATE_RETURN,		// レシーブ状態
 		STATE_DROWN,		// 溺れ状態
 		STATE_BYEBYE,		// バイバイ
+		STATE_WALK,			// 歩く
 		STATE_MAX
 	};
 
@@ -92,6 +103,7 @@ protected:
 	virtual void StateReturn();		// レシーブ
 	virtual void StateDrown();		// 溺れる
 	virtual void StateByeBye();		// バイバイ
+	virtual void StateWalk();		// 歩く
 
 	// その他関数
 	virtual void AttackAction(CMotion::AttackInfo ATKInfo, int nCntATK) override;		// 攻撃時処理
@@ -120,9 +132,11 @@ private:
 	//=============================
 	// メンバ変数
 	//=============================
-	MyLib::Vector3 m_shotpos;	// 発射位置
+	MyLib::Vector3 m_StartPos;	// 開始地点
 	CShadow *m_pShadow;			// 影の情報
+	float m_fMoveTimer;			// 移動時間
 	bool m_bEnd;				// 終了
+	DISTANCE m_Distance;		// 回収距離
 	static CListManager<CReceiverPeople> m_List;	// リスト
 };
 

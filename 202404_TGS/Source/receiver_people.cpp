@@ -29,7 +29,9 @@ namespace
 {
 	const std::string FILENAME = "data\\TEXT\\character\\mob\\person_01\\setup_human.txt";
 	const float HEAD_POSITION = 300.0f;
-	const float CATCH_RANGE = 300.0f;
+	const float CATCH_RANGE = 500.0f;
+	const float NEAR_RANGE = 1000.0f;
+	const float WALK_TIMER = (1.0f / 120.0f);
 }
 
 namespace STATE_TIME
@@ -51,6 +53,7 @@ CReceiverPeople::STATE_FUNC CReceiverPeople::m_StateFunc[] =
 	&CReceiverPeople::StateReturn,	// レシーブ
 	&CReceiverPeople::StateDrown,	// 溺れる
 	&CReceiverPeople::StateByeBye,	// バイバイ
+	&CReceiverPeople::StateWalk,	// 歩く
 };
 
 
@@ -69,7 +72,8 @@ CReceiverPeople::CReceiverPeople(int nPriority) : CObjectChara(nPriority)
 	m_Oldstate = m_state;	// 前回の状態
 	m_fStateTime = 0.0f;		// 状態遷移カウンター
 	m_mMatcol = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	m_shotpos = 0.0f;
+	m_StartPos = 0.0f;
+	m_fMoveTimer = 0.0f;
 	m_pShadow = nullptr;
 	m_bEnd = false;
 }
@@ -159,7 +163,7 @@ HRESULT CReceiverPeople::LoadText(const std::string& pFileName)
 //==========================================================================
 void CReceiverPeople::Uninit()
 {
-	
+
 	// 影を消す
 	if (m_pShadow != nullptr)
 	{
@@ -221,7 +225,7 @@ void CReceiverPeople::Update()
 		return;
 	}
 
-	
+
 	// 影の位置更新
 	if (m_pShadow != nullptr)
 	{
@@ -268,7 +272,7 @@ void CReceiverPeople::Collision()
 
 		// 地面の高さに補正
 		pos.y = 300.0f;
-		
+
 		// ジャンプ使用可能にする
 		move.y = 0.0f;
 	}
@@ -370,23 +374,31 @@ void CReceiverPeople::StateWait()
 		return;
 	}
 
-	// 既に落下している
-	if (pBaggage->GetPosition().y <= GetPosition().y)
-	{
-		SetState(STATE::STATE_DROWN);
+	// 距離を取得
+	MyLib::Vector3 bagpos = pBaggage->GetPosition();
+	MyLib::Vector3 mypos = GetPosition();
+	float distance = bagpos.DistanceXZ(mypos);
+
+	// キャッチ判定を取る
+	if (bagpos.y <= mypos.y)
+	{// 既に落下している
+		m_StartPos = GetPosition();
+		SetState(STATE::STATE_WALK);
+
+		// 距離を設定
+		if (distance <= NEAR_RANGE)
+		{// 近い
+			m_Distance = DISTANCE::DISTANCE_NEAR;
+		}
+		else
+		{// 遠い
+			m_Distance = DISTANCE::DISTANCE_FAR;
+		}
 	}
-	// キャッチできる
-	else if (pBaggage->GetPosition().y <= GetPosition().y + HEAD_POSITION &&
-		pBaggage->GetPosition().x >= GetPosition().x - CATCH_RANGE)
-	{
+	else if (bagpos.y <= mypos.y + HEAD_POSITION && distance <= CATCH_RANGE)
+	{// キャッチできる
+		m_StartPos = GetPosition();
 		SetState(STATE::STATE_GET);
-	}
-	// キャッチできない
-	else if (pBaggage->GetPosition().y >= GetPosition().y + HEAD_POSITION &&
-		pBaggage->GetPosition().x >= GetPosition().x)
-	{
-		pBaggage->SetState(CBaggage::STATE::STATE_RECEIVE);
-		SetState(STATE::STATE_RETURN);
 	}
 }
 
@@ -538,6 +550,50 @@ void CReceiverPeople::StateByeBye()
 }
 
 //==========================================================================
+// 歩行
+//==========================================================================
+void CReceiverPeople::StateWalk()
+{
+	m_fMoveTimer += WALK_TIMER;
+	CBaggage* pbag = CBaggage::GetListObj().GetData(0);
+	MyLib::Vector3 bagpos = pbag->GetPosition();
+	MyLib::Vector3 pos = UtilFunc::Correction::EasingEaseIn(m_StartPos, bagpos, 0.0f, 1.0f, m_fMoveTimer);
+	SetPosition(pos);
+
+	// 終了確認
+	if (m_fMoveTimer < 1.0f) { return; }
+
+	// 状態を距離によって変更
+	switch (m_Distance)
+	{
+	case DISTANCE::DISTANCE_NEAR:
+	{
+		SetState(STATE::STATE_BYEBYE);
+	}
+		break;
+
+	case DISTANCE::DISTANCE_FAR:
+	{
+		if (m_StartPos.x >= bagpos.x)
+		{// 荷物が届いていない
+			SetState(STATE::STATE_DROWN);
+		}
+		else 
+		{// 通り過ぎた
+			SetState(STATE::STATE_RETURN);
+		}
+	}
+		break;
+
+	default:
+	{
+		SetState(STATE::STATE_BYEBYE);
+	}
+		break;
+	}
+}
+
+//==========================================================================
 // モーションの設定
 //==========================================================================
 void CReceiverPeople::SetMotion(int motionIdx)
@@ -586,7 +642,7 @@ void CReceiverPeople::AttackAction(CMotion::AttackInfo ATKInfo, int nCntATK)
 		CBaggage* pBaggage = CBaggage::GetListObj().GetData(0);
 		pBaggage->SetAwayStartPosition(pMotion->GetAttackPosition(GetModel(), ATKInfo));
 	}
-		break;
+	break;
 
 	case MOTION::MOTION_RETURN:
 	{
@@ -657,7 +713,7 @@ void CReceiverPeople::AttackInDicision(CMotion::AttackInfo* pATKInfo, int nCntAT
 			pBaggage->SetPosition(weponpos);
 		}
 	}
-		break;
+	break;
 
 	case MOTION::MOTION_RETURN:
 	{
@@ -668,7 +724,6 @@ void CReceiverPeople::AttackInDicision(CMotion::AttackInfo* pATKInfo, int nCntAT
 			MyLib::Vector3 pos = weponpos - pBaggage->GetPosition();
 			pos = pBaggage->GetPosition() + (pos * 0.5f);
 			pBaggage->SetPosition(pos);
-			m_shotpos = weponpos;
 		}
 	}
 	break;
@@ -699,7 +754,7 @@ void CReceiverPeople::AttackInDicision(CMotion::AttackInfo* pATKInfo, int nCntAT
 		CEffect3D::TYPE_NORMAL);
 #endif
 
-	
+
 
 }
 
