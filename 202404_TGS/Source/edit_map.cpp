@@ -33,6 +33,8 @@ CListManager<CObjectX> CEdit_Map::m_List = {};				// リスト
 std::vector<std::string> CEdit_Map::m_TextureFile = {};		// テクスチャファイル
 std::vector<std::string> CEdit_Map::m_ModelFile = {};		// モデルファイル
 bool CEdit_Map::m_bLoad = false;							// 読み込み判定
+std::vector<CObjectX*> CEdit_Map::m_pObjX = {};			// オブジェクトXのポインタ
+
 
 //==========================================================================
 // コンストラクタ
@@ -41,7 +43,7 @@ CEdit_Map::CEdit_Map()
 {
 	// 値のクリア
 	m_nModelIdx.clear();	// モデルインデックス
-	m_pObjX.clear();		// オブジェクトXのポインタ
+	//m_pObjX.clear();		// オブジェクトXのポインタ
 	m_bGrab = false;		// 掴み判定
 	m_bReGrab = false;		// 再掴み判定
 	m_pCopyObj = nullptr;	// コピーオブジェクト

@@ -67,6 +67,7 @@ public:
 		m_pEffekseerObj = nullptr;
 		m_bFall = true;
 		m_state = STATE::STATE_NONE;
+		m_nGoalTimer = 0;
 	}
 
 	virtual void Action(CPlayer* player, CBaggage* pBaggage);	// アクション
@@ -99,6 +100,7 @@ private:
 	float m_fIntervalBress = 0.0f;		// 息のタイマー
 	bool m_bLandOld;					// 前回の着地情報
 	bool m_bFall;						// 落下しているかどうか
+	int m_nGoalTimer;					// タイマー
 	STATE m_state;
 	MyLib::Vector3 m_GoalMove;			// ゴール時の移動量
 };

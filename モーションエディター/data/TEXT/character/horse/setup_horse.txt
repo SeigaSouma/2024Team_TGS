@@ -91,7 +91,7 @@ END_CHARACTERSET
 # コライダー情報
 #
 #==============================================================================
-COLLIDER_FILENAME = data/TEXT/character/bird/sphere_collider.json
+COLLIDER_FILENAME = data/TEXT/character/horse/sphere_collider.json
 
 #==============================================================================
 #
@@ -101,11 +101,12 @@ COLLIDER_FILENAME = data/TEXT/character/bird/sphere_collider.json
 #------------------------------------------------------------------------------
 # モーション数
 #------------------------------------------------------------------------------
-NUM_MOTION = 1
+NUM_MOTION = 2
 
 #------------------------------------------------------------------------------
 # モデルファイル名
 #------------------------------------------------------------------------------
 MOTION_FILENAME = data/TEXT/character/horse/motion_def.txt			# [0]デフォルト
+MOTION_FILENAME = data/TEXT/character/horse/motion_walk.txt			# [1]デフォルト
 
 END_SCRIPT		# この行は絶対消さないこと！
