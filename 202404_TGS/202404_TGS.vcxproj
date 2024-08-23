@@ -342,6 +342,7 @@
     <ClCompile Include="Source\townfield_fixedplane.cpp" />
     <ClCompile Include="Source\townfield_sinuous.cpp" />
     <ClCompile Include="Source\townfield_sinuous_front.cpp" />
+    <ClCompile Include="Source\tree.cpp" />
     <ClCompile Include="Source\tutorial.cpp" />
     <ClCompile Include="Source\tutoriallogo.cpp" />
     <ClCompile Include="Source\waterfield.cpp" />
@@ -536,6 +537,7 @@
     <ClInclude Include="Source\townfield_fixedplane.h" />
     <ClInclude Include="Source\townfield_sinuous.h" />
     <ClInclude Include="Source\townfield_sinuous_front.h" />
+    <ClInclude Include="Source\tree.h" />
     <ClInclude Include="Source\tutorial.h" />
     <ClInclude Include="Source\tutoriallogo.h" />
     <ClInclude Include="Source\waterfield.h" />

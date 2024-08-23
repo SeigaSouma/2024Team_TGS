@@ -57,6 +57,7 @@
 #include "receiver_people.h"
 #include "splashwater_manager.h"
 #include "ascensionCylinder.h"
+#include "tree.h"
 
 //==========================================================================
 // 静的メンバ変数宣言
@@ -197,6 +198,22 @@ HRESULT CGame::Init()
 	// コースマネージャ
 	//=============================
 	m_pCourseManager = CCourseManager::Create();
+
+	MyLib::Vector3 treepos2(-2723.0f, 1500.0f, 12128.0f);
+
+	for (int nCnt = 0; nCnt <= 19; nCnt++)
+	{
+		CTree::Create(treepos2);
+		treepos2.x += 2000.0f;
+	}
+
+	MyLib::Vector3 treepos(-2223.0f, 900.0f, 10128.0f);
+
+	for (int nCnt = 0; nCnt <= 20; nCnt++)
+	{
+		CTree::Create(treepos);
+		treepos.x += 2000.0f;
+	}
 
 #if 0
 	//=============================
