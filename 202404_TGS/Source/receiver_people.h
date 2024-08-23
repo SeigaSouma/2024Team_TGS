@@ -133,6 +133,7 @@ private:
 	// メンバ変数
 	//=============================
 	MyLib::Vector3 m_StartPos;	// 開始地点
+	MyLib::Vector3 m_StartRot;	// 向き
 	CShadow *m_pShadow;			// 影の情報
 	float m_fMoveTimer;			// 移動時間
 	bool m_bEnd;				// 終了

@@ -32,6 +32,8 @@ namespace
 	const float CATCH_RANGE = 500.0f;
 	const float NEAR_RANGE = 1000.0f;
 	const float WALK_TIMER = (1.0f / 120.0f);
+	const MyLib::Vector3 START_ROT = MyLib::Vector3(0.0f, D3DX_PI * 0.5f, 0.0f);
+	const float LOOKBACK_TIMER = (1.0f / 30.0f);
 }
 
 namespace STATE_TIME
@@ -128,7 +130,7 @@ HRESULT CReceiverPeople::Init()
 	SetType(CObject::TYPE::TYPE_ENEMY);
 
 	// 向き設定
-	SetRotation(MyLib::Vector3(0.0f, D3DX_PI * 0.5f, 0.0f));
+	SetRotation(START_ROT);
 
 	// リストに追加
 	m_List.Regist(this);
@@ -383,6 +385,7 @@ void CReceiverPeople::StateWait()
 	if (bagpos.y <= mypos.y)
 	{// 既に落下している
 		m_StartPos = GetPosition();
+		m_StartRot = GetRotation();
 		SetState(STATE::STATE_WALK);
 
 		// 距離を設定
@@ -490,6 +493,13 @@ void CReceiverPeople::StateReturn()
 		m_bEnd = true;
 		CCatchResult::Create(MyLib::Vector3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f), CCatchResult::TYPE::TYPE_FAIL);
 	}
+
+	// 向きを調整
+	{
+		m_fMoveTimer += LOOKBACK_TIMER;
+		MyLib::Vector3 rot = UtilFunc::Correction::EasingEaseIn(m_StartRot, START_ROT, 0.0f, 1.0f, m_fMoveTimer);
+		SetRotation(rot);
+	}
 }
 
 //==========================================================================
@@ -519,6 +529,13 @@ void CReceiverPeople::StateDrown()
 
 	CBaggage* pBaggage = CBaggage::GetListObj().GetData(0);
 	SetPosition(pBaggage->GetPosition());
+
+	// 向きを調整
+	{
+		m_fMoveTimer += LOOKBACK_TIMER;
+		MyLib::Vector3 rot = UtilFunc::Correction::EasingEaseIn(m_StartRot, START_ROT, 0.0f, 1.0f, m_fMoveTimer);
+		SetRotation(rot);
+	}
 }
 
 //==========================================================================
@@ -547,6 +564,13 @@ void CReceiverPeople::StateByeBye()
 		m_bEnd = true;
 		CCatchResult::Create(MyLib::Vector3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f), CCatchResult::TYPE::TYPE_OK);
 	}
+
+	// 向きを調整
+	{
+		m_fMoveTimer += LOOKBACK_TIMER;
+		MyLib::Vector3 rot = UtilFunc::Correction::EasingEaseIn(m_StartRot, START_ROT, 0.0f, 1.0f, m_fMoveTimer);
+		SetRotation(rot);
+	}
 }
 
 //==========================================================================
@@ -559,9 +583,22 @@ void CReceiverPeople::StateWalk()
 	MyLib::Vector3 bagpos = pbag->GetPosition();
 	MyLib::Vector3 pos = UtilFunc::Correction::EasingEaseIn(m_StartPos, bagpos, 0.0f, 1.0f, m_fMoveTimer);
 	SetPosition(pos);
+	SetMotion(MOTION::MOTION_WALK);
+
+	// 向きを調整
+	{
+		MyLib::Vector3 targetrot = 0.0f;
+		float movetimer = UtilFunc::Transformation::Clamp(m_fMoveTimer, 0.0f, 0.5f);
+		targetrot.y = m_StartPos.AngleXZ(bagpos);
+		MyLib::Vector3 rot = UtilFunc::Correction::EasingEaseIn(m_StartRot, targetrot, 0.0f, 0.5f, movetimer);
+		SetRotation(rot);
+	}
 
 	// 終了確認
 	if (m_fMoveTimer < 1.0f) { return; }
+
+	m_fMoveTimer = 0.0f;
+	m_StartRot = GetRotation();
 
 	// 状態を距離によって変更
 	switch (m_Distance)
