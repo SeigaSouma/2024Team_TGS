@@ -154,6 +154,9 @@ void CObjectChara::Update()
 	// コライダーの位置調整
 	for (auto& collider : m_SphereColliders)
 	{
+		// 総数制御
+		if (collider.nParentPartsIdx >= GetNumModel()) continue;
+
 		// 判定するパーツ取得
 		CModel* pModel = GetModel()[collider.nParentPartsIdx];
 

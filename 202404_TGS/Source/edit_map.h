@@ -82,7 +82,7 @@ private:
 	//=============================
 	std::vector<int> m_nModelIdx;				// モデルインデックス
 	std::vector<LPDIRECT3DTEXTURE9> m_pTexture;	// テクスチャのポインタ
-	std::vector<CObjectX*> m_pObjX;			// オブジェクトXのポインタ
+	static std::vector<CObjectX*> m_pObjX;			// オブジェクトXのポインタ
 
 	LPDIRECT3DTEXTURE9 m_HandleTex[CHandle::HandleType::TYPE_MAX];	// テクスチャのポインタ
 

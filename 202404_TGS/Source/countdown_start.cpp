@@ -19,10 +19,10 @@ namespace
 {
 	const std::string TEXTURE[] =	// テクスチャのファイル
 	{
-		"data\\TEXTURE\\dead\\deadtext.png",
-		"data\\TEXTURE\\countdown\\count_1.png",
-		"data\\TEXTURE\\countdown\\count_2.png",
-		"data\\TEXTURE\\countdown\\count_3.png",
+		"data\\TEXTURE\\countdown\\countdown_00.png",
+		"data\\TEXTURE\\countdown\\countdown_01.png",
+		"data\\TEXTURE\\countdown\\countdown_02.png",
+		"data\\TEXTURE\\countdown\\countdown_03.png",
 	};
 	const int MAX_COUNT = 3;	// カウントの最大値
 }

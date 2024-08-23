@@ -34,6 +34,7 @@
 #include "receiver_people.h"
 #include "skip_ui.h"
 #include "countdown_start.h"
+#include "guide.h"
 
 //==========================================================================
 // 定数定義
@@ -45,6 +46,7 @@ namespace
 	const float POSR_Y_PULL_SCREEN_POS = 210.0f;	// カメラが引き始めるスクリーン座標
 	const float POSR_Y_APPROACH_SCREEN_POS = SCREEN_HEIGHT * 0.5f;	// カメラが近づき始めるスクリーン座標
 	const float POSR_YDEST_BAGGTOPLAYER_RATIO = 0.4f;	// 荷物とプレイヤー距離の割合（posRYDest）
+	const int GUIDE_NUM = 100;
 
 	const int CHANGE_BASEPOINT[] =	// ポイント変更する基準
 	{
@@ -82,6 +84,8 @@ CGameManager::CGameManager()
 	m_pReceiverPeople = nullptr;
 	m_nJudgeRank = 0;
 	m_pSkipUI = nullptr;		// スキップUIのポインタ
+	m_nGuideTimer = 0;
+	m_pGuide = nullptr;
 }
 
 //==========================================================================
@@ -475,9 +479,24 @@ void CGameManager::SceneWaitAirPush()
 	{
 		pTimer->SetEnableAddTime(true);
 		SetType(SceneType::SCENE_MAIN);
+
+		m_nGuideTimer = 0;
+
+		if (m_nGuideTimer == 0 && m_pGuide != nullptr)
+		{
+			m_pGuide->Uninit();
+			m_pGuide = nullptr;
+		}
 	}
 	else if (pTimer != nullptr)
 	{
+		m_nGuideTimer++;
+
+		if (m_nGuideTimer >= GUIDE_NUM)
+		{
+			m_pGuide = CGuide::Create();
+		}
+
 		pTimer->SetEnableAddTime(false);
 	}
 }
@@ -543,10 +562,7 @@ void CGameManager::TurnAway()
 {
 	// カメラ取得
 	CCamera* pCamera = CManager::GetInstance()->GetCamera();
-	if (pCamera->GetCameraMotion()->IsEdit())
-	{
-		return;
-	}
+	if (pCamera->GetCameraMotion()->IsEdit() || !pCamera->IsFollow()) return;
 
 	// プレイヤー取得
 	CListManager<CPlayer> playerList = CPlayer::GetListObj();

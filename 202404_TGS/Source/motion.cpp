@@ -976,10 +976,10 @@ MyLib::Vector3 CMotion::GetAttackPosition(CModel **ppModel, AttackInfo attackInf
 {
 	D3DXMATRIX mtxTrans;	// 計算用マトリックス宣言
 
-	if (ppModel[attackInfo.nCollisionNum] == nullptr)
-	{// nullptrだったら
-		return mylib_const::DEFAULT_VECTOR3;
-	}
+	// 総数制御
+	if (attackInfo.nCollisionNum >= m_nNumModel) return MyLib::Vector3();
+
+	if (ppModel[attackInfo.nCollisionNum] == nullptr) return MyLib::Vector3();
 
 	// 判定するパーツのマトリックス取得
 	D3DXMATRIX mtxWepon = ppModel[attackInfo.nCollisionNum]->GetWorldMtx().ConvertD3DXMATRIX();

@@ -33,7 +33,7 @@ public:
 	CMeshCylinder *GetMyObject();
 
 private:
-	int m_nTexIdx;	// テクスチャのインデックス番号
+
 };
 
 
