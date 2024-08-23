@@ -299,7 +299,7 @@ HRESULT CGame::Init()
 	CWaterField::Create(CWaterField::TYPE::TYPE_RIGHT);
 	CWaterField::Create(CWaterField::TYPE::TYPE_LEFT);*/
 
-	CCheckpoint::Load("data\\TEXT\\map\\checkpoint.txt");
+	//CCheckpoint::Load("data\\TEXT\\map\\checkpoint.txt");
 
 	// チェックポイント通過リセット
 	CCheckpoint::ResetSaveID();

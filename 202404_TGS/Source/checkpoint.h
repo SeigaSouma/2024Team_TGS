@@ -58,6 +58,7 @@ private:
 	//=============================
 	float m_fStateTime;				// 状態カウンター
 	float m_fLength;				// 距離
+	float m_fRotateTime;			// 回転時間
 	float m_fPassedTime;			// 通過したときの時間
 	bool m_bIsPassed;				// 通過したかどうか
 	static CListManager<CCheckpoint> m_List;	// リスト
