@@ -180,6 +180,7 @@
     <ClCompile Include="Source\EffekseerObj.cpp" />
     <ClCompile Include="Source\guide.cpp" />
     <ClCompile Include="Source\keyconfig_keyboard.cpp" />
+    <ClCompile Include="Source\kite.cpp" />
     <ClCompile Include="Source\map_obstacle_motion.cpp" />
     <ClCompile Include="Source\map_obstacle_obj.cpp" />
     <ClCompile Include="Source\movie.cpp" />
@@ -378,6 +379,7 @@
     <ClInclude Include="Source\EffekseerObj.h" />
     <ClInclude Include="Source\guide.h" />
     <ClInclude Include="Source\keyconfig_keyboard.h" />
+    <ClInclude Include="Source\kite.h" />
     <ClInclude Include="Source\map_obstacle_motion.h" />
     <ClInclude Include="Source\map_obstacle_obj.h" />
     <ClInclude Include="Source\movie.h" />
