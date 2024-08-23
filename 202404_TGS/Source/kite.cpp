@@ -1,10 +1,10 @@
 //=============================================================================
 // 
-//  プレイヤー処理 [people.cpp]
-//  Author : 相馬靜雅
+//  凧処理 [kite.cpp]
+//  Author : Ibuki Okusada
 // 
 //=============================================================================
-#include "people.h"
+#include "kite.h"
 #include "manager.h"
 #include "game.h"
 #include "input.h"
@@ -39,22 +39,22 @@ namespace STATE_TIME
 // 関数ポインタ
 //==========================================================================
 // 状態関数
-CPeople::STATE_FUNC CPeople::m_StateFunc[] =
+CKite::STATE_FUNC CKite::m_StateFunc[] =
 {
-	&CPeople::StateNone,	// なし
-	&CPeople::StateFadeIn,	// フェードイン
-	&CPeople::StateFadeOut,	// フェードアウト
+	&CKite::StateNone,	// なし
+	&CKite::StateFadeIn,	// フェードイン
+	&CKite::StateFadeOut,	// フェードアウト
 };
 
 //==========================================================================
 // 静的メンバ変数宣言
 //==========================================================================
-CListManager<CPeople> CPeople::m_List = {};	// リスト
+CListManager<CKite> CKite::m_List = {};	// リスト
 
 //==========================================================================
 // コンストラクタ
 //==========================================================================
-CPeople::CPeople(int nPriority) : CObjectChara(nPriority)
+CKite::CKite(int nPriority) : CPeople(nPriority)
 {
 	// 値のクリア
 	m_state = STATE::STATE_NONE;	// 状態
@@ -72,7 +72,7 @@ CPeople::CPeople(int nPriority) : CObjectChara(nPriority)
 //==========================================================================
 // デストラクタ
 //==========================================================================
-CPeople::~CPeople()
+CKite::~CKite()
 {
 
 }
@@ -80,10 +80,10 @@ CPeople::~CPeople()
 //==========================================================================
 // 生成処理
 //==========================================================================
-CPeople* CPeople::Create(const std::string& pFileName, MyLib::Vector3 pos)
+CKite* CKite::Create(const std::string& pFileName, MyLib::Vector3 pos)
 {
 	// メモリの確保
-	CPeople* pPeople = DEBUG_NEW CPeople;
+	CKite* pPeople = DEBUG_NEW CKite;
 
 	if (pPeople != nullptr)
 	{// メモリの確保が出来ていたら
@@ -109,7 +109,7 @@ CPeople* CPeople::Create(const std::string& pFileName, MyLib::Vector3 pos)
 //==========================================================================
 // 初期化処理
 //==========================================================================
-HRESULT CPeople::Init()
+HRESULT CKite::Init()
 {
 	// 各種変数の初期化
 	m_state = STATE::STATE_FADEIN;	// 状態
@@ -146,7 +146,7 @@ HRESULT CPeople::Init()
 //==========================================================================
 // テキスト読み込み
 //==========================================================================
-HRESULT CPeople::LoadText(const char *pFileName)
+HRESULT CKite::LoadText(const char *pFileName)
 {
 	// キャラ作成
 	HRESULT hr = SetCharacter(pFileName);
@@ -161,7 +161,7 @@ HRESULT CPeople::LoadText(const char *pFileName)
 //==========================================================================
 // 終了処理
 //==========================================================================
-void CPeople::Uninit()
+void CKite::Uninit()
 {
 	
 	// 影を消す
@@ -180,7 +180,7 @@ void CPeople::Uninit()
 //==========================================================================
 // 死亡処理
 //==========================================================================
-void CPeople::Kill()
+void CKite::Kill()
 {
 	
 	// 影を消す
@@ -194,7 +194,7 @@ void CPeople::Kill()
 //==========================================================================
 // 更新処理
 //==========================================================================
-void CPeople::Update()
+void CKite::Update()
 {
 	// 死亡の判定
 	if (IsDeath() == true)
@@ -302,7 +302,7 @@ void CPeople::Update()
 //==========================================================================
 // 当たり判定
 //==========================================================================
-void CPeople::Collision()
+void CKite::Collision()
 {
 	// 位置取得
 	MyLib::Vector3 pos = GetPosition();
@@ -354,7 +354,7 @@ void CPeople::Collision()
 //==========================================================================
 // 着地時の処理
 //==========================================================================
-void CPeople::ProcessLanding()
+void CKite::ProcessLanding()
 {
 	// 移動量取得
 	MyLib::Vector3 move = GetMove();
@@ -370,7 +370,7 @@ void CPeople::ProcessLanding()
 //==========================================================================
 // 状態更新処理
 //==========================================================================
-void CPeople::UpdateState()
+void CKite::UpdateState()
 {
 	// 色設定
 	m_mMatcol = D3DXCOLOR(1.0f, 1.0f, 1.0f, m_mMatcol.a);
@@ -385,7 +385,7 @@ void CPeople::UpdateState()
 //==========================================================================
 // 何もない状態
 //==========================================================================
-void CPeople::StateNone()
+void CKite::StateNone()
 {
 	// 色設定
 	m_mMatcol = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
@@ -395,7 +395,7 @@ void CPeople::StateNone()
 //==========================================================================
 // フェードイン
 //==========================================================================
-void CPeople::StateFadeIn()
+void CKite::StateFadeIn()
 {
 	// 色設定
 	m_mMatcol.a = m_fStateTime / STATE_TIME::FADEOUT;
@@ -410,7 +410,7 @@ void CPeople::StateFadeIn()
 //==========================================================================
 // フェードアウト
 //==========================================================================
-void CPeople::StateFadeOut()
+void CKite::StateFadeOut()
 {
 	// 色設定
 	m_mMatcol.a = 1.0f - m_fStateTime / STATE_TIME::FADEOUT;
@@ -428,7 +428,7 @@ void CPeople::StateFadeOut()
 //==========================================================================
 // 大人の壁
 //==========================================================================
-void CPeople::LimitArea()
+void CKite::LimitArea()
 {
 	return;
 
@@ -458,7 +458,7 @@ void CPeople::LimitArea()
 //==========================================================================
 // モーションの設定
 //==========================================================================
-void CPeople::SetMotion(int motionIdx)
+void CKite::SetMotion(int motionIdx)
 {
 	// モーション取得
 	CMotion* pMotion = GetMotion();
@@ -472,7 +472,7 @@ void CPeople::SetMotion(int motionIdx)
 //==========================================================================
 // 攻撃時処理
 //==========================================================================
-void CPeople::AttackAction(CMotion::AttackInfo ATKInfo, int nCntATK)
+void CKite::AttackAction(CMotion::AttackInfo ATKInfo, int nCntATK)
 {
 	return;
 }
@@ -480,7 +480,7 @@ void CPeople::AttackAction(CMotion::AttackInfo ATKInfo, int nCntATK)
 //==========================================================================
 // 攻撃判定中処理
 //==========================================================================
-void CPeople::AttackInDicision(CMotion::AttackInfo* pATKInfo, int nCntATK)
+void CKite::AttackInDicision(CMotion::AttackInfo* pATKInfo, int nCntATK)
 {
 	//return;
 	// モーション取得
@@ -517,7 +517,7 @@ void CPeople::AttackInDicision(CMotion::AttackInfo* pATKInfo, int nCntATK)
 //==========================================================================
 // 描画処理
 //==========================================================================
-void CPeople::Draw()
+void CKite::Draw()
 {
 	if (m_state == STATE_FADEOUT || m_state == STATE::STATE_FADEIN)
 	{
@@ -538,7 +538,7 @@ void CPeople::Draw()
 //==========================================================================
 // 状態設定
 //==========================================================================
-void CPeople::SetState(STATE state)
+void CKite::SetState(STATE state)
 {
 	m_state = state;
 }

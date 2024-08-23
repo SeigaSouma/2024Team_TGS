@@ -1,16 +1,17 @@
 //=============================================================================
 // 
-//  人ヘッダー [people.h]
-//  Author : 相馬靜雅
+//  凧ヘッダー [kite.h]
+//  Author : IbukiOkusada
 // 
 //=============================================================================
 
-#ifndef _ENEMY_H_
-#define _ENEMY_H_	// 二重インクルード防止
+#ifndef _KITE_H_
+#define _KITE_H_	// 二重インクルード防止
 
 #include "listmanager.h"
 #include "objectChara.h"
 #include "motion.h"
+#include "people.h"
 
 // 前方宣言
 class CShadow;
@@ -19,7 +20,7 @@ class CShadow;
 // クラス定義
 //==========================================================================
 // 人クラス
-class CPeople : public CObjectChara
+class CKite : public CPeople
 {
 public:
 	
@@ -40,8 +41,8 @@ public:
 	};
 
 
-	CPeople(int nPriority = mylib_const::ENEMY_PRIORITY);
-	virtual ~CPeople();
+	CKite(int nPriority = mylib_const::ENEMY_PRIORITY);
+	virtual ~CKite();
 
 
 	// オーバーライドされた関数
@@ -61,8 +62,8 @@ public:
 
 	HRESULT LoadText(const char *pFileName);
 
-	static CListManager<CPeople> GetListObj() { return m_List; }	// リスト取得
-	static CPeople* Create(const std::string& pFileName, MyLib::Vector3 pos);
+	static CListManager<CKite> GetListObj() { return m_List; }	// リスト取得
+	static CKite* Create(const std::string& pFileName, MyLib::Vector3 pos);
 
 protected:
 
@@ -109,7 +110,7 @@ private:
 	//=============================
 	// 関数リスト
 	//=============================
-	typedef void(CPeople::* STATE_FUNC)();
+	typedef void(CKite::* STATE_FUNC)();
 	static STATE_FUNC m_StateFunc[];	// 状態関数リスト
 
 	void UpdateState();					// 状態更新処理
@@ -121,7 +122,7 @@ private:
 	//=============================
 	float m_fMoveVelocity;	// 移動速度
 	CShadow *m_pShadow;			// 影の情報
-	static CListManager<CPeople> m_List;	// リスト
+	static CListManager<CKite> m_List;	// リスト
 };
 
 
