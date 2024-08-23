@@ -393,14 +393,24 @@ void ImguiMgr::Update()
 void ImguiMgr::Draw()
 {
 #if _DEBUG
-	ImGui::ShowDemoWindow();
+
+	if (!CManager::IsDisp_ImGui())
+	{
+		ImGui::ShowDemoWindow();
+	}
 #endif
 
 	// ImGuiフレームの終了
 	ImGui::EndFrame();
-	ImGui::Render();
 
-	// 描画コマンドの処理
-	ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
+	// ImGuiの描画
+	if (!CManager::IsDisp_ImGui())
+	{
+		// ImGuiの描画
+		ImGui::Render();
+
+		// 描画コマンドの処理
+		ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
+	}
 }
 

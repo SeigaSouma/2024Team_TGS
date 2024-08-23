@@ -124,6 +124,9 @@ void CObjectLine::Update()
 //==========================================================================
 void CObjectLine::Draw()
 {
+	// ボックスコライダーの描画
+	if (!CManager::IsDisp_BoxColliders()) return;
+
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
 
