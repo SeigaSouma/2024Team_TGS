@@ -587,7 +587,11 @@ void CBaggage::Draw()
 //==========================================================================
 bool CBaggage::Hit()
 {
-	return false;
+//#ifndef DEBUG
+//	return false;
+//#endif // DEBUG
+
+	
 
 	int block = 0;
 	float distanceX = GetPosition().x;
