@@ -43,6 +43,7 @@
 #include "course.h"
 #include "meshbubble.h"
 #include "discovery.h"
+#include "splashwater_manager.h"
 
 // 使用クラス
 #include "playercontrol.h"
@@ -1270,6 +1271,12 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 			UtilFunc::Transformation::Clamp(ratioDest, 0.0f, 0.7f);
 			UtilFunc::Transformation::Clamp(ratio, 0.1f, 1.0f);
 			pCamera->SetShake(3, 20.0f * ratio, 0.0f);	// 振動
+		}
+
+		// 水しぶき生成
+		if (nLife % 10 == 0)
+		{
+			CSplashwater_Manager::Create();
 		}
 
 		// コントローラー振動させる
