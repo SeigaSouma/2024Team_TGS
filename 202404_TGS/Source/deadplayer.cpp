@@ -123,8 +123,8 @@ HRESULT CDeadPlayer::Init()
 		pMotion->Set(MOTION::MOTION_DEAD);
 	}
 
-
-	CEffekseerObj::Create(
+	// 昇天エフェクト
+	m_pEfkEffect = CEffekseerObj::Create(
 		CMyEffekseer::EFKLABEL::EFKLABEL_PHOTON,
 		GetPosition(), 0.0f, 0.0f, 100.0f, false);
 
@@ -158,6 +158,13 @@ void CDeadPlayer::Uninit()
 		m_pShadow = nullptr;
 	}
 
+	// エフェクト削除
+	if (m_pEfkEffect != nullptr)
+	{
+		m_pEfkEffect->Uninit();
+		m_pEfkEffect = nullptr;
+	}
+
 	// リストから削除
 	m_List.Delete(this);
 
@@ -176,6 +183,13 @@ void CDeadPlayer::Kill()
 	{
 		m_pShadow->Uninit();
 		m_pShadow = nullptr;
+	}
+
+	// エフェクト削除
+	if (m_pEfkEffect != nullptr)
+	{
+		m_pEfkEffect->Uninit();
+		m_pEfkEffect = nullptr;
 	}
 }
 
