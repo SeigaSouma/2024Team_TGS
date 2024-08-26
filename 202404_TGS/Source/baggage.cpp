@@ -587,6 +587,11 @@ void CBaggage::Draw()
 //==========================================================================
 bool CBaggage::Hit()
 {
+//#ifndef DEBUG
+//	return false;
+//#endif // DEBUG
+
+	
 
 	int block = 0;
 	float distanceX = GetPosition().x;
@@ -629,6 +634,9 @@ bool CBaggage::Hit()
 				
 				// ˆÚ“®—ÊŽæ“¾
 				MyLib::Vector3 move = GetMove();
+
+				// áŠQ•¨‚Ìƒqƒbƒgˆ—
+				pObj->Hit();
 
 				if (bDead)
 				{

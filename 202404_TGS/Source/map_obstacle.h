@@ -63,6 +63,8 @@ public:
 	virtual void SetState(CObjectX::STATE state){}
 	std::vector<CCollisionLine_Box*> GetCollisionLineBox() { return m_pCollisionLineBox; }
 
+	virtual void Hit();	// ƒqƒbƒgˆ—
+
 	//=============================
 	// Ã“IŠÖ”
 	//=============================
