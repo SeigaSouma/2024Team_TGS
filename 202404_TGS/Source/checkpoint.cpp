@@ -135,9 +135,11 @@ void CCheckpoint::Update()
 	// ’Ê‰ßÏ‚Ý‚È‚çˆ—‚µ‚È‚¢
 	if (m_bIsPassed)
 	{
-		m_fRotateTime += ROTATE_TIMER;
+		// ‰ñ“]ŽžŠÔ‰ÁŽZ
+		m_fRotateTime += CManager::GetInstance()->GetDeltaTime();
+
 		MyLib::Vector3 rot = GetRotation();
-		rot.z = UtilFunc::Correction::EasingEaseIn(0.0f, -D3DX_PI, 0.0f, 1.0f, m_fRotateTime);
+		rot.z = UtilFunc::Correction::EasingEaseIn(0.0f, -D3DX_PI, 0.0f, 0.75f, m_fRotateTime);
 		SetRotation(rot);
 		return;
 	}
@@ -166,6 +168,9 @@ void CCheckpoint::Update()
 			m_fRotateTime = 0.0f;
 			m_fPassedTime = CTimer::GetInstance()->GetTime();
 			m_bIsPassed = true;
+
+			// SEÄ¶
+			CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_KARAKURI);
 		}
 	}
 }

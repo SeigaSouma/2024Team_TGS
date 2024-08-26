@@ -44,6 +44,7 @@ public:
 		LABEL_SE_HNSW_000,
 		LABEL_SE_HNSW_001,
 		LABEL_SE_HNSW_002,
+		LABEL_SE_KARAKURI,		// からくりサーカス
 
 		LABEL_MAX,
 	};
