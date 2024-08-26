@@ -64,6 +64,7 @@ public:
 	std::vector<CCollisionLine_Box*> GetCollisionLineBox() { return m_pCollisionLineBox; }
 
 	virtual void Hit();	// ヒット処理
+	void CalMyBlock();	// 自分のブロック計算
 
 	//=============================
 	// 静的関数
@@ -73,6 +74,13 @@ public:
 	static CListManager<CMap_Obstacle> GetListByBlock(int block) { return m_ListBlock[block]; }		// リスト取得
 	static void ListRegist(CMap_Obstacle* pObstacle) { m_List.Regist(pObstacle); }
 	static const float GetDistance_CollisionBlock() { return m_DISTANCE_COLLISION_BLOCK; };	// 当たり判定ブロックの間隔
+
+protected:
+
+	//=============================
+	// 共有メンバ変数
+	//=============================
+	int m_nMapBlock;		// マップのブロック
 
 private:
 
@@ -96,7 +104,6 @@ private:
 	static std::map<int, CListManager<CMap_Obstacle>> m_ListBlock;	// リスト
 	static const float m_DISTANCE_COLLISION_BLOCK;	// 当たり判定ブロックの間隔
 	bool m_bSave;			// 保存するかどうか
-	int m_nMapBlock;		// マップのブロック
 
 };
 
