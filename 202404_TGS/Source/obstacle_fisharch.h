@@ -86,6 +86,7 @@ private:
 	// メンバ関数
 	//=============================
 	// その他
+	void MainControll();	// メイン操作
 	void ControllFish();	// 管理している魚の設定
 	void SetFishOffSet(FishInfo& info);	// 魚のオフセット設定
 	void SetNowHeight();	// 距離設定
