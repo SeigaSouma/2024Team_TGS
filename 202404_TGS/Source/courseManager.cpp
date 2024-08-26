@@ -14,6 +14,7 @@
 #include "stonewall.h"
 #include "stonewall_front.h"
 #include "map_block.h"
+#include "spline.h"
 
 //==========================================================================
 // 定数定義
@@ -318,15 +319,16 @@ void CCourseManager::Load()
 	// 一本のコースにする
 	//=============================
 	std::vector<MyLib::Vector3> segmentpos;	// 基点の位置
+	std::vector<float> segmentlength;
+	int size = 0;
 	MyLib::Vector3 start;
 	std::vector<MyLib::Vector3> vecstart;	// 基点の位置
 	vecstart.push_back(MyLib::Vector3(2000.0f, 0.0f, 0.0f));
 	start = vecstart.back() + MyLib::Vector3(DISTANCE_TO_CHUNCK, 0.0f, 0.0f);
-
-
 	segmentpos.push_back(MyLib::Vector3(-3010.0f, 0.0f, 0.0f));
 	segmentpos.push_back(MyLib::Vector3(-3000.0f, 0.0f, 0.0f));
 	segmentpos.push_back(MyLib::Vector3(2000.0f, 0.0f, 0.0f));
+	segmentlength.push_back(2000.0f);
 
 	for (const auto& idx : randIdx)
 	{
@@ -337,9 +339,15 @@ void CCourseManager::Load()
 
 		// 間隔追加
 		segmentpos.push_back(segmentpos.back() + MyLib::Vector3(DISTANCE_TO_CHUNCK, 0.0f, 0.0f));
-
 		start = segmentpos.back() + MyLib::Vector3(DISTANCE_TO_CHUNCK, 0.0f, 0.0f);
 		vecstart.push_back(start);
+
+		// ここまでの長さ取得
+		size += segmentpos.size();
+		std::vector<float> calLength;
+		calLength.resize(size);
+
+		segmentlength.push_back(MySpline::CalSegmentLength_NonLoop(segmentpos, &calLength, 10.0f));
 	}
 	segmentpos.push_back(segmentpos.back() + MyLib::Vector3(10.0f, 0.0f, 0.0f));
 
@@ -359,14 +367,15 @@ void CCourseManager::Load()
 
 		if (pBlock != nullptr)
 		{
-			pBlock->Set(randIdx[i], vecstart[i], CCourseManager::GetBlockLength() * i);
+			
+			pBlock->Set(randIdx[i], vecstart[i], segmentlength[i]);
 		}
 	}
 
 
 	//この中で障害物、チェックポイント
 
-#if 1
+#if 0
 	//=============================
 	// 石垣(奥)
 	//=============================
