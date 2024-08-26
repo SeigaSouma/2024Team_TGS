@@ -1,31 +1,32 @@
 //=============================================================================
 // 
-//  凧処理 [kite.cpp]
-//  Author : Ibuki Okusada
+//  依頼人セリフエフェクト [serifeffect.cpp]
+//  Author : 石原颯馬
 // 
 //=============================================================================
-#include "kite.h"
+#include "serifeffect.h"
+#include "texture.h"
 
-// 名前空間
+//==========================================================================
+// 定数定義
+//==========================================================================
 namespace
 {
-	const int NUM_DIVISION = (16);	// 分割数
-	const float ROT_RANGE = (D3DX_PI * 0.75f);	// 範囲
-	const float ROT_CORRECTION = ((1.0f / NUM_DIVISION) * ROT_RANGE * 2);	// 1分割辺りの移動量
+	const std::string EFFECT_TEXTURE = "data\\TEXTURE\\effect\\voice_effect_00.png";
 }
 
 //==========================================================================
 // コンストラクタ
 //==========================================================================
-CKite::CKite(int nPriority) : CPeople(nPriority)
+CSerifEffect::CSerifEffect(int nPriority) : CObject3D(nPriority)
 {
-	m_StartRot = 0.0f;
+	
 }
 
 //==========================================================================
 // デストラクタ
 //==========================================================================
-CKite::~CKite()
+CSerifEffect::~CSerifEffect()
 {
 
 }
@@ -33,49 +34,36 @@ CKite::~CKite()
 //==========================================================================
 // 生成処理
 //==========================================================================
-CKite* CKite::Create(const std::string& pFileName, MyLib::Vector3 pos)
+CSerifEffect* CSerifEffect::Create(MyLib::Vector3 pos, MyLib::Vector3 rot, int life)
 {
 	// メモリの確保
-	CKite* pPeople = DEBUG_NEW CKite;
+	CSerifEffect* pObject = DEBUG_NEW CSerifEffect;
 
-	if (pPeople != nullptr)
-	{// メモリの確保が出来ていたら
-
-		// 位置設定
-		pPeople->SetPosition(pos);
-		pPeople->CObject::SetOriginPosition(pos);
-
-		// テキスト読み込み
-		HRESULT hr = pPeople->LoadText(pFileName.c_str());
-		if (FAILED(hr))
-		{// 失敗していたら
-			return nullptr;
-		}
+	if (pObject != nullptr)
+	{
+		pObject->m_Life = life;
+		pObject->SetPosition(pos);
+		pObject->SetRotation(rot);
 
 		// 初期化処理
-		pPeople->Init();
+		pObject->Init();
 	}
 
-	return pPeople;
+	return pObject;
 }
 
 //==========================================================================
 // 初期化処理
 //==========================================================================
-HRESULT CKite::Init()
+HRESULT CSerifEffect::Init()
 {
-	CPeople::Init();
+	CObject3D::Init();
 
-	// 座標を上げる
-	MyLib::Vector3 pos = GetPosition();
-	pos.y += UtilFunc::Transformation::Random(400, 600);
-	SetPosition(pos);
+	SetType(CObject::TYPE::TYPE_OBJECT3D);
 
-	// 向きをランダムで決める
-	int random = UtilFunc::Transformation::Random(-12, 12);
-	float rot = static_cast<float>(random) * 0.1f;
-	m_StartRot.y = rot;
-	SetRotation(m_StartRot);
+	BindTexture(CTexture::GetInstance()->Regist(EFFECT_TEXTURE));
+	SetSize(MyLib::Vector3(20.0f,20.0f,0.0f));
+	SetVtx();
 
 	return S_OK;
 }
@@ -83,32 +71,38 @@ HRESULT CKite::Init()
 //==========================================================================
 // 終了処理
 //==========================================================================
-void CKite::Uninit()
+void CSerifEffect::Uninit()
 {
-	CPeople::Uninit();
+	CObject3D::Uninit();
 }
 
 //==========================================================================
-// 死亡処理
+// 削除
 //==========================================================================
-void CKite::Kill()
+void CSerifEffect::Kill()
 {
-	CPeople::Kill();
+	
 }
 
 //==========================================================================
 // 更新処理
 //==========================================================================
-void CKite::Update()
+void CSerifEffect::Update()
 {
-	// 親の処理
-	CObjectChara::Update();
+	m_Life--;
+	if (m_Life <= 0)
+	{
+		Uninit();
+		return;
+	}
+
+	CObject3D::Update();
 }
 
 //==========================================================================
 // 描画処理
 //==========================================================================
-void CKite::Draw()
+void CSerifEffect::Draw()
 {
-	CPeople::Draw();
+	CObject3D::Draw();
 }

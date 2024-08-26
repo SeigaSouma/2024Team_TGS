@@ -21,6 +21,13 @@ class CPeople;
 // 人マネージャクラス
 class CPeopleManager
 {
+private:
+
+	enum TYPE
+	{
+		TYPE_KITE = 8,	// 凧
+	};
+
 public:
 
 	// 構造体定義
