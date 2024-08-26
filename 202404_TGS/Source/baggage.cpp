@@ -365,6 +365,7 @@ void CBaggage::StateDead()
 			// SEÄ¶
 			CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_CRACK_GRASS);
 
+			// ‰æ–ÊŠ„‚ê
 			CGlassclush::Create();
 		}
 		m_bEnd = true;

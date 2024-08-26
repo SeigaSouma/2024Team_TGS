@@ -138,6 +138,7 @@ void CCheckpoint::Update()
 		// ‰ñ“]ŽžŠÔ‰ÁŽZ
 		m_fRotateTime += CManager::GetInstance()->GetDeltaTime();
 
+		// ‰ñ“]
 		MyLib::Vector3 rot = GetRotation();
 		rot.z = UtilFunc::Correction::EasingEaseIn(0.0f, -D3DX_PI, 0.0f, 0.75f, m_fRotateTime);
 		SetRotation(rot);
