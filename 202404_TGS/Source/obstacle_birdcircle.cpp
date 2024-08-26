@@ -1,12 +1,13 @@
 //=============================================================================
 // 
-//  円形で回転する鳥障害物処理 [obstacle_birdcircle.cpp]
+//  円形で回転する鳥障害物処理(実体なし) [obstacle_birdcircle.cpp]
 //  Author : Ibuki Okusada
 // 
 //=============================================================================
 #include "obstacle_birdcircle.h"
 #include "debugproc.h"
 #include "manager.h"
+#include "baggage.h"
 
 
 //==========================================================================
@@ -16,6 +17,7 @@ namespace
 {
 	const int	NUM_BIRD = (10);				// 鳥の総数
 	const float BIRD_ROT = (1.0f / NUM_BIRD);	// 1鳥辺りの角度割合
+	const int RANGE_MOTION = 2;					// モーションする
 }
 
 // デフォルト情報
@@ -66,12 +68,11 @@ CObstacle_BirdCircle* CObstacle_BirdCircle::Create(const CMap_ObstacleManager::S
 //==========================================================================
 HRESULT CObstacle_BirdCircle::Init()
 {
+	// 自分のブロック計算
+	CMap_Obstacle::CalMyBlock();
+
 	CMap_Obstacle::ListRegist(this);
 	MyLib::Vector3 rot;
-//
-//#if _DEBUG
-//	CMap_Obstacle::Init();
-//#endif
 
 	// 種類の設定
 	CObject::SetType(TYPE_OBJECTX);
@@ -95,6 +96,9 @@ HRESULT CObstacle_BirdCircle::Init()
 	m_Info.fPlusLength = BIRDDEFAULT::PLUSLENGTH;
 	m_Info.fRotSpeed = BIRDDEFAULT::ROTATE_SPEED;
 	m_Info.fNowLength = BIRDDEFAULT::LENGTH;
+
+	// メイン操作
+	MainControll();
 
 	return S_OK;
 }
@@ -145,6 +149,27 @@ void CObstacle_BirdCircle::Kill()
 // 更新処理
 //==========================================================================
 void CObstacle_BirdCircle::Update()
+{
+	// 荷物取得
+	CBaggage* pBaggage = CBaggage::GetListObj().GetData(0);
+	if (pBaggage == nullptr) return;
+
+	// 荷物のブロックの範囲外なら抜ける
+	int baggageBlock = pBaggage->GetMapBlock();
+	if (!(baggageBlock + RANGE_MOTION >= m_nMapBlock &&
+		baggageBlock - RANGE_MOTION <= m_nMapBlock))
+	{
+		return;
+	}
+
+	// メイン操作
+	MainControll();
+}
+
+//==========================================================================
+// メイン操作
+//==========================================================================
+void CObstacle_BirdCircle::MainControll()
 {
 	// 回転(yは向き、xは移動に使用)
 	m_rot.y += m_Info.fRotSpeed;

@@ -41,8 +41,9 @@ public:
 		STATE_PASS,			// パス
 		STATE_GOAL,			// ゴール
 		STATE_SEND,			// 届ける
-		STATE_RETURN,		// 反射
+		STATE_RETURN,		// 反射x
 		STATE_RECEIVE,		// receive
+		STATE_FALL,			// 矯正落下
 		STATE_MAX
 	};
 
@@ -92,6 +93,8 @@ public:
 	MyLib::Vector3 GetAwayStartPosition() { return m_posAwayStart; }				// 吹っ飛びスタート地点
 
 
+	int GetMapBlock() { return m_nMapBlock; }		// マップのブロック取得
+
 	// 状態系
 	void SetState(STATE state);				// 状態設定
 	STATE GetState() { return m_state; }	// 状態取得
@@ -126,6 +129,7 @@ private:
 	void StateSend();		// 届ける
 	void StateReturn();		// 反射
 	void StateReceive() {}	// 反射
+	void StateFall();
 
 	// その他
 	void Controll();	// 操作
@@ -146,7 +150,9 @@ private:
 	bool m_bHit;				// 障害物衝突判定
 	bool m_bEnd;				// 終了判定
 	SBaggageInfo m_baggageInfo;
+	int m_nMapBlock;			// マップのブロック
 	int m_nLife;				// 体力
+	bool m_bfall;
 	float m_fDeviation;
 	static CListManager<CBaggage> m_List;	// リスト
 };

@@ -10,6 +10,7 @@
 #include "calculation.h"
 #include "manager.h"
 #include "camera.h"
+#include "kite.h"
 #include "debugproc.h"
 
 //==========================================================================
@@ -258,6 +259,7 @@ void CPeopleManager::SetPeople(const MyLib::Vector3& pos, const MyLib::Vector3& 
 	int maxType = static_cast<int>(m_vecMotionFileName.size()) - 1;
 	for (const auto& data : NowPattern.data)
 	{
+		int random = UtilFunc::Transformation::Random(0, maxType);
 		// スポーン時の向きを掛け合わせる
 		spawnPos = pos;
 
@@ -265,24 +267,40 @@ void CPeopleManager::SetPeople(const MyLib::Vector3& pos, const MyLib::Vector3& 
 		spawnPos += data.pos;
 
 		// 生成
-		pPeople = CPeople::Create(
-			m_vecMotionFileName[UtilFunc::Transformation::Random(0, maxType)],	// ファイル名
-			spawnPos);							// 位置
-
-		// 向き設定
-		if (pPeople != nullptr)
+		switch (random)
 		{
-			// 向き設定
-			float rotY = rot.y;
-			if (rand() % 2 == 0)
-			{
-				rotY += D3DX_PI;
-			}
-
-			UtilFunc::Transformation::RotNormalize(rotY);
-			pPeople->SetRotation(MyLib::Vector3(0.0f, rotY, 0.0f));
-			pPeople->SetRotDest(rotY);
+		case TYPE::TYPE_KITE:
+		{
+			pPeople = CKite::Create(
+				m_vecMotionFileName[random],	// ファイル名
+				spawnPos);							// 位置
 		}
+			break;
+		default:
+		{
+			pPeople = CPeople::Create(
+				m_vecMotionFileName[random],	// ファイル名
+				spawnPos);							// 位置
+
+			// 向き設定
+			if (pPeople != nullptr)
+			{
+				// 向き設定
+				float rotY = rot.y;
+				if (rand() % 2 == 0)
+				{
+					rotY += D3DX_PI;
+				}
+
+				UtilFunc::Transformation::RotNormalize(rotY);
+				pPeople->SetRotation(MyLib::Vector3(0.0f, rotY, 0.0f));
+				pPeople->SetRotDest(rotY);
+			}
+		}
+			break;
+		}
+
+		
 	}
 	
 }

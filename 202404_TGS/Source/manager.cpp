@@ -45,7 +45,10 @@ namespace
 //==========================================================================
 // 静的メンバ変数宣言
 //==========================================================================
-CManager *CManager::m_pManager = nullptr;					// マネージャのオブジェクト
+CManager *CManager::m_pManager = nullptr;		// マネージャのオブジェクト
+bool CManager::m_bDisp_ImGui = false;			// ImGuiの描画判定
+bool CManager::m_bDisp_BoxColliders = false;	// 当たり判定ボックスの描画判定
+bool CManager::m_bDisp_CheckPoint = true;		// チェックポイントの描画判定
 
 //==========================================================================
 // コンストラクタ
@@ -788,6 +791,15 @@ void CManager::Update()
 		}
 
 #if _DEBUG
+
+		// 描画判定
+		if (pInputKeyboard->GetTrigger(DIK_F1))
+		{// F1でワイヤーフレーム切り替え
+			m_bDisp_ImGui = m_bDisp_ImGui ? false : true;
+		}
+		ImGui::Checkbox("Disp BoxColliders", &m_bDisp_BoxColliders);
+		ImGui::Checkbox("Disp CheckPoint", &m_bDisp_CheckPoint);
+
 		if (pInputKeyboard->GetTrigger(DIK_F2))
 		{// F2でワイヤーフレーム切り替え
 			m_bWireframe = m_bWireframe ? false : true;

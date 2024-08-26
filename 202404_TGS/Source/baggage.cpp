@@ -15,6 +15,7 @@
 #include "countdown_start.h"
 #include "blackframe.h"
 #include "splashwater.h"
+#include "guide.h"
 
 //==========================================================================
 // 定数定義
@@ -59,6 +60,8 @@ CBaggage::STATE_FUNC CBaggage::m_StateFunc[] =
 	&CBaggage::StateSend,		// 届ける
 	&CBaggage::StateReturn,		// 反射
 	&CBaggage::StateReceive,	// receive
+	&CBaggage::StateFall,
+
 };
 
 //==========================================================================
@@ -89,9 +92,11 @@ CBaggage::CBaggage(int nPriority) : CObjectQuaternion(nPriority)
 	m_fWeight = 0.0f;	// 重さ
 	m_bLand = false;	// 着地判定
 	m_bEnd = false;		// 終了処理
+	m_bfall = false;
 	m_velorot = MyLib::Vector3(0.0f, 0.0f, 0.0f);
 	m_baggageInfo = {};
 	m_fDeviation = 0.0f;
+	m_nMapBlock = 0;	// マップのブロック
 	m_nLife = 0;
 }
 
@@ -442,6 +447,42 @@ void CBaggage::StateSend()
 }
 
 //==========================================================================
+// 矯正落下
+//==========================================================================
+void CBaggage::StateFall()
+{
+	// 情報取得
+	MyLib::Vector3 pos = GetPosition();
+	MyLib::Vector3 move = GetMove();
+	MyLib::Vector3 rot = GetRotation();
+
+	move.y -= 0.7f;
+	move.z -= 0.2f;
+	move.x += 0.5f;
+
+	m_velorot.x += (0.0f - m_velorot.x) * ROLL_INER;
+
+	// クォータニオン割り当て
+	BindQuaternion(MyLib::Vector3(0.0f, 1.0f, 0.0f), m_velorot.y);
+
+	pos += move;
+
+	SetPosition(pos);
+	SetMove(move);
+
+	if (pos.y <= 0)
+	{
+		if (!m_bfall)
+		{// 水しぶきの生成
+
+			CGuide::Create();
+		}
+
+		m_bfall = true;
+	}
+}
+
+//==========================================================================
 // 反射
 //==========================================================================
 void CBaggage::StateReturn()
@@ -587,8 +628,13 @@ void CBaggage::Draw()
 //==========================================================================
 bool CBaggage::Hit()
 {
+//#ifndef DEBUG
+//	return false;
+//#endif // DEBUG
 
-	int block = 0;
+	
+
+	m_nMapBlock = 0;
 	float distanceX = GetPosition().x;
 	while (1)
 	{
@@ -600,12 +646,12 @@ bool CBaggage::Hit()
 		}
 
 		// ブロック加算
-		block++;
+		m_nMapBlock++;
 	}
 
 
 	// 障害物のリスト取得
-	CListManager<CMap_Obstacle> list = CMap_Obstacle::GetListByBlock(block);
+	CListManager<CMap_Obstacle> list = CMap_Obstacle::GetListByBlock(m_nMapBlock);
 
 	// 先頭を保存
 	std::list<CMap_Obstacle*>::iterator itr = list.GetEnd();
@@ -629,6 +675,9 @@ bool CBaggage::Hit()
 				
 				// 移動量取得
 				MyLib::Vector3 move = GetMove();
+
+				// 障害物のヒット処理
+				pObj->Hit();
 
 				if (bDead)
 				{

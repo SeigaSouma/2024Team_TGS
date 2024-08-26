@@ -1,12 +1,13 @@
 //=============================================================================
 // 
-//  アーチ状の魚障害物処理 [obstacle_fisharch.cpp]
+//  アーチ状の魚障害物処理(実体なし) [obstacle_fisharch.cpp]
 //  Author : Ibuki Okusada
 // 
 //=============================================================================
 #include "obstacle_fisharch.h"
 #include "debugproc.h"
 #include "manager.h"
+#include "baggage.h"
 
 //==========================================================================
 // 定数定義
@@ -15,6 +16,7 @@ namespace
 {
 	const int NUM_FISH = (10);				// 魚の総数
 	const float FISH_ROT = (1.0f / NUM_FISH);	// 1魚辺りの角度割合
+	const int RANGE_MOTION = 2;					// モーションする
 }
 
 // デフォルト情報
@@ -67,6 +69,9 @@ CObstacle_FishArch* CObstacle_FishArch::Create(const CMap_ObstacleManager::SObst
 //==========================================================================
 HRESULT CObstacle_FishArch::Init()
 {
+	// 自分のブロック計算
+	CMap_Obstacle::CalMyBlock();
+
 	CMap_Obstacle::ListRegist(this);
 	MyLib::Vector3 rot;
 
@@ -82,8 +87,11 @@ HRESULT CObstacle_FishArch::Init()
 		rot.x = (i * FISH_ROT) * (D3DX_PI * 2);
 		UtilFunc::Transformation::RotNormalize(rot.x);
 		info.pFish->SetRotation(rot);
+
+		// 魚のオフセット設定
 		SetFishOffSet(info);
 		info.pFish->SetPosition(info.offset);
+		//info.pFish->CalMyBlock();
 		m_FishList.push_back(info);
 	}
 
@@ -92,6 +100,9 @@ HRESULT CObstacle_FishArch::Init()
 	m_Info.fPlusHeight = FISHDEFAULT::PLUS_HEIGHT;
 	m_Info.fRotSpeed = FISHDEFAULT::ROTATE_SPEED;
 	m_Info.fNowHeight = FISHDEFAULT::HEIGHT;
+
+	// メイン操作
+	MainControll();
 
 	return S_OK;
 }
@@ -142,6 +153,27 @@ void CObstacle_FishArch::Kill()
 // 更新処理
 //==========================================================================
 void CObstacle_FishArch::Update()
+{
+	// 荷物取得
+	CBaggage* pBaggage = CBaggage::GetListObj().GetData(0);
+	if (pBaggage == nullptr) return;
+
+	// 荷物のブロックの範囲外なら抜ける
+	int baggageBlock = pBaggage->GetMapBlock();
+	if (!(baggageBlock + RANGE_MOTION >= m_nMapBlock &&
+		baggageBlock - RANGE_MOTION <= m_nMapBlock))
+	{
+		return;
+	}
+
+	// メイン操作
+	MainControll();
+}
+
+//==========================================================================
+// メイン操作
+//==========================================================================
+void CObstacle_FishArch::MainControll()
 {
 	// 回転
 	m_fRot += m_Info.fRotSpeed;

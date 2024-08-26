@@ -21,10 +21,20 @@ class CMap_Obstacle_Motion : public CMap_Obstacle
 {
 private:
 
+	//=============================
+	// 列挙型定義
+	//=============================
 	enum T
 	{
 		SAKANA = 12,	// 魚
 		BIRD = 13,		// 鳥
+	};
+
+	enum MOTION
+	{
+		MOTION_DEF = 0,
+		MOTION_HIT,
+		MOTION_MAX
 	};
 
 public:
@@ -54,6 +64,8 @@ public:
 	virtual void SetScale(const MyLib::Vector3& scale)  override;		// サイズ設定
 	virtual void CalWorldMtx() override { m_pChara->CalWorldMtx(); }
 	virtual MyLib::Vector3 GetScale() override;
+
+	virtual void Hit() override;	// ヒット処理
 
 	//=============================
 	// 静的関数
