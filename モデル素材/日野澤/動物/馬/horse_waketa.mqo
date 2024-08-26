@@ -4,8 +4,8 @@ Format Text Ver 1.0
 Scene {
 	pos -423.7589 -11.1515 5426.7183
 	lookat -693.7505 410.1443 557.9292
-	head 37.7367
-	pich -0.0492
+	head 37.4168
+	pich 0.4808
 	bank -0.0500
 	ortho 0
 	zoom2 1.3820
@@ -18,10 +18,10 @@ Scene {
 	}
 }
 Material 1 {
-	"13___Default" col(0.914 0.914 0.914 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("data\\TEXTURE\\map_object\\Horse_v01.jpg")
+	"13___Default" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("data\TEXTURE\mob\Horse_v01.jpg")
 }
 Object "body" {
-	visible 0
+	visible 15
 	locking 0
 	shading 1
 	facet 59.5
@@ -643,7 +643,7 @@ Object "FR_leg" {
 	}
 }
 Object "FL_leg" {
-	visible 15
+	visible 0
 	locking 0
 	shading 1
 	facet 59.5
