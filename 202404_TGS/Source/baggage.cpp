@@ -426,6 +426,11 @@ void CBaggage::StatePass()
 
 		// カウントダウンに遷移
 		CGame::GetInstance()->GetGameManager()->SetType(CGameManager::SceneType::SCENE_COUNTDOWN);
+
+		// ゲットエフェクト生成
+		CEffekseerObj::Create(
+			CMyEffekseer::EFKLABEL::EFKLABEL_BAGGAGEGET,
+			pos, MyLib::Vector3(0.0f, 0.0f, 0.0f), 0.0f, 90.0f, true);
 	}
 
 	SetPosition(pos);
