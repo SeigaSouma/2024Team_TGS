@@ -96,6 +96,7 @@ CBaggage::CBaggage(int nPriority) : CObjectQuaternion(nPriority)
 	m_velorot = MyLib::Vector3(0.0f, 0.0f, 0.0f);
 	m_baggageInfo = {};
 	m_fDeviation = 0.0f;
+	m_nMapBlock = 0;	// マップのブロック
 	m_nLife = 0;
 }
 
@@ -633,7 +634,7 @@ bool CBaggage::Hit()
 
 	
 
-	int block = 0;
+	m_nMapBlock = 0;
 	float distanceX = GetPosition().x;
 	while (1)
 	{
@@ -645,12 +646,12 @@ bool CBaggage::Hit()
 		}
 
 		// ブロック加算
-		block++;
+		m_nMapBlock++;
 	}
 
 
 	// 障害物のリスト取得
-	CListManager<CMap_Obstacle> list = CMap_Obstacle::GetListByBlock(block);
+	CListManager<CMap_Obstacle> list = CMap_Obstacle::GetListByBlock(m_nMapBlock);
 
 	// 先頭を保存
 	std::list<CMap_Obstacle*>::iterator itr = list.GetEnd();

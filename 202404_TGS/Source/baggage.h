@@ -93,6 +93,8 @@ public:
 	MyLib::Vector3 GetAwayStartPosition() { return m_posAwayStart; }				// 吹っ飛びスタート地点
 
 
+	int GetMapBlock() { return m_nMapBlock; }		// マップのブロック取得
+
 	// 状態系
 	void SetState(STATE state);				// 状態設定
 	STATE GetState() { return m_state; }	// 状態取得
@@ -148,6 +150,7 @@ private:
 	bool m_bHit;				// 障害物衝突判定
 	bool m_bEnd;				// 終了判定
 	SBaggageInfo m_baggageInfo;
+	int m_nMapBlock;			// マップのブロック
 	int m_nLife;				// 体力
 	bool m_bfall;
 	float m_fDeviation;
