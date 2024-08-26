@@ -23,27 +23,10 @@ class CShadow;
 class CKite : public CPeople
 {
 public:
-	
-	// 状態列挙
-	enum STATE
-	{
-		STATE_NONE = 0,		// なにもない
-		STATE_FADEIN,		// フェードイン
-		STATE_FADEOUT,		// フェードアウト
-		STATE_MAX
-	};
-
-	enum MOTION
-	{
-		MOTION_DEF = 0,			// ニュートラル
-		MOTION_WALK,			// 移動
-		MOTION_MAX
-	};
 
 
 	CKite(int nPriority = mylib_const::ENEMY_PRIORITY);
 	virtual ~CKite();
-
 
 	// オーバーライドされた関数
 	virtual HRESULT Init() override;
@@ -53,76 +36,13 @@ public:
 
 	virtual void Kill();	// 削除
 
-	void SetState(STATE state);		// 状態設定
-	STATE GetState() { return m_state; }
-	void SetStateTime(float time) { m_fStateTime = time; }	// 状態時間設定
-
-	// モーション
-	void SetMotion(int motionIdx);	// モーションの設定
-
-	HRESULT LoadText(const char *pFileName);
-
-	static CListManager<CKite> GetListObj() { return m_List; }	// リスト取得
 	static CKite* Create(const std::string& pFileName, MyLib::Vector3 pos);
 
 protected:
 
-	//=============================
-	// 構造体定義
-	//=============================
-	// モーションの判定
-	struct SMotionFrag
-	{
-		bool bJump;			// ジャンプ中かどうか
-		bool bATK;			// 攻撃中かどうか
-		bool bKnockback;	// ノックバック中かどうか
-		bool bMove;			// 移動中かどうか
-		bool bCharge;		// チャージ中かどうか
-		SMotionFrag() : bJump(false), bATK(false), bKnockback(false), bMove(false), bCharge(false) {}
-	};
-
-	//=============================
-	// メンバ関数
-	//=============================
-	// 状態更新系
-	virtual void StateNone();		// 何もない状態
-	virtual void StateFadeIn();		// フェードイン
-	virtual void StateFadeOut();	// フェードアウト
-
-	// その他関数
-	virtual void ProcessLanding();	// 着地時処理
-	virtual void AttackAction(CMotion::AttackInfo ATKInfo, int nCntATK) override;		// 攻撃時処理
-	virtual void AttackInDicision(CMotion::AttackInfo* pATKInfo, int nCntATK) override;	// 攻撃判定中処理
-
-	//=============================
-	// メンバ変数
-	//=============================
-	STATE m_state;							// 状態
-	STATE m_Oldstate;						// 前回の状態
-	float m_fStateTime;						// 状態カウンター
-	SMotionFrag m_sMotionFrag;				// モーションのフラグ
-	D3DXCOLOR m_mMatcol;					// マテリアルの色
-	MyLib::Vector3 m_TargetPosition;		// 目標の位置
-	int m_flame;
-
 private:
-	
-	//=============================
-	// 関数リスト
-	//=============================
-	typedef void(CKite::* STATE_FUNC)();
-	static STATE_FUNC m_StateFunc[];	// 状態関数リスト
 
-	void UpdateState();					// 状態更新処理
-	void Collision();					// 当たり判定
-	void LimitArea(); // 大人の壁判定
-
-	//=============================
-	// メンバ変数
-	//=============================
-	float m_fMoveVelocity;	// 移動速度
-	CShadow *m_pShadow;			// 影の情報
-	static CListManager<CKite> m_List;	// リスト
+	MyLib::Vector3 m_StartRot;	// 開始向き
 };
 
 
