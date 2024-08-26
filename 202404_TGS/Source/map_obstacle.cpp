@@ -54,7 +54,8 @@ CMap_Obstacle *CMap_Obstacle::Create(const CMap_ObstacleManager::SObstacleInfo& 
 	CMap_Obstacle* pObj = nullptr;
 	// メモリの確保
 	if (bChange)	// 集合で生成するか否か
-	{
+	{// 実体なしの親オブジェクト
+
 		switch (info.type)
 		{
 		case T::SAKANA:
@@ -73,7 +74,7 @@ CMap_Obstacle *CMap_Obstacle::Create(const CMap_ObstacleManager::SObstacleInfo& 
 			break;
 		}
 	}
-	else {
+	else {	// 実体ありの単体
 		switch (info.type)
 		{
 		case T::SAKANA:
@@ -219,6 +220,14 @@ void CMap_Obstacle::Update()
 	}
 
 #endif
+}
+
+//==========================================================================
+// ヒット処理
+//==========================================================================
+void CMap_Obstacle::Hit()
+{
+	return;
 }
 
 //==========================================================================

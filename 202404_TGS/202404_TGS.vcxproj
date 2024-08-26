@@ -180,6 +180,7 @@
     <ClCompile Include="Source\EffekseerObj.cpp" />
     <ClCompile Include="Source\guide.cpp" />
     <ClCompile Include="Source\keyconfig_keyboard.cpp" />
+    <ClCompile Include="Source\kite.cpp" />
     <ClCompile Include="Source\map_obstacle_motion.cpp" />
     <ClCompile Include="Source\map_obstacle_obj.cpp" />
     <ClCompile Include="Source\movie.cpp" />
@@ -342,6 +343,7 @@
     <ClCompile Include="Source\townfield_fixedplane.cpp" />
     <ClCompile Include="Source\townfield_sinuous.cpp" />
     <ClCompile Include="Source\townfield_sinuous_front.cpp" />
+    <ClCompile Include="Source\tree.cpp" />
     <ClCompile Include="Source\tutorial.cpp" />
     <ClCompile Include="Source\tutoriallogo.cpp" />
     <ClCompile Include="Source\waterfield.cpp" />
@@ -377,6 +379,7 @@
     <ClInclude Include="Source\EffekseerObj.h" />
     <ClInclude Include="Source\guide.h" />
     <ClInclude Include="Source\keyconfig_keyboard.h" />
+    <ClInclude Include="Source\kite.h" />
     <ClInclude Include="Source\map_obstacle_motion.h" />
     <ClInclude Include="Source\map_obstacle_obj.h" />
     <ClInclude Include="Source\movie.h" />
@@ -536,6 +539,7 @@
     <ClInclude Include="Source\townfield_fixedplane.h" />
     <ClInclude Include="Source\townfield_sinuous.h" />
     <ClInclude Include="Source\townfield_sinuous_front.h" />
+    <ClInclude Include="Source\tree.h" />
     <ClInclude Include="Source\tutorial.h" />
     <ClInclude Include="Source\tutoriallogo.h" />
     <ClInclude Include="Source\waterfield.h" />

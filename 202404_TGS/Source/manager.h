@@ -96,6 +96,11 @@ public:
 	bool IsHitStop() { return m_bHitStop; }			// ワイヤーフレーム
 	CScene::MODE GetOldMode() { return m_OldMode; }	// 前回のモード取得
 	bool IsLoadComplete() { return m_bLoadComplete; }
+
+	static bool IsDisp_ImGui() { return m_bDisp_ImGui; }				// ImGuiの描画判定
+	static bool IsDisp_BoxColliders() { return m_bDisp_BoxColliders; }	// 当たり判定ボックスの描画判定
+	static bool IsDisp_CheckPoint() { return m_bDisp_CheckPoint; }		// チェックポイントの描画判定
+
 private:
 
 	void Reset(CScene::MODE mode);
@@ -133,6 +138,10 @@ private:
 	bool m_bFirstLoad;				// 初回ロード
 
 	static CManager *m_pManager;	// マネージャ
+
+	static bool m_bDisp_ImGui;			// ImGuiの描画判定
+	static bool m_bDisp_BoxColliders;	// 当たり判定ボックスの描画判定
+	static bool m_bDisp_CheckPoint;		// チェックポイントの描画判定
 };
 
 

@@ -14,6 +14,7 @@
 
 // 前方宣言
 class CShadow;
+class CEffekseerObj;
 
 //==========================================================================
 // クラス定義
@@ -103,6 +104,7 @@ private:
 	// メンバ変数
 	//=============================
 	CShadow *m_pShadow;			// 影の情報
+	CEffekseerObj* m_pEfkEffect;	// エフェクシアオブジェクト
 	static CListManager<CDeadPlayer> m_List;	// リスト
 };
 

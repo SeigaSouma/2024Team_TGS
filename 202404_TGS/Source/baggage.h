@@ -41,8 +41,9 @@ public:
 		STATE_PASS,			// パス
 		STATE_GOAL,			// ゴール
 		STATE_SEND,			// 届ける
-		STATE_RETURN,		// 反射
+		STATE_RETURN,		// 反射x
 		STATE_RECEIVE,		// receive
+		STATE_FALL,			// 矯正落下
 		STATE_MAX
 	};
 
@@ -126,6 +127,7 @@ private:
 	void StateSend();		// 届ける
 	void StateReturn();		// 反射
 	void StateReceive() {}	// 反射
+	void StateFall();
 
 	// その他
 	void Controll();	// 操作
@@ -147,6 +149,7 @@ private:
 	bool m_bEnd;				// 終了判定
 	SBaggageInfo m_baggageInfo;
 	int m_nLife;				// 体力
+	bool m_bfall;
 	float m_fDeviation;
 	static CListManager<CBaggage> m_List;	// リスト
 };

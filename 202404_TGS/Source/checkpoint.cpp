@@ -18,7 +18,8 @@
 //==========================================================================
 namespace
 {
-	const char* MODEL = "data\\MODEL\\koko.x";
+	const char* MODEL = "data\\MODEL\\checkpoint\\flag.x";
+	const float ROTATE_TIMER = (1.0f / 30.0f);
 }
 
 //==========================================================================
@@ -38,6 +39,7 @@ CCheckpoint::CCheckpoint(int nPriority) : CObjectX(nPriority)
 	m_fLength = 0.0f;
 	m_fPassedTime = 0.0f;
 	m_bIsPassed = false;
+	m_fRotateTime = 0.0f;
 }
 
 //==========================================================================
@@ -133,6 +135,10 @@ void CCheckpoint::Update()
 	// 通過済みなら処理しない
 	if (m_bIsPassed)
 	{
+		m_fRotateTime += ROTATE_TIMER;
+		MyLib::Vector3 rot = GetRotation();
+		rot.z = UtilFunc::Correction::EasingEaseIn(0.0f, -D3DX_PI, 0.0f, 1.0f, m_fRotateTime);
+		SetRotation(rot);
 		return;
 	}
 
@@ -157,6 +163,7 @@ void CCheckpoint::Update()
 			m_nSaveID = m_MyIndex;
 
 			// 通過した時間を保存
+			m_fRotateTime = 0.0f;
 			m_fPassedTime = CTimer::GetInstance()->GetTime();
 			m_bIsPassed = true;
 		}
@@ -168,6 +175,9 @@ void CCheckpoint::Update()
 //==========================================================================
 void CCheckpoint::Draw()
 {
+	// ボックスコライダーの描画
+	if (!CManager::IsDisp_CheckPoint()) return;
+
 	// 描画
 	CObjectX::Draw();
 }

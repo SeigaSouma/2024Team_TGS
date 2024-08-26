@@ -164,8 +164,14 @@ void CCollisionLine_Box::Update()
 	}
 }
 
+//==========================================================================
+// 描画処理
+//==========================================================================
 void CCollisionLine_Box::Draw()
 {
+	// ボックスコライダーの描画
+	if (!CManager::IsDisp_BoxColliders()) return;
+
 	for (int i = 0; i < 12; ++i)
 	{
 		if (m_pLine[i] == nullptr) {
