@@ -114,20 +114,8 @@ CMap_Obstacle *CMap_Obstacle::Create(const CMap_ObstacleManager::SObstacleInfo& 
 //==========================================================================
 HRESULT CMap_Obstacle::Init()
 {
-	m_nMapBlock = 0;
-	float distanceX = GetPosition().x;
-	while (1)
-	{
-		// ŠÔŠu•ªŒ¸ŽZ
-		distanceX -= m_DISTANCE_COLLISION_BLOCK;
-		if (distanceX <= 0.0f)
-		{
-			break;
-		}
-
-		// ƒuƒƒbƒN‰ÁŽZ
-		m_nMapBlock++;
-	}
+	// Ž©•ª‚ÌƒuƒƒbƒNŒvŽZ
+	CalMyBlock();
 
 	// ƒŠƒXƒg‚É’Ç‰Á
 	m_ListBlock[m_nMapBlock].Regist(this);
@@ -284,5 +272,26 @@ void CMap_Obstacle::CalVtxMinMax()
 
 			m_vtxMax.z = vtxMax.z;
 		}
+	}
+}
+
+//==========================================================================
+// Ž©•ª‚ÌƒuƒƒbƒNŒvŽZ
+//==========================================================================
+void CMap_Obstacle::CalMyBlock()
+{
+	m_nMapBlock = 0;
+	float distanceX = GetPosition().x;
+	while (1)
+	{
+		// ŠÔŠu•ªŒ¸ŽZ
+		distanceX -= m_DISTANCE_COLLISION_BLOCK;
+		if (distanceX <= 0.0f)
+		{
+			break;
+		}
+
+		// ƒuƒƒbƒN‰ÁŽZ
+		m_nMapBlock++;
 	}
 }
