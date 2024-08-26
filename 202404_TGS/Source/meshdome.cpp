@@ -14,7 +14,8 @@
 // É}ÉNÉçíËã`
 //==========================================================================
 #define TEXTURE		"data\\TEXTURE\\field002.png"
-#define POS_MESHDOME	(85000.0f)
+#define POS_MESHDOME	(95000.0f)
+//#define POS_MESHDOME	(85000.0f)
 #define POS_MESHDOME_Y	(POS_MESHDOME)
 
 //==========================================================================

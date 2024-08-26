@@ -59,6 +59,11 @@
 #include "ascensionCylinder.h"
 #include "tree.h"
 
+namespace
+{
+	const float RATIO_SETGOAL = 0.825f;	// ゴール設置の割合
+}
+
 //==========================================================================
 // 静的メンバ変数宣言
 //==========================================================================
@@ -215,97 +220,6 @@ HRESULT CGame::Init()
 		treepos.x += 2000.0f;
 	}
 
-#if 0
-	//=============================
-	// コース作成
-	//=============================
-	m_pCourse = CCourse::Create("data\\TEXT\\map\\course.bin");
-
-	//=============================
-	// 石垣(奥)
-	//=============================
-	CStoneWall* pStoneWall = CStoneWall::Create();
-
-	// 基点地点設定
-	pStoneWall->SetVecPosition(m_pCourse->GetVecPosition());
-	pStoneWall->Reset();
-
-	std::vector<CCourse::VtxInfo> vtxInfo = m_pCourse->GetVecVtxinfo();
-	std::vector<MyLib::Vector3> vecpos;
-
-	// posの要素渡し
-	//std::transform(vtxInfo.begin(), vtxInfo.end(), std::back_inserter(vecpos), [](const CCourse::VtxInfo& info)->MyLib::Vector3 {return info.pos; });
-
-	MyLib::Vector3 setpos;
-	for (const auto& info : vtxInfo)
-	{
-		setpos.x = info.pos.x + sinf(D3DX_PI + info.rot.y) * -600.0f;
-		setpos.y = info.pos.y;
-		setpos.z = info.pos.z + cosf(D3DX_PI + info.rot.y) * -600.0f;
-		vecpos.push_back(setpos);
-	}
-
-	// 各頂点座標
-	pStoneWall->SetVecVtxPosition(vecpos);
-	pStoneWall->BindVtxPosition();
-
-
-
-
-	//=============================
-	// 石垣(手前)
-	//=============================
-	CStoneWall* pStoneWall_Front = CStoneWall_Front::Create();
-
-	// 基点地点設定
-	pStoneWall_Front->SetVecPosition(m_pCourse->GetVecPosition());
-	pStoneWall_Front->Reset();
-
-	vtxInfo = m_pCourse->GetVecVtxinfo();
-	vecpos.clear();
-
-	for (const auto& info : vtxInfo)
-	{
-		setpos.x = info.pos.x + sinf(D3DX_PI + info.rot.y) * 800.0f;
-		setpos.y = info.pos.y;
-		setpos.z = info.pos.z + cosf(D3DX_PI + info.rot.y) * 800.0f;
-		vecpos.push_back(setpos);
-	}
-
-	// 各頂点座標
-	pStoneWall_Front->SetVecVtxPosition(vecpos);
-	pStoneWall_Front->BindVtxPosition();
-
-
-
-
-
-
-
-	//=============================
-	// うねりの街フィールド
-	//=============================
-	CMapMesh* pTownField = CMapMesh::Create(CMapMesh::MeshType::TYPE_TOWNFIELD_SINUOUS);
-	pTownField->SetVecPosition(m_pCourse->GetVecPosition());
-	pTownField->Reset();
-
-	// 石垣の頂上に頂点をそろえる
-	pTownField->SetVecVtxPosition(pStoneWall->GetVecTopPosition());
-	pTownField->BindVtxPosition();
-
-
-	//=============================
-	// うねりの街フィールド(手前)
-	//=============================
-	CMapMesh* pTownFieldFront = CMapMesh::Create(CMapMesh::MeshType::TYPE_TOWNFIELD_SINUOUS_FRONT);
-	pTownFieldFront->SetVecPosition(m_pCourse->GetVecPosition());
-	pTownFieldFront->Reset();
-
-	// 石垣の頂上に頂点をそろえる
-	pTownFieldFront->SetVecVtxPosition(pStoneWall_Front->GetVecTopPosition());
-	pTownFieldFront->BindVtxPosition();
-#endif
-
 
 	//=============================
 	// ステンシル影
@@ -324,7 +238,7 @@ HRESULT CGame::Init()
 	//=============================
 	// ゴール作成
 	//=============================
-	CGoalflagX::Create(m_pCourse->GetCourceLength() * 0.975f);
+	CGoalflagX::Create(m_pCourse->GetCourceLength() * RATIO_SETGOAL);
 	//CGoalflagX::Create(m_pCourse->GetCourceLength() * 0.975f);
 
 	//=============================
@@ -332,8 +246,8 @@ HRESULT CGame::Init()
 	//=============================
 	{
 		MyLib::Vector3 pos = MySpline::GetSplinePosition_NonLoop(CGame::GetInstance()->GetCourse()->GetVecPosition(),
-			m_pCourse->GetCourceLength() * 0.975f, 0.0f);
-		pos.y = 0.0f;
+			m_pCourse->GetCourceLength() * RATIO_SETGOAL, 0.0f);
+		pos.y = 300.0f;
 		pos.x += 3000.0f;
 		CReceiverPeople* pReceiverPeople = CReceiverPeople::Create(pos);
 		pReceiverPeople->SetState(CReceiverPeople::STATE::STATE_WAIT);

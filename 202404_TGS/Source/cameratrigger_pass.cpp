@@ -46,7 +46,7 @@ void CCameraTrigger_Pass::waiting()
 	pSubTitle->BindSubtitle("data\\TEXTURE\\subtitle\\subtitle_006.png");
 	pSubTitle->SetSizeByHeight(40.0f);
 
-	CSerifEffect::Create(MyLib::Vector3(460.0f, 520.0f, 900.0f), MyLib::Vector3(), 40);
+	CSerifEffect::Create(MyLib::Vector3(460.0f, 520.0f, 900.0f), MyLib::Vector3(0.0f,0.0f,0.0f), 40);
 
 	CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_SEGA_000);
 }
@@ -56,7 +56,7 @@ void CCameraTrigger_Pass::newMission()
 	pSubTitle->BindSubtitle("data\\TEXTURE\\subtitle\\subtitle_000.png");
 	pSubTitle->SetSizeByHeight(40.0f);
 
-	CSerifEffect::Create(MyLib::Vector3(460.0f, 520.0f, 900.0f), MyLib::Vector3(), 40);
+	CSerifEffect::Create(MyLib::Vector3(460.0f, 520.0f, 900.0f), MyLib::Vector3(0.0f, 0.0f, 0.0f), 40);
 }
 void CCameraTrigger_Pass::carry()
 {
@@ -74,7 +74,7 @@ void CCameraTrigger_Pass::carefull()
 	pSubTitle->BindSubtitle("data\\TEXTURE\\subtitle\\subtitle_002.png");
 	pSubTitle->SetSizeByHeight(40.0f);
 
-	CSerifEffect::Create(MyLib::Vector3(460.0f, 520.0f, 900.0f), MyLib::Vector3(), 40);
+	CSerifEffect::Create(MyLib::Vector3(460.0f, 520.0f, 900.0f), MyLib::Vector3(0.0f, 0.0f, 0.0f), 40);
 }
 void CCameraTrigger_Pass::goodluck()
 {

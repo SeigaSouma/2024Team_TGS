@@ -1274,7 +1274,7 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 		}
 
 		// 水しぶき生成
-		if (nLife % 10 == 0)
+		if (nLife % 20 == 0)
 		{
 			CSplashwater_Manager::Create();
 		}
