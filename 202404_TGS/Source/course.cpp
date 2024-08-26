@@ -629,6 +629,20 @@ void CCourse::Update()
 
 #endif
 
+	CalBothVtxPosition();
+
+	for (const auto& pos : m_vecSegmentPosition)
+	{
+		CEffect3D::Create(
+			pos,
+			0.0f,
+			D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f),
+			100.0f,
+			2,
+			CEffect3D::MOVEEFFECT::MOVEEFFECT_ADD,
+			CEffect3D::TYPE::TYPE_SMOKE);
+	}
+
 	// í∏ì_ç¿ïW
 	SetVtx();
 }

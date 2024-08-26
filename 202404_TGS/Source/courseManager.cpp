@@ -328,6 +328,8 @@ void CCourseManager::Load()
 	segmentpos.push_back(MyLib::Vector3(-3000.0f, 0.0f, 0.0f));
 	segmentpos.push_back(MyLib::Vector3(2000.0f, 0.0f, 0.0f));
 
+	int i = 0;
+	const float lastDistance = 20000.0f;
 	for (const auto& idx : randIdx)
 	{
 		for (const auto& pos : m_vecAllSegmentPos[idx])
@@ -336,10 +338,19 @@ void CCourseManager::Load()
 		}
 
 		// ŠÔŠu’Ç‰Á
-		segmentpos.push_back(segmentpos.back() + MyLib::Vector3(DISTANCE_TO_CHUNCK, 0.0f, 0.0f));
-
-		start = segmentpos.back() + MyLib::Vector3(DISTANCE_TO_CHUNCK, 0.0f, 0.0f);
+		if (i == randIdx.size() - 1)
+		{// ƒ‰ƒXƒg
+			segmentpos.push_back(segmentpos.back() + MyLib::Vector3(lastDistance, 0.0f, 0.0f));
+			start = segmentpos.back() + MyLib::Vector3(lastDistance, 0.0f, 0.0f);
+		}
+		else
+		{
+			segmentpos.push_back(segmentpos.back() + MyLib::Vector3(DISTANCE_TO_CHUNCK, 0.0f, 0.0f));
+			start = segmentpos.back() + MyLib::Vector3(DISTANCE_TO_CHUNCK, 0.0f, 0.0f);
+		}
 		vecstart.push_back(start);
+
+		i++;
 	}
 	segmentpos.push_back(segmentpos.back() + MyLib::Vector3(10.0f, 0.0f, 0.0f));
 
