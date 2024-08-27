@@ -16,6 +16,7 @@
 #include "checkpoint.h"
 #include "map_block.h"
 #include "waterstone.h"
+#include "edit_mapblock.h"
 
 //==========================================================================
 // 定数定義
@@ -45,6 +46,7 @@ CEdit_Course::CEdit_Course()
 	m_bAutoCreateMode = false;		// 自動生成判定
 	m_pEditObstacle = nullptr;	// 障害物エディター
 	m_pEditWaterStone = nullptr;	// 水中岩エディター
+	m_pEditMap = nullptr;
 }
 
 //==========================================================================
@@ -66,6 +68,9 @@ HRESULT CEdit_Course::Init()
 
 	// 水中岩エディター
 	m_pEditWaterStone = CEdit::Create(CGame::EditType::EDITTYPE_WATERSTONE);
+
+	m_pEditMap = DEBUG_NEW CEdit_MapBlock;
+	m_pEditMap->Init();
 	return S_OK;
 }
 
@@ -74,6 +79,7 @@ HRESULT CEdit_Course::Init()
 //==========================================================================
 void CEdit_Course::Uninit()
 {
+	m_pEditMap->Uninit();
 	// 終了処理
 	CEdit::Uninit();
 }
@@ -123,6 +129,9 @@ void CEdit_Course::Update()
 	// 障害物エディット
 	ObstacleEdit();
 
+	// マップエディット
+	MapEdit();
+
 	// 水中岩エディット
 	WaterStoneEdit();
 }
@@ -146,6 +155,7 @@ void CEdit_Course::FileControl()
 	if (ImGui::Button("Save"))
 	{
 		SaveObstacle();
+		SaveMap();
 		SaveWaterStone();
 		pCourceManager->Save();
 	}
@@ -202,6 +212,9 @@ void CEdit_Course::ChangeEditCourse()
 	{
 		// 障害物リセット
 		ResetObstacle();
+
+		// マップリセット
+		ResetMap();
 
 		// 水中岩リセット
 		ResetWaterStone();
@@ -864,6 +877,100 @@ void CEdit_Course::SaveObstacle()
 
 	// 障害物のリスト設定
 	CMapBlock::GetInfoList().GetData(m_nCourseEditIdx)->SetObstacleInfo(savedate);
+}
+
+//==========================================================================
+// マップエディット
+//==========================================================================
+void CEdit_Course::MapEdit()
+{
+	ImGui::Dummy(ImVec2(0.0f, 10.0f));
+	if (ImGui::TreeNode("MapEdit"))
+	{
+		// 障害物エディット更新
+		m_pEditMap->Update();
+
+		ImGui::TreePop();
+	}
+}
+
+//==========================================================================
+// マップリセット
+//==========================================================================
+void CEdit_Course::ResetMap()
+{
+
+	// 障害物マネージャ取得
+	CMap_ObstacleManager* pObstacleMgr = CMap_ObstacleManager::GetInstance();
+
+	// 障害物のリスト取得
+	CListManager<CObjectX> list = CObjectX::GetListObj();
+
+	// 先頭を保存
+	std::list<CObjectX*>::iterator itr = list.GetEnd();
+	CMap_Obstacle* pObj = nullptr;
+
+	while (list.ListLoop(itr))
+	{
+		CObjectX* pObj = *itr;
+		pObj->Kill();
+	}
+
+	// 障害物のリスト取得
+	std::vector<CMapBlockInfo::SObsacleInfo> obstacleInfo = CMapBlock::GetInfoList().GetData(m_nCourseEditIdx)->GetObstacleInfo();
+
+
+	// 障害物情報
+	std::vector<CMap_ObstacleManager::SObstacleInfo> vecInfo = pObstacleMgr->GetObstacleInfo();
+	CMap_ObstacleManager::SObstacleInfo info;
+	for (int i = 0; i < static_cast<int>(obstacleInfo.size()); i++)
+	{
+		// ブロックの障害物情報
+		CMapBlockInfo::SObsacleInfo blockinfo = obstacleInfo[i];
+
+		info = vecInfo[blockinfo.nType];
+
+		CMap_Obstacle* pObj = CMap_Obstacle::Create(info, blockinfo.pos);
+		pObj->SetRotation(blockinfo.rot);
+		pObj->SetScale(blockinfo.scale);
+		pObj->CalWorldMtx();
+	}
+
+}
+
+//==========================================================================
+// マップセーブ
+//==========================================================================
+void CEdit_Course::SaveMap()
+{
+
+	// 障害物のリスト取得
+	CListManager<CObjectX> list = CObjectX::GetListObj();
+
+	// 先頭を保存
+	std::list<CObjectX*>::iterator itr = list.GetEnd();
+	CObjectX* pObj = nullptr;
+
+	std::vector<CMapBlockInfo::SObsacleInfo> savedate;
+
+	while (list.ListLoop(itr))
+	{
+		CObjectX* pObj = *itr;
+
+		// 障害物マネージャ取得
+		CMap_ObstacleManager* pObstacleMgr = CMap_ObstacleManager::GetInstance();
+		std::vector<CMap_ObstacleManager::SObstacleInfo> vecObstacleMgrInfo = pObstacleMgr->GetObstacleInfo();
+
+		// 障害物情報取得
+		MyLib::Vector3 pos = pObj->GetPosition(), rot = pObj->GetRotation(), scale = pObj->GetScale();
+		CMapBlockInfo::SObsacleInfo info = CMapBlockInfo::SObsacleInfo(pos, rot, scale, pObj->GetIdxXFile());
+
+		// セーブ情報追加
+		savedate.push_back(info);
+	}
+
+	// 障害物のリスト設定
+	CMapBlock::GetInfoList().GetData(m_nCourseEditIdx)->SetMapInfo(savedate);
 }
 
 //==========================================================================

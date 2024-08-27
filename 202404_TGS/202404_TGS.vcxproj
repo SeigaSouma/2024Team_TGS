@@ -177,6 +177,7 @@
     <ClCompile Include="Source\countdown_start.cpp" />
     <ClCompile Include="Source\deadplayer.cpp" />
     <ClCompile Include="Source\discovery.cpp" />
+    <ClCompile Include="Source\edit_mapblock.cpp" />
     <ClCompile Include="Source\EffekseerObj.cpp" />
     <ClCompile Include="Source\guide.cpp" />
     <ClCompile Include="Source\keyconfig_keyboard.cpp" />
@@ -377,6 +378,7 @@
     <ClInclude Include="Source\countdown_start.h" />
     <ClInclude Include="Source\deadplayer.h" />
     <ClInclude Include="Source\discovery.h" />
+    <ClInclude Include="Source\edit_mapblock.h" />
     <ClInclude Include="Source\EffekseerObj.h" />
     <ClInclude Include="Source\guide.h" />
     <ClInclude Include="Source\keyconfig_keyboard.h" />

@@ -49,6 +49,8 @@ public:
 	// リスト
 	void SetObstacleInfo(const std::vector<SObsacleInfo>& info) { m_ObstacleList = info; }
 	std::vector<SObsacleInfo> GetObstacleInfo() { return m_ObstacleList; }
+	void SetMapInfo(const std::vector<SObsacleInfo>& info) { m_MapList = info; }
+	std::vector<SObsacleInfo> GetMapInfo() { return m_MapList; }
 	void SetCheckpointInfo(const std::vector<float>& list) { m_CheckpointList = list; }
 	std::vector<float> GetCheckpointInfo() { return m_CheckpointList; }
 	void SetWaterStoneInfo(const std::vector<CWaterStone_Manager::SStoneInfo>& list) { m_WaterStoneList = list; }	// 水中岩
@@ -61,7 +63,8 @@ private:
 
 	// 配置情報リスト
 	std::vector<SObsacleInfo> m_ObstacleList;	// 障害物
-	std::vector<float> m_CheckpointList;	// チェックポイント
+	std::vector<SObsacleInfo> m_MapList;		// マップ
+	std::vector<float> m_CheckpointList;		// チェックポイント
 	std::vector<CWaterStone_Manager::SStoneInfo> m_WaterStoneList;	// 水中岩
 	int m_nLevel;	// 難易度
 };
@@ -97,6 +100,7 @@ public:
 	static void SaveBin();	// セーブ
 	static void SaveBin_CheckPoint();	// チェックポイントセーブ
 	static void SaveBin_Obstacle();		// 障害物セーブ
+	static void SaveBin_Map();			// マップセーブ
 	static void SaveBin_WaterStone();	// 水中岩セーブ
 	static void SaveBin_Level();		// レベルセーブ
 	static void LoadBin();	// ロード
@@ -114,6 +118,7 @@ private:
 	//=============================
 	static std::vector<std::vector<float>> LoadBin_CheckPoint();							// チェックポイント読み込み
 	static std::vector<std::vector<CMapBlockInfo::SObsacleInfo>> LoadBin_Obstacle();		// 障害物読み込み
+	static std::vector<std::vector<CMapBlockInfo::SObsacleInfo>> LoadBin_Map();				// マップ読み込み
 	static std::vector<std::vector<CWaterStone_Manager::SStoneInfo>> LoadBin_WaterStone();	// 水中岩読み込み
 	static std::vector<int> LoadBin_Level(size_t courseSize);								// レベル読み込み
 	void DataDelete();
