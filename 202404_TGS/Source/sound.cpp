@@ -37,6 +37,18 @@ CSound::SOUNDINFO CSound::m_aSoundInfo[LABEL_MAX] =
 	{ "data/SE/ore_001.wav", 0 },
 	{ "data/SE/ore_002.wav", 0 },
 	{ "data/SE/karakurisa-kasu.wav", 0 },
+	{ "data/SE/nageru.wav", 0 },
+	{ "data/SE/receive.wav", 0 },
+	{ "data/SE/oboreru.wav", 0 },
+	{ "data/SE/habataku.wav", 0 },
+	{ "data/SE/gaya.wav", 0 },
+	{ "data/SE/countdown00.wav", 0 },
+	{ "data/SE/countdown01.wav", 0 },
+	{ "data/SE/start.wav", 0 },
+	{ "data/SE/mizusibuki.wav", 0 },
+	{ "data/SE/raou.wav", 0 },
+	{ "data/SE/shock_wood.wav", 0 },
+	{ "data/SE/shock_creature.wav", 0 },
 
 };	// サウンドの情報
 CSound* CSound::m_pThisPtr = nullptr;	// 自身のポインタ
