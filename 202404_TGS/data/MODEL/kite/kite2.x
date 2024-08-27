@@ -171,7 +171,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "data\\TEXTURE\\map_object\\kite01.png";
+    "data\\TEXTURE\\map_object\\kite02.jpg";
    }
   }
   Material {

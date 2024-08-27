@@ -267,6 +267,21 @@ void CPeopleManager::SetPeople(const MyLib::Vector3& pos, const MyLib::Vector3& 
 	for (const auto& data : NowPattern.data)
 	{
 		int random = UtilFunc::Transformation::Random(0, maxType);
+		while (1)
+		{
+			if (random != CPeople::TYPE::TYPE_KITE &&
+				random != CPeople::TYPE::TYPE_KITE2 &&
+				random != CPeople::TYPE::TYPE_KITE3)
+			{
+				break;
+			}
+			else if (UtilFunc::Transformation::Random(0, 1) == 0)
+			{
+				break;
+			}
+			random = UtilFunc::Transformation::Random(0, maxType);
+		}
+
 		// ƒXƒ|[ƒ“‚ÌŒü‚«‚ğŠ|‚¯‡‚í‚¹‚é
 		spawnPos = pos;
 

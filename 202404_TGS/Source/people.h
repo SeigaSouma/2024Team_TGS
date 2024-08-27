@@ -42,6 +42,8 @@ public:
 	enum TYPE
 	{
 		TYPE_KITE = 8,	// ‘ú
+		TYPE_KITE2,	// ‘ú
+		TYPE_KITE3,	// ‘ú
 	};
 
 	CPeople(int nPriority = mylib_const::ENEMY_PRIORITY);

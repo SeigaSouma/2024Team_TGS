@@ -161,18 +161,21 @@ void CTexture::Unload()
 //==========================================================================
 // テクスチャの割り当て処理
 //==========================================================================
-int CTexture::Regist(std::string file)
+int CTexture::Regist(const std::string& file)
 {
 	if (file == "")
 	{
 		return 0;
 	}
 
-	// \\変換
-	file = UtilFunc::Transformation::ReplaceBackslash(file);
-	file = UtilFunc::Transformation::ReplaceForwardSlashes(file);
+	// 変換後のパス
+	std::string transformFile(file);
 
-	auto itr = std::find(m_ImageNames.begin(), m_ImageNames.end(), file);
+	// \\変換
+	transformFile = UtilFunc::Transformation::ReplaceBackslash(transformFile);
+	transformFile = UtilFunc::Transformation::ReplaceForwardSlashes(transformFile);
+
+	auto itr = std::find(m_ImageNames.begin(), m_ImageNames.end(), transformFile);
 	if (itr != m_ImageNames.end())
 	{
 		return  static_cast<int>(std::distance(m_ImageNames.begin(), itr));
@@ -182,7 +185,7 @@ int CTexture::Regist(std::string file)
 	int nNumAll = GetNumAll();
 
 	// テクスチャ読み込み
-	HRESULT hr = LoadTex(file);
+	HRESULT hr = LoadTex(transformFile);
 	if (FAILED(hr))
 	{
 		return 0;
@@ -194,7 +197,7 @@ int CTexture::Regist(std::string file)
 //==========================================================================
 // テクスチャの読み込み処理
 //==========================================================================
-HRESULT CTexture::LoadTex(std::string file)
+HRESULT CTexture::LoadTex(const std::string& file)
 {
 	HRESULT hr;
 	int nIdx = static_cast<int>(m_TexInfo.size());
@@ -256,7 +259,7 @@ int CTexture::GetNumAll()
 //==========================================================================
 // テクスチャ情報取得
 //==========================================================================
-CTexture::STexture CTexture::GetTextureInfo(std::string file)
+CTexture::STexture CTexture::GetTextureInfo(const std::string& file)
 {
 	// 最大数取得
 	int nNumAll = GetNumAll() + 1;

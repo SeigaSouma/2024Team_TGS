@@ -91,6 +91,8 @@ CPeople* CPeople::Create(const std::string& filename, const MyLib::Vector3& pos,
 	switch (type)
 	{
 	case TYPE::TYPE_KITE:
+	case TYPE::TYPE_KITE2:
+	case TYPE::TYPE_KITE3:
 		pPeople = DEBUG_NEW CKite;
 		break;
 

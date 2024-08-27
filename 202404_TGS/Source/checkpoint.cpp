@@ -18,8 +18,10 @@
 //==========================================================================
 namespace
 {
-	const char* MODEL = "data\\MODEL\\checkpoint\\flag.x";
-	const float ROTATE_TIMER = (1.0f / 30.0f);
+	const char* MODEL = "data\\MODEL\\checkpoint\\flag.x";	// モデルパス
+	const std::string TEX_EFFECT = "data\\TEXTURE\\effect\\rolling.png";	// エフェクトパス
+	const float ROTATE_TIMER = 0.6f;
+	const ImVec4 WATERCOLOR = ImVec4(0.658f, 0.658f, 1.0, 0.87f); // RGBA
 }
 
 //==========================================================================
@@ -40,6 +42,8 @@ CCheckpoint::CCheckpoint(int nPriority) : CObjectX(nPriority)
 	m_fPassedTime = 0.0f;
 	m_bIsPassed = false;
 	m_fRotateTime = 0.0f;
+	m_pEffect = nullptr;		// エフェクトのポインタ
+	m_pEffekseerObj = nullptr;	// エフェクシアのオブジェクト
 }
 
 //==========================================================================
@@ -98,6 +102,33 @@ HRESULT CCheckpoint::Init()
 }
 
 //==========================================================================
+// エフェクト生成
+//==========================================================================
+void CCheckpoint::CreateEffect()
+{
+	// エフェクト生成
+	m_pEffect = CObjectBillboard::Create(GetPosition(), 0.0f);
+	m_pEffect->SetType(CObject::TYPE::TYPE_OBJECTBILLBOARD);
+
+	// テクスチャ設定
+	CTexture* pTexture = CTexture::GetInstance();
+	if (pTexture == nullptr) return;
+
+	int texIdx = pTexture->Regist(TEX_EFFECT);
+	m_pEffect->BindTexture(texIdx);
+
+	// サイズ設定
+	D3DXVECTOR2 size = UtilFunc::Transformation::AdjustSizeByWidth(pTexture->GetImageSize(texIdx), 400.0f);
+	m_pEffect->SetSize(size);
+
+	m_pEffect->SetAlpha(0.7f);
+
+
+	// 水エフェクト生成
+	CreateWaterEffect(8);
+}
+
+//==========================================================================
 // 終了処理
 //==========================================================================
 void CCheckpoint::Uninit()
@@ -138,10 +169,33 @@ void CCheckpoint::Update()
 		// 回転時間加算
 		m_fRotateTime += CManager::GetInstance()->GetDeltaTime();
 
+
+		if (m_fRotateTime <= ROTATE_TIMER * 0.5f)
+		{
+			// 水エフェクト生成
+			CreateWaterEffect(4);
+		}
+		else if(m_pEffekseerObj == nullptr)
+		{
+			m_pEffekseerObj = CEffekseerObj::Create(
+				CMyEffekseer::EFKLABEL::EFKLABEL_WATERJUMP,
+				GetPosition() + MyLib::Vector3(300.0f, 0.0f, 0.0f), 0.0f, 0.0f, 60.0f, true);
+		}
+
+
 		// 回転
 		MyLib::Vector3 rot = GetRotation();
-		rot.z = UtilFunc::Correction::EasingEaseIn(0.0f, -D3DX_PI, 0.0f, 0.75f, m_fRotateTime);
+		rot.z = UtilFunc::Correction::EasingEaseIn(0.0f, -D3DX_PI, 0.0f, ROTATE_TIMER, m_fRotateTime);
 		SetRotation(rot);
+
+		// エフェクト回転
+		MyLib::Vector3 effectRot = m_pEffect->GetRotation();
+		effectRot.z += UtilFunc::Correction::EasingLinear(0.0f, D3DX_PI * 0.5f, 0.0f, ROTATE_TIMER, m_fRotateTime);
+		m_pEffect->SetRotation(effectRot);
+
+		// エフェクト不透明度
+		float alpha = UtilFunc::Correction::EasingEaseOut(0.7f, 0.0f, 0.0f, ROTATE_TIMER, m_fRotateTime);
+		m_pEffect->SetAlpha(alpha);
 		return;
 	}
 
@@ -172,7 +226,53 @@ void CCheckpoint::Update()
 
 			// SE再生
 			CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_KARAKURI);
+
+			// エフェクト作成
+			CreateEffect();
 		}
+	}
+}
+
+//==========================================================================
+// 水エフェクト生成
+//==========================================================================
+void CCheckpoint::CreateWaterEffect(int max)
+{
+	for (int i = 0; i < max; i++)
+	{
+		// 移動量
+		MyLib::Vector3 setmove;
+		float randmove = UtilFunc::Transformation::Random(30, 50) * 0.1f;
+		float randmoveY = UtilFunc::Transformation::Random(130, 170) * 0.1f;
+
+		float randAngle = UtilFunc::Transformation::Random(-20, 20) * 0.01f;
+		setmove.x = sinf(D3DX_PI * 0.5f + randAngle) * randmove;
+		setmove.z = cosf(D3DX_PI * 0.5f + randAngle) * randmove;
+		setmove.y = randmoveY;
+
+		// 色
+		float colorrand = UtilFunc::Transformation::Random(-22, 22) * 0.01f;
+
+		// 半径
+		float randRadius = UtilFunc::Transformation::Random(-100, 100) * 0.1f;
+		float radius = 25.0f + randRadius;
+
+		// 生成
+		MyLib::Vector3 distance(
+			-250.0f + UtilFunc::Transformation::Random(-200, 200) * 0.1f,
+			0.0f,
+			UtilFunc::Transformation::Random(-100, 100) * 0.1f);
+
+		CEffect3D* pEffect = CEffect3D::Create(
+			GetPosition() + distance,
+			setmove,
+			D3DXCOLOR(WATERCOLOR.x + colorrand, WATERCOLOR.y + colorrand, WATERCOLOR.z, WATERCOLOR.w),
+			radius,
+			50,
+			CEffect3D::MOVEEFFECT::MOVEEFFECT_ADD,
+			CEffect3D::TYPE::TYPE_SMOKE);
+		pEffect->SetEnableGravity();
+		pEffect->SetGravityValue(0.4f);
 	}
 }
 

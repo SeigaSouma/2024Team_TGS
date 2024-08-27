@@ -352,7 +352,7 @@ Mesh {
    1.000000;1.000000;1.000000;;
    1.000000;1.000000;1.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\ƒ`[ƒ€§ì\\2024Team_TGS\\ƒ‚ƒfƒ‹‘fŞ\\“ú–ìàV\\˜f¯Œn\\‘¾—z\\sun.png";
+    "data\\TEXTURE\\map_object\\sun.png";
    }
   }
  }
