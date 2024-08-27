@@ -18,6 +18,7 @@
 #include "course.h"
 #include "spline.h"
 #include "EffekseerObj.h"
+#include "deadplayer.h"
 
 // キーコンフィグ
 #include "keyconfig_keyboard.h"
@@ -111,8 +112,8 @@ void CPlayerControlMove::Move(CPlayer* player)
 	int angle = 0;
 	m_nIntervalAddRippleCounter = 1;
 
-	// 移動方向設定
-	player->SetMoveAngle(CPlayer::ANGLE::NONE);
+	// 移動方向
+	CPlayer::ANGLE moveAngle = CPlayer::ANGLE::NONE;
 
 	if ((pMotion->IsGetMove(nMotionType) == 1 || pMotion->IsGetCancelable()) &&
 		state != CPlayer::STATE::STATE_DEAD &&
@@ -224,7 +225,7 @@ void CPlayerControlMove::Move(CPlayer* player)
 #endif
 			// 移動方向
 			angle = (stickrot <= 0.0f) ? -1 : 1;
-			CPlayer::ANGLE moveAngle = (static_cast<CPlayer::ANGLE>(angle) == 1) ? CPlayer::ANGLE::RIGHT : CPlayer::ANGLE::LEFT;
+			moveAngle = (static_cast<CPlayer::ANGLE>(angle) == 1) ? CPlayer::ANGLE::RIGHT : CPlayer::ANGLE::LEFT;
 
 			if (angle == -1)
 			{
@@ -335,6 +336,10 @@ void CPlayerControlMove::Move(CPlayer* player)
 	// モーションフラグ設定
 	player->SetMotionFrag(motionFrag);
 
+	// 移動方向設定
+	player->SetMoveAngle(moveAngle);
+
+
 #if _DEBUG
 	if (!pInputGamepad->GetPress(CInputGamepad::BUTTON::BUTTON_BACK, 0) &&
 		!pInputKeyboard->GetPress(DIK_S))
@@ -349,10 +354,17 @@ void CPlayerControlMove::Move(CPlayer* player)
 	static int block = 80, interval = 20;
 	static float blocksize = 2.5f;*/
 
+#if 0
 	static float height = 31.5f, velocity = 4.0f, thickness = 16.0f;
 	static int life = 53;
 	static int block = 64;
 	static float blocksize = 4.7f;
+#else
+	static float height = 72.0f, velocity = 4.0f, thickness = 15.0f;
+	static int life = 45;
+	static int block = 64;
+	static float blocksize = 3.7f;
+#endif
 
 #if _DEBUG
 	ImGui::DragInt("INTERVAL", &m_nIntervalWaterRipple, 1);
@@ -397,16 +409,20 @@ void CPlayerControlMove::Move(CPlayer* player)
 			MyLib::Vector3 setpos = player->GetPosition();
 			setpos.y -= 5.0f;
 
-			CWaterRipple::Create(block, blocksize, setpos, height, velocity, thickness, life);
+			// 生成処理
+			if (moveAngle != CPlayer::ANGLE::LEFT)
+			{
+				CWaterRipple::Create(block, blocksize, setpos, height, velocity, thickness, life);
+			}
+			else
+			{
+				CWaterRipple::Create(block, blocksize, setpos, height, velocity, thickness, 35);
+			}
 
 			// インターバルをランダム調整
 			m_nIntervalWaterRipple = DEFAULT_WATERRIPPLE_INTERVAL + UtilFunc::Transformation::Random(-6, 6);
 		}
 	}
-
-	//// 角度の正規化
-	//UtilFunc::Transformation::RotNormalize(fRotDest);
-	//player->SetRotDest(fRotDest);
 }
 
 //==========================================================================
@@ -554,8 +570,16 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 			posBaggage.y = posBaggageOrigin.y;
 			if (CGame::GetInstance()->GetGameManager()->GetType() != CGameManager::SceneType::SCENE_GOAL)
 			{
-				player->Hit(1);
+				MyLib::HitResult_Character hitresult = player->Hit(1);
 				m_bLandOld = true;
+
+				// ラ王生成
+				if (hitresult.isdeath)
+				{
+					CDeadPlayer::Create(player->GetPosition());
+					pBaggage->SetState(CBaggage::STATE::STATE_FALL);
+
+				}
 			}
 		}
 		else if(!pBaggage->IsLand())
@@ -592,10 +616,17 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 			posBaggage.y = posBaggageOrigin.y;
 			if (CGame::GetInstance()->GetGameManager()->GetType() != CGameManager::SceneType::SCENE_GOAL)
 			{
-				player->Hit(1);
+				MyLib::HitResult_Character hitresult = player->Hit(1);
 
 				// 前回着地した状態に
 				m_bLandOld = true;
+
+				// ラ王生成
+				if (hitresult.isdeath)
+				{
+					CDeadPlayer::Create(player->GetPosition());
+					pBaggage->SetState(CBaggage::STATE::STATE_FALL);
+				}
 			}
 		}
 	}

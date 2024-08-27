@@ -48,7 +48,6 @@
 // 使用クラス
 #include "playercontrol.h"
 #include "glassclush.h"
-#include "deadplayer.h"
 
 //==========================================================================
 // 定数定義
@@ -1350,16 +1349,11 @@ void CPlayer::DeadSetting(MyLib::HitResult_Character* result)
 	// 死んだ
 	result->isdeath = true;
 
-	m_pBaggage->SetState(CBaggage::STATE::STATE_FALL);
-
 	// 空気エフェクトをリセットする
 	if (m_pControlBaggage)
 	{
 		m_pControlBaggage->EffectStop();
 	}
-
-	// ラ王生成
-	CDeadPlayer::Create(GetPosition());
 }
 
 //==========================================================================

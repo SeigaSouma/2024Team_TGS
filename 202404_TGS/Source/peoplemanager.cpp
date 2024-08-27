@@ -140,8 +140,15 @@ void CPeopleManager::SetByRank()
 
 	if (m_Rank == CJudge::JUDGE::JUDGE_MAX)
 	{// 最低ランク
+
+		// ガヤ音停止
+		CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_GAYA);
 		return;
 	}
+
+	// ガヤ音再生
+	CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_GAYA);
+	CSound::GetInstance()->VolumeChange(CSound::LABEL::LABEL_SE_GAYA, 0.5f);
 
 	// 後出しリストリセット
 	m_lateSpawnPeople.clear();
