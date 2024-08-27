@@ -142,6 +142,20 @@ HRESULT CReceiverPeople::Init()
 		pMotion->Set(MOTION::MOTION_DROWN);
 	}
 
+	// ŽV‹´
+	MyLib::Vector3 setpos(GetPosition());
+
+	int max = 5;
+	float distance = 400.0f;
+	setpos.z -= distance * (max / 2) + distance;
+	for (int i = 0; i < max; i++)
+	{
+		setpos.z += distance;
+
+		CObjectX* pObj = CObjectX::Create("data\\MODEL\\map_object\\sanbashi.x", setpos, 0.0f);
+		pObj->SetType(CObject::TYPE::TYPE_OBJECTX);
+		pObj->SetScale(3.0f);
+	}
 	return S_OK;
 }
 

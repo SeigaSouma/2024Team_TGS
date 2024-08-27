@@ -365,6 +365,7 @@ void CBaggage::StateDead()
 			// SE再生
 			CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_CRACK_GRASS);
 
+			// 画面割れ
 			CGlassclush::Create();
 		}
 		m_bEnd = true;
@@ -425,6 +426,11 @@ void CBaggage::StatePass()
 
 		// カウントダウンに遷移
 		CGame::GetInstance()->GetGameManager()->SetType(CGameManager::SceneType::SCENE_COUNTDOWN);
+
+		// ゲットエフェクト生成
+		CEffekseerObj::Create(
+			CMyEffekseer::EFKLABEL::EFKLABEL_BAGGAGEGET,
+			pos, MyLib::Vector3(0.0f, 0.0f, 0.0f), 0.0f, 90.0f, true);
 	}
 
 	SetPosition(pos);
@@ -475,7 +481,9 @@ void CBaggage::StateFall()
 		if (!m_bfall)
 		{// 水しぶきの生成
 
-			CGuide::Create();
+			CEffekseerObj::Create(
+				CMyEffekseer::EFKLABEL::EFKLABEL_SPRAYWATER,
+				pos, MyLib::Vector3(0.0f, 0.0f, 0.0f), 0.0f, 40.0f, true);
 		}
 
 		m_bfall = true;

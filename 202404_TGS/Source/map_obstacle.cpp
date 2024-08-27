@@ -207,6 +207,9 @@ void CMap_Obstacle::Update()
 		i++;
 	}
 
+	// ’¸“_‘å¬ŒvZ
+	//CalVtxMinMax();
+
 #endif
 }
 
