@@ -83,7 +83,7 @@ namespace
 	const float MULTIPLY_CHARGEATK = 2.0f;				// チャージ攻撃の倍率
 	const float MAX_HEIGHT = 200.0f;					// 最大高さ
 	const ImVec4 WATERCOLOR = ImVec4(0.658f, 0.658f, 1.0, 0.87f); // RGBA
-	const int INTERVAL_WATERLINE = 2;					// 水搔き分け線の間隔
+	const int INTERVAL_WATERLINE[CPlayer::ANGLE::MAX] = {2, 4, 2};	// 水搔き分け線の間隔
 }
 
 //==========================================================================
@@ -140,6 +140,7 @@ CPlayer::CPlayer(int nPriority) : CObjectChara(nPriority)
 	m_bLandField = false;			// フィールドの着地判定
 	m_bHitWall = false;				// 壁の当たり判定
 	m_nCntWalk = 0;					// 歩行カウンター
+	m_moveAngle = ANGLE::RIGHT;		// 移動の向き
 	m_state = STATE_NONE;			// 状態
 
 	SMotionFrag initFrag = {};
@@ -507,33 +508,17 @@ void CPlayer::Controll()
 			MyLib::Vector3 pos = m_pBaggage->GetPosition();
 			m_pBaggage->SetOriginPosition(MyLib::Vector3(0.0f, m_posCylinder.y + fHeight, 0.0f));
 			
-			m_pControlBaggage->Action(this, m_pBaggage);		// 荷物操作
+			// 荷物操作
+			m_pControlBaggage->Action(this, m_pBaggage);
 			m_pBaggage->SetOriginPosition(MyLib::Vector3(0.0f, m_posCylinder.y + fHeight, 0.0f));
 
 
-
 			// 移動時の水搔き分け線
-			m_nCntWaterLine = (m_nCntWaterLine + 1) % INTERVAL_WATERLINE;	// 搔き分け線のカウンター
+			m_nCntWaterLine = (m_nCntWaterLine + 1) % INTERVAL_WATERLINE[m_moveAngle];	// 搔き分け線のカウンター
 			if (m_nCntWaterLine == 0)
 			{
 				MovingWaterLine();
 			}
-
-			//// 入水
-			//CMyEffekseer::GetInstance()->SetEffect(
-			//	CMyEffekseer::EFKLABEL::EFKLABEL_PLAYERMOVE_LINE,
-			//	GetPosition(), MyLib::Vector3(0.0f, D3DX_PI * 0.5f, 0.0f), 0.0f, 40.0f, true);
-
-			//{// トリック操作
-			//	int idx = -1; bool value = false;
-			//	m_pControlTrick->Trick(this, idx, value);
-
-			//	// 操作成功
-			//	if (value)
-			//	{
-			//		SetMotion(idx);	// モーション変更
-			//	}
-			//}
 		}
 	}
 	else
@@ -1467,19 +1452,36 @@ void CPlayer::MovingWaterLine()
 	// 位置
 	MyLib::Vector3 setpos = GetPosition();
 
+	// 移動方向
+	m_moveAngle;
+
 	for (int i = 0; i < 2; i++)
 	{
-		// 移動量
-		MyLib::Vector3 setmove;
-		float randmove = UtilFunc::Transformation::Random(30, 50) * 0.1f;
-		float randmoveY = UtilFunc::Transformation::Random(40, 200) * 0.01f;
-		float randangle = UtilFunc::Transformation::Random(-30, 30) * 0.001f;
-
 		float defAngle = 0.35f;
 		if (i == 0)
 		{
 			defAngle = 0.65f;
 		}
+
+		// 移動量
+		MyLib::Vector3 setmove;
+		float randmove, randmoveY = UtilFunc::Transformation::Random(40, 200) * 0.01f;
+		switch (m_moveAngle)
+		{
+		case CPlayer::RIGHT:
+			randmove = UtilFunc::Transformation::Random(30, 50) * 0.1f;
+			randmoveY = UtilFunc::Transformation::Random(150, 320) * 0.01f;
+			break;
+
+		case CPlayer::LEFT:
+			randmove = UtilFunc::Transformation::Random(10, 30) * 0.1f;
+			break;
+
+		case CPlayer::NONE:
+			randmove = UtilFunc::Transformation::Random(25, 45) * 0.1f;
+			break;
+		}
+		float randangle = UtilFunc::Transformation::Random(-30, 30) * 0.001f;
 
 		setmove.x = sinf(D3DX_PI + D3DX_PI * (defAngle + randangle)) * randmove;
 		setmove.z = cosf(D3DX_PI + D3DX_PI * (defAngle + randangle)) * randmove;
@@ -1489,8 +1491,24 @@ void CPlayer::MovingWaterLine()
 		float colorrand = UtilFunc::Transformation::Random(-22, 22) * 0.01f;
 
 		// 半径
-		float randRadius = UtilFunc::Transformation::Random(-50, 50) * 0.1f;
-		float radius = 20.2f + randRadius;
+		float randRadius, radius, defRadius = 20.2f;
+		switch (m_moveAngle)
+		{
+		case CPlayer::RIGHT:
+			randRadius = UtilFunc::Transformation::Random(-50, 50) * 0.1f;
+			break;
+
+		case CPlayer::LEFT:
+			randRadius = UtilFunc::Transformation::Random(-30, 30) * 0.1f;
+			defRadius *= 0.7f;
+			break;
+
+		case CPlayer::NONE:
+			randRadius = UtilFunc::Transformation::Random(-40, 40) * 0.1f;
+			defRadius *= 0.85f;
+			break;
+		}
+		radius = defRadius + randRadius;
 
 		// 生成
 		MyLib::Vector3 distance(50.0f, 5.0f, -50.0f);
