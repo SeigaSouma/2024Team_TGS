@@ -40,7 +40,7 @@ HRESULT CKite::Init()
 
 	// À•W‚ğã‚°‚é
 	MyLib::Vector3 pos = GetPosition();
-	pos.y += UtilFunc::Transformation::Random(400, 600);
+	pos.y += UtilFunc::Transformation::Random(70, 100) * 10.0f;
 	SetPosition(pos);
 
 	// Œü‚«‚ğƒ‰ƒ“ƒ_ƒ€‚ÅŒˆ‚ß‚é

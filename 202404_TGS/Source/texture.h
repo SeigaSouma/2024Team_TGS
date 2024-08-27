@@ -39,12 +39,12 @@ public:
 	void Init();	// 初期化処理
 	HRESULT LoadAll();	// 全てのテクスチャ読み込み
 	void Unload();
-	int Regist(std::string file);	// 読み込み
+	int Regist(const std::string& file);	// 読み込み
 	LPDIRECT3DTEXTURE9 GetAdress(int nIdx);
 	D3DXVECTOR2 GetImageSize(int nIdx);		// テクスチャ素材のサイズ取得
 
 	int GetNumAll();		// 読み込んだ総数
-	STexture GetTextureInfo(std::string file);	// テクスチャ情報取得
+	STexture GetTextureInfo(const std::string& file);	// テクスチャ情報取得
 	STexture GetTextureInfo(int nIdxTex);	// テクスチャ情報取得
 
 	static CTexture* Create();
@@ -54,7 +54,7 @@ private:
 	//=============================
 	// メンバ関数
 	//=============================
-	HRESULT LoadTex(std::string file);
+	HRESULT LoadTex(const std::string& file);
 	void SearchAllImages(const std::wstring& folderPath);
 
 	//=============================

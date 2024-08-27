@@ -74,7 +74,7 @@ CObjectBillboard* CObjectBillboard::Create(int nPriority)
 //==========================================================================
 // 生成処理
 //==========================================================================
-CObjectBillboard* CObjectBillboard::Create(MyLib::Vector3 pos, MyLib::Vector3 rot)
+CObjectBillboard* CObjectBillboard::Create(const MyLib::Vector3& pos, const MyLib::Vector3& rot)
 {
 	// メモリの確保
 	CObjectBillboard* pObjBillBoard = DEBUG_NEW CObjectBillboard;
@@ -82,12 +82,12 @@ CObjectBillboard* CObjectBillboard::Create(MyLib::Vector3 pos, MyLib::Vector3 ro
 	if (pObjBillBoard != nullptr)
 	{// メモリの確保が出来ていたら
 
-		// 初期化処理
-		pObjBillBoard->Init();
-
 		// 位置・向き
 		pObjBillBoard->SetPosition(pos);
 		pObjBillBoard->SetRotation(rot);
+
+		// 初期化処理
+		pObjBillBoard->Init();
 	}
 
 	return pObjBillBoard;
