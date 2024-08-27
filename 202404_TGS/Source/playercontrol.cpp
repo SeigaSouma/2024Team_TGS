@@ -18,6 +18,7 @@
 #include "course.h"
 #include "spline.h"
 #include "EffekseerObj.h"
+#include "deadplayer.h"
 
 // キーコンフィグ
 #include "keyconfig_keyboard.h"
@@ -569,8 +570,14 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 			posBaggage.y = posBaggageOrigin.y;
 			if (CGame::GetInstance()->GetGameManager()->GetType() != CGameManager::SceneType::SCENE_GOAL)
 			{
-				player->Hit(1);
+				MyLib::HitResult_Character hitresult = player->Hit(1);
 				m_bLandOld = true;
+
+				// ラ王生成
+				if (hitresult.isdeath)
+				{
+					CDeadPlayer::Create(player->GetPosition());
+				}
 			}
 		}
 		else if(!pBaggage->IsLand())
@@ -607,10 +614,16 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 			posBaggage.y = posBaggageOrigin.y;
 			if (CGame::GetInstance()->GetGameManager()->GetType() != CGameManager::SceneType::SCENE_GOAL)
 			{
-				player->Hit(1);
+				MyLib::HitResult_Character hitresult = player->Hit(1);
 
 				// 前回着地した状態に
 				m_bLandOld = true;
+
+				// ラ王生成
+				if (hitresult.isdeath)
+				{
+					CDeadPlayer::Create(player->GetPosition());
+				}
 			}
 		}
 	}
