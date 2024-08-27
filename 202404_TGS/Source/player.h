@@ -60,6 +60,15 @@ public:
 		STATE_MAX
 	};
 
+	// 向き
+	enum ANGLE
+	{
+		RIGHT = 0,	// 右
+		LEFT,		// 左
+		NONE,		// 通常
+		MAX
+	};
+
 	//=============================
 	// 構造体
 	//=============================
@@ -156,6 +165,9 @@ public:
 	MyLib::Vector3 GetCylinderPosition() { return m_posCylinder; };		// 筒の位置取得
 	void SetMoveLength(float len) { m_fMoveLength = len; }				// 移動距離設定
 	float GetMoveLength() { return m_fMoveLength; }						// 移動距離取得
+	void SetMoveAngle(const ANGLE& angle) { m_moveAngle = angle; }		// 移動の向き設定
+	ANGLE GetMoveAngle() { return m_moveAngle; }						// 移動の向き取得
+
 	CBaggage* GetBaggage() { return m_pBaggage; }			// 自分の荷物取得
 	CRetry_Ui* GetRetryUI() { return m_pRetryUI; }			// リトライUI取得
 	void CreateRetryUI();										// リトライUI設定
@@ -231,6 +243,7 @@ private:
 	MyLib::Vector3 m_KnokBackMove;	// ノックバックの移動量
 	MyLib::Vector3 m_posCylinder;	// 筒の位置
 	int m_nCntState;				// 状態遷移カウンター
+	ANGLE m_moveAngle;				// 移動の向き
 	bool m_bDash;					// ダッシュ判定
 	float m_fDashTime;				// ダッシュ時間
 	float m_fMoveLength;			// 移動距離
