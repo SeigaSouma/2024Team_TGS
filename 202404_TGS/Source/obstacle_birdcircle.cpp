@@ -18,6 +18,7 @@ namespace
 	const int	NUM_BIRD = (10);				// 鳥の総数
 	const float BIRD_ROT = (1.0f / NUM_BIRD);	// 1鳥辺りの角度割合
 	const int RANGE_MOTION = 2;					// モーションする
+	const float INTERVAL_WING = 0.8f;
 }
 
 // デフォルト情報
@@ -37,6 +38,7 @@ CObstacle_BirdCircle::CObstacle_BirdCircle(int nPriority,
 	// 値のクリア
 	m_BirdList.clear();
 	m_scale = 1.0f;
+	m_fIntervalWing = 0.0f;		// 羽ばたきの間隔
 }
 
 //==========================================================================
@@ -166,6 +168,15 @@ void CObstacle_BirdCircle::Update()
 		baggageBlock - RANGE_MOTION <= m_nMapBlock))
 	{
 		return;
+	}
+
+
+	// サウンド再生
+	m_fIntervalWing += CManager::GetInstance()->GetDeltaTime();
+	if (m_fIntervalWing >= INTERVAL_WING)
+	{
+		m_fIntervalWing = 0.0f;
+		CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_HABATAKI);
 	}
 
 	// メイン操作

@@ -142,7 +142,7 @@ void CPeopleManager::SetByRank()
 	{// Å’áƒ‰ƒ“ƒN
 
 		// ƒKƒ„‰¹’âŽ~
-		CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_GAYA);
+		CSound::GetInstance()->StopSound(CSound::LABEL::LABEL_SE_GAYA);
 		return;
 	}
 
