@@ -126,8 +126,6 @@ HRESULT CSplashwater::Init()
 	// ˆÚ“®—Ê
 	SetMove(CalSetmove());
 
-	// ƒTƒEƒ“ƒhÄ¶
-	CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_MIZUSIBUKI);
 	return S_OK;
 }
 

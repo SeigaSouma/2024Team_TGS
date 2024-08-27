@@ -274,40 +274,11 @@ void CPeopleManager::SetPeople(const MyLib::Vector3& pos, const MyLib::Vector3& 
 		spawnPos += data.pos;
 
 		// 生成
-		switch (random)
-		{
-		case TYPE::TYPE_KITE:
-		{
-			pPeople = CKite::Create(
-				m_vecMotionFileName[random],	// ファイル名
-				spawnPos);							// 位置
-		}
-			break;
-		default:
-		{
-			pPeople = CPeople::Create(
-				m_vecMotionFileName[random],	// ファイル名
-				spawnPos);							// 位置
-
-			// 向き設定
-			if (pPeople != nullptr)
-			{
-				// 向き設定
-				float rotY = rot.y;
-				if (rand() % 2 == 0)
-				{
-					rotY += D3DX_PI;
-				}
-
-				UtilFunc::Transformation::RotNormalize(rotY);
-				pPeople->SetRotation(MyLib::Vector3(0.0f, rotY, 0.0f));
-				pPeople->SetRotDest(rotY);
-			}
-		}
-			break;
-		}
-
-		
+		pPeople = CKite::Create(
+			m_vecMotionFileName[random],	// ファイル名
+			spawnPos,						// 位置
+			static_cast<CPeople::TYPE>(random)
+		);
 	}
 	
 }
