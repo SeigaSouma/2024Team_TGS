@@ -408,7 +408,15 @@ void CPlayerControlMove::Move(CPlayer* player)
 			MyLib::Vector3 setpos = player->GetPosition();
 			setpos.y -= 5.0f;
 
-			CWaterRipple::Create(block, blocksize, setpos, height, velocity, thickness, life);
+			// 生成処理
+			if (moveAngle != CPlayer::ANGLE::LEFT)
+			{
+				CWaterRipple::Create(block, blocksize, setpos, height, velocity, thickness, life);
+			}
+			else
+			{
+				CWaterRipple::Create(block, blocksize, setpos, height, velocity, thickness, 35);
+			}
 
 			// インターバルをランダム調整
 			m_nIntervalWaterRipple = DEFAULT_WATERRIPPLE_INTERVAL + UtilFunc::Transformation::Random(-6, 6);
