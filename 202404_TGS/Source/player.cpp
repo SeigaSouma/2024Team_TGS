@@ -48,7 +48,6 @@
 // 使用クラス
 #include "playercontrol.h"
 #include "glassclush.h"
-#include "deadplayer.h"
 
 //==========================================================================
 // 定数定義
@@ -1357,9 +1356,6 @@ void CPlayer::DeadSetting(MyLib::HitResult_Character* result)
 	{
 		m_pControlBaggage->EffectStop();
 	}
-
-	// ラ王生成
-	CDeadPlayer::Create(GetPosition());
 }
 
 //==========================================================================

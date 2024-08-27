@@ -18,6 +18,7 @@
 #include "course.h"
 #include "spline.h"
 #include "EffekseerObj.h"
+#include "deadplayer.h"
 
 // キーコンフィグ
 #include "keyconfig_keyboard.h"
@@ -408,7 +409,15 @@ void CPlayerControlMove::Move(CPlayer* player)
 			MyLib::Vector3 setpos = player->GetPosition();
 			setpos.y -= 5.0f;
 
-			CWaterRipple::Create(block, blocksize, setpos, height, velocity, thickness, life);
+			// 生成処理
+			if (moveAngle != CPlayer::ANGLE::LEFT)
+			{
+				CWaterRipple::Create(block, blocksize, setpos, height, velocity, thickness, life);
+			}
+			else
+			{
+				CWaterRipple::Create(block, blocksize, setpos, height, velocity, thickness, 35);
+			}
 
 			// インターバルをランダム調整
 			m_nIntervalWaterRipple = DEFAULT_WATERRIPPLE_INTERVAL + UtilFunc::Transformation::Random(-6, 6);
@@ -561,8 +570,14 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 			posBaggage.y = posBaggageOrigin.y;
 			if (CGame::GetInstance()->GetGameManager()->GetType() != CGameManager::SceneType::SCENE_GOAL)
 			{
-				player->Hit(1);
+				MyLib::HitResult_Character hitresult = player->Hit(1);
 				m_bLandOld = true;
+
+				// ラ王生成
+				if (hitresult.isdeath)
+				{
+					CDeadPlayer::Create(player->GetPosition());
+				}
 			}
 		}
 		else if(!pBaggage->IsLand())
@@ -599,10 +614,16 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 			posBaggage.y = posBaggageOrigin.y;
 			if (CGame::GetInstance()->GetGameManager()->GetType() != CGameManager::SceneType::SCENE_GOAL)
 			{
-				player->Hit(1);
+				MyLib::HitResult_Character hitresult = player->Hit(1);
 
 				// 前回着地した状態に
 				m_bLandOld = true;
+
+				// ラ王生成
+				if (hitresult.isdeath)
+				{
+					CDeadPlayer::Create(player->GetPosition());
+				}
 			}
 		}
 	}
