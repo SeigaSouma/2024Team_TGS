@@ -1349,8 +1349,6 @@ void CPlayer::DeadSetting(MyLib::HitResult_Character* result)
 	// 死んだ
 	result->isdeath = true;
 
-	m_pBaggage->SetState(CBaggage::STATE::STATE_FALL);
-
 	// 空気エフェクトをリセットする
 	if (m_pControlBaggage)
 	{
