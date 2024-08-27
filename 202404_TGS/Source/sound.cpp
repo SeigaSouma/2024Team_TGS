@@ -41,7 +41,7 @@ CSound::SOUNDINFO CSound::m_aSoundInfo[LABEL_MAX] =
 	{ "data/SE/receive.wav", 0 },
 	{ "data/SE/oboreru.wav", 0 },
 	{ "data/SE/habataku.wav", 0 },
-	{ "data/SE/gaya.wav", 0 },
+	{ "data/SE/gaya.wav", -1 },
 	{ "data/SE/countdown00.wav", 0 },
 	{ "data/SE/countdown01.wav", 0 },
 	{ "data/SE/start.wav", 0 },
