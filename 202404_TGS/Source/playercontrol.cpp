@@ -577,6 +577,8 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 				if (hitresult.isdeath)
 				{
 					CDeadPlayer::Create(player->GetPosition());
+					pBaggage->SetState(CBaggage::STATE::STATE_FALL);
+
 				}
 			}
 		}
@@ -623,6 +625,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 				if (hitresult.isdeath)
 				{
 					CDeadPlayer::Create(player->GetPosition());
+					pBaggage->SetState(CBaggage::STATE::STATE_FALL);
 				}
 			}
 		}
