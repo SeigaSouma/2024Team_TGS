@@ -36,6 +36,7 @@ CSound::SOUNDINFO CSound::m_aSoundInfo[LABEL_MAX] =
 	{ "data/SE/ore_000.wav", 0 },
 	{ "data/SE/ore_001.wav", 0 },
 	{ "data/SE/ore_002.wav", 0 },
+	{ "data/SE/karakurisa-kasu.wav", 0 },
 
 };	// サウンドの情報
 CSound* CSound::m_pThisPtr = nullptr;	// 自身のポインタ

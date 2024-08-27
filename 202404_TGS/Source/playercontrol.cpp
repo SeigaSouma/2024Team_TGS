@@ -111,6 +111,9 @@ void CPlayerControlMove::Move(CPlayer* player)
 	int angle = 0;
 	m_nIntervalAddRippleCounter = 1;
 
+	// ˆÚ“®•ûŒüİ’è
+	player->SetMoveAngle(CPlayer::ANGLE::NONE);
+
 	if ((pMotion->IsGetMove(nMotionType) == 1 || pMotion->IsGetCancelable()) &&
 		state != CPlayer::STATE::STATE_DEAD &&
 		state != CPlayer::STATE::STATE_DEADWAIT &&
@@ -219,7 +222,9 @@ void CPlayerControlMove::Move(CPlayer* player)
 			move.z += cosf(stickrot + Camerarot.y) * fMove;
 			fRotDest = D3DX_PI + stickrot + Camerarot.y;
 #endif
+			// ˆÚ“®•ûŒü
 			angle = (stickrot <= 0.0f) ? -1 : 1;
+			CPlayer::ANGLE moveAngle = (static_cast<CPlayer::ANGLE>(angle) == 1) ? CPlayer::ANGLE::RIGHT : CPlayer::ANGLE::LEFT;
 
 			if (angle == -1)
 			{
@@ -233,6 +238,9 @@ void CPlayerControlMove::Move(CPlayer* player)
 			move.x += sinf(D3DX_PI * 0.5f + Camerarot.y) * (fMove * angle);
 			move.z += cosf(D3DX_PI * 0.5f + Camerarot.y) * (fMove * angle);
 			fRotDest = angle * (-D3DX_PI * 0.5f) + Camerarot.y;
+
+			// ˆÚ“®•ûŒüİ’è
+			player->SetMoveAngle(moveAngle);
 		}
 
 		// ƒWƒƒƒ“ƒvó‹µæ“¾

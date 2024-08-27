@@ -154,6 +154,13 @@ void CObstacle_FishArch::Kill()
 //==========================================================================
 void CObstacle_FishArch::Update()
 {
+
+//#if _DEBUG
+//	// マトリックス設定
+//	CalWorldMtx();
+//	CMap_Obstacle::Update();
+//#endif // _DEBUG
+
 	// 荷物取得
 	CBaggage* pBaggage = CBaggage::GetListObj().GetData(0);
 	if (pBaggage == nullptr) return;

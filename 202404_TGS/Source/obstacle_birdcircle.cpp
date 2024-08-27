@@ -70,8 +70,9 @@ HRESULT CObstacle_BirdCircle::Init()
 {
 	// 自分のブロック計算
 	CMap_Obstacle::CalMyBlock();
-
 	CMap_Obstacle::ListRegist(this);
+
+	
 	MyLib::Vector3 rot;
 
 	// 種類の設定
@@ -150,6 +151,11 @@ void CObstacle_BirdCircle::Kill()
 //==========================================================================
 void CObstacle_BirdCircle::Update()
 {
+//#if _DEBUG
+//	// マトリックス設定
+//	CalWorldMtx();
+//	CMap_Obstacle::Update();
+//#endif // _DEBUG
 	// 荷物取得
 	CBaggage* pBaggage = CBaggage::GetListObj().GetData(0);
 	if (pBaggage == nullptr) return;

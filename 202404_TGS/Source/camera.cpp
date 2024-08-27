@@ -1337,7 +1337,7 @@ void CCamera::Reset(CScene::MODE mode)
 	D3DXMatrixPerspectiveFovLH(&m_mtxProjection, D3DXToRadian(45.0f),
 								(float)m_viewport.Width / (float)m_viewport.Height,
 								10.0f,		// 奥行きの制限
-								600000.0f);	// 奥行きの制限
+								1500000.0f);	// 奥行きの制限
 
 	// ビューマトリックスの初期化
 	D3DXMatrixLookAtLH(&m_mtxView, &m_posV, &m_posR, &m_vecU);

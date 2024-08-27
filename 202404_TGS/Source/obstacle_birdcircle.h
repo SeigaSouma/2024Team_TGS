@@ -55,6 +55,7 @@ public:
 	virtual void Update() override;
 	virtual void Draw() override;
 	virtual void Kill() override;
+	virtual MyLib::Matrix GetWorldMtx() override { return m_mtxWorld; }
 
 	//=============================
 	// ƒƒ“ƒoŠÖ”
