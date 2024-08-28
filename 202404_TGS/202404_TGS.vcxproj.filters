@@ -719,6 +719,9 @@
     <ClCompile Include="Source\waterstoneManager.cpp">
       <Filter>map\waterstone</Filter>
     </ClCompile>
+    <ClCompile Include="Source\edit_mapblock.cpp">
+      <Filter>edit</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ballast.h">
@@ -1305,6 +1308,9 @@
     </ClInclude>
     <ClInclude Include="Source\waterstoneManager.h">
       <Filter>map\waterstone</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\edit_mapblock.h">
+      <Filter>edit</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
