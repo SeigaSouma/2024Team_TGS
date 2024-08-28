@@ -28,6 +28,9 @@
 #include "Imguimanager.h"
 #include "fog.h"
 
+
+#include <vlc/vlc.h>
+
 //==========================================================================
 // 定数定義
 //==========================================================================
@@ -297,6 +300,49 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 
 	// シーンのロードを開始
 	GetLoadManager()->LoadScene(CScene::MODE_NONE);
+
+
+
+
+
+#if 0
+	/* VLCエンジンを読み込む */
+	libvlc_instance_t* instance = libvlc_new(0, NULL);
+	if (instance == NULL) {
+		std::cerr << "libvlc_new failed: " << libvlc_errmsg() << std::endl;
+		return -1;
+	}
+
+	/* 新しい項目を作成する */
+	libvlc_media_t* media = libvlc_media_new_path(instance, "data\\MOVIE\\ohayo01mayu.mp3"); // ファイルパス (相対パス)
+	// media = libvlc_media_new_path(instance, "C:\\path/sample.mp3");          // ファイルパス (絶対パス)
+	// media = libvlc_media_new_location(instance, "http://example.com/sample.mp3"); // URL
+
+	/* メディアプレーヤーの再生環境を作成する */
+	libvlc_media_player_t* media_player = libvlc_media_player_new_from_media(media);
+
+	/* メディアを保持する必要がなくなったため、メディアの参照カウントを減少させる */
+	libvlc_media_release(media);
+
+	/* メディアプレーヤーを再生する */
+	libvlc_media_player_play(media_player);
+
+	/* 待機する */
+	while (libvlc_state_t::libvlc_Ended != libvlc_media_player_get_state(media_player))
+	{
+		Sleep(100);
+	}
+
+	/* 再生を止める */
+	libvlc_media_player_stop(media_player);
+
+	/* メディアプレーヤーを解放する */
+	libvlc_media_player_release(media_player);
+
+	libvlc_release(instance);
+#endif
+
+
 
 
 
