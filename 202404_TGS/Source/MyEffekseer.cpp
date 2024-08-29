@@ -29,6 +29,7 @@ std::string CMyEffekseer::m_EffectName[CMyEffekseer::EFKLABEL_MAX] =	// エフェク
 	"data/Effekseer/photon.efkefc",			// 死亡
 	"data/Effekseer/ItemGet.efkefc",		// 荷物獲得
 	"data/Effekseer/air.efkefc",			// 空気
+	"data/Effekseer/crowd.efkefc",			// 群衆
 };
 CMyEffekseer* CMyEffekseer::m_pMyEffekseer = nullptr;	// 自身のポインタ
 

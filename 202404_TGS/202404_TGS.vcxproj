@@ -320,6 +320,7 @@
     <ClCompile Include="Source\sample_objX.cpp" />
     <ClCompile Include="Source\scene.cpp" />
     <ClCompile Include="Source\score.cpp" />
+    <ClCompile Include="Source\scroll.cpp" />
     <ClCompile Include="Source\serifeffect.cpp" />
     <ClCompile Include="Source\shadow.cpp" />
     <ClCompile Include="Source\skip_ui.cpp" />
@@ -520,6 +521,7 @@
     <ClInclude Include="Source\sample_objX.h" />
     <ClInclude Include="Source\scene.h" />
     <ClInclude Include="Source\score.h" />
+    <ClInclude Include="Source\scroll.h" />
     <ClInclude Include="Source\serifeffect.h" />
     <ClInclude Include="Source\shadow.h" />
     <ClInclude Include="Source\skip_ui.h" />
