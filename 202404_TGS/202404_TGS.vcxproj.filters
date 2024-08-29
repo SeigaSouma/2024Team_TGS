@@ -141,6 +141,9 @@
     <Filter Include="map\waterstone">
       <UniqueIdentifier>{2ab656b8-7b95-477c-af25-e5095936ee74}</UniqueIdentifier>
     </Filter>
+    <Filter Include="map\frontobj">
+      <UniqueIdentifier>{407d394f-2207-4529-813b-058ac443e12c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\ballast.cpp">
@@ -724,6 +727,9 @@
     </ClCompile>
     <ClCompile Include="Source\suffocation.cpp">
       <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\frontobj_manager.cpp">
+      <Filter>map\frontobj</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1317,6 +1323,9 @@
     </ClInclude>
     <ClInclude Include="Source\suffocation.h">
       <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\frontobj_manager.h">
+      <Filter>map\frontobj</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

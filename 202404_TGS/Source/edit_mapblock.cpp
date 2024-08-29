@@ -5,9 +5,11 @@
 // 
 //=============================================================================
 #include "edit_mapblock.h"
+#include "edit_map.h"
 #include "manager.h"
 #include "calculation.h"
 #include "camera.h"
+#include "frontobj_manager.h"
 
 //==========================================================================
 // 定数定義
@@ -78,6 +80,7 @@ void CEdit_MapBlock::Update()
 //==========================================================================
 void CEdit_MapBlock_Arrangment::Init()
 {
+	m_FileName = CEdit_Map::GetModelFileName();
 	// 当たり判定ボックス生成
 	CreateBoxLine();
 }
@@ -116,9 +119,6 @@ void CEdit_MapBlock_Arrangment::CreateBoxLine()
 void CEdit_MapBlock_Arrangment::Update()
 {
 
-	// 障害物マネージャ取得
-	CListManager<CObjectX> pList = CObjectX::GetListObj();
-
 	// コンボボックス
 	static const char* savetext[] = { "Save", "Save_as", "Load" };
 	static int saveselect = 0;
@@ -134,9 +134,9 @@ void CEdit_MapBlock_Arrangment::Update()
 	std::vector<std::string> items;
 
 	// チェックポイントの終了
-	for (int i = 0; i < pList.GetNumAll(); i++)
+	for (int i = 0; i < static_cast<int>(m_FileName.size()); i++)
 	{
-		std::string file = UtilFunc::Transformation::RemoveFilePath(pList.GetData(i)->GetFileName());
+		std::string file = m_FileName[i];
 		items.push_back(file);
 	}
 
@@ -153,8 +153,7 @@ void CEdit_MapBlock_Arrangment::Update()
 	if (ImGui::Combo("SetType", &select, items_cstr.data(), items_cstr.size()))
 	{
 		// 障害物情報設定
-		m_MapInfo.fileName = pList.GetData(select)->GetFileName();
-		m_MapInfo.nIdx = pList.GetData(select)->GetIdxXFile();
+		m_MapInfo.fileName = items[select];
 	}
 
 
@@ -244,6 +243,8 @@ void CEdit_MapBlock_Arrangment::Update()
 
 			CObjectX* pObj = CObjectX::Create(m_MapInfo.fileName, setpos);
 			pObj->CalWorldMtx();
+			pObj->SetType(CObject::TYPE_OBJECTX);
+			CFrontObjManager::GetInstance()->Regist(pObj);
 
 			CreateBoxLine();
 		}
@@ -450,6 +451,7 @@ void CEdit_MapBlock_Arrangment::ObjectSelect()
 
 		if (m_pGrabObj != nullptr)
 		{
+			CFrontObjManager::GetInstance()->Erase(m_pGrabObj);
 			m_pGrabObj->Kill();
 			m_pGrabObj = nullptr;
 		}

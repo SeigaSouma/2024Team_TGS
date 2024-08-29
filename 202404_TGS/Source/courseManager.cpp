@@ -15,6 +15,7 @@
 #include "stonewall_front.h"
 #include "map_block.h"
 #include "spline.h"
+#include "frontobj_manager.h"
 
 //==========================================================================
 // 定数定義
@@ -87,7 +88,7 @@ CCourseManager *CCourseManager::Create()
 //==========================================================================
 HRESULT CCourseManager::Init()
 {
-
+	CFrontObjManager::Create();
 	// 読み込み
 	Load();
 	return S_OK;
@@ -98,6 +99,8 @@ HRESULT CCourseManager::Init()
 //==========================================================================
 void CCourseManager::Uninit()
 {
+	CFrontObjManager::GetInstance()->Uninit();
+
 	delete m_ThisPtr;
 	m_ThisPtr = nullptr;
 
@@ -387,7 +390,7 @@ void CCourseManager::Load()
 
 	//この中で障害物、チェックポイント
 
-#if 1
+#if 0
 	//=============================
 	// 石垣(奥)
 	//=============================
