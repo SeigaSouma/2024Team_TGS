@@ -60,7 +60,7 @@ HRESULT CSuffocation::Init()
 	CObject2D::Init();
 
 	MyLib::Vector3 move = GetMove();
-	move = UtilFunc::Transformation::Random(-20, 20) * 0.1f;
+	move = UtilFunc::Transformation::Random(-50, 50) * 0.1f;
 	SetMove(move);
 
 	// テクスチャ設定
