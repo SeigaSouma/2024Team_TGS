@@ -471,7 +471,10 @@ void CBaggage::StateFall()
 	// クォータニオン割り当て
 	BindQuaternion(MyLib::Vector3(0.0f, 1.0f, 0.0f), m_velorot.y);
 
-	pos += move;
+	if (!m_bfall)
+	{
+		pos += move;
+	}
 
 	SetPosition(pos);
 	SetMove(move);
@@ -636,9 +639,9 @@ void CBaggage::Draw()
 //==========================================================================
 bool CBaggage::Hit()
 {
-//#ifndef DEBUG
-//	return false;
-//#endif // DEBUG
+#ifndef DEBUG
+	return false;
+#endif // DEBUG
 
 	
 

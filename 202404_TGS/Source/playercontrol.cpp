@@ -754,7 +754,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 			posBaggage.x >= pos.x - range)
 		{// ”ÍˆÍ“à
 
-			if (bKantsu)
+			//if (bKantsu)
 			{// áŠQ•¨‚Ì‹ó‹CŠÑ’Ê”»’è
 
 #if GEKIMUZU
@@ -856,7 +856,11 @@ void CPlayerControlBaggage::GoalAction(CPlayer* player, CBaggage* pBaggage)
 	CKeyConfig* pKeyConfigKeyBoard = pKeyConfigManager->GetConfig(CKeyConfigManager::CONTROL_INKEY);
 	CCamera* pCamera = CManager::GetInstance()->GetCamera();
 	CCameraMotion* pCamMotion = pCamera->GetMotion();
-	pBaggage->SetState(CBaggage::STATE::STATE_GOAL);
+
+	if (m_state != STATE::STATE_RELEASE)
+	{// Žè•ú‚³‚ê‚Ä‚È‚¢‚Æ‚«
+		pBaggage->SetState(CBaggage::STATE::STATE_GOAL);
+	}
 
 	static float up = 0.175f, power = 0.4f;
 
@@ -944,9 +948,12 @@ void CPlayerControlBaggage::GoalAction(CPlayer* player, CBaggage* pBaggage)
 
 	case STATE::STATE_RELEASE:
 	{
-		move.x += -move.x * GOAL_INER;
-		move.z += -move.z * GOAL_INER;
-		move.y += GOAL_GRAVITY;
+		if (pBaggage->GetState() != CBaggage::STATE::STATE_FALL)
+		{
+			move.x += -move.x * GOAL_INER;
+			move.z += -move.z * GOAL_INER;
+			move.y += GOAL_GRAVITY;
+		}
 
 		// ‚‚³§ŒÀ
 		if (pBaggage->GetPosition().y <= pBaggage->GetOriginPosition().y)
@@ -956,8 +963,10 @@ void CPlayerControlBaggage::GoalAction(CPlayer* player, CBaggage* pBaggage)
 			pos.y = pBaggage->GetOriginPosition().y;
 		}
 
-		pBaggage->SetState(CBaggage::STATE::STATE_SEND);
-
+		if (pBaggage->GetState() != CBaggage::STATE::STATE_FALL)
+		{
+			pBaggage->SetState(CBaggage::STATE::STATE_SEND);
+		}
 	}
 		break;
 
@@ -977,8 +986,11 @@ void CPlayerControlBaggage::GoalAction(CPlayer* player, CBaggage* pBaggage)
 
 	if (pBaggage->GetState() != CBaggage::STATE::STATE_RETURN)
 	{
-		pBaggage->SetMove(move);
-		pBaggage->SetPosition(pos);
+		if (pBaggage->GetState() != CBaggage::STATE::STATE_FALL)
+		{
+			pBaggage->SetMove(move);
+			pBaggage->SetPosition(pos);
+		}
 		pCamMotion->SetPosition(pos);
 	}
 }

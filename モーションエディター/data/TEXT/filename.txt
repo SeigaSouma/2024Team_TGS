@@ -19,8 +19,8 @@ SCRIPT			# Ç±ÇÃçsÇÕê‚ëŒè¡Ç≥Ç»Ç¢Ç±Ç∆ÅI
 1MOTION_FILENAME = data/TEXT/character/mob/setup_person_cherry.txt
 1MOTION_FILENAME = data/TEXT/character/horse/setup_horse.txt
 1MOTION_FILENAME = data/TEXT/character/bird/setup_bird.txt
-MOTION_FILENAME = data/TEXT/character/fish/setup_fish.txt
-1MOTION_FILENAME = data/TEXT/character/mob/person_01/setup_human.txt
+1MOTION_FILENAME = data/TEXT/character/fish/setup_fish.txt
+MOTION_FILENAME = data/TEXT/character/mob/person_01/setup_human.txt
 1MOTION_FILENAME = data/TEXT/character/kite/setup_kite.txt
 1MOTION_FILENAME = data/TEXT/character/player/tyuuni/setup_raou.txt
 

@@ -39,6 +39,7 @@ namespace
 namespace STATE_TIME
 {
 	const float FADEOUT = 0.6f;	// 死亡時間
+	const float DIVE = 1.0f;	// ダイブ時間
 }
 
 //==========================================================================
@@ -53,6 +54,8 @@ CReceiverPeople::STATE_FUNC CReceiverPeople::m_StateFunc[] =
 	&CReceiverPeople::StateWait,	// 待機
 	&CReceiverPeople::StateGet,		// キャッチ
 	&CReceiverPeople::StateReturn,	// レシーブ
+	&CReceiverPeople::StateYabai,	// やばい
+	&CReceiverPeople::StateDive,	// ダイブ
 	&CReceiverPeople::StateDrown,	// 溺れる
 	&CReceiverPeople::StateByeBye,	// バイバイ
 	&CReceiverPeople::StateWalk,	// 歩く
@@ -152,6 +155,7 @@ HRESULT CReceiverPeople::Init()
 	{
 		setpos.z += distance;
 
+		// 生成
 		CObjectX* pObj = CObjectX::Create("data\\MODEL\\map_object\\sanbashi.x", setpos, 0.0f);
 		pObj->SetType(CObject::TYPE::TYPE_OBJECTX);
 		pObj->SetScale(3.0f);
@@ -264,6 +268,12 @@ void CReceiverPeople::Update()
 //==========================================================================
 void CReceiverPeople::Collision()
 {
+	if (m_state == STATE::STATE_DIVE ||
+		m_state == STATE::STATE_DROWN)
+	{
+		return;
+	}
+
 	// 位置取得
 	MyLib::Vector3 pos = GetPosition();
 
@@ -400,16 +410,32 @@ void CReceiverPeople::StateWait()
 	{// 既に落下している
 		m_StartPos = GetPosition();
 		m_StartRot = GetRotation();
-		SetState(STATE::STATE_WALK);
+
+		// 移動時間リセット
+		m_fMoveTimer = 0.0f;
 
 		// 距離を設定
 		if (distance <= NEAR_RANGE)
 		{// 近い
 			m_Distance = DISTANCE::DISTANCE_NEAR;
+			SetState(STATE::STATE_WALK);
 		}
 		else
 		{// 遠い
+
 			m_Distance = DISTANCE::DISTANCE_FAR;
+
+			if (m_StartPos.x >= bagpos.x)
+			{// 荷物が届いていない
+				SetState(STATE::STATE_YABAI);
+
+				// ドロップ設定
+				pBaggage->SetState(CBaggage::STATE::STATE_FALL);
+			}
+			else
+			{// 通り過ぎた
+				SetState(STATE::STATE_WALK);
+			}
 		}
 	}
 	else if (bagpos.y <= mypos.y + HEAD_POSITION && distance <= CATCH_RANGE)
@@ -514,6 +540,76 @@ void CReceiverPeople::StateReturn()
 		MyLib::Vector3 rot = UtilFunc::Correction::EasingEaseIn(m_StartRot, START_ROT, 0.0f, 1.0f, m_fMoveTimer);
 		SetRotation(rot);
 	}
+}
+
+//==========================================================================
+// やばい
+//==========================================================================
+void CReceiverPeople::StateYabai()
+{
+	// モーション取得
+	CMotion* pMotion = GetMotion();
+	if (pMotion == nullptr)
+	{
+		return;
+	}
+
+	int type = pMotion->GetType();
+	if (type != MOTION::MOTION_YABAI)
+	{
+		// モーション設定
+		pMotion->Set(MOTION::MOTION_YABAI);
+	}
+
+	if (type == MOTION::MOTION_YABAI &&
+		pMotion->IsFinish())
+	{
+		m_state = STATE::STATE_DIVE;
+		m_fStateTime = 0.0f;
+	}
+}
+
+//==========================================================================
+// ダイブ
+//==========================================================================
+void CReceiverPeople::StateDive()
+{
+	// モーション取得
+	CMotion* pMotion = GetMotion();
+	if (pMotion == nullptr)
+	{
+		return;
+	}
+
+	if (pMotion->GetType() != MOTION::MOTION_DIVE)
+	{
+		// モーション設定
+		pMotion->Set(MOTION::MOTION_DIVE);
+	}
+
+	// 移動時間加算
+	m_fMoveTimer += CManager::GetInstance()->GetDeltaTime();
+
+	// 荷物取得
+	CBaggage* pBag = CBaggage::GetListObj().GetData(0);
+	MyLib::Vector3 bagpos = pBag->GetPosition();
+
+	// 位置設定
+	MyLib::Vector3 pos = UtilFunc::Correction::EasingLinear(m_StartPos, bagpos, 0.0f, STATE_TIME::DIVE, m_fMoveTimer);
+	SetPosition(pos);
+
+	// 向きを調整
+	MyLib::Vector3 rot = GetRotation();
+	rot.y = m_StartPos.AngleXZ(bagpos);
+	SetRotation(rot);
+
+
+	// 状態遷移
+	if (m_fMoveTimer >= STATE_TIME::DIVE)
+	{
+		SetState(STATE::STATE_DROWN);
+	}
+
 }
 
 //==========================================================================
