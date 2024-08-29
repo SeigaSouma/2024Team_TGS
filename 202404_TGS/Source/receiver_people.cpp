@@ -608,6 +608,11 @@ void CReceiverPeople::StateDive()
 	if (m_fMoveTimer >= STATE_TIME::DIVE)
 	{
 		SetState(STATE::STATE_DROWN);
+
+		// 水エフェクト
+		CEffekseerObj::Create(
+			CMyEffekseer::EFKLABEL::EFKLABEL_SPRAYWATER_MINI,
+			pos, MyLib::Vector3(0.0f, 0.0f, 0.0f), 0.0f, 20.0f, true);
 	}
 
 }
