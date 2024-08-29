@@ -11,7 +11,7 @@ TEXTURE_FILENAME = data\TEXTURE\sky\sky_02.jpg		# [0]
 #------------------------------------------------------------------------------
 # モデル数
 #------------------------------------------------------------------------------
-NUM_MODEL = 72
+NUM_MODEL = 74
 
 #------------------------------------------------------------------------------
 # モデルファイル名
@@ -88,6 +88,8 @@ MODEL_FILENAME = data\MODEL\river_object\crab.x		# [68]
 MODEL_FILENAME = data\MODEL\river_object\hat.x		# [69]
 MODEL_FILENAME = data\MODEL\river_object\rockman.x		# [70]
 MODEL_FILENAME = data\MODEL\river_object\ryohukaruma.x		# [71]
+MODEL_FILENAME = data\MODEL\river_object\frog.x		# [72]
+MODEL_FILENAME = data\MODEL\map_object\sun.x		# [73]
 
 #==============================================================================
 # 空情報
@@ -727,7 +729,7 @@ END_MODELSET
 
 MODELSET
 	TYPE = 52
-	POS = 80950.02 100.00 4209.23
+	POS = 80950.02 295.44 4209.23
 	ROT = 0.00 0.00 0.00
 	SCALE = 1.00
 	SHADOW = 1
@@ -738,6 +740,38 @@ MODELSET
 	POS = 81680.85 500.00 10506.72
 	ROT = 0.00 0.00 0.00
 	SCALE = 2.63
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 45
+	POS = 86251.35 19.03 5820.73
+	ROT = 0.00 0.00 0.00
+	SCALE = 4.32
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 63
+	POS = 90385.72 309.93 5802.39
+	ROT = 0.00 0.00 0.00
+	SCALE = 1.79
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 52
+	POS = 85368.38 347.31 9253.75
+	ROT = 0.00 0.00 0.00
+	SCALE = 1.72
+	SHADOW = 1
+END_MODELSET
+
+MODELSET
+	TYPE = 53
+	POS = 75116.88 556.04 14005.49
+	ROT = 0.00 0.00 0.00
+	SCALE = 3.25
 	SHADOW = 1
 END_MODELSET
 
