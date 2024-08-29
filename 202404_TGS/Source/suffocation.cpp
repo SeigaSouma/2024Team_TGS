@@ -14,7 +14,7 @@
 //==========================================================================
 namespace
 {
-	const std::string TEXTURE_SAMPLE = "data\\TEXTURE\\key\\A.png";	// テクスチャのファイル
+	const std::string TEXTURE_SAMPLE = "data\\TEXTURE\\subtitle\\suffocation.png";	// テクスチャのファイル
 }
 
 //==========================================================================
@@ -59,6 +59,10 @@ HRESULT CSuffocation::Init()
 	// オブジェクト2Dの初期化
 	CObject2D::Init();
 
+	MyLib::Vector3 move = GetMove();
+	move = UtilFunc::Transformation::Random(-20, 20) * 0.1f;
+	SetMove(move);
+
 	// テクスチャ設定
 	int texID = CTexture::GetInstance()->Regist(TEXTURE_SAMPLE);
 	BindTexture(texID);
@@ -74,7 +78,7 @@ HRESULT CSuffocation::Init()
 #endif
 	SetSize(size);
 	SetSizeOrigin(size);
-	SetPosition(MyLib::Vector3(SCREEN_WIDTH * 0.5f,SCREEN_HEIGHT * 0.5f,0.0f));
+	SetPosition(MyLib::Vector3(SCREEN_WIDTH * 0.5f,600.0f,0.0f));
 
 
 	// 位置、向き設定は必要があれば追加
@@ -101,6 +105,28 @@ void CSuffocation::Update()
 {
 	// 更新処理
 	CObject2D::Update();
+
+	int nCtr;
+	MyLib::Vector3 pos = GetPosition();
+	MyLib::Vector3 move = GetMove();
+
+	if (UtilFunc::Transformation::Random(0, 2) == 0)
+	{
+		move.x *= -1.0f;
+	}
+
+	move.y = -1.2f;
+	pos += move;
+
+	if (pos.y <= SCREEN_HEIGHT * 0.5f)
+	{
+		move.y = 0.0f;
+		pos.y = SCREEN_HEIGHT * 0.5f;
+		SetPosition(pos);
+	}
+	SetMove(move);
+	SetPosition(pos);
+
 }
 
 //==========================================================================
