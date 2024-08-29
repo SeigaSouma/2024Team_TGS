@@ -95,7 +95,7 @@ class CEdit_MapBlock_Arrangment : public CEdit_MapBlock_Super
 {
 public:
 
-	CEdit_MapBlock_Arrangment() : CEdit_MapBlock_Super() {}
+	CEdit_MapBlock_Arrangment() : CEdit_MapBlock_Super() { m_FileName.clear(); }
 	~CEdit_MapBlock_Arrangment() {}
 
 	void Init() override;	// 初期化
@@ -118,6 +118,7 @@ private:
 	CHandle* m_pHandle = nullptr;					// 移動ハンドル
 	CHandle::HandleType m_HandleType = CHandle::HandleType::TYPE_MOVE;	// ハンドルの種類
 	CHandle::HandleAngle m_moveAngle = CHandle::HandleAngle::ANGLE_X;	// 移動の向き
+	std::vector<std::string> m_FileName;
 
 };
 

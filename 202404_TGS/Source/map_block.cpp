@@ -455,6 +455,7 @@ void CMapBlock::LoadBin()
 	{
 		map.emplace_back();
 		map.back().push_back(CMapBlockInfo::SObsacleInfo());
+		map.resize(checkpointSize);
 	}
 
 	// レベルロード
@@ -569,7 +570,7 @@ std::vector<std::vector<CMapBlockInfo::SObsacleInfo>> CMapBlock::LoadBin_Obstacl
 std::vector<std::vector<CMapBlockInfo::SObsacleInfo>> CMapBlock::LoadBin_Map()
 {
 	// ファイルを開く
-	std::ifstream File(FILE_OBSTACLE, std::ios::binary);
+	std::ifstream File(FILE_MAP, std::ios::binary);
 	if (!File.is_open()) {
 		// 例外処理
 		return std::vector<std::vector<CMapBlockInfo::SObsacleInfo>>();

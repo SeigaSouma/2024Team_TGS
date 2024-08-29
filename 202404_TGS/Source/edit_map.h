@@ -47,6 +47,7 @@ public:
 
 	static CEdit_Map* Create(const std::string& file, CManager::BuildMode mode);	// 生成
 	static CListManager<CObjectX> GetListObj() { return m_List; }		// リスト取得
+	static std::vector<std::string> GetModelFileName() { return m_ModelFile; }
 
 protected:
 	std::string m_Filename;	// ファイル名
