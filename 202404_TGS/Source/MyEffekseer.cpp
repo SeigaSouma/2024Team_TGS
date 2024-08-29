@@ -18,15 +18,17 @@
 //==========================================================================
 std::string CMyEffekseer::m_EffectName[CMyEffekseer::EFKLABEL_MAX] =	// エフェクトのファイル名
 {
-	"data/Effekseer/Laser01.efkefc",			// サンプルのレーザー
+	"data/Effekseer/Laser01.efkefc",		// サンプルのレーザー
 	"data/Effekseer/bress.efkefc",			// 息
-	"data/Effekseer/sample_river.efkefc",			// 川サンプル
+	"data/Effekseer/sample_river.efkefc",	// 川サンプル
 	"data/Effekseer/impact.efkefc",			// 衝撃
-	"data/Effekseer/spraywater.efkefc",			// 衝撃
-	"data/Effekseer/waterjump.efkefc",			// 魚入水
-	"data/Effekseer/playermoveLine.efkefc",		// プレイヤーの移動線
-	"data/Effekseer/photon.efkefc",				// 死亡
-	"data/Effekseer/ItemGet.efkefc",			// 荷物獲得
+	"data/Effekseer/spraywater.efkefc",		// 衝撃
+	"data/Effekseer/spraywater_mini.efkefc",// 衝撃
+	"data/Effekseer/waterjump.efkefc",		// 魚入水
+	"data/Effekseer/playermoveLine.efkefc",	// プレイヤーの移動線
+	"data/Effekseer/photon.efkefc",			// 死亡
+	"data/Effekseer/ItemGet.efkefc",		// 荷物獲得
+	"data/Effekseer/air.efkefc",			// 空気
 };
 CMyEffekseer* CMyEffekseer::m_pMyEffekseer = nullptr;	// 自身のポインタ
 

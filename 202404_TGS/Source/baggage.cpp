@@ -485,8 +485,8 @@ void CBaggage::StateFall()
 		{// êÖÇµÇ‘Ç´ÇÃê∂ê¨
 
 			CEffekseerObj::Create(
-				CMyEffekseer::EFKLABEL::EFKLABEL_SPRAYWATER,
-				pos, MyLib::Vector3(0.0f, 0.0f, 0.0f), 0.0f, 40.0f, true);
+				CMyEffekseer::EFKLABEL::EFKLABEL_SPRAYWATER_MINI,
+				pos, MyLib::Vector3(0.0f, 0.0f, 0.0f), 0.0f, 30.0f, true);
 		}
 
 		m_bfall = true;

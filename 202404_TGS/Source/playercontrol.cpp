@@ -977,7 +977,8 @@ void CPlayerControlBaggage::GoalAction(CPlayer* player, CBaggage* pBaggage)
 	// ílïœçX
 	pos += move;
 
-	if (pos.y <= pBaggage->GetOriginPosition().y)
+	if (m_state != STATE::STATE_RELEASE &&
+		pos.y <= pBaggage->GetOriginPosition().y)
 	{
 		pos.y = pBaggage->GetOriginPosition().y;
 		move.y = 0.0f;

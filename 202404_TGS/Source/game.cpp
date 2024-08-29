@@ -586,6 +586,13 @@ void CGame::Update()
 
 #endif
 
+	/*if (pInputKeyboard->GetTrigger(DIK_K))
+	{
+		CEffekseerObj::Create(
+			CMyEffekseer::EFKLABEL::EFKLABEL_AIR,
+			CManager::GetInstance()->GetCamera()->GetPositionR(), MyLib::Vector3(0.0f, 0.0f, 0.0f), 0.0f, 100.0f, true);
+	}*/
+
 	// シーンの更新
 	CScene::Update();
 }
