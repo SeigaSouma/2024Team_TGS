@@ -142,7 +142,7 @@ void CPeopleManager::SetByRank()
 	{// 最低ランク
 
 		// ガヤ音停止
-		CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_GAYA);
+		CSound::GetInstance()->StopSound(CSound::LABEL::LABEL_SE_GAYA);
 		return;
 	}
 
@@ -267,6 +267,21 @@ void CPeopleManager::SetPeople(const MyLib::Vector3& pos, const MyLib::Vector3& 
 	for (const auto& data : NowPattern.data)
 	{
 		int random = UtilFunc::Transformation::Random(0, maxType);
+		while (1)
+		{
+			if (random != CPeople::TYPE::TYPE_KITE &&
+				random != CPeople::TYPE::TYPE_KITE2 &&
+				random != CPeople::TYPE::TYPE_KITE3)
+			{
+				break;
+			}
+			else if (UtilFunc::Transformation::Random(0, 1) == 0)
+			{
+				break;
+			}
+			random = UtilFunc::Transformation::Random(0, maxType);
+		}
+
 		// スポーン時の向きを掛け合わせる
 		spawnPos = pos;
 
@@ -274,40 +289,11 @@ void CPeopleManager::SetPeople(const MyLib::Vector3& pos, const MyLib::Vector3& 
 		spawnPos += data.pos;
 
 		// 生成
-		switch (random)
-		{
-		case TYPE::TYPE_KITE:
-		{
-			pPeople = CKite::Create(
-				m_vecMotionFileName[random],	// ファイル名
-				spawnPos);							// 位置
-		}
-			break;
-		default:
-		{
-			pPeople = CPeople::Create(
-				m_vecMotionFileName[random],	// ファイル名
-				spawnPos);							// 位置
-
-			// 向き設定
-			if (pPeople != nullptr)
-			{
-				// 向き設定
-				float rotY = rot.y;
-				if (rand() % 2 == 0)
-				{
-					rotY += D3DX_PI;
-				}
-
-				UtilFunc::Transformation::RotNormalize(rotY);
-				pPeople->SetRotation(MyLib::Vector3(0.0f, rotY, 0.0f));
-				pPeople->SetRotDest(rotY);
-			}
-		}
-			break;
-		}
-
-		
+		pPeople = CKite::Create(
+			m_vecMotionFileName[random],	// ファイル名
+			spawnPos,						// 位置
+			static_cast<CPeople::TYPE>(random)
+		);
 	}
 	
 }

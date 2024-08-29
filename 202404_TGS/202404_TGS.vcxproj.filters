@@ -138,6 +138,9 @@
     <Filter Include="direction\ascension">
       <UniqueIdentifier>{c9db0c57-1554-4691-b321-f54864fb0e81}</UniqueIdentifier>
     </Filter>
+    <Filter Include="map\waterstone">
+      <UniqueIdentifier>{2ab656b8-7b95-477c-af25-e5095936ee74}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\ballast.cpp">
@@ -488,12 +491,6 @@
     <ClCompile Include="Source\debug_bressrange.cpp">
       <Filter>SAMPLE</Filter>
     </ClCompile>
-    <ClCompile Include="Source\map_obstacle.cpp">
-      <Filter>map</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\map_obstacleManager.cpp">
-      <Filter>map</Filter>
-    </ClCompile>
     <ClCompile Include="Source\edit_obstacle.cpp">
       <Filter>edit</Filter>
     </ClCompile>
@@ -566,9 +563,6 @@
     <ClCompile Include="Source\convert.cpp">
       <Filter>system</Filter>
     </ClCompile>
-    <ClCompile Include="Source\waterstone.cpp">
-      <Filter>map</Filter>
-    </ClCompile>
     <ClCompile Include="Source\mapmesh.cpp">
       <Filter>map\mesh</Filter>
     </ClCompile>
@@ -599,9 +593,6 @@
     <ClCompile Include="Source\edit_waterstone.cpp">
       <Filter>edit</Filter>
     </ClCompile>
-    <ClCompile Include="Source\waterstoneManager.cpp">
-      <Filter>map</Filter>
-    </ClCompile>
     <ClCompile Include="Source\people.cpp">
       <Filter>people</Filter>
     </ClCompile>
@@ -622,12 +613,6 @@
     </ClCompile>
     <ClCompile Include="Source\peoplemanager.cpp">
       <Filter>people</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\map_obstacle_motion.cpp">
-      <Filter>map</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\map_obstacle_obj.cpp">
-      <Filter>map</Filter>
     </ClCompile>
     <ClCompile Include="Source\countdown_start.cpp">
       <Filter>direction</Filter>
@@ -715,6 +700,27 @@
     </ClCompile>
     <ClCompile Include="Source\serifeffect.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\map_obstacle.cpp">
+      <Filter>map\obstacle</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\map_obstacle_motion.cpp">
+      <Filter>map\obstacle</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\map_obstacle_obj.cpp">
+      <Filter>map\obstacle</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\map_obstacleManager.cpp">
+      <Filter>map\obstacle</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\waterstone.cpp">
+      <Filter>map\waterstone</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\waterstoneManager.cpp">
+      <Filter>map\waterstone</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\edit_mapblock.cpp">
+      <Filter>edit</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1075,12 +1081,6 @@
     <ClInclude Include="Source\debug_bressrange.h">
       <Filter>SAMPLE</Filter>
     </ClInclude>
-    <ClInclude Include="Source\map_obstacle.h">
-      <Filter>map</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\map_obstacleManager.h">
-      <Filter>map</Filter>
-    </ClInclude>
     <ClInclude Include="Source\edit_obstacle.h">
       <Filter>edit</Filter>
     </ClInclude>
@@ -1153,9 +1153,6 @@
     <ClInclude Include="Source\convert.h">
       <Filter>system</Filter>
     </ClInclude>
-    <ClInclude Include="Source\waterstone.h">
-      <Filter>map</Filter>
-    </ClInclude>
     <ClInclude Include="Source\mapmesh.h">
       <Filter>map\mesh</Filter>
     </ClInclude>
@@ -1186,9 +1183,6 @@
     <ClInclude Include="Source\edit_waterstone.h">
       <Filter>edit</Filter>
     </ClInclude>
-    <ClInclude Include="Source\waterstoneManager.h">
-      <Filter>map</Filter>
-    </ClInclude>
     <ClInclude Include="Source\people.h">
       <Filter>people</Filter>
     </ClInclude>
@@ -1209,12 +1203,6 @@
     </ClInclude>
     <ClInclude Include="Source\peoplemanager.h">
       <Filter>people</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\map_obstacle_motion.h">
-      <Filter>map</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\map_obstacle_obj.h">
-      <Filter>map</Filter>
     </ClInclude>
     <ClInclude Include="Source\countdown_start.h">
       <Filter>direction</Filter>
@@ -1302,6 +1290,27 @@
     </ClInclude>
     <ClInclude Include="Source\serifeffect.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\map_obstacle.h">
+      <Filter>map\obstacle</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\map_obstacle_motion.h">
+      <Filter>map\obstacle</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\map_obstacle_obj.h">
+      <Filter>map\obstacle</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\map_obstacleManager.h">
+      <Filter>map\obstacle</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\waterstone.h">
+      <Filter>map\waterstone</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\waterstoneManager.h">
+      <Filter>map\waterstone</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\edit_mapblock.h">
+      <Filter>edit</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

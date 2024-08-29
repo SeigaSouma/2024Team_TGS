@@ -721,7 +721,7 @@ bool CBaggage::Hit()
 				SetMove(move);
 
 				// SEÄ¶
-				CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_HIT);
+				CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_SHOCK_WOOD);
 
 				return true;
 			}

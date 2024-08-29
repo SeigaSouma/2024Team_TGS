@@ -101,6 +101,7 @@ private:
 	Info m_Info;	// 情報
 	MyLib::Matrix m_mtxWorld;	// ワールドマトリックス
 	MyLib::Vector3 m_scale;		// スケール
+	float m_fIntervalWing;		// 羽ばたきの間隔
 };
 
 

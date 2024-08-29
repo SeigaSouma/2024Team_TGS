@@ -20,6 +20,9 @@
 #include "debugproc.h"
 #include "motion.h"
 
+// 派生クラス
+#include "kite.h"
+
 
 //==========================================================================
 // 定数定義
@@ -80,10 +83,23 @@ CPeople::~CPeople()
 //==========================================================================
 // 生成処理
 //==========================================================================
-CPeople* CPeople::Create(const std::string& pFileName, MyLib::Vector3 pos)
+CPeople* CPeople::Create(const std::string& filename, const MyLib::Vector3& pos, const TYPE& type)
 {
 	// メモリの確保
-	CPeople* pPeople = DEBUG_NEW CPeople;
+	CPeople* pPeople = nullptr;
+
+	switch (type)
+	{
+	case TYPE::TYPE_KITE:
+	case TYPE::TYPE_KITE2:
+	case TYPE::TYPE_KITE3:
+		pPeople = DEBUG_NEW CKite;
+		break;
+
+	default:
+		pPeople = DEBUG_NEW CPeople;
+		break;
+	}
 
 	if (pPeople != nullptr)
 	{// メモリの確保が出来ていたら
@@ -93,7 +109,7 @@ CPeople* CPeople::Create(const std::string& pFileName, MyLib::Vector3 pos)
 		pPeople->CObject::SetOriginPosition(pos);
 
 		// テキスト読み込み
-		HRESULT hr = pPeople->LoadText(pFileName.c_str());
+		HRESULT hr = pPeople->LoadText(filename.c_str());
 		if (FAILED(hr))
 		{// 失敗していたら
 			return nullptr;
@@ -124,14 +140,35 @@ HRESULT CPeople::Init()
 
 	// デフォルト設定
 	CMotion* pMotion = GetMotion();
+	int motionmove = UtilFunc::Transformation::Random(0, pMotion->GetNumMotion() - 1);
+
 	if (pMotion != nullptr)
 	{
-		pMotion->Set(UtilFunc::Transformation::Random(0, pMotion->GetNumMotion() - 1));
+		pMotion->Set(motionmove);
 	}
+
+	float rotY = D3DX_PI * 0.5f;
+	if (pMotion->IsGetMove(pMotion->GetType()) == 1)
+	{// 移動モーション
+
+		// 向き設定
+		if (rand() % 2 == 0)
+		{
+			rotY += D3DX_PI;
+		}
+	}
+	else
+	{
+		rotY = UtilFunc::Transformation::Random(-31, 31) * 0.1f;
+	}
+	UtilFunc::Transformation::RotNormalize(rotY);
+	SetRotation(MyLib::Vector3(0.0f, rotY, 0.0f));
+	SetRotDest(rotY);
 
 	// 移動速度
 	m_fMoveVelocity = MOVE_VELOCITY + UtilFunc::Transformation::Random(-20, 50) * 0.1f;
 
+	// 移動量
 	MyLib::Vector3 move, rot = GetRotation();
 	move.x = sinf(D3DX_PI + rot.y) * m_fMoveVelocity;
 	move.z = cosf(D3DX_PI + rot.y) * m_fMoveVelocity;

@@ -66,6 +66,9 @@ HRESULT CSplashwater_Manager::Init()
 		CSplashwater::Create();
 	}
 
+	// ÉTÉEÉìÉhçƒê∂
+	CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_MIZUSIBUKI);
+
 	// îwåi
 	CSplashwater_BG::Create();
 

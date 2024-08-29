@@ -46,7 +46,7 @@ public:
 	virtual D3DXVECTOR2 *GetTex();						// テクスチャ座標の取得
 
 	static CObjectBillboard *Create(int nPriority = mylib_const::PRIORITY_ZSORT);
-	static CObjectBillboard *Create(MyLib::Vector3 pos, MyLib::Vector3 rot);
+	static CObjectBillboard *Create(const MyLib::Vector3& pos, const MyLib::Vector3& rot);
 	CObjectBillboard *GetObjectBillBoard();
 	LPDIRECT3DVERTEXBUFFER9 GetVtxBuff() const;
 

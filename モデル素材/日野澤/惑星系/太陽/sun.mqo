@@ -17,9 +17,8 @@ Scene {
 		}
 	}
 }
-Material 2 {
+Material 1 {
 	"13913_Sun" col(1.000 1.000 1.000 1.000) dif(1.000) amb(1.000) emi(1.000) spc(1.000) power(100.00) tex("C:\Users\student\Desktop\ƒ`[ƒ€§ì\2024Team_TGS\ƒ‚ƒfƒ‹‘fŞ\“ú–ìàV\˜f¯Œn\‘¾—z\sun.png")
-	"01___Default" col(0.608 0.612 0.620 1.000) dif(0.800) amb(0.600) emi(0.560) spc(0.000) power(5.00) tex("moon.png")
 }
 Object "obj1" {
 	visible 15
