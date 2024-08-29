@@ -19,6 +19,7 @@
 #include "debug_bressrange.h"
 #endif
 
+class CSuffocation;
 class CEffekseerObj;
 
 //==========================================================================
@@ -62,12 +63,13 @@ public:
 	};
 
 	// コンストラクタ
-	CPlayerControlBaggage() 
+	CPlayerControlBaggage()
 	{
 		m_pEffekseerObj = nullptr;
 		m_bFall = true;
 		m_state = STATE::STATE_NONE;
 		m_nGoalTimer = 0;
+		m_pSuffocation = nullptr;
 	}
 
 	virtual void Action(CPlayer* player, CBaggage* pBaggage);	// アクション
@@ -82,6 +84,8 @@ private:
 	bool EndCheck(CBaggage* pBaggage);
 	void GoalAction(CPlayer* player, CBaggage* pBaggage);
 	void BressEffect(CPlayer* player, CBaggage* pBaggage);		// 息エフェクト
+	void suffocation();
+	CSuffocation* m_pSuffocation;
 
 	// メンバ変数
 	CEffekseerObj* m_pEffekseerObj = nullptr;

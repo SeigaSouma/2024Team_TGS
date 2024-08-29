@@ -248,6 +248,9 @@ void CObstacle_FishArch::ControllFish()
 				CEffekseerObj::Create(
 					CMyEffekseer::EFKLABEL::EFKLABEL_WATERJUMP,
 					setpos, MyLib::Vector3(0.0f, 0.0f, 0.0f), 0.0f, 40.0f, true);
+
+				// サウンド再生
+				CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_INTHEWATER2);
 			}
 
 			// 位置設定

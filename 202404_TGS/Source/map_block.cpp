@@ -9,6 +9,7 @@
 #include "map_obstacle.h"
 #include "map_obstacleManager.h"
 #include "waterstone.h"
+#include "objectX.h"
 
 //==========================================================================
 // 定数定義
@@ -18,6 +19,7 @@ namespace
 	const std::string FILENAME = "data\\TEXT\\map\\block.txt";
 	const std::string FILE_CHECKPOINT = "data\\TEXT\\map\\checkpoint.bin";	// チェックポイントのセーブファイル
 	const std::string FILE_OBSTACLE = "data\\TEXT\\map\\obstacle.bin";		// 障害物のセーブファイル
+	const std::string FILE_MAP = "data\\TEXT\\map\\map.bin";				// マップのセーブファイル
 	const std::string FILE_WATERSTONE = "data\\TEXT\\map\\waterstone.bin";		// 水中岩のセーブファイル
 	const std::string FILE_LEVEL = "data\\TEXT\\map\\level.bin";			// レベルのセーブファイル
 	const int NUM_CHUNK = 5;	// チャンクの数
@@ -266,6 +268,52 @@ void CMapBlock::SaveBin_Obstacle()
 }
 
 //==========================================================================
+// マップセーブ
+//==========================================================================
+void CMapBlock::SaveBin_Map()
+{
+	// ファイルを開く
+	std::ofstream File(FILE_MAP, std::ios::binary);
+	if (!File.is_open()) {
+		return;
+	}
+
+
+	// 先頭を保存
+	std::list<CMapBlockInfo*>::iterator itr = m_InfoList.GetEnd();
+	CMapBlockInfo* pObj = nullptr;
+
+	std::vector<std::vector<CMapBlockInfo::SObsacleInfo>> savedata;
+
+	// データコピー
+	while (m_InfoList.ListLoop(itr))
+	{
+		savedata.push_back((*itr)->GetMapInfo());
+	}
+
+	// 外側ベクトルのサイズを書き込む
+	size_t outer_size = savedata.size();
+	File.write(reinterpret_cast<const char*>(&outer_size), sizeof(outer_size));
+
+
+	for (const auto& inner : savedata)
+	{
+		// データの個数を計算
+		size_t vecSize = inner.size();
+
+		// ベクトルのサイズをセーブ
+		File.write(reinterpret_cast<const char*>(&vecSize), sizeof(vecSize));
+
+		// ベクトル内の要素をセーブ
+		File.write(reinterpret_cast<const char*>(inner.data()), vecSize * sizeof(CMapBlockInfo::SObsacleInfo));
+	}
+
+
+	// ファイルを閉じる
+	File.close();
+}
+
+//==========================================================================
 // 水中岩セーブ
 //==========================================================================
 void CMapBlock::SaveBin_WaterStone()
@@ -361,6 +409,9 @@ void CMapBlock::SaveBin()
 	// 障害物セーブ
 	SaveBin_Obstacle();
 
+	// マップセーブ
+	SaveBin_Map();
+
 	// 水中岩セーブ
 	SaveBin_WaterStone();
 
@@ -398,6 +449,14 @@ void CMapBlock::LoadBin()
 		waterstone.back().push_back(CWaterStone_Manager::SStoneInfo());
 	}
 
+	// マップロード
+	std::vector<std::vector<CMapBlockInfo::SObsacleInfo>> map = LoadBin_Map();
+	if (map.empty())
+	{
+		map.emplace_back();
+		map.back().push_back(CMapBlockInfo::SObsacleInfo());
+	}
+
 	// レベルロード
 	std::vector<int> level = LoadBin_Level(checkpointSize);
 	if (level.empty())
@@ -418,6 +477,7 @@ void CMapBlock::LoadBin()
 
 		pBlock->SetCheckpointInfo(checkpoint[i]);	// チェックポイント設定
 		pBlock->SetObstacleInfo(obstacle[i]);		// 障害物設定
+		pBlock->SetMapInfo(map[i]);					// マップ設定
 		pBlock->SetLevel(level[i]);					// レベル設定
 
 		if (static_cast<int>(waterstone.size()) > i)
@@ -470,6 +530,43 @@ std::vector<std::vector<float>> CMapBlock::LoadBin_CheckPoint()
 // 障害物読み込み
 //==========================================================================
 std::vector<std::vector<CMapBlockInfo::SObsacleInfo>> CMapBlock::LoadBin_Obstacle()
+{
+	// ファイルを開く
+	std::ifstream File(FILE_OBSTACLE, std::ios::binary);
+	if (!File.is_open()) {
+		// 例外処理
+		return std::vector<std::vector<CMapBlockInfo::SObsacleInfo>>();
+	}
+
+	// まず、外側のベクトルのサイズを読み込む
+	size_t outer_size;
+	File.read(reinterpret_cast<char*>(&outer_size), sizeof(outer_size));
+
+	std::vector<std::vector<CMapBlockInfo::SObsacleInfo>> loaddata(outer_size);
+
+	// 各内側のベクトルに対してデータを読み込む
+	for (auto& inner_vector : loaddata)
+	{
+		// 内側のベクトルのサイズを読み込む
+		size_t inner_size;
+		File.read(reinterpret_cast<char*>(&inner_size), sizeof(inner_size));
+
+		inner_vector.resize(inner_size);
+
+		// データ読み込み
+		File.read(reinterpret_cast<char*>(inner_vector.data()), inner_size * sizeof(CMapBlockInfo::SObsacleInfo));
+	}
+
+	// ファイルを閉じる
+	File.close();
+
+	return loaddata;
+}
+
+//==========================================================================
+// マップ読み込み
+//==========================================================================
+std::vector<std::vector<CMapBlockInfo::SObsacleInfo>> CMapBlock::LoadBin_Map()
 {
 	// ファイルを開く
 	std::ifstream File(FILE_OBSTACLE, std::ios::binary);
@@ -593,6 +690,17 @@ void CMapBlock::Set(const int Idx, const MyLib::Vector3& startpos, float startle
 		}
 	}
 
+	// マップの配置
+	{
+		CMap_ObstacleManager* pManager = CMap_ObstacleManager::GetInstance();
+
+		for (const auto& it : pInfo->GetMapInfo())
+		{
+			CObjectX* pObj = CObjectX::Create(it.nType, it.pos + startpos, it.rot);
+			pObj->SetScale(it.scale);
+		}
+	}
+
 	// 岩の配置
 	{
 		for (const auto& it : pInfo->GetWaterStoneInfo())
@@ -688,6 +796,7 @@ CMapBlockInfo::~CMapBlockInfo()
 //==========================================================================
 HRESULT CMapBlockInfo::Init()
 {
+	m_MapList.clear();
 	m_CheckpointList.clear();
 	m_ObstacleList.clear();
 	m_WaterStoneList.clear();

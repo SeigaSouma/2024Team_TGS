@@ -39,6 +39,12 @@ public:
 		MOTION_MAX
 	};
 
+	enum TYPE
+	{
+		TYPE_KITE = 8,	// 凧
+		TYPE_KITE2,	// 凧
+		TYPE_KITE3,	// 凧
+	};
 
 	CPeople(int nPriority = mylib_const::ENEMY_PRIORITY);
 	virtual ~CPeople();
@@ -52,8 +58,8 @@ public:
 
 	virtual void Kill();	// 削除
 
-	void SetState(STATE state);		// 状態設定
-	STATE GetState() { return m_state; }
+	void SetState(STATE state);				// 状態設定
+	STATE GetState() { return m_state; }	// 状態取得
 	void SetStateTime(float time) { m_fStateTime = time; }	// 状態時間設定
 
 	// モーション
@@ -62,7 +68,7 @@ public:
 	HRESULT LoadText(const char *pFileName);
 
 	static CListManager<CPeople> GetListObj() { return m_List; }	// リスト取得
-	static CPeople* Create(const std::string& pFileName, MyLib::Vector3 pos);
+	static CPeople* Create(const std::string& filename, const MyLib::Vector3& pos, const TYPE& type);
 
 protected:
 

@@ -84,6 +84,7 @@ public:
 	void Kill();
 	void CreateCollisionBox();	// 当たり判定ボックス生成
 	CCollisionLine_Box* GetCollisionLineBox() { return m_pCollisionLineBox; }	// 当たり判定ボックス取得
+	static CListManager<CObjectX> GetListObj() { return m_List; }				// リスト取得
 
 	static CObjectX *Create();
 	static CObjectX *Create(const std::string& file);
@@ -123,7 +124,6 @@ private:
 
 	// その他
 	void SetCollisionBoxData();	// 当たり判定ボックスデータ設定
-	
 
 	//=============================
 	// メンバ変数
@@ -142,7 +142,7 @@ private:
 	static int m_nNumAll;		// 総数
 	CShadow *m_pShadow;			// 影の情報
 	CCollisionLine_Box* m_pCollisionLineBox;	// 当たり判定ボックス
-
+	static CListManager<CObjectX> m_List;		// リスト
 
 	LPD3DXMESH m_pMesh;			// メッシュ(頂点情報)へのポインタ
 

@@ -27,6 +27,7 @@ CObjectX::STATE_FUNC CObjectX::m_StateFunc[] =
 // 静的メンバ変数宣言
 //==========================================================================
 int CObjectX::m_nNumAll = 0;	// 総数
+CListManager<CObjectX> CObjectX::m_List = {};	// リスト
 
 //==========================================================================
 // コンストラクタ
@@ -240,6 +241,8 @@ HRESULT CObjectX::Init()
 	// Xファイルのデータ取得
 	CXLoad *pXLoad = CXLoad::GetInstance();
 
+	m_List.Regist(this);
+
 	// Xファイルのロード
 	m_nIdxXFile = pXLoad->XLoad("data\\MODEL\\radiokaikan_01.x");
 
@@ -271,6 +274,8 @@ HRESULT CObjectX::Init(const std::string& file)
 
 	// Xファイルのデータ取得
 	CXLoad *pXLoad = CXLoad::GetInstance();
+
+	m_List.Regist(this);
 
 	// Xファイルのロード
 	m_nIdxXFile = pXLoad->XLoad(file);
@@ -307,6 +312,8 @@ HRESULT CObjectX::Init(int nIdxXFile)
 	// Xファイルのデータ割り当て
 	BindXData(nIdxXFile);
 
+	m_List.Regist(this);
+
 	// Xファイルのデータ取得
 	CXLoad::SXFile *pXData = CXLoad::GetInstance()->GetMyObject(m_nIdxXFile);
 
@@ -339,6 +346,8 @@ void CObjectX::Uninit()
 		m_pShadow = nullptr;
 	}
 
+	m_List.Delete(this);
+
 	m_nIdxTexure = 0;
 
 	// オブジェクトの破棄
@@ -358,6 +367,8 @@ void CObjectX::Kill()
 		m_pShadow->Uninit();
 		m_pShadow = nullptr;
 	}
+
+	m_List.Delete(this);
 
 	if (m_pCollisionLineBox != nullptr) {
 		m_pCollisionLineBox->Kill();

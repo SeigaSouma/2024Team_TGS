@@ -11,6 +11,9 @@
 #include "objectX.h"
 #include "listmanager.h"
 
+class CObjectBillboard;
+class CEffekseerObj;
+
 //==========================================================================
 // クラス定義
 //==========================================================================
@@ -52,6 +55,8 @@ private:
 	//=============================
 	// メンバ関数
 	//=============================
+	void CreateEffect();	// エフェクト生成
+	void CreateWaterEffect(int max);	// 水エフェクト生成
 
 	//=============================
 	// メンバ変数
@@ -61,6 +66,8 @@ private:
 	float m_fRotateTime;			// 回転時間
 	float m_fPassedTime;			// 通過したときの時間
 	bool m_bIsPassed;				// 通過したかどうか
+	CObjectBillboard* m_pEffect;	// エフェクトのポインタ
+	CEffekseerObj* m_pEffekseerObj;	// エフェクシアのオブジェクト
 	static CListManager<CCheckpoint> m_List;	// リスト
 
 	static int m_nAll;		// 総数

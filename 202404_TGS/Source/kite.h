@@ -19,7 +19,7 @@ class CShadow;
 //==========================================================================
 // クラス定義
 //==========================================================================
-// 人クラス
+// 凧クラス
 class CKite : public CPeople
 {
 public:
@@ -30,13 +30,7 @@ public:
 
 	// オーバーライドされた関数
 	virtual HRESULT Init() override;
-	virtual void Uninit() override;
 	virtual void Update() override;
-	virtual void Draw() override;
-
-	virtual void Kill();	// 削除
-
-	static CKite* Create(const std::string& pFileName, MyLib::Vector3 pos);
 
 protected:
 

@@ -14,6 +14,7 @@
 #include "edit_course.h"
 #include "edit_waterstone.h"
 #include "edit_judgezone.h"
+#include "edit_mapblock.h"
 
 //==========================================================================
 // コンストラクタ
