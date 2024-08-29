@@ -725,6 +725,9 @@
     <ClCompile Include="Source\edit_mapblock.cpp">
       <Filter>edit</Filter>
     </ClCompile>
+    <ClCompile Include="Source\suffocation.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
     <ClCompile Include="Source\frontobj_manager.cpp">
       <Filter>map\frontobj</Filter>
     </ClCompile>
@@ -1317,6 +1320,9 @@
     </ClInclude>
     <ClInclude Include="Source\edit_mapblock.h">
       <Filter>edit</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\suffocation.h">
+      <Filter>ui</Filter>
     </ClInclude>
     <ClInclude Include="Source\frontobj_manager.h">
       <Filter>map\frontobj</Filter>
