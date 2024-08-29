@@ -334,6 +334,7 @@
     <ClCompile Include="Source\stonewall.cpp" />
     <ClCompile Include="Source\stonewall_front.cpp" />
     <ClCompile Include="Source\subtitle.cpp" />
+    <ClCompile Include="Source\suffocation.cpp" />
     <ClCompile Include="Source\targetpoint.cpp" />
     <ClCompile Include="Source\texture.cpp" />
     <ClCompile Include="Source\timer.cpp" />
@@ -532,6 +533,7 @@
     <ClInclude Include="Source\stonewall.h" />
     <ClInclude Include="Source\stonewall_front.h" />
     <ClInclude Include="Source\subtitle.h" />
+    <ClInclude Include="Source\suffocation.h" />
     <ClInclude Include="Source\targetpoint.h" />
     <ClInclude Include="Source\texture.h" />
     <ClInclude Include="Source\timer.h" />
