@@ -8,6 +8,7 @@
 #include "manager.h"
 #include "calculation.h"
 #include "input.h"
+#include "renderer.h"
 
 //==========================================================================
 // ’è”’è‹`
@@ -99,6 +100,9 @@ HRESULT CGlassclush::Init()
 
 	// Ží—Þ‚ÌÝ’è
 	SetType(CObject::TYPE::TYPE_OBJECT2D);
+
+	// ƒuƒ‰[‚Ìíœ
+	CManager::GetInstance()->GetRenderer()->SetEnableDrawMultiScreen(0.0f, 0.0f, 60.0f);
 
 	return S_OK;
 }
