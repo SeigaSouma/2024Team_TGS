@@ -19,6 +19,7 @@
 #include "spline.h"
 #include "EffekseerObj.h"
 #include "deadplayer.h"
+#include "suffocation.h"
 
 // キーコンフィグ
 #include "keyconfig_keyboard.h"
@@ -426,6 +427,14 @@ void CPlayerControlMove::Move(CPlayer* player)
 }
 
 //==========================================================================
+// サフォケーション
+//==========================================================================
+void CPlayerControlBaggage::suffocation()
+{
+	CSuffocation::Create();
+}
+
+//==========================================================================
 // アクション
 //==========================================================================
 void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
@@ -575,10 +584,14 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 
 				// ラ王生成
 				if (hitresult.isdeath)
-				{
+				{//=============================================================================
 					CDeadPlayer::Create(player->GetPosition());
 					pBaggage->SetState(CBaggage::STATE::STATE_FALL);
 
+					if (m_pSuffocation == nullptr)
+					{
+						m_pSuffocation = CSuffocation::Create();
+					}
 				}
 			}
 		}
@@ -626,6 +639,11 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 				{
 					CDeadPlayer::Create(player->GetPosition());
 					pBaggage->SetState(CBaggage::STATE::STATE_FALL);
+
+					if (m_pSuffocation == nullptr)
+					{
+						m_pSuffocation = CSuffocation::Create();
+					}
 				}
 			}
 		}
@@ -1098,6 +1116,12 @@ void CPlayerControlBaggage::Reset(CPlayer* player, CBaggage* pBaggage)
 	MyLib::Vector3 posBaggageOrigin = pBaggage->GetOriginPosition();
 	pBaggage->SetPosition(MyLib::Vector3(pos.x, posBaggageOrigin.y, pos.z));
 	m_state = STATE::STATE_WAIT;
+
+	if (m_pSuffocation != nullptr)
+	{
+		m_pSuffocation->Uninit();
+		m_pSuffocation = nullptr;
+	}
 }
 
 //==========================================================================
