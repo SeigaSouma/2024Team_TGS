@@ -61,6 +61,7 @@ public:
 		EFKLABEL_PLAYERMOVE_LINE,	// プレイヤーの移動線
 		EFKLABEL_PHOTON,			// 死亡
 		EFKLABEL_BAGGAGEGET,		// 荷物獲得
+		EFKLABEL_AIR,				// 空気
 		EFKLABEL_MAX
 	};
 
