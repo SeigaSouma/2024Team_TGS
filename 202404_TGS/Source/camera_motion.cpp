@@ -445,6 +445,7 @@ void CCameraMotion::TriggerMoment()
 		return;
 	}
 
+	// ƒgƒŠƒK[‚ÌuŠÔ
 	m_pCameraMotion_Trigger[m_nNowMotionIdx]->TriggerMoment(m_nNowTriggerIdx);
 }
 
@@ -736,6 +737,18 @@ void CCameraMotion::EditKey()
 
 	pKey->rotDest = rot;
 	pKey->posRDest = posR - m_EditInfo.offset;
+
+	// ˆÊ’u“ü—Í
+	if (ImGui::CollapsingHeader("Transform"))
+	{
+		ImGui::DragFloat3("posR", (float*)&posR, 1.0f, 0.0f, 0.0f, "%.2f");
+		ImGui::DragFloat3("rot", (float*)&rot, 0.1f, 0.0f, 0.0f, "%.2f");
+		pCamera->SetPositionR(posR);
+		pCamera->SetRotation(rot);
+
+		pKey->rotDest = rot;
+		pKey->posRDest = posR - m_EditInfo.offset;
+	}
 
 	if (ImGui::Button("Regist Key"))
 	{
