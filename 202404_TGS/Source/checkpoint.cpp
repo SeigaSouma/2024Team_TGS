@@ -12,6 +12,7 @@
 #include "spline.h"
 #include "course.h"
 #include "timer.h"
+#include "splashwater_manager.h"
 
 //==========================================================================
 // 定数定義
@@ -19,7 +20,7 @@
 namespace
 {
 	const char* MODEL = "data\\MODEL\\checkpoint\\flag.x";	// モデルパス
-	const std::string TEX_EFFECT = "data\\TEXTURE\\effect\\rolling.png";	// エフェクトパス
+	const std::string TEX_EFFECT = "data\\TEXTURE\\effect\\rolling2.png";	// エフェクトパス
 	const float ROTATE_TIMER = 0.6f;
 	const ImVec4 WATERCOLOR = ImVec4(0.658f, 0.658f, 1.0, 0.87f); // RGBA
 }
@@ -177,9 +178,13 @@ void CCheckpoint::Update()
 		}
 		else if(m_pEffekseerObj == nullptr)
 		{
+			// エフェクト
 			m_pEffekseerObj = CEffekseerObj::Create(
 				CMyEffekseer::EFKLABEL::EFKLABEL_WATERJUMP,
 				GetPosition() + MyLib::Vector3(300.0f, 0.0f, 0.0f), 0.0f, 0.0f, 60.0f, true);
+
+			// しぶき生成
+			CSplashwater_Manager::Create();
 		}
 
 
