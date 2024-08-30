@@ -82,7 +82,7 @@ HRESULT CBlackFrame::Init()
 		m_pObj2D[nCntSelect] = CObject2D::Create(8);
 
 		// 種類の設定
-		m_pObj2D[nCntSelect]->SetType(CObject::TYPE::TYPE_OBJECT2D);
+		m_pObj2D[nCntSelect]->SetType(CObject::TYPE::TYPE_NONE);
 
 		// テクスチャの割り当て
 		m_pObj2D[nCntSelect]->BindTexture(0);
