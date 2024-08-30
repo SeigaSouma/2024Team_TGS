@@ -696,7 +696,6 @@ void CMapBlock::Set(const int Idx, const MyLib::Vector3& startpos, float startle
 	{
 		// 障害物のリスト取得
 		std::vector<CMapBlockInfo::SObsacleInfo> mapInfo = pInfo->GetMapInfo();
-
 		for (int i = 0; i < static_cast<int>(mapInfo.size()); i++)
 		{
 			// ブロックの障害物情報

@@ -148,7 +148,7 @@ void CObjectChara::Update()
 	// モーション更新
 	if (m_pMotion != nullptr)
 	{
-		m_pMotion->Update(CManager::GetInstance()->GetDeltaTime() / (1.0f / 60.0f));
+		m_pMotion->Update(/*CManager::GetInstance()->GetDeltaTime() / (1.0f / 60.0f)*/);
 	}
 
 	// コライダーの位置調整

@@ -12,45 +12,45 @@
 //==========================================================================
 CSound::SOUNDINFO CSound::m_aSoundInfo[LABEL_MAX] = 
 {
-	{ "data/BGM/title.wav", -1 },			// タイトル
-	{ "data/BGM/BGM_game_000.wav", -1 },	// ゲーム
-	{ "data/BGM/BGM_water_flow.wav", -1 },	// 水流
-	{ "data/BGM/result.wav", -1 },			// リザルト
-	{ "data/BGM/tutorial.wav", -1 },	// チュートリアル
-	{ "data/BGM/ranking.wav", -1 },		// ランキング
-	{ "data/SE/walk01.wav", 0 },			// 歩行1
-	{ "data/SE/cursor_move.wav", 0 },			// カーソル移動
-	{ "data/SE/cursor_end.wav", 0 },			// カーソル閉じ
-	{ "data/SE/cancel01.wav", 0 },				// キャンセル1
-	{ "data/SE/cancel02.wav", 0 },				// キャンセル2
-	{ "data/SE/SE_drown.wav", -1 },				// 溺れ
-	{ "data/SE/SE_collide.wav", 0 },				// ヒット
-	{ "data/SE/SE_cracks_grass.wav", 0 },				// 画面割れ
-	{ "data/SE/SE_breath_stream.wav", -1 },				// 息ループ
-	{ "data/SE/oksd_000.wav", 0 },
-	{ "data/SE/oksd_001.wav", 0 },
-	{ "data/SE/oksd_002.wav", 0 },
-	{ "data/SE/sega_000.wav", 0 },
-	{ "data/SE/sega_001.wav", 0 },
-	{ "data/SE/sega_002.wav", 0 },
-	{ "data/SE/ore_000.wav", 0 },
-	{ "data/SE/ore_001.wav", 0 },
-	{ "data/SE/ore_002.wav", 0 },
-	{ "data/SE/karakurisa-kasu.wav", 0 },
-	{ "data/SE/nageru.wav", 0 },
-	{ "data/SE/receive.wav", 0 },
-	{ "data/SE/oboreru.wav", 0 },
-	{ "data/SE/habataku.wav", 0 },
-	{ "data/SE/gaya.wav", -1 },
-	{ "data/SE/countdown00.wav", 0 },
-	{ "data/SE/countdown01.wav", 0 },
-	{ "data/SE/start.wav", 0 },
-	{ "data/SE/mizusibuki.wav", 0 },
-	{ "data/SE/raou.wav", 0 },
-	{ "data/SE/shock_wood.wav", 0 },
-	{ "data/SE/shock_creature.wav", 0 },
-	{ "data/SE/inthewater1.wav", 0 },
-	{ "data/SE/inthewater2.wav", 0 },
+	{ TYPE_BGM,"data/BGM/title.wav", -1 },			// タイトル
+	{ TYPE_BGM,"data/BGM/BGM_game_000.wav", -1 },	// ゲーム
+	{ TYPE_BGM,"data/BGM/BGM_water_flow.wav", -1 },	// 水流
+	{ TYPE_BGM,"data/BGM/result.wav", -1 },			// リザルト
+	{ TYPE_BGM,"data/BGM/tutorial.wav", -1 },		// チュートリアル
+	{ TYPE_BGM,"data/BGM/ranking.wav", -1 },		// ランキング
+	{ TYPE_SE,"data/SE/walk01.wav", 0 },			// 歩行1
+	{ TYPE_SE,"data/SE/cursor_move.wav", 0 },		// カーソル移動
+	{ TYPE_SE,"data/SE/cursor_end.wav", 0 },		// カーソル閉じ
+	{ TYPE_SE,"data/SE/cancel01.wav", 0 },			// キャンセル1
+	{ TYPE_SE,"data/SE/cancel02.wav", 0 },			// キャンセル2
+	{ TYPE_SE,"data/SE/SE_drown.wav", -1 },			// 溺れ
+	{ TYPE_SE,"data/SE/SE_collide.wav", 0 },			// ヒット
+	{ TYPE_SE,"data/SE/SE_cracks_grass.wav", 0 },		// 画面割れ
+	{ TYPE_SE,"data/SE/SE_breath_stream.wav", -1 },		// 息ループ
+	{ TYPE_SE,"data/SE/oksd_000.wav", 0 },
+	{ TYPE_SE,"data/SE/oksd_001.wav", 0 },
+	{ TYPE_SE,"data/SE/oksd_002.wav", 0 },
+	{ TYPE_SE,"data/SE/sega_000.wav", 0 },
+	{ TYPE_SE,"data/SE/sega_001.wav", 0 },
+	{ TYPE_SE,"data/SE/sega_002.wav", 0 },
+	{ TYPE_SE,"data/SE/ore_000.wav", 0 },
+	{ TYPE_SE,"data/SE/ore_001.wav", 0 },
+	{ TYPE_SE,"data/SE/ore_002.wav", 0 },
+	{ TYPE_SE,"data/SE/karakurisa-kasu.wav", 0 },
+	{ TYPE_SE,"data/SE/nageru.wav", 0 },
+	{ TYPE_SE,"data/SE/receive.wav", 0 },
+	{ TYPE_SE,"data/SE/oboreru.wav", 0 },
+	{ TYPE_SE,"data/SE/habataku.wav", 0 },
+	{ TYPE_SE,"data/SE/gaya.wav", -1 },
+	{ TYPE_SE,"data/SE/countdown00.wav", 0 },
+	{ TYPE_SE,"data/SE/countdown01.wav", 0 },
+	{ TYPE_SE,"data/SE/start.wav", 0 },
+	{ TYPE_SE,"data/SE/mizusibuki.wav", 0 },
+	{ TYPE_SE,"data/SE/raou.wav", 0 },
+	{ TYPE_SE,"data/SE/shock_wood.wav", 0 },
+	{ TYPE_SE,"data/SE/shock_creature.wav", 0 },
+	{ TYPE_SE,"data/SE/inthewater1.wav", 0 },
+	{ TYPE_SE,"data/SE/inthewater2.wav", 0 },
 
 
 };	// サウンドの情報
@@ -223,10 +223,12 @@ HRESULT CSound::Init(HWND hWnd)
 		buffer.LoopCount  = m_aSoundInfo[nCntSound].nCntLoop;
 		SetVolume.dwFlags = DSBCAPS_CTRLVOLUME;		//音量調整のフラグ
 
-		m_fVolume = 1.0f;
+		m_fMasterVolume = 1.0f;
+		m_aVolume[CSound::TYPE::TYPE_BGM] = 1.0f;
+		m_aVolume[CSound::TYPE::TYPE_SE] = 1.0f;
 
 		//音量をセットする
-		m_pMasteringVoice->SetVolume(1.0f);
+		m_pMasteringVoice->SetVolume(m_fMasterVolume);
 
 		// オーディオバッファの登録
 		m_apSourceVoice[nCntSound]->SubmitSourceBuffer(&buffer);
@@ -358,7 +360,7 @@ HRESULT CSound::PlaySound(LABEL label, bool stop)
 	m_apSourceVoice[label]->SetFrequencyRatio(1.0f);
 
 	// 音量リセット
-	m_apSourceVoice[label]->SetVolume(1.0f);
+	m_apSourceVoice[label]->SetVolume(m_aVolume[m_aSoundInfo[label].type]);
 
 #endif
 	return S_OK;
@@ -535,19 +537,45 @@ void CSound::VolumeChange(LABEL label, float volume)
 //==========================================================================
 void CSound::VolumeChange(float fVolume)
 {
-	m_fVolume += fVolume;
-	UtilFunc::Transformation::ValueNormalize(m_fVolume, 2.0f, 0.0f);
+	m_fMasterVolume += fVolume;
+	UtilFunc::Transformation::ValueNormalize(m_fMasterVolume, 2.0f, 0.0f);
 
 	//音量をセットする
-	m_pMasteringVoice->SetVolume(m_fVolume);
+	m_pMasteringVoice->SetVolume(m_fMasterVolume);
 }
 
 //==========================================================================
-// 音量取得(3桁表示)
+// 音量調整(種類別ボリューム設定)
+//==========================================================================
+void CSound::VolumeChange(TYPE type, float fVolume)
+{
+	m_aVolume[type] += fVolume;
+	UtilFunc::Transformation::ValueNormalize(m_aVolume[type], 2.0f, 0.0f);
+
+	//音量をセットする
+	for (int cnt = 0; cnt < CSound::LABEL::LABEL_MAX; cnt++)
+	{
+		if (m_aSoundInfo[cnt].type == type)
+		{
+			VolumeChange((LABEL)cnt, m_aVolume[type]);
+		}
+	}
+}
+
+//==========================================================================
+// 音量取得(3桁表示, マスターボリューム)
 //==========================================================================
 int CSound::GetVolume()
 {
-	return (int)((m_fVolume + 0.009) * 100);
+	return (int)((m_fMasterVolume + 0.009) * 100);
+}
+
+//==========================================================================
+// 音量取得(3桁表示, 種類別ボリューム)
+//==========================================================================
+int CSound::GetVolume(TYPE type)
+{
+	return (int)((m_aVolume[type] + 0.009) * 100);
 }
 
 //==========================================================================

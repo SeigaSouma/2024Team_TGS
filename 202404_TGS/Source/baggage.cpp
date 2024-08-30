@@ -462,17 +462,17 @@ void CBaggage::StateFall()
 	MyLib::Vector3 move = GetMove();
 	MyLib::Vector3 rot = GetRotation();
 
-	move.y -= 0.7f;
-	move.z -= 0.2f;
-	move.x += 0.5f;
-
-	m_velorot.x += (0.0f - m_velorot.x) * ROLL_INER;
-
-	// クォータニオン割り当て
-	BindQuaternion(MyLib::Vector3(0.0f, 1.0f, 0.0f), m_velorot.y);
-
 	if (!m_bfall)
 	{
+		move.y -= 0.7f;
+		move.z -= 0.2f;
+		move.x += 0.5f;
+
+		m_velorot.x += (0.0f - m_velorot.x) * ROLL_INER;
+
+		// クォータニオン割り当て
+		BindQuaternion(MyLib::Vector3(0.0f, 1.0f, 0.0f), m_velorot.y);
+
 		pos += move;
 	}
 
@@ -531,6 +531,15 @@ void CBaggage::StateReturn()
 	}
 
 	SetPosition(pos);
+}
+
+//==========================================================================
+// 反射
+//==========================================================================
+void CBaggage::StateReceive()
+{
+	m_bfall = true;
+	SetMove(0.0f);
 }
 
 //==========================================================================
