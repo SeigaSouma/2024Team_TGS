@@ -86,7 +86,20 @@ void CObject::ReleaseAll()
 				}
 				else
 				{
-					itr++;
+					if (pObj->IsDeath())
+					{
+						// èIóπèàóù
+						pObj->Uninit();
+
+						// å„Ç≈è¡Ç∑vectorÇ…äiî[
+						objectsToRemove[layer.first][priority.first].push_back(*itr);
+						itr = priority.second.erase(itr);
+					}
+					else
+					{
+						itr++;
+					}
+
 				}
 			}
 		}
