@@ -181,6 +181,21 @@ void CPlayerControlMove::Move(CPlayer* player)
 				move.z += cosf(D3DX_PI * 0.5f + Camerarot.y) * fMove;
 				fRotDest = -D3DX_PI * 0.5f + Camerarot.y;
 			}
+
+			move.x += sinf(D3DX_PI * 0.5f + Camerarot.y) * fMove;
+			move.z += cosf(D3DX_PI * 0.5f + Camerarot.y) * fMove;
+			move.x += sinf(D3DX_PI * 0.5f + Camerarot.y) * fMove;
+			move.x += sinf(D3DX_PI * 0.5f + Camerarot.y) * fMove;
+			move.z += cosf(D3DX_PI * 0.5f + Camerarot.y) * fMove;
+			move.x += sinf(D3DX_PI * 0.5f + Camerarot.y) * fMove;
+			move.z += cosf(D3DX_PI * 0.5f + Camerarot.y) * fMove;
+			move.x += sinf(D3DX_PI * 0.5f + Camerarot.y) * fMove;
+			move.z += cosf(D3DX_PI * 0.5f + Camerarot.y) * fMove;
+			move.x += sinf(D3DX_PI * 0.5f + Camerarot.y) * fMove;
+			move.z += cosf(D3DX_PI * 0.5f + Camerarot.y) * fMove;
+			move.x += sinf(D3DX_PI * 0.5f + Camerarot.y) * fMove;
+			move.z += cosf(D3DX_PI * 0.5f + Camerarot.y) * fMove;
+			move.z += cosf(D3DX_PI * 0.5f + Camerarot.y) * fMove;
 		}
 		else if (pInputKeyboard->GetPress(DIK_W))
 		{// 上移動
@@ -850,6 +865,8 @@ void CPlayerControlBaggage::GoalAction(CPlayer* player, CBaggage* pBaggage)
 	{
 		return;
 	}
+
+
 	// インプット情報取得
 	CKeyConfigManager* pKeyConfigManager = CKeyConfigManager::GetInstance();
 	CKeyConfig* pKeyConfigPad = pKeyConfigManager->GetConfig(CKeyConfigManager::CONTROL_INPAD);
@@ -877,6 +894,8 @@ void CPlayerControlBaggage::GoalAction(CPlayer* player, CBaggage* pBaggage)
 		}
 
 		m_state = STATE::STATE_PRESS;
+
+		// 自動手放し減算
 		m_nGoalTimer--;
 		if (m_nGoalTimer <= 0)
 		{
@@ -975,7 +994,10 @@ void CPlayerControlBaggage::GoalAction(CPlayer* player, CBaggage* pBaggage)
 	}
 
 	// 値変更
-	pos += move;
+	if (pBaggage->GetState() != CBaggage::STATE::STATE_FALL)
+	{
+		pos += move;
+	}
 
 	if (m_state != STATE::STATE_RELEASE &&
 		pos.y <= pBaggage->GetOriginPosition().y)
@@ -985,6 +1007,7 @@ void CPlayerControlBaggage::GoalAction(CPlayer* player, CBaggage* pBaggage)
 
 	}
 
+	// リターン以外は更新
 	if (pBaggage->GetState() != CBaggage::STATE::STATE_RETURN)
 	{
 		if (pBaggage->GetState() != CBaggage::STATE::STATE_FALL)
