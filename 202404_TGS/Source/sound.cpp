@@ -228,7 +228,7 @@ HRESULT CSound::Init(HWND hWnd)
 		m_aVolume[CSound::TYPE::TYPE_SE] = 1.0f;
 
 		//音量をセットする
-		m_pMasteringVoice->SetVolume(1.0f);
+		m_pMasteringVoice->SetVolume(m_fMasterVolume);
 
 		// オーディオバッファの登録
 		m_apSourceVoice[nCntSound]->SubmitSourceBuffer(&buffer);
