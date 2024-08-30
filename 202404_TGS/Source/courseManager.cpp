@@ -28,9 +28,9 @@ namespace
 	{
 		0,
 		0,
-		0,
-		0,
-		0
+		1,
+		1,
+		2
 	};
 
 	const std::vector<MyLib::Vector3> DEFAULT_SEGMENTPOS =
