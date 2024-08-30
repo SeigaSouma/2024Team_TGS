@@ -35,7 +35,7 @@ const MyLib::Vector3 CBlackFrame::m_DestPosition[VTX_MAX] =	// 目標の位置
 CBlackFrame::CBlackFrame(int nPriority, const LAYER layer) : CObject(nPriority, layer)
 {
 	// 値のクリア
-	memset(&m_pObj3D[0], 0, sizeof(m_pObj3D));	// オブジェクト2Dのオブジェクト
+	memset(&m_pObj2D[0], 0, sizeof(m_pObj2D));	// オブジェクト2Dのオブジェクト
 	m_state = STATE_NONE;	// 状態
 	m_nCntMove = 0;	// 移動カウント
 }
@@ -79,29 +79,29 @@ HRESULT CBlackFrame::Init()
 	for (int nCntSelect = 0; nCntSelect < VTX_MAX; nCntSelect++)
 	{
 		// 生成処理
-		m_pObj3D[nCntSelect] = CObject2D::Create(8);
+		m_pObj2D[nCntSelect] = CObject2D::Create(8);
 
 		// 種類の設定
-		m_pObj3D[nCntSelect]->SetType(CObject::TYPE::TYPE_NONE);
+		m_pObj2D[nCntSelect]->SetType(CObject::TYPE::TYPE_OBJECT2D);
 
 		// テクスチャの割り当て
-		m_pObj3D[nCntSelect]->BindTexture(0);
+		m_pObj2D[nCntSelect]->BindTexture(0);
 
 		// 各種変数の初期化
 		switch (nCntSelect)
 		{
 		case VTX_UP:
 			// サイズ取得
-			m_pObj3D[nCntSelect]->SetSize(SIZE);	// サイズ
-			m_pObj3D[nCntSelect]->SetPosition(START_UP);	// 位置
-			m_pObj3D[nCntSelect]->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));	// 色
+			m_pObj2D[nCntSelect]->SetSize(SIZE);	// サイズ
+			m_pObj2D[nCntSelect]->SetPosition(START_UP);	// 位置
+			m_pObj2D[nCntSelect]->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));	// 色
 			break;
 
 		case VTX_DOWN:
 			// サイズ取得
-			m_pObj3D[nCntSelect]->SetSize(SIZE);	// サイズ
-			m_pObj3D[nCntSelect]->SetPosition(START_DOWN);	// 位置
-			m_pObj3D[nCntSelect]->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));	// 色
+			m_pObj2D[nCntSelect]->SetSize(SIZE);	// サイズ
+			m_pObj2D[nCntSelect]->SetPosition(START_DOWN);	// 位置
+			m_pObj2D[nCntSelect]->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));	// 色
 			break;
 		}
 	}
@@ -122,7 +122,7 @@ void CBlackFrame::Reset()
 
 	for (int nCntVtx = 0; nCntVtx < VTX_MAX; nCntVtx++)
 	{
-		if (m_pObj3D[nCntVtx] != nullptr)
+		if (m_pObj2D[nCntVtx] != nullptr)
 		{// nullptrじゃなかったら
 
 			MyLib::Vector3 pos = mylib_const::DEFAULT_VECTOR3;
@@ -136,7 +136,7 @@ void CBlackFrame::Reset()
 			}
 
 			// 情報設定
-			m_pObj3D[nCntVtx]->SetPosition(pos);
+			m_pObj2D[nCntVtx]->SetPosition(pos);
 		}
 	}
 
@@ -149,12 +149,12 @@ void CBlackFrame::Uninit()
 {
 	for (int nCntSelect = 0; nCntSelect < VTX_MAX; nCntSelect++)
 	{
-		if (m_pObj3D[nCntSelect] != nullptr)
+		if (m_pObj2D[nCntSelect] != nullptr)
 		{// nullptrじゃなかったら
 
 			// 終了処理
-			m_pObj3D[nCntSelect]->Uninit();
-			m_pObj3D[nCntSelect] = nullptr;
+			m_pObj2D[nCntSelect]->Uninit();
+			m_pObj2D[nCntSelect] = nullptr;
 		}
 	}
 
@@ -171,7 +171,7 @@ void CBlackFrame::Update()
 {
 	for (int nCntSelect = 0; nCntSelect < VTX_MAX; nCntSelect++)
 	{
-		if (m_pObj3D[nCntSelect] == nullptr)
+		if (m_pObj2D[nCntSelect] == nullptr)
 		{// nullptrだったら
 			continue;
 		}
@@ -180,7 +180,7 @@ void CBlackFrame::Update()
 		UpdateState(nCntSelect);
 
 		// 頂点情報設定
-		m_pObj3D[nCntSelect]->SetVtx();
+		m_pObj2D[nCntSelect]->SetVtx();
 	}
 
 	// 移動カウント加算
@@ -207,17 +207,17 @@ void CBlackFrame::UpdateState(int nCntVtx)
 
 	case CBlackFrame::STATE_INCOMPLETION:
 
-		m_pObj3D[nCntVtx]->SetPosition(m_DestPosition[nCntVtx]);
+		m_pObj2D[nCntVtx]->SetPosition(m_DestPosition[nCntVtx]);
 		break;
 
 	case CBlackFrame::STATE_OUTCOMPLETION:
 		if (nCntVtx == VTX_UP)
 		{
-			m_pObj3D[nCntVtx]->SetPosition(START_UP);
+			m_pObj2D[nCntVtx]->SetPosition(START_UP);
 		}
 		else if (nCntVtx == VTX_DOWN)
 		{
-			m_pObj3D[nCntVtx]->SetPosition(START_DOWN);
+			m_pObj2D[nCntVtx]->SetPosition(START_DOWN);
 		}
 		break;
 	}
@@ -236,7 +236,7 @@ void CBlackFrame::StateIn(int nCntVtx)
 	}
 
 	// 情報取得
-	MyLib::Vector3 pos = m_pObj3D[nCntVtx]->GetPosition();
+	MyLib::Vector3 pos = m_pObj2D[nCntVtx]->GetPosition();
 
 	// 初期位置
 	MyLib::Vector3 start = mylib_const::DEFAULT_VECTOR3;
@@ -257,7 +257,7 @@ void CBlackFrame::StateIn(int nCntVtx)
 	pos.y = UtilFunc::Correction::EasingLinear(start.y, m_DestPosition[nCntVtx].y, fTime);
 
 	// 情報設定
-	m_pObj3D[nCntVtx]->SetPosition(pos);
+	m_pObj2D[nCntVtx]->SetPosition(pos);
 }
 
 //==========================================================================
@@ -273,7 +273,7 @@ void CBlackFrame::StateOut(int nCntVtx)
 	}
 
 	// 情報取得
-	MyLib::Vector3 pos = m_pObj3D[nCntVtx]->GetPosition();
+	MyLib::Vector3 pos = m_pObj2D[nCntVtx]->GetPosition();
 
 	// 初期位置
 	MyLib::Vector3 start = mylib_const::DEFAULT_VECTOR3;
@@ -294,7 +294,7 @@ void CBlackFrame::StateOut(int nCntVtx)
 	pos.y = UtilFunc::Correction::EasingLinear(m_DestPosition[nCntVtx].y, start.y, fTime);
 
 	// 情報設定
-	m_pObj3D[nCntVtx]->SetPosition(pos);
+	m_pObj2D[nCntVtx]->SetPosition(pos);
 }
 
 //==========================================================================
@@ -312,13 +312,13 @@ void CBlackFrame::Draw()
 
 	for (int nCntSelect = 0; nCntSelect < VTX_MAX; nCntSelect++)
 	{
-		if (m_pObj3D[nCntSelect] == nullptr)
+		if (m_pObj2D[nCntSelect] == nullptr)
 		{
 			continue;
 		}
 
 		// 描画処理
-		m_pObj3D[nCntSelect]->Draw();
+		m_pObj2D[nCntSelect]->Draw();
 	}
 
 	// アルファテストを無効にする
