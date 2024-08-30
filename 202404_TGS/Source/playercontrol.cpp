@@ -19,6 +19,7 @@
 #include "spline.h"
 #include "EffekseerObj.h"
 #include "deadplayer.h"
+#include "suffocation.h"
 
 // キーコンフィグ
 #include "keyconfig_keyboard.h"
@@ -180,6 +181,21 @@ void CPlayerControlMove::Move(CPlayer* player)
 				move.z += cosf(D3DX_PI * 0.5f + Camerarot.y) * fMove;
 				fRotDest = -D3DX_PI * 0.5f + Camerarot.y;
 			}
+
+			move.x += sinf(D3DX_PI * 0.5f + Camerarot.y) * fMove;
+			move.z += cosf(D3DX_PI * 0.5f + Camerarot.y) * fMove;
+			move.x += sinf(D3DX_PI * 0.5f + Camerarot.y) * fMove;
+			move.x += sinf(D3DX_PI * 0.5f + Camerarot.y) * fMove;
+			move.z += cosf(D3DX_PI * 0.5f + Camerarot.y) * fMove;
+			move.x += sinf(D3DX_PI * 0.5f + Camerarot.y) * fMove;
+			move.z += cosf(D3DX_PI * 0.5f + Camerarot.y) * fMove;
+			move.x += sinf(D3DX_PI * 0.5f + Camerarot.y) * fMove;
+			move.z += cosf(D3DX_PI * 0.5f + Camerarot.y) * fMove;
+			move.x += sinf(D3DX_PI * 0.5f + Camerarot.y) * fMove;
+			move.z += cosf(D3DX_PI * 0.5f + Camerarot.y) * fMove;
+			move.x += sinf(D3DX_PI * 0.5f + Camerarot.y) * fMove;
+			move.z += cosf(D3DX_PI * 0.5f + Camerarot.y) * fMove;
+			move.z += cosf(D3DX_PI * 0.5f + Camerarot.y) * fMove;
 		}
 		else if (pInputKeyboard->GetPress(DIK_W))
 		{// 上移動
@@ -426,6 +442,14 @@ void CPlayerControlMove::Move(CPlayer* player)
 }
 
 //==========================================================================
+// サフォケーション
+//==========================================================================
+void CPlayerControlBaggage::suffocation()
+{
+	CSuffocation::Create();
+}
+
+//==========================================================================
 // アクション
 //==========================================================================
 void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
@@ -575,10 +599,14 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 
 				// ラ王生成
 				if (hitresult.isdeath)
-				{
+				{//=============================================================================
 					CDeadPlayer::Create(player->GetPosition());
 					pBaggage->SetState(CBaggage::STATE::STATE_FALL);
 
+					if (m_pSuffocation == nullptr)
+					{
+						m_pSuffocation = CSuffocation::Create();
+					}
 				}
 			}
 		}
@@ -626,6 +654,11 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 				{
 					CDeadPlayer::Create(player->GetPosition());
 					pBaggage->SetState(CBaggage::STATE::STATE_FALL);
+
+					if (m_pSuffocation == nullptr)
+					{
+						m_pSuffocation = CSuffocation::Create();
+					}
 				}
 			}
 		}
@@ -736,7 +769,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 			posBaggage.x >= pos.x - range)
 		{// 範囲内
 
-			if (bKantsu)
+			//if (bKantsu)
 			{// 障害物の空気貫通判定
 
 #if GEKIMUZU
@@ -832,13 +865,19 @@ void CPlayerControlBaggage::GoalAction(CPlayer* player, CBaggage* pBaggage)
 	{
 		return;
 	}
+
+
 	// インプット情報取得
 	CKeyConfigManager* pKeyConfigManager = CKeyConfigManager::GetInstance();
 	CKeyConfig* pKeyConfigPad = pKeyConfigManager->GetConfig(CKeyConfigManager::CONTROL_INPAD);
 	CKeyConfig* pKeyConfigKeyBoard = pKeyConfigManager->GetConfig(CKeyConfigManager::CONTROL_INKEY);
 	CCamera* pCamera = CManager::GetInstance()->GetCamera();
 	CCameraMotion* pCamMotion = pCamera->GetMotion();
-	pBaggage->SetState(CBaggage::STATE::STATE_GOAL);
+
+	if (m_state != STATE::STATE_RELEASE)
+	{// 手放されてないとき
+		pBaggage->SetState(CBaggage::STATE::STATE_GOAL);
+	}
 
 	static float up = 0.175f, power = 0.4f;
 
@@ -855,6 +894,8 @@ void CPlayerControlBaggage::GoalAction(CPlayer* player, CBaggage* pBaggage)
 		}
 
 		m_state = STATE::STATE_PRESS;
+
+		// 自動手放し減算
 		m_nGoalTimer--;
 		if (m_nGoalTimer <= 0)
 		{
@@ -926,9 +967,12 @@ void CPlayerControlBaggage::GoalAction(CPlayer* player, CBaggage* pBaggage)
 
 	case STATE::STATE_RELEASE:
 	{
-		move.x += -move.x * GOAL_INER;
-		move.z += -move.z * GOAL_INER;
-		move.y += GOAL_GRAVITY;
+		if (pBaggage->GetState() != CBaggage::STATE::STATE_FALL)
+		{
+			move.x += -move.x * GOAL_INER;
+			move.z += -move.z * GOAL_INER;
+			move.y += GOAL_GRAVITY;
+		}
 
 		// 高さ制限
 		if (pBaggage->GetPosition().y <= pBaggage->GetOriginPosition().y)
@@ -938,8 +982,10 @@ void CPlayerControlBaggage::GoalAction(CPlayer* player, CBaggage* pBaggage)
 			pos.y = pBaggage->GetOriginPosition().y;
 		}
 
-		pBaggage->SetState(CBaggage::STATE::STATE_SEND);
-
+		if (pBaggage->GetState() != CBaggage::STATE::STATE_FALL)
+		{
+			pBaggage->SetState(CBaggage::STATE::STATE_SEND);
+		}
 	}
 		break;
 
@@ -948,19 +994,27 @@ void CPlayerControlBaggage::GoalAction(CPlayer* player, CBaggage* pBaggage)
 	}
 
 	// 値変更
-	pos += move;
+	if (pBaggage->GetState() != CBaggage::STATE::STATE_FALL)
+	{
+		pos += move;
+	}
 
-	if (pos.y <= pBaggage->GetOriginPosition().y)
+	if (m_state != STATE::STATE_RELEASE &&
+		pos.y <= pBaggage->GetOriginPosition().y)
 	{
 		pos.y = pBaggage->GetOriginPosition().y;
 		move.y = 0.0f;
 
 	}
 
+	// リターン以外は更新
 	if (pBaggage->GetState() != CBaggage::STATE::STATE_RETURN)
 	{
-		pBaggage->SetMove(move);
-		pBaggage->SetPosition(pos);
+		if (pBaggage->GetState() != CBaggage::STATE::STATE_FALL)
+		{
+			pBaggage->SetMove(move);
+			pBaggage->SetPosition(pos);
+		}
 		pCamMotion->SetPosition(pos);
 	}
 }
@@ -1086,6 +1140,12 @@ void CPlayerControlBaggage::Reset(CPlayer* player, CBaggage* pBaggage)
 	MyLib::Vector3 posBaggageOrigin = pBaggage->GetOriginPosition();
 	pBaggage->SetPosition(MyLib::Vector3(pos.x, posBaggageOrigin.y, pos.z));
 	m_state = STATE::STATE_WAIT;
+
+	if (m_pSuffocation != nullptr)
+	{
+		m_pSuffocation->Uninit();
+		m_pSuffocation = nullptr;
+	}
 }
 
 //==========================================================================

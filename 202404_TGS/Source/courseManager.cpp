@@ -15,6 +15,7 @@
 #include "stonewall_front.h"
 #include "map_block.h"
 #include "spline.h"
+#include "frontobj_manager.h"
 
 //==========================================================================
 // 定数定義
@@ -22,14 +23,14 @@
 namespace
 {
 	const std::string FILENAME = "data\\TEXT\\map\\chunkdata.bin";
-	const int NUM_CHUNK = 5;	// チャンクの数
+	const int NUM_CHUNK = 1;	// チャンクの数
 	const int DECIDE_LEVEL[] =	// レベル
 	{
 		0,
 		0,
-		0,
-		0,
-		0
+		1,
+		1,
+		2
 	};
 
 	const std::vector<MyLib::Vector3> DEFAULT_SEGMENTPOS =
@@ -87,7 +88,7 @@ CCourseManager *CCourseManager::Create()
 //==========================================================================
 HRESULT CCourseManager::Init()
 {
-
+	CFrontObjManager::Create();
 	// 読み込み
 	Load();
 	return S_OK;
@@ -98,6 +99,8 @@ HRESULT CCourseManager::Init()
 //==========================================================================
 void CCourseManager::Uninit()
 {
+	CFrontObjManager::GetInstance()->Uninit();
+
 	delete m_ThisPtr;
 	m_ThisPtr = nullptr;
 

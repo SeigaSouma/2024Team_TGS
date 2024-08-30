@@ -56,10 +56,13 @@ public:
 		EFKLABEL_RIVER_SAMPLE,		// 川サンプル
 		EFKLABEL_IMPACT,			// 衝撃
 		EFKLABEL_SPRAYWATER,		// 水しぶき
+		EFKLABEL_SPRAYWATER_MINI,	// 水しぶき
 		EFKLABEL_WATERJUMP,			// 魚入水
 		EFKLABEL_PLAYERMOVE_LINE,	// プレイヤーの移動線
 		EFKLABEL_PHOTON,			// 死亡
 		EFKLABEL_BAGGAGEGET,		// 荷物獲得
+		EFKLABEL_AIR,				// 空気
+		EFKLABEL_CROWD,				// 群衆
 		EFKLABEL_MAX
 	};
 
@@ -83,7 +86,9 @@ public:
 
 private:
 
+	//=============================
 	// メンバ関数
+	//=============================
 	HRESULT Init();
 	void Draw();
 	void UpdateAll();
@@ -92,7 +97,9 @@ private:
 	::EffekseerRendererDX9::RendererRef GetEffekseerRenderer() { return efkRenderer; }	// エフェクシアのレンダラー取得
 	Effekseer::EffectRef LoadProcess(const std::u16string& efkpath);	// 読み込み処理
 
+	//=============================
 	// メンバ変数
+	//=============================
 	int32_t time = 0;
 	Effekseer::Handle efkHandle = 0;
 	EffekseerRendererDX9::RendererRef efkRenderer;

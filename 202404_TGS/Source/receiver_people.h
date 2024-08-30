@@ -43,6 +43,8 @@ public:
 		STATE_WAIT,			// 待機状態
 		STATE_GET,			// キャッチ状態
 		STATE_RETURN,		// レシーブ状態
+		STATE_YABAI,		// ヤバイ状態
+		STATE_DIVE,			// ダイブ状態
 		STATE_DROWN,		// 溺れ状態
 		STATE_BYEBYE,		// バイバイ
 		STATE_WALK,			// 歩く
@@ -58,6 +60,8 @@ public:
 		MOTION_GET,		// キャッチ
 		MOTION_RETURN,	// 遠くに飛ばしすぎてアウト
 		MOTION_DROWN,	// 溺れる
+		MOTION_DIVE,	// ダイブ
+		MOTION_YABAI,	// ﾔﾊﾞｲ！
 		MOTION_MAX
 	};
 
@@ -101,6 +105,8 @@ protected:
 	virtual void StatePass();		// パス
 	virtual void StateGet();		// キャッチ
 	virtual void StateReturn();		// レシーブ
+	virtual void StateYabai();		// やばい
+	virtual void StateDive();		// ダイブ
 	virtual void StateDrown();		// 溺れる
 	virtual void StateByeBye();		// バイバイ
 	virtual void StateWalk();		// 歩く

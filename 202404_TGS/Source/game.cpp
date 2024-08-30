@@ -58,6 +58,7 @@
 #include "splashwater_manager.h"
 #include "ascensionCylinder.h"
 #include "tree.h"
+#include "scroll.h"
 
 namespace
 {
@@ -585,6 +586,18 @@ void CGame::Update()
 	}
 
 #endif
+
+	/*if (pInputKeyboard->GetTrigger(DIK_K))
+	{
+		CEffekseerObj::Create(
+			CMyEffekseer::EFKLABEL::EFKLABEL_AIR,
+			CManager::GetInstance()->GetCamera()->GetPositionR(), MyLib::Vector3(0.0f, 0.0f, 0.0f), 0.0f, 100.0f, true);
+	}*/
+
+	if (pInputKeyboard->GetTrigger(DIK_K))
+	{
+		CScroll::Create(MyLib::Vector3(640.0f, 360.0f, 0.0f), 1.0f, 250.0f, 900.0f, true);
+	}
 
 	// シーンの更新
 	CScene::Update();

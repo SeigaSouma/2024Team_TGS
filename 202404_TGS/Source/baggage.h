@@ -85,6 +85,9 @@ public:
 	bool IsLand() { return m_bLand; }	// 着地判定
 	bool IsHit() { return m_bHit; }		// Hit()での判定を返す
 	bool IsEnd() { return m_bEnd; }		// 終了判定を返す
+	bool IsFall() { return m_bfall; }	// 落下判定
+	void SetIsFall(bool fall) { m_bfall = fall; }	// 落下判定
+
 	MyLib::Vector3 GetVeloRot() { return m_velorot; }	// 回転速度
 	void SetVeloRot(const MyLib::Vector3& velorot) { m_velorot = velorot; }
 	void Reset();						// 判定リセット
@@ -128,7 +131,7 @@ private:
 	void StateGoal();		// ゴール
 	void StateSend();		// 届ける
 	void StateReturn();		// 反射
-	void StateReceive() {}	// 反射
+	void StateReceive();	// 反射
 	void StateFall();
 
 	// その他
@@ -152,7 +155,7 @@ private:
 	SBaggageInfo m_baggageInfo;
 	int m_nMapBlock;			// マップのブロック
 	int m_nLife;				// 体力
-	bool m_bfall;
+	bool m_bfall;				// 落下判定
 	float m_fDeviation;
 	static CListManager<CBaggage> m_List;	// リスト
 };

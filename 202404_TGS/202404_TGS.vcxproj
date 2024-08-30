@@ -157,6 +157,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\frontobj_manager.cpp" />
     <ClCompile Include="Libraries\Imgui\imgui.cpp" />
     <ClCompile Include="Libraries\Imgui\imgui_demo.cpp" />
     <ClCompile Include="Libraries\Imgui\imgui_draw.cpp" />
@@ -319,6 +320,7 @@
     <ClCompile Include="Source\sample_objX.cpp" />
     <ClCompile Include="Source\scene.cpp" />
     <ClCompile Include="Source\score.cpp" />
+    <ClCompile Include="Source\scroll.cpp" />
     <ClCompile Include="Source\serifeffect.cpp" />
     <ClCompile Include="Source\shadow.cpp" />
     <ClCompile Include="Source\skip_ui.cpp" />
@@ -334,6 +336,7 @@
     <ClCompile Include="Source\stonewall.cpp" />
     <ClCompile Include="Source\stonewall_front.cpp" />
     <ClCompile Include="Source\subtitle.cpp" />
+    <ClCompile Include="Source\suffocation.cpp" />
     <ClCompile Include="Source\targetpoint.cpp" />
     <ClCompile Include="Source\texture.cpp" />
     <ClCompile Include="Source\timer.cpp" />
@@ -357,6 +360,7 @@
     <ClCompile Include="Source\Xload.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\frontobj_manager.h" />
     <ClInclude Include="Libraries\Imgui\imconfig.h" />
     <ClInclude Include="Libraries\Imgui\imgui.h" />
     <ClInclude Include="Libraries\Imgui\imgui_impl_dx9.h" />
@@ -517,6 +521,7 @@
     <ClInclude Include="Source\sample_objX.h" />
     <ClInclude Include="Source\scene.h" />
     <ClInclude Include="Source\score.h" />
+    <ClInclude Include="Source\scroll.h" />
     <ClInclude Include="Source\serifeffect.h" />
     <ClInclude Include="Source\shadow.h" />
     <ClInclude Include="Source\skip_ui.h" />
@@ -532,6 +537,7 @@
     <ClInclude Include="Source\stonewall.h" />
     <ClInclude Include="Source\stonewall_front.h" />
     <ClInclude Include="Source\subtitle.h" />
+    <ClInclude Include="Source\suffocation.h" />
     <ClInclude Include="Source\targetpoint.h" />
     <ClInclude Include="Source\texture.h" />
     <ClInclude Include="Source\timer.h" />

@@ -10,6 +10,7 @@
 #include "map_obstacleManager.h"
 #include "waterstone.h"
 #include "objectX.h"
+#include "frontobj_manager.h"
 
 //==========================================================================
 // 定数定義
@@ -455,6 +456,7 @@ void CMapBlock::LoadBin()
 	{
 		map.emplace_back();
 		map.back().push_back(CMapBlockInfo::SObsacleInfo());
+		map.resize(checkpointSize);
 	}
 
 	// レベルロード
@@ -569,7 +571,7 @@ std::vector<std::vector<CMapBlockInfo::SObsacleInfo>> CMapBlock::LoadBin_Obstacl
 std::vector<std::vector<CMapBlockInfo::SObsacleInfo>> CMapBlock::LoadBin_Map()
 {
 	// ファイルを開く
-	std::ifstream File(FILE_OBSTACLE, std::ios::binary);
+	std::ifstream File(FILE_MAP, std::ios::binary);
 	if (!File.is_open()) {
 		// 例外処理
 		return std::vector<std::vector<CMapBlockInfo::SObsacleInfo>>();
@@ -692,12 +694,19 @@ void CMapBlock::Set(const int Idx, const MyLib::Vector3& startpos, float startle
 
 	// マップの配置
 	{
-		CMap_ObstacleManager* pManager = CMap_ObstacleManager::GetInstance();
-
-		for (const auto& it : pInfo->GetMapInfo())
+		// 障害物のリスト取得
+		std::vector<CMapBlockInfo::SObsacleInfo> mapInfo = pInfo->GetMapInfo();
+		for (int i = 0; i < static_cast<int>(mapInfo.size()); i++)
 		{
-			CObjectX* pObj = CObjectX::Create(it.nType, it.pos + startpos, it.rot);
-			pObj->SetScale(it.scale);
+			// ブロックの障害物情報
+			CMapBlockInfo::SObsacleInfo blockinfo = mapInfo[i];
+
+			CObjectX* pObj = CObjectX::Create(blockinfo.nType, blockinfo.pos + startpos);
+			pObj->SetRotation(blockinfo.rot);
+			pObj->SetScale(blockinfo.scale);
+			pObj->CalWorldMtx();
+			pObj->SetType(CObject::TYPE_OBJECTX);
+			CFrontObjManager::GetInstance()->Regist(pObj);
 		}
 	}
 

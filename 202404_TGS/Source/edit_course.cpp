@@ -17,6 +17,8 @@
 #include "map_block.h"
 #include "waterstone.h"
 #include "edit_mapblock.h"
+#include "edit_map.h"
+#include "frontobj_manager.h"
 
 //==========================================================================
 // 定数定義
@@ -62,7 +64,6 @@ CEdit_Course::~CEdit_Course()
 //==========================================================================
 HRESULT CEdit_Course::Init()
 {
-
 	// 障害物エディター
 	m_pEditObstacle = CEdit::Create(CGame::EditType::EDITTYPE_OBSTACLE);
 
@@ -899,41 +900,30 @@ void CEdit_Course::MapEdit()
 //==========================================================================
 void CEdit_Course::ResetMap()
 {
-
-	// 障害物マネージャ取得
-	CMap_ObstacleManager* pObstacleMgr = CMap_ObstacleManager::GetInstance();
-
 	// 障害物のリスト取得
-	CListManager<CObjectX> list = CObjectX::GetListObj();
+	std::vector<CObjectX*> objinfo = CFrontObjManager::GetInstance()->GetInfo();
+	std::vector<CMapBlockInfo::SObsacleInfo> savedate;
 
-	// 先頭を保存
-	std::list<CObjectX*>::iterator itr = list.GetEnd();
-	CMap_Obstacle* pObj = nullptr;
-
-	while (list.ListLoop(itr))
+	for (int i = 0; i < objinfo.size(); i++)
 	{
-		CObjectX* pObj = *itr;
-		pObj->Kill();
+		objinfo[i]->Kill();
 	}
 
 	// 障害物のリスト取得
-	std::vector<CMapBlockInfo::SObsacleInfo> obstacleInfo = CMapBlock::GetInfoList().GetData(m_nCourseEditIdx)->GetObstacleInfo();
+	std::vector<CMapBlockInfo::SObsacleInfo> mapInfo = CMapBlock::GetInfoList().GetData(m_nCourseEditIdx)->GetMapInfo();
+	CFrontObjManager::GetInstance()->Reset();
 
-
-	// 障害物情報
-	std::vector<CMap_ObstacleManager::SObstacleInfo> vecInfo = pObstacleMgr->GetObstacleInfo();
-	CMap_ObstacleManager::SObstacleInfo info;
-	for (int i = 0; i < static_cast<int>(obstacleInfo.size()); i++)
+	for (int i = 0; i < static_cast<int>(mapInfo.size()); i++)
 	{
 		// ブロックの障害物情報
-		CMapBlockInfo::SObsacleInfo blockinfo = obstacleInfo[i];
+		CMapBlockInfo::SObsacleInfo blockinfo = mapInfo[i];
 
-		info = vecInfo[blockinfo.nType];
-
-		CMap_Obstacle* pObj = CMap_Obstacle::Create(info, blockinfo.pos);
+		CObjectX* pObj = CObjectX::Create(blockinfo.nType, blockinfo.pos);
 		pObj->SetRotation(blockinfo.rot);
 		pObj->SetScale(blockinfo.scale);
+		pObj->SetType(CObject::TYPE_OBJECTX);
 		pObj->CalWorldMtx();
+		CFrontObjManager::GetInstance()->Regist(pObj);
 	}
 
 }
@@ -943,27 +933,14 @@ void CEdit_Course::ResetMap()
 //==========================================================================
 void CEdit_Course::SaveMap()
 {
-
 	// 障害物のリスト取得
-	CListManager<CObjectX> list = CObjectX::GetListObj();
-
-	// 先頭を保存
-	std::list<CObjectX*>::iterator itr = list.GetEnd();
-	CObjectX* pObj = nullptr;
-
+	std::vector<CObjectX*> objinfo = CFrontObjManager::GetInstance()->GetInfo();
 	std::vector<CMapBlockInfo::SObsacleInfo> savedate;
 
-	while (list.ListLoop(itr))
+	for(int i = 0; i < objinfo.size(); i++)
 	{
-		CObjectX* pObj = *itr;
 
-		// 障害物マネージャ取得
-		CMap_ObstacleManager* pObstacleMgr = CMap_ObstacleManager::GetInstance();
-		std::vector<CMap_ObstacleManager::SObstacleInfo> vecObstacleMgrInfo = pObstacleMgr->GetObstacleInfo();
-
-		// 障害物情報取得
-		MyLib::Vector3 pos = pObj->GetPosition(), rot = pObj->GetRotation(), scale = pObj->GetScale();
-		CMapBlockInfo::SObsacleInfo info = CMapBlockInfo::SObsacleInfo(pos, rot, scale, pObj->GetIdxXFile());
+		CMapBlockInfo::SObsacleInfo info = CMapBlockInfo::SObsacleInfo(objinfo[i]->GetPosition(), objinfo[i]->GetRotation(), objinfo[i]->GetScale(), objinfo[i]->GetIdxXFile());
 
 		// セーブ情報追加
 		savedate.push_back(info);

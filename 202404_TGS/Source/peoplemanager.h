@@ -23,7 +23,9 @@ class CPeopleManager
 {
 public:
 
+	//=============================
 	// 構造体定義
+	//=============================
 	struct SPeopleData
 	{
 		int nType;			// キャラクター種類
@@ -45,7 +47,9 @@ public:
 		std::vector<SPeopleData> data;
 	};
 
+	//=============================
 	// 列挙型定義
+	//=============================
 	enum STATE
 	{
 		STATE_NONE = 0,		// 何もない状態
@@ -73,9 +77,18 @@ public:
 
 private:
 
+	//=============================
+	// メンバ関数
+	//=============================
+	void SetEffect();	// エフェクト生成
+
+	//=============================
 	// メンバ変数
+	//=============================
 	CJudge::JUDGE m_Rank;							// 現在のランク
 	CJudge::JUDGE m_OldRank;						// 前回のランク
+	float m_fTimer_EffectSpawn;						// エフェクト生成のタイマー
+	float m_fInterval_EffectSpawn;					// エフェクト生成の間隔
 	std::vector<SPattern> m_vecPattern;				// 配置パターン
 	std::vector<SPattern> m_PatternByRank[CJudge::JUDGE::JUDGE_MAX];			// 配置パターン
 	std::list<SPeopleData> m_lateSpawnPeople;		// 後生成の人リスト

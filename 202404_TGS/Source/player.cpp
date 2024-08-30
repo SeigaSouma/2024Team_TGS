@@ -44,6 +44,7 @@
 #include "meshbubble.h"
 #include "discovery.h"
 #include "splashwater_manager.h"
+#include "suffocation.h"
 
 // 使用クラス
 #include "playercontrol.h"

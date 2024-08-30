@@ -19,10 +19,11 @@
 namespace
 {
 	const std::string FILENAME = "data\\TEXT\\people\\manager.txt";
-	const float SPAWN_DISTANCE = 600.0f;		// 湧き距離間隔
-	const float SPAWN_ALL_LENGTH = 80000.0f;	// 出現する全ての長さ
-	const float SPAWN_MIN_LENGTH = -6000.0f;	// 出現する最低距離（プレイヤーからの距離）
-	const float SPAWN_MAX_LENGTH = 6000.0f;		// 出現する最高距離（プレイヤーからの距離、これより先は後生成リスト行き）
+	const float SPAWN_DISTANCE = 600.0f;			// 湧き距離間隔
+	const float SPAWN_ALL_LENGTH = 80000.0f;		// 出現する全ての長さ
+	const float SPAWN_MIN_LENGTH = -6000.0f;		// 出現する最低距離（プレイヤーからの距離）
+	const float SPAWN_MAX_LENGTH = 6000.0f;			// 出現する最高距離（プレイヤーからの距離、これより先は後生成リスト行き）
+	const float DEFAULT_TIME_EFFECTSPAWN = 2.0f;	// エフェクト生成のデフォルト間隔
 }
 CPeopleManager* CPeopleManager::m_ThisPtr = nullptr;				// 自身のポインタ
 
@@ -34,9 +35,10 @@ CPeopleManager::CPeopleManager()
 	// 値のクリア
 	m_Rank = CJudge::JUDGE::JUDGE_MAX;	// 現在のランク
 	m_OldRank = CJudge::JUDGE::JUDGE_MAX;		// 前回のランク
+	m_fTimer_EffectSpawn = 0.0f;				// エフェクト生成のタイマー
+	m_fInterval_EffectSpawn = 0.0f;				// エフェクト生成の間隔
 	m_vecPattern.clear();			// 配置パターン
 	m_vecMotionFileName.clear();	// モーションファイル名
-	m_PatternByRank;			// 配置パターン
 }
 
 //==========================================================================
@@ -100,6 +102,11 @@ void CPeopleManager::Uninit()
 //==========================================================================
 void CPeopleManager::Update()
 {
+
+	// エフェクト生成
+	SetEffect();
+
+
 	// 範囲外の人を消す
 	DespawnPeople();
 
@@ -114,6 +121,34 @@ void CPeopleManager::Update()
 
 	// 前回のランク
 	m_OldRank = m_Rank;
+}
+
+//==========================================================================
+// エフェクト生成
+//==========================================================================
+void CPeopleManager::SetEffect()
+{
+	// 最低ランク以外
+	if (m_Rank == CJudge::JUDGE::JUDGE_MAX) return;
+
+	// エフェクト生成のタイマー加算
+	m_fTimer_EffectSpawn += CManager::GetInstance()->GetDeltaTime();
+
+	if (m_fInterval_EffectSpawn <= m_fTimer_EffectSpawn)
+	{
+		// エフェクト生成の間隔
+		m_fTimer_EffectSpawn = 0.0f;
+		m_fInterval_EffectSpawn = DEFAULT_TIME_EFFECTSPAWN + UtilFunc::Transformation::Random(-20, 20) * 0.01f;
+
+		// プレイヤー取得
+		CPlayer* pPlayer = CPlayer::GetListObj().GetData(0);
+		if (pPlayer == nullptr) return;
+
+		// ガヤエフェクト
+		CEffekseerObj::Create(
+			CMyEffekseer::EFKLABEL::EFKLABEL_CROWD,
+			MyLib::Vector3(pPlayer->GetPosition().x, 250.0f, 2000.0f), MyLib::Vector3(0.0f, 0.0f, 0.0f), 0.0f, 70.0f, true);
+	}
 }
 
 //==========================================================================
@@ -149,6 +184,7 @@ void CPeopleManager::SetByRank()
 	// ガヤ音再生
 	CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_GAYA);
 	CSound::GetInstance()->VolumeChange(CSound::LABEL::LABEL_SE_GAYA, 0.5f);
+
 
 	// 後出しリストリセット
 	m_lateSpawnPeople.clear();
