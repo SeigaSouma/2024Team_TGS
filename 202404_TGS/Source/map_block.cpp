@@ -698,6 +698,7 @@ void CMapBlock::Set(const int Idx, const MyLib::Vector3& startpos, float startle
 		for (const auto& it : pInfo->GetMapInfo())
 		{
 			CObjectX* pObj = CObjectX::Create(it.nType, it.pos + startpos, it.rot);
+			pObj->SetType(CObject::TYPE::TYPE_XFILE);
 			pObj->SetScale(it.scale);
 		}
 	}
