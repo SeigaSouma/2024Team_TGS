@@ -15,7 +15,25 @@
 namespace
 {
 	const std::string TEXTURE_SAMPLE = "data\\TEXTURE\\subtitle\\suffocation.png";	// テクスチャのファイル
+	static int RANDOM_MOVEX = 250;
+	static int RANDOM_MOVEINTERVAL = 2;
+	static float VELOCITY_UP = 0.13f;
 }
+
+namespace StateTime	// 状態別時間
+{
+	const float BURST = 0.3f;	// 破裂
+}
+
+
+//==========================================================================
+// 関数ポインタ
+//==========================================================================
+CSuffocation::STATE_FUNC CSuffocation::m_StateFunc[] =
+{
+	&CSuffocation::StateSurfacing,	// なし
+	&CSuffocation::StateBurst,		// オープン
+};
 
 //==========================================================================
 // コンストラクタ
@@ -23,6 +41,9 @@ namespace
 CSuffocation::CSuffocation(int nPriority) : CObject2D(nPriority)
 {
 	// 値のクリア
+	m_fStateTime = 0.0f;		// 状態カウンター
+	m_state = State::STATE_SURFACING;			// 状態
+	m_fDestWidth = 0.0f;	// 目標の幅
 }
 
 //==========================================================================
@@ -59,10 +80,6 @@ HRESULT CSuffocation::Init()
 	// オブジェクト2Dの初期化
 	CObject2D::Init();
 
-	MyLib::Vector3 move = GetMove();
-	move = UtilFunc::Transformation::Random(-50, 50) * 0.1f;
-	SetMove(move);
-
 	// テクスチャ設定
 	int texID = CTexture::GetInstance()->Regist(TEXTURE_SAMPLE);
 	BindTexture(texID);
@@ -78,7 +95,7 @@ HRESULT CSuffocation::Init()
 #endif
 	SetSize(size);
 	SetSizeOrigin(size);
-	SetPosition(MyLib::Vector3(SCREEN_WIDTH * 0.5f,600.0f,0.0f));
+	SetPosition(MyLib::Vector3(SCREEN_WIDTH * 0.5f, 720.0f + size.y, 0.0f));
 
 
 	// 位置、向き設定は必要があれば追加
@@ -103,30 +120,87 @@ void CSuffocation::Uninit()
 //==========================================================================
 void CSuffocation::Update()
 {
+	// 状態更新
+	UpdateState();
+	if (IsDeath()) return;
+
 	// 更新処理
 	CObject2D::Update();
+}
 
-	int nCtr;
+//==========================================================================
+// 状態更新
+//==========================================================================
+void CSuffocation::UpdateState()
+{
+	// 状態タイマー
+	m_fStateTime += CManager::GetInstance()->GetDeltaTime();
+
+	// 状態リスト
+	(this->*(m_StateFunc[m_state]))();
+}
+
+//==========================================================================
+// 浮上
+//==========================================================================
+void CSuffocation::StateSurfacing()
+{
 	MyLib::Vector3 pos = GetPosition();
 	MyLib::Vector3 move = GetMove();
 
-	if (UtilFunc::Transformation::Random(0, 2) == 0)
+	// 横揺れのランダム
+	if (UtilFunc::Transformation::Random(0, RANDOM_MOVEX) == 0)
 	{
-		move.x *= -1.0f;
+		m_fDestWidth = UtilFunc::Transformation::Random(-RANDOM_MOVEX, RANDOM_MOVEX) * 0.1f;
 	}
 
-	move.y = -1.2f;
-	pos += move;
+	// 浮上
+	move.y -= (VELOCITY_UP + UtilFunc::Transformation::Random(0, 30) * 0.01f);
+	pos.y += move.y;
 
+	// 横揺れ
+	move.x += (m_fDestWidth - move.x) * 0.1f;
+	pos.x = 640.0f + move.x;
+
+	// 中央
 	if (pos.y <= SCREEN_HEIGHT * 0.5f)
 	{
 		move.y = 0.0f;
 		pos.y = SCREEN_HEIGHT * 0.5f;
 		SetPosition(pos);
+
+		// 状態遷移
+		m_state = State::STATE_BURST;
+		m_fStateTime = 0.0f;
 	}
 	SetMove(move);
 	SetPosition(pos);
+}
 
+//==========================================================================
+// 破裂
+//==========================================================================
+void CSuffocation::StateBurst()
+{
+	// 位置更新
+	MyLib::Vector3 pos = GetPosition();
+	pos.x += (640.0f - pos.x) * 0.2f;
+	SetPosition(pos);
+
+	// サイズ更新
+	D3DXVECTOR2 size = GetSize(), sizeOrigin = GetSizeOrigin();
+	size.x = UtilFunc::Correction::EasingEaseInOut(sizeOrigin.x, sizeOrigin.x * 5.0f, 0.0f, StateTime::BURST, m_fStateTime);
+	size.y = UtilFunc::Correction::EasingEaseInOut(sizeOrigin.y, sizeOrigin.y * 5.0f, 0.0f, StateTime::BURST, m_fStateTime);
+	SetSize(size);
+
+	// 不透明度
+	float alpha = UtilFunc::Correction::EasingEaseInOut(1.0f, 0.0f, 0.0f, StateTime::BURST, m_fStateTime);
+	SetAlpha(alpha);
+
+	if (m_fStateTime >= StateTime::BURST)
+	{
+		Uninit();
+	}
 }
 
 //==========================================================================

@@ -23,7 +23,8 @@ public:
 	//=============================
 	enum State
 	{
-		STATE_NONE = 0,		// なにもない
+		STATE_SURFACING = 0,	// 浮上
+		STATE_BURST,			// 破裂
 		STATE_MAX
 	};
 
@@ -46,9 +47,19 @@ public:
 private:
 
 	//=============================
+	// 関数リスト
+	//=============================
+	// 状態リスト
+	typedef void(CSuffocation::* STATE_FUNC)();
+	static STATE_FUNC m_StateFunc[];
+
+	//=============================
 	// メンバ関数
 	//=============================
 	// 状態系
+	void UpdateState();		// 状態更新
+	void StateSurfacing();	// 浮上
+	void StateBurst();		// 破裂
 
 	// その他関数
 
@@ -60,7 +71,7 @@ private:
 	State m_state;			// 状態
 
 	// その他変数
-
+	float m_fDestWidth;	// 目標の幅
 };
 
 
