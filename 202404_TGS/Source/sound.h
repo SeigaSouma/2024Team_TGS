@@ -18,6 +18,12 @@ class CSound
 public:
 
 	// 列挙型定義
+	enum TYPE
+	{
+		TYPE_BGM,
+		TYPE_SE,
+		TYPE_MAX
+	};
 	enum LABEL
 	{
 		LABEL_BGM_TITLE = 0,			// タイトル
@@ -65,6 +71,7 @@ public:
 
 	typedef struct
 	{
+		CSound::TYPE type;	// 音種類
 		std::string file;	// ファイル名
 		int nCntLoop;		// ループカウント
 	} SOUNDINFO;
@@ -79,7 +86,9 @@ public:
 	void StopSound(LABEL label);
 	void VolumeChange(LABEL label, float volume);	// 音量設定
 	void VolumeChange(float fVolume);				// マスターボリューム設定
-	int GetVolume();
+	void VolumeChange(TYPE type, float fVolume);	// 種類別ボリューム設定
+	int GetVolume();								// 音量取得（マスターボリューム）
+	int GetVolume(TYPE type);						// 音量取得（種類別）
 	void SetFrequency(LABEL label, float fValue);	// 周波数設定
 
 	static CSound* Create(HWND hWnd);	// 生成処理
@@ -95,7 +104,8 @@ private:
 	BYTE *m_apDataAudio[LABEL_MAX];						// オーディオデータ
 	DWORD m_aSizeAudio[LABEL_MAX];						// オーディオデータサイズ
 	DSBUFFERDESC SetVolume;								// 音量調整
-	float m_fVolume;									// 音量
+	float m_fMasterVolume;								// 音量（マスターボイス）
+	float m_aVolume[TYPE_MAX];							// 音量（種類別）
 	static SOUNDINFO m_aSoundInfo[LABEL_MAX];			// サウンドの情報
 	WAVEFORMATEXTENSIBLE m_wfx[LABEL_MAX];
 	static CSound* m_pThisPtr;	// 自身のポインタ

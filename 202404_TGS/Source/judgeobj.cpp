@@ -18,10 +18,10 @@ namespace
 {
 	const std::vector<std::string> TEXTURE =
 	{
-		"data\\TEXTURE\\judge_test_01.png",
-		"data\\TEXTURE\\judge_test_02.png",
-		"data\\TEXTURE\\judge_test_03.png",
-		"data\\TEXTURE\\judge_test_04.png",
+		"data\\TEXTURE\\judge\\judge_texture_01.png",
+		"data\\TEXTURE\\judge\\judge_texture_02.png",
+		"data\\TEXTURE\\judge\\judge_texture_03.png",
+		"data\\TEXTURE\\judge\\judge_texture_04.png",
 	};
 }
 
