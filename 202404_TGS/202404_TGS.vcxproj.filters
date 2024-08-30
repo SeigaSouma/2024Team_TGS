@@ -147,6 +147,9 @@
     <Filter Include="direction\scroll">
       <UniqueIdentifier>{43a00958-1255-4847-8500-df8424cd6811}</UniqueIdentifier>
     </Filter>
+    <Filter Include="direction\leaf">
+      <UniqueIdentifier>{d5d3f913-e097-4560-acf1-c1b9337af4b6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\ballast.cpp">
@@ -736,6 +739,9 @@
     </ClCompile>
     <ClCompile Include="Source\scroll.cpp">
       <Filter>direction\scroll</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\leaf.cpp">
+      <Filter>direction\leaf</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1335,6 +1341,9 @@
     </ClInclude>
     <ClInclude Include="Source\scroll.h">
       <Filter>direction\scroll</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\leaf.h">
+      <Filter>direction\leaf</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
