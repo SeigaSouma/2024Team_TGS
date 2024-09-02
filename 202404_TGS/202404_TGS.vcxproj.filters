@@ -743,6 +743,9 @@
     <ClCompile Include="Source\leaf.cpp">
       <Filter>direction\leaf</Filter>
     </ClCompile>
+    <ClCompile Include="Source\controlkeydisp.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ballast.h">
@@ -1344,6 +1347,9 @@
     </ClInclude>
     <ClInclude Include="Source\leaf.h">
       <Filter>direction\leaf</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\controlkeydisp.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
