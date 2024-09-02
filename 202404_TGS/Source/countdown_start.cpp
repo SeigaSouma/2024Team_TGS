@@ -211,6 +211,8 @@ void CCountdown_Start::StateDrop_Wait()
 {
 	if (m_fStateTime >= StateTime::DROP_WAIT)
 	{
+		CSound::GetInstance()->PlaySound(CSound::LABEL_SE_COUNTDOWN1);
+
 		// 状態タイマーリセット
 		m_fStateTime = 0.0f;
 
@@ -257,7 +259,6 @@ void CCountdown_Start::StateDrop_DOWN()
 		int texID = CTexture::GetInstance()->Regist(TEXTURE[m_nCount]);
 		BindTexture(texID);
 
-
 		// サイズ設定
 		D3DXVECTOR2 size = CTexture::GetInstance()->GetImageSize(texID);
 
@@ -275,6 +276,8 @@ void CCountdown_Start::StateComplete()
 {
 	if (m_fStateTime >= StateTime::COMPLETE)
 	{
+		CSound::GetInstance()->PlaySound(CSound::LABEL_SE_COUNTDOWN2);
+
 		// 状態タイマーリセット
 		m_fStateTime = 0.0f;
 
