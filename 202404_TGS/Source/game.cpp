@@ -60,6 +60,7 @@
 #include "tree.h"
 #include "scroll.h"
 #include "suffocation.h"
+#include "leaf.h"
 
 namespace
 {
@@ -586,6 +587,7 @@ void CGame::Update()
 		CManager::GetInstance()->GetFade()->SetFade(CScene::MODE_RESULT);
 	}
 
+	// ¶¬
 	if (ImGui::TreeNode("Create"))
 	{
 		if (ImGui::Button("CScroll"))
@@ -596,6 +598,11 @@ void CGame::Update()
 		if (ImGui::Button("CSuffocation"))
 		{
 			CSuffocation::Create();
+		}
+
+		if (ImGui::Button("CLeaf"))
+		{
+			CLeaf::Create(CManager::GetInstance()->GetCamera()->GetPositionR() + MyLib::Vector3(0.0f, 300.0f, 0.0f));
 		}
 
 		ImGui::TreePop();
