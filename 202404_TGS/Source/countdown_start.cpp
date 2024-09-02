@@ -170,6 +170,8 @@ void CCountdown_Start::UpdateState()
 
 	// 実行
 	(this->*(m_StateFuncList[m_state]))();
+
+	CSound::GetInstance()->StopSound(CSound::LABEL_SE_COUNTDOWN1);
 }
 
 //==========================================================================
@@ -275,6 +277,8 @@ void CCountdown_Start::StateComplete()
 {
 	if (m_fStateTime >= StateTime::COMPLETE)
 	{
+		CSound::GetInstance()->StopSound(CSound::LABEL_SE_COUNTDOWN2);
+
 		// 状態タイマーリセット
 		m_fStateTime = 0.0f;
 

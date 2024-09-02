@@ -431,6 +431,8 @@ void CBaggage::StatePass()
 		CEffekseerObj::Create(
 			CMyEffekseer::EFKLABEL::EFKLABEL_BAGGAGEGET,
 			pos, MyLib::Vector3(0.0f, 0.0f, 0.0f), 0.0f, 90.0f, true);
+
+		CSound::GetInstance()->StopSound(CSound::LABEL_SE_RECIEVE);
 	}
 
 	SetPosition(pos);
@@ -479,7 +481,7 @@ void CBaggage::StateFall()
 	SetPosition(pos);
 	SetMove(move);
 
-	if (pos.y <= 0)
+	if (pos.y <= -100.0f)
 	{
 		if (!m_bfall)
 		{// …‚µ‚Ô‚«‚Ì¶¬
