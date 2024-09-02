@@ -11,6 +11,9 @@
 #include "game.h"
 #include "course.h"
 
+// 派生クラス
+#include "leaf_flow.h"
+
 //==========================================================================
 // 定数定義
 //==========================================================================
@@ -61,10 +64,25 @@ CLeaf::~CLeaf()
 //==========================================================================
 // 生成処理
 //==========================================================================
-CLeaf* CLeaf::Create(const MyLib::Vector3& pos)
+CLeaf* CLeaf::Create(const MyLib::Vector3& pos, const Type& type)
 {
 	// メモリの確保
-	CLeaf* pObj = DEBUG_NEW CLeaf;
+	CLeaf* pObj = nullptr;
+
+	switch (type)
+	{
+	case Type::TYPE_FALL:
+		pObj = DEBUG_NEW CLeaf;
+		break;
+
+	case Type::TYPE_FLOW:
+		pObj = DEBUG_NEW CLeafFlow;
+		break;
+
+	default:
+		return nullptr;
+		break;
+	}
 
 	if (pObj == nullptr)
 	{// 失敗
@@ -107,7 +125,7 @@ HRESULT CLeaf::Init()
 
 	// 向き
 	MyLib::Vector3 rot;
-	rot.y = UtilFunc::Transformation::Random(-31, 31) * 0.01f;
+	rot.y = UtilFunc::Transformation::Random(-31, 31) * 0.1f;
 	rot.x = UtilFunc::Transformation::Random(-31, 31) * 0.01f;
 	rot.z = UtilFunc::Transformation::Random(-31, 31) * 0.01f;
 	SetRotation(rot);

@@ -60,7 +60,7 @@
 #include "tree.h"
 #include "scroll.h"
 #include "suffocation.h"
-#include "leaf.h"
+#include "leaf_flow.h"
 #include "controlkeydisp.h"
 
 namespace
@@ -622,7 +622,12 @@ void CGame::Update()
 
 		if (ImGui::Button("CLeaf"))
 		{
-			CLeaf::Create(CManager::GetInstance()->GetCamera()->GetPositionR() + MyLib::Vector3(0.0f, 300.0f, 0.0f));
+			CLeaf::Create(CManager::GetInstance()->GetCamera()->GetPositionR() + MyLib::Vector3(0.0f, 300.0f, 0.0f), CLeaf::Type::TYPE_FALL);
+		}
+
+		if (ImGui::Button("CLeafFlow"))
+		{
+			CLeaf::Create(MyLib::Vector3(-500.0f, 0.0f, UtilFunc::Transformation::Random(-300, 300)), CLeaf::Type::TYPE_FLOW);
 		}
 
 		ImGui::TreePop();
