@@ -98,7 +98,8 @@ HRESULT CCourse::Init()
 	D3DXCOLOR* pVtxCol = GetVtxCol();
 
 	// 全ての要素を書き換え
-	std::fill(pVtxCol, pVtxCol + GetNumVertex(), D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.7f));
+	std::fill(pVtxCol, pVtxCol + GetNumVertex(), D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.4f));
+
 
 
 	// 頂点座標計算
@@ -773,6 +774,89 @@ void CCourse::SetVtxPosition()
 		i++;
 	}
 
+}
+
+//==========================================================================
+// 高さ取得
+//==========================================================================
+float CCourse::GetHeight(const MyLib::Vector3& pos, bool* pLand)
+{
+	// ベクトルと法線
+	MyLib::Vector3 vec1, vec2, nor;
+	float fHeight = 0.0f;
+	MyLib::Vector3* pVtxPos = GetVtxPos();
+
+	// フィールドの位置
+	MyLib::Vector3 posfield = GetPosition();
+	int nHeight = GetHeightBlock();
+	int nWidth = GetWidthBlock();
+
+	// 長さ取得
+	float fWidthLen = GetWidthLen();
+	float fHeightLen = GetHeightLen();
+
+	// 最大の長さ
+	float fMaxWidthLen = fWidthLen * GetWidthBlock();
+	float fMaxHeightLen = -fWidthLen * GetHeightBlock();
+
+	// 判定する頂点の計算
+	int nCntWidth = 0;
+	int nCntHeight = 0;
+	int nWidthPoint = static_cast<int>(((pos.x - posfield.x) - fMaxWidthLen * 0.5f) / fWidthLen + GetWidthBlock());
+	int nHeightPoint = static_cast<int>(GetHeightBlock() - ((pos.z - posfield.z) - fMaxHeightLen * 0.5f) / fHeightLen);
+
+	for (int nCntH = 0; nCntH < 2; nCntH++)
+	{
+		for (int nCntW = 0; nCntW < 2; nCntW++)
+		{
+			// 横頂点
+			nCntWidth = nWidthPoint + (nCntW - 1);
+			nCntHeight = nHeightPoint + (nCntH - 1);
+
+			if (nCntWidth < 0 || nWidth < nCntWidth)
+			{// 範囲外で先頭
+				continue;
+			}
+
+			if (nCntHeight < 0 || nHeight < nCntHeight)
+			{// 範囲外で先頭
+				continue;
+			}
+
+			// 今回の頂点
+			int nNowPoint = (nCntWidth + 1) + (nCntHeight * (nWidth + 1));
+			int nVerTexW = (nWidth + 1) + 1;
+
+			int nLeft = nCntWidth + (nCntHeight * (nWidth + 1));
+			int nRight = nCntWidth + (nCntHeight * (nWidth + 1)) + nVerTexW;
+
+			if (nLeft >= GetNumVertex() || nRight >= GetNumVertex())
+			{
+				continue;
+			}
+
+			fHeight = UtilFunc::Calculation::GetVtxHeight(pos, pVtxPos[nNowPoint] + posfield, pVtxPos[nLeft] + posfield, pVtxPos[nRight] + posfield, pLand);
+			if (*pLand)
+			{
+				break;
+			}
+
+			fHeight = UtilFunc::Calculation::GetVtxHeight(pos, pVtxPos[nNowPoint + GetWidthBlock()] + posfield, pVtxPos[nRight] + posfield, pVtxPos[nLeft] + posfield, pLand);
+			if (*pLand)
+			{
+				break;
+			}
+		}
+	}
+
+	if (*pLand)
+	{// 着地していたら
+
+		return fHeight;
+	}
+
+	// 高さを取得
+	return pos.y;
 }
 
 //==========================================================================

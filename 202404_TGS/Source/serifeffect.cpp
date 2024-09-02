@@ -108,7 +108,7 @@ void CSerifEffect::Update()
 
 	// ˆÚ“®
 	MyLib::Vector3 rot = GetRotation();
-	float move = UtilFunc::Correction::EasingEaseIn(0.0f, MOVE, progress);
+	float move = UtilFunc::Correction::EasingEaseOut(0.0f, MOVE, progress);
 	MyLib::Vector3 vecMove = MyLib::Vector3();
 	vecMove.x = -move * cosf(rot.z);
 	vecMove.y = -move * sinf(rot.z);
