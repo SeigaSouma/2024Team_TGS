@@ -431,6 +431,8 @@ void CBaggage::StatePass()
 		CEffekseerObj::Create(
 			CMyEffekseer::EFKLABEL::EFKLABEL_BAGGAGEGET,
 			pos, MyLib::Vector3(0.0f, 0.0f, 0.0f), 0.0f, 90.0f, true);
+
+		CSound::GetInstance()->StopSound(CSound::LABEL_SE_RECIEVE);
 	}
 
 	SetPosition(pos);

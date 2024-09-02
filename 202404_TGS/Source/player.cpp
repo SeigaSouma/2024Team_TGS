@@ -1245,7 +1245,7 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 	{
 		if (nLife == camlife)
 		{
-			CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_DROWN);
+			CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_OBORERU);
 		}
 
 		// カメラ振動
