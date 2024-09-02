@@ -78,6 +78,9 @@ public:
 	void SetVecVtxinfo(const std::vector<VtxInfo>& vecinfo) { m_vecVtxInfo = vecinfo; }	// 各頂点の情報設定
 	void SetVecVtxinfo(int idx, const VtxInfo& vecinfo);								// 各頂点の情報設定
 
+	float GetHeight(const MyLib::Vector3& pos, bool* pLand);
+
+
 	// ファイル操作
 	void Save();	// セーブ
 	HRESULT Load(const std::string& file);	// ロード
