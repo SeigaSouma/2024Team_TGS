@@ -479,7 +479,7 @@ void CBaggage::StateFall()
 	SetPosition(pos);
 	SetMove(move);
 
-	if (pos.y <= 0)
+	if (pos.y <= -100.0f)
 	{
 		if (!m_bfall)
 		{// …‚µ‚Ô‚«‚Ì¶¬

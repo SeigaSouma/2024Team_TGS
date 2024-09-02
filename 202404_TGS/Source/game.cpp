@@ -59,6 +59,7 @@
 #include "ascensionCylinder.h"
 #include "tree.h"
 #include "scroll.h"
+#include "suffocation.h"
 
 namespace
 {
@@ -585,7 +586,23 @@ void CGame::Update()
 		CManager::GetInstance()->GetFade()->SetFade(CScene::MODE_RESULT);
 	}
 
+	if (ImGui::TreeNode("Create"))
+	{
+		if (ImGui::Button("CScroll"))
+		{
+			CScroll::Create(MyLib::Vector3(640.0f, 360.0f, 0.0f), 1.0f, 250.0f, 900.0f, true);
+		}
+
+		if (ImGui::Button("CSuffocation"))
+		{
+			CSuffocation::Create();
+		}
+
+		ImGui::TreePop();
+	}
+
 #endif
+
 
 	if (pInputKeyboard->GetTrigger(DIK_K))
 	{
