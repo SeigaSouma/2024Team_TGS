@@ -767,6 +767,11 @@ void CReceiverPeople::StateWalk()
 		SetState(STATE::STATE_RETURN);
 		m_fMoveTimer = 0.0f;
 		m_StartPos = bagpos;
+
+		// ゲットエフェクト生成
+		CEffekseerObj::Create(
+			CMyEffekseer::EFKLABEL::EFKLABEL_TP,
+			pos, MyLib::Vector3(0.0f, D3DX_PI * 0.5f, 0.0f), 0.0f, 30.0f, true);
 		return;
 	}
 

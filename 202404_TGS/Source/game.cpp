@@ -627,7 +627,7 @@ void CGame::Update()
 
 		if (ImGui::Button("CLeafFlow"))
 		{
-			CLeaf::Create(MyLib::Vector3(-500.0f, 0.0f, UtilFunc::Transformation::Random(-300, 300)), CLeaf::Type::TYPE_FLOW);
+			CLeaf::Create(MyLib::Vector3(-500.0f, 10.0f, UtilFunc::Transformation::Random(-300, 300)), CLeaf::Type::TYPE_FLOW);
 		}
 
 		ImGui::TreePop();

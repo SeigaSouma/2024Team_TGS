@@ -24,7 +24,7 @@ namespace
 	const float WIDTH = 2000.0f;
 	const float INTERVAL_TEXU = 500.0f;		// U座標の間隔
 	const float INTERVAL_SINCURVE = 1200.0f;	// サインカーブの間隔
-	const float HEIGHT_SINCURVE = 8.4f;	// サインカーブの高さ
+	const float HEIGHT_SINCURVE = 80.4f;	// サインカーブの高さ
 	const float SCROLL_VELOCITY = 10.0f;
 }
 const float CCourse::m_fCreateDistance = 600.0f;	// 生成間隔
@@ -622,7 +622,7 @@ void CCourse::Update()
 	}
 
 	// サインカーブの移動量
-	m_fSinCurve -= velocity;
+	//m_fSinCurve -= velocity;
 #else
 
 	// サインカーブの移動量
@@ -857,6 +857,115 @@ float CCourse::GetHeight(const MyLib::Vector3& pos, bool* pLand)
 
 	// 高さを取得
 	return pos.y;
+}
+
+//==========================================================================
+// 自分のいる頂点のインデックス取得
+//==========================================================================
+int CCourse::GetMyVtxIndex(const MyLib::Vector3& _pos)
+{
+	int idx = -1;
+	for (const auto& vtxInfo : m_vecVtxInfo)
+	{
+		const MyLib::Vector3& pos = vtxInfo.pos;
+
+		if (pos.x <= _pos.x)
+		{
+			idx++;
+		}
+		else
+		{
+			break;
+		}
+	}
+
+	return idx;
+}
+
+//==========================================================================
+// 頂点からなる平面との当たり判定
+//==========================================================================
+bool CCourse::CollisionVtxQuad(int idx, MyLib::Vector3 rayPos, MyLib::Vector3* colPos)
+{
+	// 例外処理
+	if (static_cast<int>(m_vecVtxInfo.size()) <= idx) return false;
+	if (idx < 0) return false;
+
+	MyLib::Vector3* pVtxPos = GetVtxPos();
+	MyLib::Vector3 rayVec(0.0f, -1.0f, 0.0f);
+
+	// レイと4点の判定
+	int calIdx = idx * 2;
+	float raylen = 90000.0f;
+
+	// 時計回り
+	//MyLib::Vector3 pos0(pVtxPos[calIdx + 1]), pos1(pVtxPos[calIdx + 3]), pos2(pVtxPos[calIdx + 2]), pos3(pVtxPos[calIdx + 0]);
+	MyLib::Vector3 pos0(pVtxPos[calIdx + 3]), pos1(pVtxPos[calIdx + 1]), pos2(pVtxPos[calIdx + 0]), pos3(pVtxPos[calIdx + 2]);
+
+	pos0 += GetPosition();
+	pos1 += GetPosition();
+	pos2 += GetPosition();
+	pos3 += GetPosition();
+
+	bool bHit = UtilFunc::Collision::CollisionRayQuad(&rayPos, &rayVec,
+		&pos0, &pos1, &pos2, &pos3,
+		raylen, colPos);
+	//*colPos += GetPosition();
+
+#if 0
+
+	MyLib::Vector3 aaaa(800.0f, 2000.0f, 0.0f), koutne;
+	int courseIdx = GetMyVtxIndex(aaaa);
+	courseIdx *= 2;
+
+	MyLib::Vector3 Apos0(pVtxPos[courseIdx + 3]), Apos1(pVtxPos[courseIdx + 1]), Apos2(pVtxPos[courseIdx + 0]), Apos3(pVtxPos[courseIdx + 2]);
+	Apos0 += GetPosition();
+	Apos1 += GetPosition();
+	Apos2 += GetPosition();
+	Apos3 += GetPosition();
+
+	UtilFunc::Collision::CollisionRayQuad(&aaaa, &rayVec,
+		&Apos0, &Apos1, &Apos2, &Apos3,
+		raylen, &koutne);
+	//koutne += GetPosition();
+
+	CEffect3D::Create(
+		koutne,
+		MyLib::Vector3(0.0f, 0.0f, 0.0f),
+		D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f),
+		40.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+
+
+	CEffect3D::Create(
+		pos0,
+		MyLib::Vector3(0.0f, 0.0f, 0.0f),
+		D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f),
+		40.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+
+	CEffect3D::Create(
+		pos1,
+		MyLib::Vector3(0.0f, 0.0f, 0.0f),
+		D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f),
+		40.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+
+	CEffect3D::Create(
+		pos2,
+		MyLib::Vector3(0.0f, 0.0f, 0.0f),
+		D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f),
+		40.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+
+	CEffect3D::Create(
+		pos3,
+		MyLib::Vector3(0.0f, 0.0f, 0.0f),
+		D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f),
+		40.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+
+	ImGui::Text("rot:x%.2f, %.2f, %.2f", pos1.x, pos1.y, pos1.z);
+	ImGui::Text("rot:x%.2f, %.2f, %.2f", pos2.x, pos2.y, pos2.z);
+	ImGui::Text("rot:x%.2f, %.2f, %.2f", pos3.x, pos3.y, pos3.z);
+#endif
+
+	return bHit;
 }
 
 //==========================================================================

@@ -124,7 +124,7 @@ namespace MySpline
 	@param	endDistance	[in]	èIí[ÇÃí∑Ç≥
 	@return	void
 	*/
-	inline MyLib::Vector3 GetSplinePosition_NonLoop(const std::vector<MyLib::Vector3>& posvec, float _distance, float endDistance = 10.0f)
+	inline MyLib::Vector3 GetSplinePosition_NonLoop(const std::vector<MyLib::Vector3>& posvec, float _distance, float endDistance = 10.0f, int* pIdx = nullptr)
 	{
 		int posvecSize = posvec.size();
 
@@ -145,6 +145,11 @@ namespace MySpline
 			}
 			distance -= vecLength[idx];
 			idx = (idx + 1) % posvecSize;
+		}
+
+		if (pIdx != nullptr)
+		{
+			*pIdx = idx;
 		}
 
 		// äÑçáÇåvéZ

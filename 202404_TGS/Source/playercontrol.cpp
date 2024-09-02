@@ -1016,8 +1016,8 @@ void CPlayerControlBaggage::GoalAction(CPlayer* player, CBaggage* pBaggage)
 		{
 			pBaggage->SetMove(move);
 			pBaggage->SetPosition(pos);
+			pCamMotion->SetPosition(pos);
 		}
-		pCamMotion->SetPosition(pos);
 	}
 }
 

@@ -10,6 +10,7 @@
 #include "input.h"
 #include "game.h"
 #include "course.h"
+#include "spline.h"
 
 //==========================================================================
 // 定数定義
@@ -42,6 +43,7 @@ CLeafFlow::CLeafFlow(int nPriority) : CLeaf(nPriority)
 	// 値のクリア
 	m_fStateTimer = 0.0f;			// 状態カウンター
 	m_state = CLeafFlow::State::STATE_FLOW;	// 状態
+	m_fMoveLen = 0.0f;	// 移動距離
 }
 
 //==========================================================================
@@ -67,6 +69,8 @@ HRESULT CLeafFlow::Init()
 	rot.x = D3DX_PI * 0.5f;
 	SetRotation(rot);
 
+	m_fMoveLen = 0.0f;	// 移動距離
+
 	return S_OK;
 }
 
@@ -76,6 +80,7 @@ HRESULT CLeafFlow::Init()
 void CLeafFlow::Update()
 {
 	UpdateState();
+	if (IsDeath()) return;
 
 	// 更新処理
 	CObject3D::Update();
@@ -99,7 +104,60 @@ void CLeafFlow::UpdateState()
 void CLeafFlow::StateFlow()
 {
 	MyLib::Vector3 pos = GetPosition();
-	pos.x += 5.0f;
+
+	// コース取得
+	CCourse* pCourse = CGame::GetInstance()->GetCourse();
+	int courseIdx = pCourse->GetMyVtxIndex(pos);
+
+	// 位置計算
+	m_fMoveLen += 8.0f;
+	/*if (CInputKeyboard::GetInstance()->GetPress(DIK_RIGHT))
+	{
+		m_fMoveLen += 8.0f;
+	}
+	if (CInputKeyboard::GetInstance()->GetPress(DIK_LEFT))
+	{
+		m_fMoveLen -= 8.0f;
+	}*/
+
+	MyLib::Vector3 calpos;
+	calpos = MySpline::GetSplinePosition_NonLoop(pCourse->GetVecPosition(), m_fMoveLen);
+	pos.x = calpos.x;
+	pos.z = calpos.z;
+
+	pos.z += GetOriginPosition().z;
+
+	// 平面判定
+	MyLib::Vector3 colPos[3];
+	bool bHit[3] = {};
+
+	ImGui::Text("courseIdx：%d", courseIdx);
+
+	bHit[0] = pCourse->CollisionVtxQuad(courseIdx, MyLib::Vector3(pos.x, 2000.0f, pos.z), &colPos[0]);
+	/*bHit[1] = pCourse->CollisionVtxQuad(courseIdx - 1, MyLib::Vector3(pos.x, 2000.0f, pos.z), &colPos[1]);
+	bHit[2] = pCourse->CollisionVtxQuad(courseIdx + 1, MyLib::Vector3(pos.x, 2000.0f, pos.z), &colPos[2]);*/
+
+
+	//ImGui::Text("colPos:x%.2f, %.2f, %.2f", colPos.x, colPos.y, colPos.z);
+
+	float minHeight = 2000.0f;
+	bool bAllHit = false;
+	for (int i = 0; i < 3; i++)
+	{
+		//ImGui::Text("colPos[%d]：%.2f", i, colPos[i].y);
+		if (bHit[i] &&
+			minHeight >= colPos[i].y)
+		{
+			minHeight = colPos[i].y;
+
+			bAllHit = true;
+		}
+	}
+
+	if (bAllHit)
+	{
+		pos.y = minHeight + 2.0f;
+	}
 	SetPosition(pos);
 
 	if (pos.x >= 20000.0f)

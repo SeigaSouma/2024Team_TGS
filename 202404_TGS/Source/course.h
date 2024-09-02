@@ -78,8 +78,10 @@ public:
 	void SetVecVtxinfo(const std::vector<VtxInfo>& vecinfo) { m_vecVtxInfo = vecinfo; }	// 各頂点の情報設定
 	void SetVecVtxinfo(int idx, const VtxInfo& vecinfo);								// 各頂点の情報設定
 
-	float GetHeight(const MyLib::Vector3& pos, bool* pLand);
-
+	// 判定
+	float GetHeight(const MyLib::Vector3& pos, bool* pLand);	// 高さ取得
+	int GetMyVtxIndex(const MyLib::Vector3& _pos);				// 自分のいる頂点のインデックス取得
+	bool CollisionVtxQuad(int idx, MyLib::Vector3 rayPos, MyLib::Vector3* colPos);		// 頂点からなる平面との当たり判定
 
 	// ファイル操作
 	void Save();	// セーブ

@@ -62,6 +62,9 @@ private:
 	float m_fStateTimer;	// 状態カウンター
 	State m_state;			// 状態
 
+	// その他
+	float m_fMoveLen;	// 移動距離
+
 };
 
 

@@ -1625,6 +1625,35 @@ namespace UtilFunc	// 便利関数
 		}
 
 		/**
+		@brief	点が三角形の内部にあるかを判定するヘルパー関数
+		@param	p	[in]	判定する点
+		@param	a	[in]	三角形の頂点1
+		@param	b	[in]	三角形の頂点2
+		@param	c	[in]	三角形の頂点3
+		@return	trueなら内部、falseなら外部
+		*/
+		inline bool PointInTriangle(const MyLib::Vector3& p, const MyLib::Vector3& a, const MyLib::Vector3& b, const MyLib::Vector3& c) 
+		{
+			MyLib::Vector3 v0 = c - a;
+			MyLib::Vector3 v1 = b - a;
+			MyLib::Vector3 v2 = p - a;
+
+			// バリセントリック座標を使った三角形内判定
+			float dot00 = D3DXVec3Dot(&v0, &v0);
+			float dot01 = D3DXVec3Dot(&v0, &v1);
+			float dot02 = D3DXVec3Dot(&v0, &v2);
+			float dot11 = D3DXVec3Dot(&v1, &v1);
+			float dot12 = D3DXVec3Dot(&v1, &v2);
+
+			float invDenom = 1.0f / (dot00 * dot11 - dot01 * dot01);
+			float u = (dot11 * dot02 - dot01 * dot12) * invDenom;
+			float v = (dot00 * dot12 - dot01 * dot02) * invDenom;
+
+			// u >= 0, v >= 0, u + v <= 1 なら三角形の内部
+			return (u >= 0) && (v >= 0) && (u + v <= 1);
+		}
+
+		/**
 		@brief	視界内の判定(3D)
 		@param	posMain			[in]	中心となる人の位置
 		@param	posTarget		[in]	対象の位置
@@ -1808,6 +1837,81 @@ namespace UtilFunc	// 便利関数
 			}
 
 			return true;
+		}
+
+
+		/**
+		@brief	レイと4点から作られる平面の衝突判定(3D)
+		@param	pos		[in]	レイの始点
+		@param	dir_w	[in]	レイの方向ベクトル
+		@param	v0		[in]	四角形の1点目（反時計回りで定義）
+		@param	v1		[in]	四角形の2点目
+		@param	v2		[in]	四角形の3点目
+		@param	v3		[in]	四角形の4点目
+		@param	t		[out]	衝突までの距離（レイの長さに比例）
+		@param	colPos	[out]	衝突点座標
+		@param	colPos	[out]	衝突点座標
+		@return	衝突判定
+		*/
+		inline bool CollisionRayQuad(MyLib::Vector3* pos, MyLib::Vector3* dir_w, MyLib::Vector3* v0, MyLib::Vector3* v1, MyLib::Vector3* v2, MyLib::Vector3* v3, float& t, MyLib::Vector3* colPos = 0) 
+		{
+			// 四角形の面を構成する3つの頂点から法線を求める（反時計回り順）
+			MyLib::Vector3 edge1 = *v1 - *v0;
+			MyLib::Vector3 edge2 = *v2 - *v0;
+			MyLib::Vector3 normal;
+			D3DXVec3Cross(&normal, &edge1, &edge2); // 外積で法線を求める
+			D3DXVec3Normalize(&normal, &normal);    // 正規化
+
+			// 平面方程式の係数を求める
+			float d = -D3DXVec3Dot(&normal, v0);
+
+			// レイの方向ベクトルと法線の内積を求める
+			float dotDirNormal = D3DXVec3Dot(dir_w, &normal);
+			if (abs(dotDirNormal) < FLT_EPSILON) 
+			{
+				// レイが平面と平行な場合、衝突しない
+				return false;
+			}
+
+			// レイと平面の交点を求める
+			float dotPosNormal = D3DXVec3Dot(pos, &normal);
+			t = -(dotPosNormal + d) / dotDirNormal;
+
+			if (t < 0.0f) 
+			{
+				// レイが平面の後ろにある場合、衝突しない
+				return false;
+			}
+
+			// 交点を計算
+			MyLib::Vector3 intersection = *pos + t * (*dir_w);
+
+			// 交点が四角形の内部にあるかをチェック
+			// 四角形を2つの三角形に分割し、それぞれの三角形の内部にあるかを判定
+
+			bool bLand1 = false, bLand2 = false;
+
+			float fHeight1 = UtilFunc::Calculation::GetVtxHeight(intersection, *v0, *v1, *v2, &bLand1);
+			float fHeight2 = UtilFunc::Calculation::GetVtxHeight(intersection, *v2, *v3, *v0, &bLand2);
+
+			if (bLand1 || bLand2)
+			{
+				*colPos = intersection;
+
+				if (bLand1)
+				{
+					colPos->y = fHeight1;
+				}
+
+				if (bLand2)
+				{
+					colPos->y = fHeight2;
+				}
+
+				return true;
+			}
+
+			return false;
 		}
 
 		/**
