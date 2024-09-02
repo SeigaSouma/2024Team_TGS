@@ -24,7 +24,8 @@ public:
 	enum State
 	{
 		STATE_FALL = 0,		// 落下
-		STATE_FADEOUT = 0,	// フェードアウト
+		STATE_WAIT,			// 待機
+		STATE_FADEOUT,		// フェードアウト
 		STATE_MAX
 	};
 
@@ -59,6 +60,7 @@ private:
 	// 状態系
 	void UpdateState();		// 状態更新
 	void StateFall();		// 落下
+	void StateWait();		// 待機
 	void StateFadeOut();	// フェードアウト
 
 	// その他関数
@@ -72,7 +74,9 @@ private:
 	State m_state;			// 状態
 
 	// その他変数
+	MyLib::Vector3 m_rotStart;	// 開始時の向き
 	MyLib::Vector3 m_rotDest;	// 目標の向き
+	float m_fFallWidth;			// 落下幅
 	float m_fRotateTimer;		// 回転までの時間
 	float m_fRotateInterval;	// 回転までの間隔
 };
