@@ -60,10 +60,23 @@
 #include "tree.h"
 #include "scroll.h"
 #include "suffocation.h"
+#include "controlkeydisp.h"
 
 namespace
 {
 	const float RATIO_SETGOAL = 0.825f;	// ゴール設置の割合
+
+	std::map<CInputGamepad::BUTTON, std::string> TEXTURE_PATH =
+	{
+		std::pair<CInputGamepad::BUTTON,std::string>(CInputGamepad::BUTTON::BUTTON_A,""),
+		std::pair<CInputGamepad::BUTTON,std::string>(CInputGamepad::BUTTON::BUTTON_B,"data\\TEXTURE\\ui_button\\UI_button_b.png"),
+		std::pair<CInputGamepad::BUTTON,std::string>(CInputGamepad::BUTTON::BUTTON_X,"data\\TEXTURE\\ui_button\\UI_button_x.png"),
+		std::pair<CInputGamepad::BUTTON,std::string>(CInputGamepad::BUTTON::BUTTON_Y,""),
+		std::pair<CInputGamepad::BUTTON,std::string>(CInputGamepad::BUTTON::BUTTON_RB,""),
+		std::pair<CInputGamepad::BUTTON,std::string>(CInputGamepad::BUTTON::BUTTON_RT,""),
+		std::pair<CInputGamepad::BUTTON,std::string>(CInputGamepad::BUTTON::BUTTON_BACK,""),
+		std::pair<CInputGamepad::BUTTON,std::string>(CInputGamepad::BUTTON::BUTTON_START,"data\\TEXTURE\\ui_button\\UI_button_start.png"),
+	};
 }
 
 //==========================================================================
@@ -283,6 +296,13 @@ HRESULT CGame::Init()
 	// BGM再生
 	CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_BGM_GAME);
 	CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_BGM_WATER_FLOW);
+
+	// キーコンフィグボタンテクスチャ読み込み
+	for (auto itr = TEXTURE_PATH.begin(); itr != TEXTURE_PATH.end(); itr++)
+	{
+		int nIdx = CTexture::GetInstance()->Regist((*itr).second);
+		CControlKeyDisp::Load((*itr).first, nIdx);
+	}
 
 	// 成功
 	return S_OK;
