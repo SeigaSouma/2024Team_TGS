@@ -63,6 +63,7 @@ public:
 		EFKLABEL_BAGGAGEGET,		// 荷物獲得
 		EFKLABEL_AIR,				// 空気
 		EFKLABEL_CROWD,				// 群衆
+		EFKLABEL_TP,				// テレポート
 		EFKLABEL_MAX
 	};
 

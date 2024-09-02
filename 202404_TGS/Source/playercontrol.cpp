@@ -606,6 +606,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 					if (m_pSuffocation == nullptr)
 					{
 						m_pSuffocation = CSuffocation::Create();
+						CSound::GetInstance()->PlaySound(CSound::LABEL_SE_RAOU);
 					}
 				}
 			}
@@ -658,6 +659,7 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 					if (m_pSuffocation == nullptr)
 					{
 						m_pSuffocation = CSuffocation::Create();
+						CSound::GetInstance()->PlaySound(CSound::LABEL_SE_RAOU);
 					}
 				}
 			}

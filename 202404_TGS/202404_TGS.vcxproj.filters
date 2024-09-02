@@ -743,6 +743,12 @@
     <ClCompile Include="Source\leaf.cpp">
       <Filter>direction\leaf</Filter>
     </ClCompile>
+    <ClCompile Include="Source\controlkeydisp.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\leaf_flow.cpp">
+      <Filter>direction\leaf</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ballast.h">
@@ -1343,6 +1349,12 @@
       <Filter>direction\scroll</Filter>
     </ClInclude>
     <ClInclude Include="Source\leaf.h">
+      <Filter>direction\leaf</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\controlkeydisp.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\leaf_flow.h">
       <Filter>direction\leaf</Filter>
     </ClInclude>
   </ItemGroup>

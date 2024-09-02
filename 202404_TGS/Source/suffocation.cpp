@@ -149,7 +149,7 @@ void CSuffocation::StateSurfacing()
 	MyLib::Vector3 move = GetMove();
 
 	// ‰¡—h‚ê‚Ìƒ‰ƒ“ƒ_ƒ€
-	if (UtilFunc::Transformation::Random(0, RANDOM_MOVEX) == 0)
+	if (UtilFunc::Transformation::Random(0, RANDOM_MOVEINTERVAL) == 0)
 	{
 		m_fDestWidth = UtilFunc::Transformation::Random(-RANDOM_MOVEX, RANDOM_MOVEX) * 0.1f;
 	}

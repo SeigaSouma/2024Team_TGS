@@ -1,58 +1,57 @@
 //=============================================================================
 // 
-//  依頼人セリフエフェクト [serifeffect.cpp]
+//  キーコンフィグに応じたボタン表示 [controlkeydisp.cpp]
 //  Author : 石原颯馬
 // 
 //=============================================================================
-#include "serifeffect.h"
-#include "texture.h"
+#include "controlkeydisp.h"
+#include "keyconfig.h"
 
+std::map<CInputGamepad::BUTTON, int> CControlKeyDisp::m_buttonTextures;
 //==========================================================================
 // 定数定義
 //==========================================================================
 namespace
 {
-	const std::string EFFECT_TEXTURE = "data\\TEXTURE\\effect\\voice_effect_00.png";
-	const float EFFECT_DEF_SIZE = 20.0f;
-	const float EFFECT_MAX_SIZE = EFFECT_DEF_SIZE * 1.8f;
-	const float MOVE = 50.0f;
+	
 }
 
 //==========================================================================
 // コンストラクタ
 //==========================================================================
-CSerifEffect::CSerifEffect(int nPriority) : CObject3D(nPriority)
+CControlKeyDisp::CControlKeyDisp(int nPriority) : CObject2D(nPriority)
 {
-	m_Life = 0;
-	m_MaxLife = 0;
+	
 }
 
 //==========================================================================
 // デストラクタ
 //==========================================================================
-CSerifEffect::~CSerifEffect()
+CControlKeyDisp::~CControlKeyDisp()
 {
-
+	
 }
 
 //==========================================================================
 // 生成処理
 //==========================================================================
-CSerifEffect* CSerifEffect::Create(MyLib::Vector3 pos, MyLib::Vector3 rot, int life)
+CControlKeyDisp* CControlKeyDisp::Create(MyLib::Vector3 pos, MyLib::Vector3 rot, float width, float height, int type)
 {
 	// メモリの確保
-	CSerifEffect* pObject = DEBUG_NEW CSerifEffect;
+	CControlKeyDisp* pObject = DEBUG_NEW CControlKeyDisp;
 
 	if (pObject != nullptr)
 	{
-		pObject->m_MaxLife = life;
-		pObject->m_Life = pObject->m_MaxLife;
 		pObject->SetPosition(pos);
 		pObject->SetOriginPosition(pos);
 		pObject->SetRotation(rot);
+		pObject->SetSize(D3DXVECTOR2(width, height));
 
 		// 初期化処理
 		pObject->Init();
+
+		// キーコンフィグに応じてテクスチャ設定
+		pObject->CControlKeyDisp::SetType(type);
 	}
 
 	return pObject;
@@ -61,15 +60,11 @@ CSerifEffect* CSerifEffect::Create(MyLib::Vector3 pos, MyLib::Vector3 rot, int l
 //==========================================================================
 // 初期化処理
 //==========================================================================
-HRESULT CSerifEffect::Init()
+HRESULT CControlKeyDisp::Init()
 {
-	CObject3D::Init();
+	CObject2D::Init();
 
-	SetType(CObject::TYPE::TYPE_OBJECT3D);
-
-	BindTexture(CTexture::GetInstance()->Regist(EFFECT_TEXTURE));
-	SetSize(MyLib::Vector3(EFFECT_DEF_SIZE, EFFECT_DEF_SIZE,0.0f));
-	SetVtx();
+	CObject::SetType(CObject::TYPE::TYPE_OBJECT2D);
 
 	return S_OK;
 }
@@ -77,15 +72,15 @@ HRESULT CSerifEffect::Init()
 //==========================================================================
 // 終了処理
 //==========================================================================
-void CSerifEffect::Uninit()
+void CControlKeyDisp::Uninit()
 {
-	CObject3D::Uninit();
+	CObject2D::Uninit();
 }
 
 //==========================================================================
 // 削除
 //==========================================================================
-void CSerifEffect::Kill()
+void CControlKeyDisp::Kill()
 {
 	
 }
@@ -93,47 +88,28 @@ void CSerifEffect::Kill()
 //==========================================================================
 // 更新処理
 //==========================================================================
-void CSerifEffect::Update()
+void CControlKeyDisp::Update()
 {
-	// ライフ尽きたら消す
-	m_Life--;
-	if (m_Life <= 0)
-	{
-		Uninit();
-		return;
-	}
-
-	// 進行度計算
-	float progress = 1.0f - static_cast<float>(m_Life) / static_cast<float>(m_MaxLife);
-
-	// 移動
-	MyLib::Vector3 rot = GetRotation();
-	float move = UtilFunc::Correction::EasingEaseOut(0.0f, MOVE, progress);
-	MyLib::Vector3 vecMove = MyLib::Vector3();
-	vecMove.x = -move * cosf(rot.z);
-	vecMove.y = -move * sinf(rot.z);
-
-	// 拡大
-	float size = UtilFunc::Correction::EasingEaseOut(EFFECT_DEF_SIZE, EFFECT_MAX_SIZE, progress);
-
-	// フェードアウト
-	float alpha = UtilFunc::Correction::EasingEaseIn(1.0f, 0.0f, progress);
-
-	
-	// 設定
-	D3DXCOLOR col = GetColor();
-	col.a = alpha;
-	SetPosition(GetOriginPosition() + vecMove);
-	SetSize(size);
-	SetColor(col);
-
-	CObject3D::Update();
+	CObject2D::Update();
 }
 
 //==========================================================================
 // 描画処理
 //==========================================================================
-void CSerifEffect::Draw()
+void CControlKeyDisp::Draw()
 {
-	CObject3D::Draw();
+	CObject2D::Draw();
+}
+
+//==========================================================================
+// 種類・テクスチャ設定
+//==========================================================================
+void CControlKeyDisp::SetType(int type)
+{
+	auto itr = m_buttonTextures.find(static_cast<CInputGamepad::BUTTON>(type));
+	if (itr != m_buttonTextures.end())
+	{
+		BindTexture((*itr).second);
+		SetVtx();
+	}
 }
