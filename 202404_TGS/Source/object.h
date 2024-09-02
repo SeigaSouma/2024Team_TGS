@@ -56,6 +56,7 @@ public:
 	{
 		LAYER_MAP = 0,
 		LAYER_LINE,
+		LAYER_LEAF,
 		LAYER_DEFAULT,
 		LAYER_2D,
 		LAYER_MAX

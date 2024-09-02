@@ -442,6 +442,9 @@ void CRequestPeople::AttackAction(CMotion::AttackInfo ATKInfo, int nCntATK)
 		{
 			pBaggage->SetState(CBaggage::STATE::STATE_PASS);
 			pBaggage->SetAwayStartPosition(pMotion->GetAttackPosition(GetModel(), ATKInfo));
+
+			// SEÄ¶
+			CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_NAGERU);
 		}
 	}
 	break;
