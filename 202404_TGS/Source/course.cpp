@@ -622,7 +622,7 @@ void CCourse::Update()
 	}
 
 	// サインカーブの移動量
-	//m_fSinCurve -= velocity;
+	m_fSinCurve -= velocity;
 #else
 
 	// サインカーブの移動量
