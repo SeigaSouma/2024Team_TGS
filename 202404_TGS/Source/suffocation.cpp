@@ -165,6 +165,8 @@ void CSuffocation::StateSurfacing()
 	// ’†‰›
 	if (pos.y <= SCREEN_HEIGHT * 0.5f)
 	{
+		CSound::GetInstance()->PlaySound(CSound::LABEL_SE_CLUCKBUBBLES);
+
 		move.y = 0.0f;
 		pos.y = SCREEN_HEIGHT * 0.5f;
 		SetPosition(pos);

@@ -51,7 +51,7 @@ HRESULT CWaterField_Left::Init()
 	SetType(CObject::TYPE::TYPE_OBJECT3D);
 
 	// 各種変数初期化
-	SetPosition(MyLib::Vector3(0.0f, 1.1f, 0.0f));			// 位置
+	SetPosition(MyLib::Vector3(0.0f, -50.0f, 0.0f));			// 位置
 
 
 	// 全ての要素を書き換え
@@ -79,4 +79,15 @@ void CWaterField_Left::Update()
 	m_fTexU -= SCROLL_V;		// Uスクロール用
 
 	CWaterField::Update();
+
+	// カラーエディット
+	static ImVec4 myColor = ImVec4(1.0f, 1.0f, 1.0f, 0.21f); // RGBA
+
+	if (ImGui::ColorEdit4("Left Color", &myColor.x))
+	{
+		D3DXCOLOR* pVtxCol = GetVtxCol();
+
+		// 全ての要素を書き換え
+		std::fill(pVtxCol, pVtxCol + GetNumVertex(), D3DXCOLOR(myColor.x, myColor.y, myColor.z, myColor.w));
+	}
 }

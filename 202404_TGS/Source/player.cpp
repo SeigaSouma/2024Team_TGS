@@ -1040,14 +1040,15 @@ bool CPlayer::Collision(MyLib::Vector3 &pos, MyLib::Vector3 &move)
 	m_bHitWall = false;			// 壁の当たり判定
 
 	// 高さ取得
-	if (m_state != STATE_DEAD && m_state != STATE_RETURN && m_state != STATE_RESTART)
+	/*if (m_state != STATE_DEAD && m_state != STATE_RETURN && m_state != STATE_RESTART)
 	{
 		fHeight = CManager::GetInstance()->GetScene()->GetElevation()->GetHeight(pos, &bLand);
 	}
 	else
 	{
 		fHeight = pos.y;
-	}
+	}*/
+	fHeight = 0.0f;
 
 	if (fHeight > pos.y)
 	{// 地面の方が自分より高かったら

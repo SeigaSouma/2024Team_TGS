@@ -41,6 +41,15 @@
 #define CHANGE	(0)
 #endif
 
+
+//==========================================================================
+// 定数定義
+//==========================================================================
+namespace
+{
+	const float INTERVAL_TEXU = 900.0f;	// U座標の間隔
+}
+
 //==========================================================================
 // 静的メンバ変数宣言
 //==========================================================================
@@ -630,14 +639,27 @@ void CElevation::SetVtx()
 {
 
 	MyLib::Vector3 *pVtxPos = GetVtxPos();
-	MyLib::Vector3 *pVtxNor = GetVtxNor();
+	MyLib::Vector3* pVtxNor = GetVtxNor();
+	D3DXVECTOR2* pVtxTex = GetVtxTex();
 	MyLib::Vector3 vec1, vec2, nor;
 	MyLib::Vector3 VtxRight, VtxLeft, VtxNow;
 	float fWidthLen = GetWidthLen();
 	float fHeightLen = GetHeightLen();
 
+	int texID = CTexture::GetInstance()->Regist(m_aInfo.TextureFileName);
+
+	D3DXVECTOR2 size = UtilFunc::Transformation::AdjustSizeByWidth(CTexture::GetInstance()->GetImageSize(texID), INTERVAL_TEXU);
+	float intervalU = size.x, intervalV = size.y;
+	float posU = 0.0f, posV = 0.0f;
+
+
 	for (int nCntHeight = 0; nCntHeight < m_aInfo.nHeightBlock + 1; nCntHeight++)
 	{// 縦の分割分繰り返す
+
+		// リセット
+		posU = 0.0f;
+
+		int back = (nCntHeight * (m_aInfo.nWidthBlock + 1)) + 1;
 
 		for (int nCntWidth = 0; nCntWidth < m_aInfo.nWidthBlock + 1; nCntWidth++)
 		{// 横の分割分繰り返す
@@ -715,6 +737,28 @@ void CElevation::SetVtx()
 
 			// 法線
 			pVtxNor[nNowPoint] = nor;
+
+			// UV座標
+			pVtxTex[nNowPoint] = D3DXVECTOR2(posU, posV);
+
+			// 横の割合分進める
+			if (nCntWidth + 1 <= m_aInfo.nWidthBlock)
+			{
+				int u = nCntWidth + (nCntHeight * (m_aInfo.nWidthBlock + 1));
+				posU += pVtxPos[u].DistanceXZ(pVtxPos[u + 1]) / INTERVAL_TEXU;
+			}
+			else
+			{
+				int n = 0;
+			}
+		}
+
+		// 縦の割合分進める
+		if (nCntHeight != m_aInfo.nHeightBlock)
+		{
+			int vtxIdx = (nCntHeight * (m_aInfo.nWidthBlock + 1));
+			int vtxIdxDown = ((nCntHeight + 1) * (m_aInfo.nWidthBlock + 1));
+			posV += pVtxPos[vtxIdx].DistanceXZ(pVtxPos[vtxIdxDown]) / intervalV;
 		}
 	}
 

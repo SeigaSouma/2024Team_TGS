@@ -220,10 +220,10 @@ void CLeaf::StateFall()
 	UtilFunc::Transformation::RotNormalize(rot);
 	SetRotation(rot);
 
-	ImGui::Text("ratio:%.2f", ratio);
+	/*ImGui::Text("ratio:%.2f", ratio);
 	ImGui::Text("len:%.2f", len);
 	ImGui::Text("rot:x%.2f, %.2f, %.2f", rot.x, rot.y, rot.z);
-	ImGui::Text("m_rotDest:x%.2f, %.2f, %.2f", m_rotDest.x, m_rotDest.y, m_rotDest.z);
+	ImGui::Text("m_rotDest:x%.2f, %.2f, %.2f", m_rotDest.x, m_rotDest.y, m_rotDest.z);*/
 
 	// —Ž‰º
 	pos.y -= UtilFunc::Transformation::Random(80, 120) * 0.01f;

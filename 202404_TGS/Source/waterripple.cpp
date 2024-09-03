@@ -18,7 +18,7 @@
 //==========================================================================
 namespace
 {
-
+	const float DEFAULT_ALPHA = 0.5f;	// デフォ不透明度
 }
 
 //==========================================================================
@@ -83,16 +83,17 @@ HRESULT CWaterRipple::Init()
 	// オブジェクト3Dメッシュの初期化処理
 	CObject3DMesh::Init(CObject3DMesh::TYPE_FIELD);
 
-	// 頂点情報設定
-	SetVtx();
-
-
-
 
 	D3DXCOLOR* pVtxCol = GetVtxCol();
 
 	// 全ての要素を書き換え
-	std::fill(pVtxCol, pVtxCol + GetNumVertex(), D3DXCOLOR(0.6f, 0.6f, 1.0f, 0.7f));
+	std::fill(pVtxCol, pVtxCol + GetNumVertex(), D3DXCOLOR(0.6f, 0.6f, 1.0f, DEFAULT_ALPHA));
+
+
+	// 頂点座標計算
+	SetVtxPosition();
+
+	SetVtx();
 	return S_OK;
 }
 
@@ -110,16 +111,15 @@ void CWaterRipple::Uninit()
 //==========================================================================
 void CWaterRipple::Update()
 {
-
+	// 中心からの長さ加算
 	m_Info.length += m_Info.velocity;
 
-#if _DEBUG
 	// 頂点座標計算
 	SetVtxPosition();
 
 	SetVtx();
-#endif
 
+	// 寿命減算
 	m_Info.life--;
 
 	if (m_Info.life <= 0)
@@ -136,6 +136,7 @@ void CWaterRipple::SetVtxPosition()
 
 	MyLib::Vector3* pVtxPos = GetVtxPos();
 	MyLib::Vector3* pVtxNor = GetVtxNor();
+	D3DXCOLOR* pVtxCol = GetVtxCol();
 	MyLib::Vector3 vec1, vec2, nor;
 	MyLib::Vector3 VtxRight, VtxLeft, VtxNow;
 	int nHeight = GetHeightBlock();
@@ -174,13 +175,8 @@ void CWaterRipple::SetVtxPosition()
 			float fRangeLength = fMaxLength - fMinLength;
 
 
-
-
-
-
-
-
-
+			// 透明度
+			pVtxCol[idx].a = DEFAULT_ALPHA * (static_cast<float>(m_Info.life) / static_cast<float>(m_Info.maxLife));
 
 			// 現在距離との割合
 			float ratio = m_Info.length / fNowLength;
@@ -189,6 +185,7 @@ void CWaterRipple::SetVtxPosition()
 			{// 範囲外は移動量ゼロ
 				
 				ratio = 0.0f;
+				pVtxCol[idx].a = 0.0f;
 			}
 
 			if (fNowLength <= fMaxLength &&
@@ -203,20 +200,23 @@ void CWaterRipple::SetVtxPosition()
 
 				float calMinLen = fMinLength;
 				if (calMinLen <= 0.0f)
-				{
+				{// 範囲外
 					calMinLen = 0.0f;
+					pVtxCol[idx].a = 0.0f;
 				}
 
 				float calMaxLen = fMaxLength - calMinLen;
 				float calVtxLen = fNowLength - calMinLen;
 				if (calMaxLen <= 0.0f)
-				{
+				{// 範囲外
 					calMaxLen = 0.0f;
+					pVtxCol[idx].a = 0.0f;
 				}
 
 				if (calVtxLen <= 0.0f)
-				{
+				{// 範囲外
 					calVtxLen = 0.0f;
+					pVtxCol[idx].a = 0.0f;
 				}
 
 
@@ -234,9 +234,6 @@ void CWaterRipple::SetVtxPosition()
 
 				ratio = maxratio;
 			}
-
-			/*if (ratio >= 1.0f)
-				ratio = 1.0f;*/
 
 			// 波の高さ
 			float waveHeight = m_Info.height * ratio;

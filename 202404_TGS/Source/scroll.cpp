@@ -8,6 +8,7 @@
 #include "manager.h"
 #include "calculation.h"
 #include "input.h"
+#include "sound.h"
 
 //==========================================================================
 // ’è”’è‹`
@@ -276,6 +277,7 @@ void CScroll::StateNone()
 
 		// ó‘Ô‘JˆÚ
 		SetState(STATE::STATE_OPEN);
+		CSound::GetInstance()->PlaySound(CSound::LABEL_SE_OPEN);
 	}
 }
 
