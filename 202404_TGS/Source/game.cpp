@@ -242,9 +242,9 @@ HRESULT CGame::Init()
 	//=============================
 	CStencilShadow::Create();
 
-	/*CWaterField::Create(CWaterField::TYPE::TYPE_NORMAL);
+	//CWaterField::Create(CWaterField::TYPE::TYPE_NORMAL);
 	CWaterField::Create(CWaterField::TYPE::TYPE_RIGHT);
-	CWaterField::Create(CWaterField::TYPE::TYPE_LEFT);*/
+	CWaterField::Create(CWaterField::TYPE::TYPE_LEFT);
 
 	//CCheckpoint::Load("data\\TEXT\\map\\checkpoint.txt");
 

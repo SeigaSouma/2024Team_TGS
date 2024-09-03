@@ -50,7 +50,7 @@ public:
 		VtxInfo(const MyLib::Vector3& _pos, const MyLib::Vector3& _rot) : pos(_pos), rot(_rot) {}
 	};
 
-	CCourse(int nPriority = 1, const LAYER layer = LAYER::LAYER_MAP);
+	CCourse(int nPriority = 2, const LAYER layer = LAYER::LAYER_MAP);
 	~CCourse();
 
 	// オーバーライドされた関数

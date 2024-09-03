@@ -33,7 +33,7 @@ public:
 			height(_height), velocity(_velocity), length(_length), thickness(_thickness), life(_life), maxLife(_maxLife) {}
 	};
 
-	CWaterRipple(const int block, const float blockSize, int nPriority = 1, const LAYER layer = LAYER::LAYER_MAP);
+	CWaterRipple(const int block, const float blockSize, int nPriority = 3, const LAYER layer = LAYER::LAYER_MAP);
 	~CWaterRipple();
 
 	// オーバーライドされた関数

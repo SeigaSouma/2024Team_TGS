@@ -110,7 +110,7 @@ void CLeafFlow::StateFlow()
 	int courseIdx = pCourse->GetMyVtxIndex(pos);
 
 	// 位置計算
-	m_fMoveLen += 8.0f;
+	m_fMoveLen += 5.0f;
 	/*if (CInputKeyboard::GetInstance()->GetPress(DIK_RIGHT))
 	{
 		m_fMoveLen += 8.0f;
@@ -131,7 +131,7 @@ void CLeafFlow::StateFlow()
 	MyLib::Vector3 colPos[3];
 	bool bHit[3] = {};
 
-	ImGui::Text("courseIdx：%d", courseIdx);
+	//ImGui::Text("courseIdx：%d", courseIdx);
 
 	bHit[0] = pCourse->CollisionVtxQuad(courseIdx, MyLib::Vector3(pos.x, 2000.0f, pos.z), &colPos[0]);
 	/*bHit[1] = pCourse->CollisionVtxQuad(courseIdx - 1, MyLib::Vector3(pos.x, 2000.0f, pos.z), &colPos[1]);
