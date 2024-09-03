@@ -277,6 +277,7 @@ void CScroll::StateNone()
 
 		// ó‘Ô‘JˆÚ
 		SetState(STATE::STATE_OPEN);
+		CSound::GetInstance()->PlaySound(CSound::LABEL_SE_OPEN);
 	}
 }
 
@@ -300,8 +301,6 @@ void CScroll::StateOpen()
 
 	if (m_fStateTimer >= StateTime::OPEN)
 	{// ŠÔŒo‰ß
-
-		CSound::GetInstance()->PlaySound(CSound::LABEL_SE_OPEN);
 
 		// ó‘Ô‘JˆÚ
 		SetState(STATE::STATE_WAIT);
