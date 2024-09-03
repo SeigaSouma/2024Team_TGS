@@ -88,6 +88,7 @@ public:
 	// Ã“Iƒƒ“ƒoŠÖ”
 	static CKeyConfigManager* GetInstance() { return m_pInstance; }
 	static CKeyConfigManager* Create();
+	static void ConfigTextureLoad();
 	bool Bind(CKeyConfig* pConfig, const int type);
 	CKeyConfig* GetConfig(const Control type) { return m_apKeyConfig[type]; }
 
