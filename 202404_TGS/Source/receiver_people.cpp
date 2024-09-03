@@ -560,6 +560,8 @@ void CReceiverPeople::StateReturn()
 	{
 		// ƒ‚[ƒVƒ‡ƒ“Ý’è
 		pMotion->Set(MOTION::MOTION_RETURN);
+
+		CSound::GetInstance()->PlaySound(CSound::LABEL_SE_SMASHATTACK);
 	}
 
 	// UŒ‚î•ñŽæ“¾
@@ -645,6 +647,8 @@ void CReceiverPeople::StateDive()
 	{
 		// ƒ‚[ƒVƒ‡ƒ“Ý’è
 		pMotion->Set(MOTION::MOTION_DIVE);
+
+		CSound::GetInstance()->PlaySound(CSound::LABEL_SE_DIVE);
 	}
 
 	// ˆÚ“®ŽžŠÔ‰ÁŽZ
@@ -772,6 +776,8 @@ void CReceiverPeople::StateWalk()
 		CEffekseerObj::Create(
 			CMyEffekseer::EFKLABEL::EFKLABEL_TP,
 			pos, MyLib::Vector3(0.0f, D3DX_PI * 0.5f, 0.0f), 0.0f, 30.0f, true);
+
+		CSound::GetInstance()->PlaySound(CSound::LABEL_SE_TELEPORTATION);
 		return;
 	}
 

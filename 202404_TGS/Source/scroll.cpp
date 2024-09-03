@@ -8,6 +8,7 @@
 #include "manager.h"
 #include "calculation.h"
 #include "input.h"
+#include "sound.h"
 
 //==========================================================================
 // ’è”’è‹`
@@ -299,6 +300,8 @@ void CScroll::StateOpen()
 
 	if (m_fStateTimer >= StateTime::OPEN)
 	{// ŠÔŒo‰ß
+
+		CSound::GetInstance()->PlaySound(CSound::LABEL_SE_OPEN);
 
 		// ó‘Ô‘JˆÚ
 		SetState(STATE::STATE_WAIT);

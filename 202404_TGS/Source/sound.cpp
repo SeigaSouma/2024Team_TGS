@@ -51,7 +51,17 @@ CSound::SOUNDINFO CSound::m_aSoundInfo[LABEL_MAX] =
 	{ TYPE_SE,"data/SE/shock_creature.wav", 0 },
 	{ TYPE_SE,"data/SE/inthewater1.wav", 0 },
 	{ TYPE_SE,"data/SE/inthewater2.wav", 0 },
-
+	{ TYPE_SE,"data/SE/writing.wav", 0 },
+	{ TYPE_SE,"data/SE/cluckbubbles.wav", 0 },
+	{ TYPE_SE,"data/SE/open.wav", 0 },
+	{ TYPE_SE,"data/SE/dive.wav", 0 },
+	{ TYPE_SE,"data/SE/good.wav", 0 },
+	{ TYPE_SE,"data/SE/worst.wav", 0 },
+	{ TYPE_SE,"data/SE/bad.wav", 0 },
+	{ TYPE_SE,"data/SE/smashattack.wav", 0 },
+	{ TYPE_SE,"data/SE/pressure.wav", 0 },
+	{ TYPE_SE,"data/SE/teleportation.wav", 0 },
+	{ TYPE_SE,"data/SE/awesome.wav", 0 },
 
 };	// サウンドの情報
 CSound* CSound::m_pThisPtr = nullptr;	// 自身のポインタ
