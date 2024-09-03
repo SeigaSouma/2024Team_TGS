@@ -7,6 +7,7 @@
 #include "keyconfig.h"
 #include "keyconfig_gamepad.h"
 #include "keyconfig_keyboard.h"
+#include "controlkeydisp.h"
 
 //==========================================================================
 // 定数定義
@@ -21,6 +22,32 @@ namespace
 		"data\\TEXT\\keyconfig\\keyboard_out.txt",
 	};
 }
+
+// ネームSPACE
+namespace KEY_PAD
+{
+	const std::string FOLDER_PATH = "data\\TEXTURE\\ui_button\\";
+	std::map<CInputGamepad::BUTTON, std::string> TEXTURE_PATH =
+	{
+		std::pair<CInputGamepad::BUTTON,std::string>(CInputGamepad::BUTTON::BUTTON_UP,			"button_up.png"),
+		std::pair<CInputGamepad::BUTTON,std::string>(CInputGamepad::BUTTON::BUTTON_DOWN,		"button_down.png"),
+		std::pair<CInputGamepad::BUTTON,std::string>(CInputGamepad::BUTTON::BUTTON_LEFT,		"button_left.png"),
+		std::pair<CInputGamepad::BUTTON,std::string>(CInputGamepad::BUTTON::BUTTON_RIGHT,		"button_right.png"),
+		std::pair<CInputGamepad::BUTTON,std::string>(CInputGamepad::BUTTON::BUTTON_START,		"button_start.png"),
+		std::pair<CInputGamepad::BUTTON,std::string>(CInputGamepad::BUTTON::BUTTON_BACK,		"button_back.png"),
+		std::pair<CInputGamepad::BUTTON,std::string>(CInputGamepad::BUTTON::BUTTON_LSTICKPUSH,	"button_ls.png"),
+		std::pair<CInputGamepad::BUTTON,std::string>(CInputGamepad::BUTTON::BUTTON_RSTICKPUSH,	"button_rs.png"),
+		std::pair<CInputGamepad::BUTTON,std::string>(CInputGamepad::BUTTON::BUTTON_LB,			"button_lb.png"),
+		std::pair<CInputGamepad::BUTTON,std::string>(CInputGamepad::BUTTON::BUTTON_RB,			"button_rb.png"),
+		std::pair<CInputGamepad::BUTTON,std::string>(CInputGamepad::BUTTON::BUTTON_LT,			"button_lt.png"),
+		std::pair<CInputGamepad::BUTTON,std::string>(CInputGamepad::BUTTON::BUTTON_RT,			"button_rt.png"),
+		std::pair<CInputGamepad::BUTTON,std::string>(CInputGamepad::BUTTON::BUTTON_A,			"button_a.png"),
+		std::pair<CInputGamepad::BUTTON,std::string>(CInputGamepad::BUTTON::BUTTON_B,			"button_b.png"),
+		std::pair<CInputGamepad::BUTTON,std::string>(CInputGamepad::BUTTON::BUTTON_X,			"button_x.png"),
+		std::pair<CInputGamepad::BUTTON,std::string>(CInputGamepad::BUTTON::BUTTON_Y,			"button_y.png"),
+	};
+}
+
 
 //==========================================================================
 // 静的メンバ変数宣言
@@ -46,6 +73,7 @@ CKeyConfigManager* CKeyConfigManager::Create()
 	if (m_pInstance != nullptr) { return m_pInstance; }	// インスタンスが存在
 	m_pInstance = DEBUG_NEW CKeyConfigManager;
 	m_pInstance->ConfigCreate();	// コンフィグ生成
+
 	return m_pInstance;
 }
 
@@ -126,5 +154,18 @@ void CKeyConfigManager::ConfigCreate()
 			p->Uninit();
 			delete p;
 		}
+	}
+}
+
+//==========================================================================
+// コンフィグ用テクスチャ読み込み
+//==========================================================================
+void CKeyConfigManager::ConfigTextureLoad()
+{
+	// キーコンフィグボタンテクスチャ読み込み
+	for (auto itr = KEY_PAD::TEXTURE_PATH.begin(); itr != KEY_PAD::TEXTURE_PATH.end(); itr++)
+	{
+		int nIdx = CTexture::GetInstance()->Regist(KEY_PAD::FOLDER_PATH + (*itr).second);
+		CControlKeyDisp::Load((*itr).first, nIdx);
 	}
 }
