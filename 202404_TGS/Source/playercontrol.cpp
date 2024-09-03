@@ -376,10 +376,10 @@ void CPlayerControlMove::Move(CPlayer* player)
 	static int block = 64;
 	static float blocksize = 4.7f;
 #else
-	static float height = 72.0f, velocity = 4.0f, thickness = 15.0f;
-	static int life = 45;
+	static float height = 72.0f, velocity = 3.9f, thickness = 13.0f;
+	static int life = 43;
 	static int block = 64;
-	static float blocksize = 3.7f;
+	static float blocksize = 4.5f;
 #endif
 
 #if _DEBUG

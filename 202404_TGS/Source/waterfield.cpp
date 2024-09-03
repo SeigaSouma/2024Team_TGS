@@ -19,9 +19,10 @@
 //==========================================================================
 namespace
 {
-	const std::string TEXTURE = "data\\TEXTURE\\FIELD\\water_03.jpg";
-	const int BLOCK = 240;
-	const float BLOCK_SIZE = 400.0f;
+	const std::string TEXTURE = "data\\TEXTURE\\FIELD\\water-bg-pattern-04.jpg";
+	const int BLOCK = 8;
+	const float BLOCK_SIZE = 40000.0f;
+	const float INTERVAL_TEXU = 900.0f;	// U座標の間隔
 }
 
 //==========================================================================
@@ -165,33 +166,53 @@ void CWaterField::Draw()
 //==========================================================================
 void CWaterField::SetVtx()
 {
-	VERTEX_3D* pVtx;	// 頂点情報へのポインタ
-	LPDIRECT3DVERTEXBUFFER9 pVtxBuff = GetVtxBuff();
 	int nHBlock = GetHeightBlock();
 	int nWBlock = GetWidthBlock();
 
-	// 頂点バッファをロックし、頂点情報へのポインタを取得
-	pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+	// 頂点情報
+	MyLib::Vector3* pVtxPos = GetVtxPos();
+	D3DXVECTOR2* pVtxTex = GetVtxTex();
+
+	int idx = 0;
+
+	// テクスチャ情報
+	int texID = CTexture::GetInstance()->Regist(TEXTURE);
+	D3DXVECTOR2 size = UtilFunc::Transformation::AdjustSizeByWidth(CTexture::GetInstance()->GetImageSize(texID), INTERVAL_TEXU);
+	float intervalU = size.x, intervalV = size.y;
+	float posU = 0.0f, posV = 0.0f;
 
 	// 頂点情報の設定
 	for (int nCntHeight = 0; nCntHeight < nHBlock + 1; nCntHeight++)
 	{//縦の頂点数分繰り返す
 
+		// リセット
+		posU = 0.0f;
+
 		for (int nCntWidth = 0; nCntWidth < nWBlock + 1; nCntWidth++)
 		{// 横の頂点数分繰り返す
 
-			// テクスチャ座標の設定
-			pVtx[0].tex = D3DXVECTOR2
-			(
-				((float)nCntWidth / (1.0f / (float)(nWBlock + 1))) * (1.0f / (float)(nWBlock + 1)) + m_fTexU,
-				((float)nCntHeight / (1.0f / (float)(nHBlock + 1))) * (1.0f / (float)(nHBlock + 1)) + m_fTexV
-			);
-			pVtx += 1;
+			
+			// UV座標
+			pVtxTex[idx] = D3DXVECTOR2(posU + m_fTexU, posV + m_fTexV);
+
+			// 横の割合分進める
+			if (nCntWidth + 1 <= nWBlock)
+			{
+				int u = nCntWidth + (nCntHeight * (nWBlock + 1));
+				posU += pVtxPos[u].DistanceXZ(pVtxPos[u + 1]) / INTERVAL_TEXU;
+			}
+
+			idx++;
+		}
+
+		// 縦の割合分進める
+		if (nCntHeight != nHBlock)
+		{
+			int vtxIdx = (nCntHeight * (nWBlock + 1));
+			int vtxIdxDown = ((nCntHeight + 1) * (nWBlock + 1));
+			posV += pVtxPos[vtxIdx].DistanceXZ(pVtxPos[vtxIdxDown]) / intervalV;
 		}
 	}
-
-	// 頂点バッファをアンロックする
-	pVtxBuff->Unlock();
 
 	// 頂点情報更新
 	CObject3DMesh::SetVtx();

@@ -26,6 +26,8 @@ namespace
 	const float INTERVAL_SINCURVE = 1200.0f;	// サインカーブの間隔
 	const float HEIGHT_SINCURVE = 8.4f;	// サインカーブの高さ
 	const float SCROLL_VELOCITY = 10.0f;
+	const ImVec4 FILLCOLOR = ImVec4(0.80, 0.98, 1.0, 0.4f); // RGBA
+
 }
 const float CCourse::m_fCreateDistance = 600.0f;	// 生成間隔
 
@@ -314,7 +316,7 @@ void CCourse::ReCreateVtx()
 	D3DXCOLOR* pVtxCol = GetVtxCol();
 
 	// 全ての要素を書き換え
-	std::fill(pVtxCol, pVtxCol + GetNumVertex(), D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.7f));
+	std::fill(pVtxCol, pVtxCol + GetNumVertex(), D3DXCOLOR(FILLCOLOR.x, FILLCOLOR.y, FILLCOLOR.z, FILLCOLOR.w));
 
 
 	for (const auto& box : m_pCollisionLineBox)
@@ -623,6 +625,18 @@ void CCourse::Update()
 
 	// サインカーブの移動量
 	m_fSinCurve -= velocity;
+
+	// カラーエディット
+	static ImVec4 myColor = ImVec4(0.80, 0.98, 1.0, 0.46f); // RGBA
+
+	if (ImGui::ColorEdit4("Color", &myColor.x))
+	{
+		D3DXCOLOR* pVtxCol = GetVtxCol();
+
+		// 全ての要素を書き換え
+		std::fill(pVtxCol, pVtxCol + GetNumVertex(), D3DXCOLOR(myColor.x, myColor.y, myColor.z, myColor.w));
+	}
+
 #else
 
 	// サインカーブの移動量
