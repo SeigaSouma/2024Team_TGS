@@ -183,17 +183,21 @@ void CJudgeObj::CreateState()
 	if (m_Judge == CJudge::JUDGE::JUDGE_AAA)
 	{
 		m_pStateFunc = DEBUG_NEW CJudgeStateFunc_AAA(this);
+		CSound::GetInstance()->PlaySound(CSound::LABEL_SE_AWESOME);
 	}
 	else if (m_Judge == CJudge::JUDGE::JUDGE_BBB)
 	{
 		m_pStateFunc = DEBUG_NEW CJudgeStateFunc_BBB(this);
+		CSound::GetInstance()->PlaySound(CSound::LABEL_SE_GOOD);
 	}
 	else if (m_Judge == CJudge::JUDGE::JUDGE_CCC)
 	{
 		m_pStateFunc = DEBUG_NEW CJudgeStateFunc_CCC(this);
+		CSound::GetInstance()->PlaySound(CSound::LABEL_SE_BAD);
 	}
 	else if (m_Judge == CJudge::JUDGE::JUDGE_DDD)
 	{
 		m_pStateFunc = DEBUG_NEW CJudgeStateFunc_DDD(this);
+		CSound::GetInstance()->PlaySound(CSound::LABEL_SE_WORST);
 	}
 }
