@@ -7,6 +7,8 @@
 #include "object2D.h"
 #include "manager.h"
 #include "pause.h"
+#include "2D_effect.h"
+#include "debugproc.h"
 
 //==========================================================================
 // 定数定義
@@ -28,6 +30,7 @@ CObject2D::CObject2D(int nPriority, const LAYER layer) : CObject(nPriority, laye
 	m_fAngle = 0.0f;							// 対角線の向き
 	m_pVtxBuff = nullptr;							// 頂点バッファ
 	m_nTexIdx = 0;								// テクスチャのインデックス番号
+	m_AnchorType = AnchorPoint::CENTER;			// アンカーポイントの種類
 
 	for (int nCntVtx = 0; nCntVtx < 32; nCntVtx++)
 	{
@@ -309,22 +312,89 @@ void CObject2D::SetVtx()
 	float fAngle = GetAngle();
 	float fLength = GetLength();
 
+	// アンカーポイントの設定
+	float anchorX = pos.x;
+	float anchorY = pos.y;
+
+	D3DXVECTOR2 size = GetSize();
+
+	// センター以外は計算
+	if (m_AnchorType != AnchorPoint::CENTER)
+	{
+		float distanceX = size.x, distanceY = size.y;
+		switch (m_AnchorType)
+		{
+		case CObject2D::LEFT:
+			anchorX = pos.x + distanceX;
+			anchorY = pos.y;
+			break;
+
+		case CObject2D::TOP_LEFT:
+			anchorX = pos.x + distanceX;
+			anchorY = pos.y + distanceY;
+			break;
+
+		case CObject2D::TOP_CENTER:
+			anchorX = pos.x;
+			anchorY = pos.y + distanceY;
+			break;
+
+		case CObject2D::TOP_RIGHT:
+			anchorX = pos.x - distanceX;
+			anchorY = pos.y + distanceY;
+			break;
+
+		case CObject2D::RIGHT:
+			anchorX = pos.x - distanceX;
+			anchorY = pos.y;
+			break;
+
+		case CObject2D::UNDER_RIGHT:
+			anchorX = pos.x - distanceX;
+			anchorY = pos.y - distanceY;
+			break;
+
+		case CObject2D::UNDER_CENTER:
+			anchorX = pos.x;
+			anchorY = pos.y - distanceY;
+			break;
+
+		case CObject2D::UNDER_LEFT:
+			anchorX = pos.x + distanceX;
+			anchorY = pos.y - distanceY;
+			break;
+
+		default:
+			anchorX = pos.x;
+			anchorY = pos.y;
+			break;
+		}
+	}
+
 	// 頂点座標の設定
-	pVtx[0].pos.x = pos.x + sinf(rot.z - D3DX_PI + fAngle) * fLength;
-	pVtx[0].pos.y = pos.y + cosf(rot.z - D3DX_PI + fAngle) * fLength;
+	pVtx[0].pos.x = anchorX + sinf(rot.z - D3DX_PI + fAngle) * fLength;
+	pVtx[0].pos.y = anchorY + cosf(rot.z - D3DX_PI + fAngle) * fLength;
 	pVtx[0].pos.z = 0.0f;
 
-	pVtx[1].pos.x = pos.x + sinf(rot.z + D3DX_PI - fAngle) * fLength;
-	pVtx[1].pos.y = pos.y + cosf(rot.z + D3DX_PI - fAngle) * fLength;
+	pVtx[1].pos.x = anchorX + sinf(rot.z + D3DX_PI - fAngle) * fLength;
+	pVtx[1].pos.y = anchorY + cosf(rot.z + D3DX_PI - fAngle) * fLength;
 	pVtx[1].pos.z = 0.0f;
 
-	pVtx[2].pos.x = pos.x + sinf(rot.z - fAngle) * fLength;
-	pVtx[2].pos.y = pos.y + cosf(rot.z - fAngle) * fLength;
+	pVtx[2].pos.x = anchorX + sinf(rot.z - fAngle) * fLength;
+	pVtx[2].pos.y = anchorY + cosf(rot.z - fAngle) * fLength;
 	pVtx[2].pos.z = 0.0f;
 
-	pVtx[3].pos.x = pos.x + sinf(rot.z + fAngle) * fLength;
-	pVtx[3].pos.y = pos.y + cosf(rot.z + fAngle) * fLength;
+	pVtx[3].pos.x = anchorX + sinf(rot.z + fAngle) * fLength;
+	pVtx[3].pos.y = anchorY + cosf(rot.z + fAngle) * fLength;
 	pVtx[3].pos.z = 0.0f;
+
+	if (m_AnchorType != AnchorPoint::CENTER)
+	{
+		pVtx[0].pos = RotateVtx(MyLib::Vector3(anchorX - size.x, anchorY - size.y, 0.0f), pos);
+		pVtx[1].pos = RotateVtx(MyLib::Vector3(anchorX + size.x, anchorY - size.y, 0.0f), pos);
+		pVtx[2].pos = RotateVtx(MyLib::Vector3(anchorX - size.x, anchorY + size.y, 0.0f), pos);
+		pVtx[3].pos = RotateVtx(MyLib::Vector3(anchorX + size.x, anchorY + size.y, 0.0f), pos);
+	}
 
 	// rhwの設定
 	pVtx[0].rhw = 1.0f;
@@ -346,6 +416,33 @@ void CObject2D::SetVtx()
 
 	// 頂点バッファをアンロックロック
 	m_pVtxBuff->Unlock();
+}
+
+//==========================================================================
+// 頂点回転処理
+//==========================================================================
+MyLib::Vector3 CObject2D::RotateVtx(const MyLib::Vector3& vtx, const MyLib::Vector3& center)
+{
+	// 判定するパーツのマトリックス取得
+	MyLib::Matrix mtxRot, mtxTrans;
+	MyLib::Matrix mtxWepon;
+
+	mtxWepon.Identity();
+
+	MyLib::Vector3 rot = GetRotation();
+	MyLib::Vector3 pos = GetPosition();
+
+	// 向きを反映する
+	mtxRot.RotationYawPitchRoll(rot.y, rot.x, rot.z);
+	mtxWepon.Multiply(mtxWepon, mtxRot);
+
+	// オフセットを反映する
+	MyLib::Vector3 offset(vtx.x - pos.x, vtx.y - pos.y, 0.0f);
+
+	// オフセットに回転行列を適用
+	offset = mtxRot.Coord(offset);
+
+	return (offset + center);
 }
 
 //==========================================================================
