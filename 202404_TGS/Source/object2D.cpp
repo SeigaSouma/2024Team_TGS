@@ -309,8 +309,6 @@ void CObject2D::SetVtx()
 	MyLib::Vector3 pos = GetPosition();
 	MyLib::Vector3 rot = GetRotation();
 	D3DXCOLOR col = GetColor();
-	float fAngle = GetAngle();
-	float fLength = GetLength();
 
 	// アンカーポイントの設定
 	float anchorX = pos.x;
@@ -372,23 +370,28 @@ void CObject2D::SetVtx()
 	}
 
 	// 頂点座標の設定
-	pVtx[0].pos.x = anchorX + sinf(rot.z - D3DX_PI + fAngle) * fLength;
-	pVtx[0].pos.y = anchorY + cosf(rot.z - D3DX_PI + fAngle) * fLength;
-	pVtx[0].pos.z = 0.0f;
+	if (m_AnchorType == AnchorPoint::CENTER)
+	{
+		float fAngle = GetAngle();
+		float fLength = GetLength();
 
-	pVtx[1].pos.x = anchorX + sinf(rot.z + D3DX_PI - fAngle) * fLength;
-	pVtx[1].pos.y = anchorY + cosf(rot.z + D3DX_PI - fAngle) * fLength;
-	pVtx[1].pos.z = 0.0f;
+		pVtx[0].pos.x = anchorX + sinf(rot.z - D3DX_PI + fAngle) * fLength;
+		pVtx[0].pos.y = anchorY + cosf(rot.z - D3DX_PI + fAngle) * fLength;
+		pVtx[0].pos.z = 0.0f;
 
-	pVtx[2].pos.x = anchorX + sinf(rot.z - fAngle) * fLength;
-	pVtx[2].pos.y = anchorY + cosf(rot.z - fAngle) * fLength;
-	pVtx[2].pos.z = 0.0f;
+		pVtx[1].pos.x = anchorX + sinf(rot.z + D3DX_PI - fAngle) * fLength;
+		pVtx[1].pos.y = anchorY + cosf(rot.z + D3DX_PI - fAngle) * fLength;
+		pVtx[1].pos.z = 0.0f;
 
-	pVtx[3].pos.x = anchorX + sinf(rot.z + fAngle) * fLength;
-	pVtx[3].pos.y = anchorY + cosf(rot.z + fAngle) * fLength;
-	pVtx[3].pos.z = 0.0f;
+		pVtx[2].pos.x = anchorX + sinf(rot.z - fAngle) * fLength;
+		pVtx[2].pos.y = anchorY + cosf(rot.z - fAngle) * fLength;
+		pVtx[2].pos.z = 0.0f;
 
-	if (m_AnchorType != AnchorPoint::CENTER)
+		pVtx[3].pos.x = anchorX + sinf(rot.z + fAngle) * fLength;
+		pVtx[3].pos.y = anchorY + cosf(rot.z + fAngle) * fLength;
+		pVtx[3].pos.z = 0.0f;
+	}
+	else
 	{
 		pVtx[0].pos = RotateVtx(MyLib::Vector3(anchorX - size.x, anchorY - size.y, 0.0f), pos);
 		pVtx[1].pos = RotateVtx(MyLib::Vector3(anchorX + size.x, anchorY - size.y, 0.0f), pos);
@@ -423,10 +426,8 @@ void CObject2D::SetVtx()
 //==========================================================================
 MyLib::Vector3 CObject2D::RotateVtx(const MyLib::Vector3& vtx, const MyLib::Vector3& center)
 {
-	// 判定するパーツのマトリックス取得
-	MyLib::Matrix mtxRot, mtxTrans;
+	MyLib::Matrix mtxRot;
 	MyLib::Matrix mtxWepon;
-
 	mtxWepon.Identity();
 
 	MyLib::Vector3 rot = GetRotation();

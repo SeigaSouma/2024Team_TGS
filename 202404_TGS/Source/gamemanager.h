@@ -118,6 +118,8 @@ protected:
 	float m_fPosRY;			// プレイヤーと荷物を画面内に収めるときに使うposRのY座標
 	float m_fSceneTimer;	// シーンタイマー
 	int m_nJudgeRank;		// クリアランク
+	float m_fAirSpawnTimer;		// 空気の生成タイマー
+	float m_fAirSpawnInterval;	// 空気の生成間隔
 	CGuide* m_pGuide;
 	CRequestPeople* m_pRequestPeople;	// 依頼人のポインタ
 	CReceiverPeople* m_pReceiverPeople;	// 届け先のポインタ
