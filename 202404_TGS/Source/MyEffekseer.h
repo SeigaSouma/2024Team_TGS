@@ -64,6 +64,7 @@ public:
 		EFKLABEL_AIR,				// 空気
 		EFKLABEL_CROWD,				// 群衆
 		EFKLABEL_TP,				// テレポート
+		EFKLABEL_HIT,				// ヒット
 		EFKLABEL_MAX
 	};
 

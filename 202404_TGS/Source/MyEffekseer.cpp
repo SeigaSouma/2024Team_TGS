@@ -31,6 +31,7 @@ std::string CMyEffekseer::m_EffectName[CMyEffekseer::EFKLABEL_MAX] =	// エフェク
 	"data/Effekseer/air.efkefc",			// 空気
 	"data/Effekseer/crowd.efkefc",			// 群衆
 	"data/Effekseer/teleport.efkefc",		// テレポート
+	"data/Effekseer/hit.efkefc",		// テレポート
 };
 CMyEffekseer* CMyEffekseer::m_pMyEffekseer = nullptr;	// 自身のポインタ
 

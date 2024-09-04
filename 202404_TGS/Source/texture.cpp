@@ -11,6 +11,7 @@
 
 // 読み込むテクスチャのヘッダー
 #include "map.h"
+#include "keyconfig.h"
 
 //==========================================================================
 // 定数定義
@@ -93,6 +94,9 @@ HRESULT CTexture::LoadAll()
 	{// 失敗した場合
 		return E_FAIL;
 	}
+
+	// キーコンフィグ用の読み込み
+	CKeyConfigManager::ConfigTextureLoad();
 
 	return S_OK;
 }
