@@ -24,7 +24,11 @@ public:
 	//=============================
 	enum State
 	{
-		STATE_NONE = 0,		// なにもない
+		STATE_SCROLL_TEXT = 0,	// 文字送り
+		STATE_SCROLL_VOID,		// 空間送り
+		STATE_SCROLL_RANK,		// ランク送り
+		STATE_FINISH,			// 終了
+		STATE_NONE,				// なにもなし
 		STATE_MAX
 	};
 
@@ -38,6 +42,9 @@ public:
 	void Uninit() override;
 	void Update() override;
 	void Draw() override;
+	void SetVtx() override;
+
+	void SetState(State state);	// 状態設定
 
 	//=============================
 	// 静的関数
@@ -47,9 +54,22 @@ public:
 private:
 
 	//=============================
+	// 関数リスト
+	//=============================
+	// 状態リスト
+	typedef void(CClearRank::* STATE_FUNC)();
+	static STATE_FUNC m_StateFunc[];
+
+	//=============================
 	// メンバ関数
 	//=============================
 	// 状態系
+	void UpdateState();
+	void StateScrollText();	// 文字送り
+	void StateSrollVoid();	// 空間送り
+	void StateScrollRank();	// ランク送り
+	void StateFinish();		// 終了
+	void StateNone() {}		// なにもなし
 
 	// その他関数
 	void CreateText();	// 文字生成
@@ -64,7 +84,8 @@ private:
 	// その他
 	CJudge::JUDGE m_Rank;	// ランク
 	CObject2D* m_pText;		// 文字
-
+	float m_fMoveTextLen;	// テキストの移動距離
+	float m_fMoveRankLen;	// ランクの移動距離
 };
 
 
