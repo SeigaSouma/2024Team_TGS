@@ -15,6 +15,7 @@
 // 前方宣言
 //==========================================================================
 class CResultScore;
+class CTimer;
 
 //==========================================================================
 // クラス定義
@@ -41,6 +42,7 @@ private:
 	// メンバ変数
 	bool m_clear; // クリア判定
 
+	CTimer* m_pTimer;	// タイマーのオブジェクト
 	static bool m_bAllArrival;		// 全て到着した判定
 	static CResultScore *m_pResultScore;
 };

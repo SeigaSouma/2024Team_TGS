@@ -5,8 +5,8 @@
 // 
 //=============================================================================
 
-#ifndef _GLASSCLUSH_H_
-#define _GLASSCLUSH_H_	// 二重インクルード防止
+#ifndef _CLEARRANK_H_
+#define _CLEARRANK_H_	// 二重インクルード防止
 
 #include "object2d.h"
 #include "judge.h"
@@ -73,6 +73,7 @@ private:
 
 	// その他関数
 	void CreateText();	// 文字生成
+	void CreateRank();	// ランク生成
 
 	//=============================
 	// メンバ変数

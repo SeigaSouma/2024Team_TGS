@@ -38,6 +38,9 @@ namespace
 		120.0f,
 		140.0f
 	};
+
+	const float SIZE_HEIGHT = 50.0f;	// 縦幅のサイズ
+	const float MOVEVALUE_TEXT = 3.0f;	//テキストの移動量
 }
 
 //==========================================================================
@@ -81,6 +84,12 @@ CToatalRank* CToatalRank::Create(CJudge::JUDGE rank, float time)
 //==========================================================================
 HRESULT CToatalRank::Init()
 {
+	//=============================
+	// 文字生成
+	//=============================
+	CreateText();
+
+
 
 	// オブジェクト2Dの初期化
 	CObject2D::Init();
@@ -96,21 +105,17 @@ HRESULT CToatalRank::Init()
 	size = UtilFunc::Transformation::AdjustSizeByWidth(size, 240.0f);
 
 #else	// 縦幅を元にサイズ設定
-	size = UtilFunc::Transformation::AdjustSizeByWidth(size, 240.0f);
+	size = UtilFunc::Transformation::AdjustSizeByWidth(size, 120.0f);
 #endif
-	SetSize(D3DXVECTOR2(640.0f,360.0f));
+	SetSize(size);
 	SetSizeOrigin(size);
-	SetPosition(MyLib::Vector3(640.0f,360.0f,0.0f));
+	SetPosition(m_pText->GetPosition() + MyLib::Vector3(m_pText->GetSize().x * 2.0f + 50.0f,100.0f,0.0f));
 
 	// 位置、向き設定は必要があれば追加
 
 	// 種類の設定
 	SetType(CObject::TYPE::TYPE_OBJECT2D);
 
-	//=============================
-	// 文字生成
-	//=============================
-	CreateText();
 	return S_OK;
 }
 
@@ -131,12 +136,15 @@ void CToatalRank::CreateText()
 	D3DXVECTOR2 size = CTexture::GetInstance()->GetImageSize(texID);
 
 	// 横幅を元にサイズ設定
-	size = UtilFunc::Transformation::AdjustSizeByWidth(size, 150.0f);
+	size = UtilFunc::Transformation::AdjustSizeByHeight(size, SIZE_HEIGHT);
 	m_pText->SetSize(size);
 	m_pText->SetSizeOrigin(size);
 
 	// 位置設定
-	m_pText->SetPosition(GetPosition() + MyLib::Vector3(-size.x, 0.0f, 0.0f));
+	m_pText->SetPosition(MyLib::Vector3(700.0f, 400.0f, 0.0f));
+
+	// アンカーポイントの設定
+	m_pText->SetAnchorType(CObject2D::AnchorPoint::LEFT);
 }
 
 //==========================================================================
