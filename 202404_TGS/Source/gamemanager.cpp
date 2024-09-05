@@ -55,6 +55,7 @@ namespace
 		10,	// CCC
 		1,	// DDD
 	};
+	const float DEFAULT_INTERVAL_AIRSPAWN = 5.0f;	// デフォの空気生成間隔
 }
 
 namespace SceneTime
@@ -83,6 +84,8 @@ CGameManager::CGameManager()
 	m_pRequestPeople = nullptr;	// 依頼人のポインタ
 	m_pReceiverPeople = nullptr;
 	m_nJudgeRank = 0;
+	m_fAirSpawnTimer = 0.0f;	// 空気の生成タイマー
+	m_fAirSpawnInterval = 0.0f;	// 空気の生成間隔
 	m_pSkipUI = nullptr;		// スキップUIのポインタ
 	m_nGuideTimer = 0;
 	m_pGuide = nullptr;
@@ -165,6 +168,9 @@ HRESULT CGameManager::Init()
 
 	m_SceneType = SceneType::SCENE_WAIT_AIRPUSH;	// シーンの種類 
 #endif
+
+	// 空気の生成間隔
+	m_fAirSpawnInterval = DEFAULT_INTERVAL_AIRSPAWN;
 	return S_OK;
 }
 
@@ -270,7 +276,7 @@ void CGameManager::Update()
 		break;
 	}
 
-
+	// ジャッジランクの変動検知
 	for (int i = 0; i < CJudge::JUDGE::JUDGE_MAX; i++)
 	{
 		if (m_nEvaluationPoint >= CHANGE_BASEPOINT[i])
@@ -284,6 +290,18 @@ void CGameManager::Update()
 		CPeopleManager::GetInstance()->SetRank(CJudge::JUDGE::JUDGE_MAX);
 	}
 
+	// 空気
+	m_fAirSpawnTimer += CManager::GetInstance()->GetDeltaTime();
+	if (m_fAirSpawnTimer >= m_fAirSpawnInterval)
+	{
+		// タイマー関連リセット
+		m_fAirSpawnTimer = 0.0f;
+		m_fAirSpawnInterval = DEFAULT_INTERVAL_AIRSPAWN + UtilFunc::Transformation::Random(-30, 5) * 0.1f;
+
+		CEffekseerObj::Create(
+			CMyEffekseer::EFKLABEL::EFKLABEL_AIR,
+			CManager::GetInstance()->GetCamera()->GetPositionR() + MyLib::Vector3(0.0f, 300.0f, 0.0f), MyLib::Vector3(0.0f, 0.0f, 0.0f), 0.0f, 20.0f, true);
+	}
 
 	// テキストの描画
 	CManager::GetInstance()->GetDebugProc()->Print(

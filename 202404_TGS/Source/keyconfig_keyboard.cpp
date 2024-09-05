@@ -67,6 +67,17 @@ bool CkeyConfigKeyboard::GetRepeat(const int type, const int nId)
 }
 
 //==========================================================================
+// í—Şæ“¾
+//==========================================================================
+int CkeyConfigKeyboard::GetKey(const int type, const int nId)
+{
+	// Šm”F
+	if (m_Info.find(type) == m_Info.end()) { return 0; }	// ‘¶İ‚µ‚È‚¢
+
+	return m_Info[type];
+}
+
+//==========================================================================
 // I—¹ˆ—
 //==========================================================================
 void CkeyConfigKeyboard::Uninit() {

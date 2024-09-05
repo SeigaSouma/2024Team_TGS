@@ -11,6 +11,8 @@
 #include "gamemanager.h"
 #include "player.h"
 #include "baggage.h"
+#include "controlkeydisp.h"
+#include "keyconfig.h"
 
 //==========================================================================
 // 定数定義
@@ -46,6 +48,7 @@ CGuide::CGuide(int nPriority) : CObject2D(nPriority)
 	m_state = State::STATE_NONE;	// 状態
 	m_fStateTime = 0.0f;	// 状態カウンター
 	m_fLifeTimer = 0.0f;	// 生存時間
+	m_pKeyDisp = nullptr;
 }
 
 //==========================================================================
@@ -104,6 +107,15 @@ HRESULT CGuide::Init()
 	SetSize(size);
 	SetSizeOrigin(size);
 
+	// 開始ボタンも生成
+	if(m_pKeyDisp == nullptr)
+	{
+		CKeyConfig* pkeyconfig = CKeyConfigManager::GetInstance()->GetConfig(CKeyConfigManager::CONTROL_INPAD);
+		MyLib::Vector3 keypos = GetPosition();
+		keypos.x -= (size.x * 0.5f + size.y);
+		m_pKeyDisp = CControlKeyDisp::Create(keypos, 0.0f, size.y, size.y, pkeyconfig->GetKey(INGAME::ACT_AIR));
+	}
+
 	return S_OK;
 }
 
@@ -112,6 +124,12 @@ HRESULT CGuide::Init()
 //==========================================================================
 void CGuide::Uninit()
 {
+	if (m_pKeyDisp != nullptr)
+	{
+		m_pKeyDisp->Uninit();
+		m_pKeyDisp = nullptr;
+	}
+
 	// 終了処理
 	CObject2D::Uninit();
 }
@@ -176,9 +194,19 @@ void CGuide::StateFadeIn()
 	float alpha = UtilFunc::Correction::EasingLinear(0.0f, 1.0f, 0.0f, StateTime::FADEIN, m_fStateTime);
 	SetAlpha(alpha);
 
+	if (m_pKeyDisp != nullptr)
+	{
+		m_pKeyDisp->SetAlpha(alpha);
+	}
+
 	if (m_fStateTime >= StateTime::FADEOUT)
 	{
 		SetAlpha(1.0f);
+
+		if (m_pKeyDisp != nullptr)
+		{
+			m_pKeyDisp->SetAlpha(1.0f);
+		}
 
 		// 状態タイマーリセット
 		m_fStateTime = 0.0f;
@@ -193,6 +221,11 @@ void CGuide::StateFadeout()
 {
 	float alpha = UtilFunc::Correction::EasingLinear(1.0f, 0.0f, 0.0f, StateTime::FADEOUT, m_fStateTime);
 	SetAlpha(alpha);
+
+	if (m_pKeyDisp != nullptr)
+	{
+		m_pKeyDisp->SetAlpha(alpha);
+	}
 
 	if (m_fStateTime >= StateTime::FADEOUT)
 	{

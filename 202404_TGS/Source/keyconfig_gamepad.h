@@ -30,6 +30,7 @@ public:
 	bool GetRepeat(const int type, const int nId = 0) override;
 	void Load(const std::string& file) override;
 	void Setting(const int type, const int nId = 0) override;
+	int GetKey(const int type, const int nId = 0) override;
 
 public:
 	void Join(const int action, const CInputGamepad::BUTTON key);
