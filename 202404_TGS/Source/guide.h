@@ -10,6 +10,9 @@
 
 #include "object2d.h"
 
+// 前方宣言
+class CControlKeyDisp;
+
 //==========================================================================
 // クラス定義
 //==========================================================================
@@ -73,6 +76,7 @@ private:
 	float m_fLifeTimer;		// 生存時間
 	float m_fStateTime;		// 状態カウンター
 	State m_state;			// 状態
+	CControlKeyDisp* m_pKeyDisp;	// 開始ボタン
 
 };
 
