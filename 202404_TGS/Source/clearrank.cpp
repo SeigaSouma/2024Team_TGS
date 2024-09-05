@@ -1,6 +1,6 @@
 //=============================================================================
 // 
-//  クリアランク処理 [clearrank.cpp]
+//  クリアランク処理(一番上) [clearrank.cpp]
 //  Author : 相馬靜雅
 // 
 //=============================================================================
@@ -23,7 +23,26 @@ namespace
 		"data\\TEXTURE\\result\\rank_C.png",
 	};
 	const std::string TEXT_TEXTURE = "data\\TEXTURE\\result\\clearrank.png";
+	const float MOVEVALUE_TEXT = 3.0f;	//テキストの移動量
 }
+
+namespace StateTime
+{
+	const float WAIT = 0.5f;	// 待機
+}
+
+//==========================================================================
+// 関数ポインタ
+//==========================================================================
+CClearRank::STATE_FUNC CClearRank::m_StateFunc[] =
+{
+	&CClearRank::StateScrollText,	// 文字送り
+	&CClearRank::StateSrollVoid,	// 空間送り
+	&CClearRank::StateScrollRank,	// ランク送り
+	&CClearRank::StateFinish,		// 終了
+	&CClearRank::StateNone,			// なにもなし
+
+};
 
 //==========================================================================
 // コンストラクタ
@@ -33,6 +52,12 @@ CClearRank::CClearRank(int nPriority) : CObject2D(nPriority)
 	// 値のクリア
 	m_Rank = CJudge::JUDGE::JUDGE_DDD;	// ランク
 	m_pText = nullptr;		// 文字
+
+
+	m_fStateTime = 0.0f;		// 状態カウンター
+	m_state = State::STATE_SCROLL_TEXT;			// 状態
+	m_fMoveTextLen = 0.0f;	// テキストの移動距離
+	m_fMoveRankLen = 0.0f;	// ランクの移動距離
 }
 
 //==========================================================================
@@ -84,13 +109,15 @@ HRESULT CClearRank::Init()
 #else	// 縦幅を元にサイズ設定
 	size = UtilFunc::Transformation::AdjustSizeByWidth(size, 100.0f);
 #endif
-	SetSize(size);
+	SetSize(D3DXVECTOR2(0.0f, size.y));
 	SetSizeOrigin(size);
 	SetPosition(MyLib::Vector3(1040.0f,360.0f,0.0f));
 
 	// 種類の設定
-	SetType(CObject::TYPE::TYPE_OBJECT2D);
+	SetType(CObject::TYPE::TYPE_ENEMY);
 
+	// アンカーポイントの設定
+	SetAnchorType(AnchorPoint::LEFT);
 
 	//=============================
 	// 文字生成
@@ -117,11 +144,14 @@ void CClearRank::CreateText()
 
 	// 横幅を元にサイズ設定
 	size = UtilFunc::Transformation::AdjustSizeByWidth(size, 100.0f);
-	m_pText->SetSize(size);
+	m_pText->SetSize(D3DXVECTOR2(0.0f, size.y));
 	m_pText->SetSizeOrigin(size);
 
 	// 位置設定
 	m_pText->SetPosition(GetPosition() + MyLib::Vector3(-size.x, 0.0f, 0.0f));
+
+	// アンカーポイントの設定
+	m_pText->SetAnchorType(AnchorPoint::LEFT);
 }
 
 //==========================================================================
@@ -138,8 +168,126 @@ void CClearRank::Uninit()
 //==========================================================================
 void CClearRank::Update()
 {
+	// 状態更新
+	UpdateState();
+
 	// 更新処理
 	CObject2D::Update();
+}
+
+//==========================================================================
+// 頂点情報設定処理
+//==========================================================================
+void CClearRank::SetVtx()
+{
+	CObject2D::SetVtx();
+}
+
+//==========================================================================
+// 状態更新
+//==========================================================================
+void CClearRank::UpdateState()
+{
+	// 状態タイマー
+	m_fStateTime += CManager::GetInstance()->GetDeltaTime();
+
+	(this->*(m_StateFunc[m_state]))();
+
+}
+
+//==========================================================================
+// 文字送り
+//==========================================================================
+void CClearRank::StateScrollText()
+{
+	// サイズ取得
+	D3DXVECTOR2 size = m_pText->GetSize(), sizeOrigin = m_pText->GetSizeOrigin();
+
+	// テキスト移動距離加算
+	m_fMoveTextLen += MOVEVALUE_TEXT;
+	m_fMoveTextLen = UtilFunc::Transformation::Clamp(m_fMoveTextLen, 0.0f, sizeOrigin.x);
+
+	if (m_fMoveTextLen >= sizeOrigin.x)
+	{
+		// 状態遷移
+		SetState(State::STATE_SCROLL_VOID);
+	}
+
+	// サイズ設定
+	size.x = m_fMoveTextLen;
+	m_pText->SetSize(size);
+
+	// テクスチャ座標設定
+	D3DXVECTOR2* pTex = m_pText->GetTex();
+	pTex[1].x = pTex[3].x = (size.x / sizeOrigin.x);
+}
+
+//==========================================================================
+// 空間送り
+//==========================================================================
+void CClearRank::StateSrollVoid()
+{
+
+	if (m_fStateTime >= StateTime::WAIT)
+	{
+		// 状態遷移
+		SetState(State::STATE_SCROLL_RANK);
+	}
+
+}
+
+//==========================================================================
+// ランク送り
+//==========================================================================
+void CClearRank::StateScrollRank()
+{
+	// サイズ取得
+	D3DXVECTOR2 size = GetSize(), sizeOrigin = GetSizeOrigin();
+
+	// テキスト移動距離加算
+	m_fMoveRankLen += MOVEVALUE_TEXT;
+	m_fMoveRankLen = UtilFunc::Transformation::Clamp(m_fMoveRankLen, 0.0f, sizeOrigin.x);
+
+	if (m_fMoveRankLen >= sizeOrigin.x)
+	{
+		// 状態遷移
+		SetState(State::STATE_FINISH);
+	}
+
+	// サイズ設定
+	size.x = m_fMoveRankLen;
+	SetSize(size);
+
+	// テクスチャ座標設定
+	D3DXVECTOR2* pTex = GetTex();
+	pTex[1].x = pTex[3].x = (size.x / sizeOrigin.x);
+}
+
+//==========================================================================
+// 終了
+//==========================================================================
+void CClearRank::StateFinish()
+{
+	// サイズ設定
+	SetSize(GetSizeOrigin());
+	m_pText->SetSize(m_pText->GetSizeOrigin());
+
+	// テクスチャ座標設定
+	D3DXVECTOR2* pTex = GetTex();
+	D3DXVECTOR2* pTexText = m_pText->GetTex();
+	pTex[1].x = pTex[3].x = pTexText[1].x = pTexText[3].x = 1.0f;
+
+	// 状態遷移
+	SetState(State::STATE_NONE);
+}
+
+//==========================================================================
+// 状態設定
+//==========================================================================
+void CClearRank::SetState(State state)
+{
+	m_state = state;
+	m_fStateTime = 0.0f;
 }
 
 //==========================================================================

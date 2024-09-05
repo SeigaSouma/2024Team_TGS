@@ -35,7 +35,7 @@ namespace UtilFunc
 	namespace Transformation
 	{
 		template<class T> void ValueNormalize(T& Value, T MaxValue, T MinValue);	// 値の正規化処理
-		template<class T> const T& Clamp(T Value, T MinValue, T MaxValue);			
+		template<class T> const T Clamp(T Value, T MinValue, T MaxValue);			
 			MyLib::Vector3 RotationChangeToForwardVector(float rot);
 		MyLib::Vector3 WorldMtxChangeToPosition(D3DXMATRIX worldmtx);	// ワールドマトリックスをposに変換
 		MyLib::Vector3 MtxChangeToMatrix(const D3DXMATRIX& matrix);
@@ -2378,20 +2378,19 @@ namespace UtilFunc	// 便利関数
 		@param	MaxValue	[in]	最大値
 		@return	void
 		*/
-		template<class T>inline const T& Clamp(T Value, T MinValue, T MaxValue)
+		template<class T>inline const T Clamp(T Value, T MinValue, T MaxValue)
 		{
-			T returnValue = Value;
-			if (returnValue >= MaxValue)
+			if (Value >= MaxValue)
 			{
 				// 最大値に補正
-				returnValue = MaxValue;
+				return MaxValue;
 			}
-			else if (returnValue <= MinValue)
+			else if (Value <= MinValue)
 			{
 				// 最小値に補正
-				returnValue = MinValue;
+				return MinValue;
 			}
-			return returnValue;
+			return Value;
 		}
 
 		/**
