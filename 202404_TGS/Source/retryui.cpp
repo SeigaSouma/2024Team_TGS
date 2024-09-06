@@ -11,6 +11,7 @@
 #include "player.h"
 #include "keyconfig.h"
 #include "keyconfig_gamepad.h"
+#include "controlkeydisp.h"
 
 //==========================================================================
 // 定数定義
@@ -21,15 +22,22 @@ namespace
 		"data\\TEXTURE\\dead\\retrybutton.png" ,
 		"data\\TEXTURE\\dead\\posebutton.png" };	// テクスチャのファイル
 
-	const MyLib::Vector3 DEST_POS[3] = { MyLib::Vector3(60.0f, 685.0f, 0.0f),
+	const MyLib::Vector3 DEST_POS[3] = { MyLib::Vector3(70.0f, 685.0f, 0.0f),
 		MyLib::Vector3(640.0f, 685.0f, 0.0f),
-		MyLib::Vector3(1220.0f, 685.0f, 0.0f) };	// 目標の位置
+		MyLib::Vector3(1210.0f, 685.0f, 0.0f) };	// 目標の位置
 
 	const MyLib::Vector3 START_POS[3] = { MyLib::Vector3(-115.0f, 685.0f, 0.0f),
 		MyLib::Vector3(640.0f, 900.0f, 0.0f),
 		MyLib::Vector3(1415.0f, 685.0f, 0.0f) };	// 開始の位置
 
-	const float UI_HEIGHT[3] = { 50.0f,100.0f,50.0f };// Uiの幅
+	const int USE_CONFIG[CRetry_Ui::BUTTON_MAX] =	// 使用するキーコンフィグ
+	{
+		INGAME::ACT_BACK,
+		INGAME::ACT_RETRY,
+		INGAME::ACT_PAUSE,
+	};
+
+	const float UI_HEIGHT[3] = { 75.0f,100.0f,75.0f };// Uiの幅
 	const float TIME_RETRY = 0.8f;		// リトライでボタンを押し続ける時間
 	const float UI_MOVE_COEF = 0.04f;
 }
@@ -43,6 +51,8 @@ CRetry_Ui::CRetry_Ui(int nPriority) : CObject2D(nPriority)
 	for (int cnt = 0; cnt < BUTTON_MAX; cnt++)
 	{
 		m_Button[cnt] = nullptr;
+		m_apKeyDisp[cnt] = nullptr;
+		m_DispPos[cnt] = 0.0f;
 	}
 	m_fRetryPushTime = 0.0f;	// リトライの押下時間
 }
@@ -77,7 +87,9 @@ CRetry_Ui* CRetry_Ui::Create()
 //==========================================================================
 HRESULT CRetry_Ui::Init()
 {
-
+	// インプット情報取得
+	CKeyConfigManager* pKeyConfig = CKeyConfigManager::GetInstance();
+	CKeyConfig* pPad = pKeyConfig->GetConfig(CKeyConfigManager::Control::CONTROL_INPAD);
 	//// オブジェクト2Dの初期化
 	//CObject2D::Init();
 
@@ -112,6 +124,22 @@ HRESULT CRetry_Ui::Init()
 
 		// 種類の設定
 		m_Button[cnt]->SetType(CObject::TYPE::TYPE_OBJECT2D);
+
+		// キーコンフィグを生成する
+		if(m_apKeyDisp[cnt] == nullptr)
+		{
+			// 初期地点を設定
+			MyLib::Vector3 pos = START_POS[cnt];
+			pos.x += size.x * 0.7f;
+			float range = size.y * 0.45f;
+
+			// 目標地点も調整
+			m_DispPos[cnt] = DEST_POS[cnt];
+			m_DispPos[cnt].x += size.x * 0.5f;
+
+			// 生成
+			m_apKeyDisp[cnt] = CControlKeyDisp::Create(pos, 0.0f, range, range, pPad->GetKey(USE_CONFIG[cnt]));
+		}
 	}
 
 	// 種類の設定
@@ -132,6 +160,12 @@ void CRetry_Ui::Uninit()
 		{
 			m_Button[cnt]->Uninit();
 			m_Button[cnt] = nullptr;
+		}
+
+		if (m_apKeyDisp[cnt] != nullptr)
+		{
+			m_apKeyDisp[cnt]->Uninit();
+			m_apKeyDisp[cnt] = nullptr;
 		}
 	}
 
@@ -226,7 +260,22 @@ void CRetry_Ui::Moveui()
 
 		// 位置を設定
 		m_Button[cnt]->SetPosition(changepos);
+
+		// キーコンフィグ表示も移動
+		if (m_apKeyDisp[cnt] != nullptr)
+		{
+			// 目標位置までの差を計算
+			deffpos.x = (m_DispPos[cnt].x - m_apKeyDisp[cnt]->GetPosition().x) * UI_MOVE_COEF;
+			deffpos.y = (m_DispPos[cnt].y - m_apKeyDisp[cnt]->GetPosition().y) * UI_MOVE_COEF;
+
+			// 目標位置を設定
+			changepos =
+				MyLib::Vector3(m_apKeyDisp[cnt]->GetPosition().x +
+					deffpos.x, m_apKeyDisp[cnt]->GetPosition().y +
+					deffpos.y, m_apKeyDisp[cnt]->GetPosition().z);
+
+			// 位置を設定
+			m_apKeyDisp[cnt]->SetPosition(changepos);
+		}
 	}
-
-
 }

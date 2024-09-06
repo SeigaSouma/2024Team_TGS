@@ -10,6 +10,9 @@
 
 #include "object2d.h"
 
+// 前方宣言
+class CControlKeyDisp;
+
 //==========================================================================
 // クラス定義
 //==========================================================================
@@ -60,7 +63,9 @@ private:
 	// 状態系
 
 	// その他変数
-	CObject2D* m_Button[3];	// 2Dオブジェクト
+	CObject2D* m_Button[BUTTON_MAX];	// 2Dオブジェクト
+	CControlKeyDisp* m_apKeyDisp[BUTTON_MAX];	// キーコンフィグ
+	MyLib::Vector3 m_DispPos[BUTTON_MAX];
 	float m_fRetryPushTime;			// リトライの押下時間
 };
 

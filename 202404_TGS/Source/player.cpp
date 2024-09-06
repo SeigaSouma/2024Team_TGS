@@ -99,7 +99,7 @@ namespace MULTITARGET
 	// 死亡時
 	const float DEATH_ALPHA = (0.0f);		// 目標透明度
 	const float DEATH_MULTI = (1.0f);		// 目標倍率
-	const float DEATH_TIMER = (240.0f);		// 遷移タイマー
+	const float DEATH_TIMER = (120.0f);		// 遷移タイマー
 
 	// リセット時
 	const float RESET_ALPHA = (0.0f);		// 目標透明度

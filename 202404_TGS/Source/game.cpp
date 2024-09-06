@@ -286,6 +286,12 @@ HRESULT CGame::Init()
 	CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_BGM_GAME);
 	CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_BGM_WATER_FLOW);
 
+	// フィードバックエフェクトリセット
+	CManager::GetInstance()->GetRenderer()->SetEnableDrawMultiScreen(
+		0.0f,
+		1.0f,
+		0.01f);
+
 	// 成功
 	return S_OK;
 }
@@ -416,6 +422,19 @@ void CGame::Uninit()
 	{
 		m_pMapUI = nullptr;
 		CMapUI::Release();
+	}
+
+
+	if (CManager::GetInstance() != nullptr)
+	{
+		if (CManager::GetInstance()->GetRenderer() != nullptr)
+		{
+			// フィードバックエフェクトリセット
+			CManager::GetInstance()->GetRenderer()->SetEnableDrawMultiScreen(
+				0.0f,
+				1.0f,
+				0.01f);
+		}
 	}
 
 	// コース
