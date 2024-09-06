@@ -15,6 +15,7 @@
 #include "MyEffekseer.h"
 #include "titlelogo.h"
 #include "title_pressenter.h"
+#include "camera.h"
 
 //==========================================================================
 // 定数定義
@@ -23,6 +24,14 @@ namespace
 {
 	const float TIME_FADELOGO = 0.6f;	// ロゴのフェードアウト時間
 	const char* TEXTURE = "data\\TEXTURE\\title\\title.png";
+}
+
+namespace STARTCAMERA
+{
+	const MyLib::Vector3 POSV = (321.91f, 233.25f, -654.0f);
+	const MyLib::Vector3 POSR = (321.91f, 160.74f, 296.27f);
+	const MyLib::Vector3 ROT = (0.0f, 0.0f, -0.2f);
+	const float LENGTH = 365.0f;
 }
 
 //==========================================================================
@@ -106,6 +115,16 @@ HRESULT CTitle::Init()
 
 	// シーンの種類
 	m_SceneType = SCENETYPE::SCENETYPE_NONE;
+
+	// カメラの初期値設定
+	{
+		CCamera* pCamera = CManager::GetInstance()->GetCamera();
+		pCamera->SetStateCameraV(new CStateCameraV);
+		pCamera->SetRotation(STARTCAMERA::ROT);
+		pCamera->SetPositionR(STARTCAMERA::POSR);
+		pCamera->SetDistance(STARTCAMERA::LENGTH);
+		pCamera->GetCameraMotion()->SetFinish(true);
+	}
 
 	// 成功
 	return S_OK;

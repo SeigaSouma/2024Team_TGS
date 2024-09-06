@@ -868,6 +868,12 @@ void CPlayerControlBaggage::GoalAction(CPlayer* player, CBaggage* pBaggage)
 		return;
 	}
 
+	// フィードバックエフェクトリセット
+	CManager::GetInstance()->GetRenderer()->SetEnableDrawMultiScreen(
+		0.0f,
+		1.0f,
+		0.01f);
+
 
 	// インプット情報取得
 	CKeyConfigManager* pKeyConfigManager = CKeyConfigManager::GetInstance();

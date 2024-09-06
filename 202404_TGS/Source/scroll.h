@@ -48,7 +48,7 @@ public:
 	//=============================
 	// Ã“IŠÖ”
 	//=============================
-	static CScroll* Create(const MyLib::Vector3& pos, const float toOpenTime, const float height, const float scrollLength, bool bFadeOut = false);	// ¶¬ˆ—
+	static CScroll* Create(const MyLib::Vector3& pos, const float toOpenTime, const float height, const float scrollLength, bool bFadeOut = false, int nPriority = 7);	// ¶¬ˆ—
 
 private:
 	

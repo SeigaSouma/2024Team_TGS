@@ -23,6 +23,7 @@ namespace
 		"data\\TEXTURE\\result\\rank_C.png",
 	};
 	const std::string TEXT_TEXTURE = "data\\TEXTURE\\result\\clearrank.png";
+	const float SIZE_HEIGHT = 50.0f;	// 縦幅のサイズ
 	const float MOVEVALUE_TEXT = 3.0f;	//テキストの移動量
 }
 
@@ -92,37 +93,17 @@ CClearRank* CClearRank::Create(CJudge::JUDGE rank)
 //==========================================================================
 HRESULT CClearRank::Init()
 {
-
-	// オブジェクト2Dの初期化
-	CObject2D::Init();
-
-	// テクスチャ設定
-	int texID = CTexture::GetInstance()->Regist(TEXTURE[m_Rank]);
-	BindTexture(texID);
-
-	// サイズ設定
-	D3DXVECTOR2 size = CTexture::GetInstance()->GetImageSize(texID);
-
-#if 0	// 横幅を元にサイズ設定
-	size = UtilFunc::Transformation::AdjustSizeByWidth(size, 100.0f);
-
-#else	// 縦幅を元にサイズ設定
-	size = UtilFunc::Transformation::AdjustSizeByWidth(size, 100.0f);
-#endif
-	SetSize(D3DXVECTOR2(0.0f, size.y));
-	SetSizeOrigin(size);
-	SetPosition(MyLib::Vector3(1040.0f,360.0f,0.0f));
-
-	// 種類の設定
-	SetType(CObject::TYPE::TYPE_ENEMY);
-
-	// アンカーポイントの設定
-	SetAnchorType(AnchorPoint::LEFT);
-
 	//=============================
 	// 文字生成
 	//=============================
 	CreateText();
+
+	//=============================
+	// ランク生成
+	//=============================
+	CreateRank();
+
+
 	return S_OK;
 }
 
@@ -142,17 +123,47 @@ void CClearRank::CreateText()
 	// サイズ設定
 	D3DXVECTOR2 size = CTexture::GetInstance()->GetImageSize(texID);
 
-	// 横幅を元にサイズ設定
-	size = UtilFunc::Transformation::AdjustSizeByWidth(size, 100.0f);
+	// 縦幅を元にサイズ設定
+	size = UtilFunc::Transformation::AdjustSizeByHeight(size, SIZE_HEIGHT);
 	m_pText->SetSize(D3DXVECTOR2(0.0f, size.y));
 	m_pText->SetSizeOrigin(size);
 
 	// 位置設定
-	m_pText->SetPosition(GetPosition() + MyLib::Vector3(-size.x, 0.0f, 0.0f));
+	m_pText->SetPosition(MyLib::Vector3(200.0f, 200.0f, 0.0f));
 
 	// アンカーポイントの設定
 	m_pText->SetAnchorType(AnchorPoint::LEFT);
 }
+
+//==========================================================================
+// ランク生成
+//==========================================================================
+void CClearRank::CreateRank()
+{
+	// オブジェクト2Dの初期化
+	CObject2D::Init();
+
+	// テクスチャ設定
+	int texID = CTexture::GetInstance()->Regist(TEXTURE[m_Rank]);
+	BindTexture(texID);
+
+	// サイズ設定
+	D3DXVECTOR2 size = CTexture::GetInstance()->GetImageSize(texID);
+
+	// 縦幅を元にサイズ設定
+	size = UtilFunc::Transformation::AdjustSizeByHeight(size, SIZE_HEIGHT);
+
+	SetSize(D3DXVECTOR2(0.0f, size.y));
+	SetSizeOrigin(size);
+	SetPosition(m_pText->GetPosition() + MyLib::Vector3(m_pText->GetSizeOrigin().x * 2.0f, 0.0f, 0.0f));
+
+	// 種類の設定
+	SetType(CObject::TYPE::TYPE_ENEMY);
+
+	// アンカーポイントの設定
+	SetAnchorType(AnchorPoint::LEFT);
+}
+
 
 //==========================================================================
 // 終了処理

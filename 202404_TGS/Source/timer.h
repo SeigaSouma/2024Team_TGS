@@ -48,6 +48,7 @@ public:
 	float GetTime() { return m_fTime; }	// 時間取得
 	void SetTime(const float time);
 	void SetEnableAddTime(bool frag) { m_bAddTime = frag; }	// 時間加算フラグ設定
+	virtual void ApplyTimer();	// タイマー反映
 
 	CTimer::eState GetState() { return m_state; }
 	void SetState(eState state) { m_state = state; }
@@ -68,7 +69,6 @@ private:
 	//=============================
 	virtual void StateWait();
 	virtual void StateGoal();
-	virtual void ApplyTimer();
 
 protected:
 

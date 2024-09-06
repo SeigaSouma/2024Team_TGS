@@ -64,10 +64,10 @@ CScroll::~CScroll()
 //==========================================================================
 // 生成処理
 //==========================================================================
-CScroll* CScroll::Create(const MyLib::Vector3& pos, const float toOpenTime, const float height, const float scrollLength, bool bFadeOut)
+CScroll* CScroll::Create(const MyLib::Vector3& pos, const float toOpenTime, const float height, const float scrollLength, bool bFadeOut, int nPriority)
 {
 	// メモリの確保
-	CScroll* pObj = DEBUG_NEW CScroll;
+	CScroll* pObj = DEBUG_NEW CScroll(nPriority + 1);
 
 	if (pObj != nullptr)
 	{
@@ -91,6 +91,13 @@ CScroll* CScroll::Create(const MyLib::Vector3& pos, const float toOpenTime, cons
 //==========================================================================
 HRESULT CScroll::Init()
 {
+	// 紙部分生成
+	CreatePaper();
+
+	// 端部分生成
+	CreateEdge();
+
+
 	// オブジェクト2Dの初期化
 	CObject2D::Init();
 
@@ -114,13 +121,6 @@ HRESULT CScroll::Init()
 	m_state = STATE::STATE_NONE;
 	m_fStateTimer = 0.0f;
 
-
-	// 紙部分生成
-	CreatePaper();
-
-	// 端部分生成
-	CreateEdge();
-
 	return S_OK;
 }
 
@@ -130,7 +130,7 @@ HRESULT CScroll::Init()
 void CScroll::CreatePaper()
 {
 	// 紙部分
-	m_pPapaer = CObject2D::Create(6);
+	m_pPapaer = CObject2D::Create(GetPriority() - 1);
 	if (m_pPapaer == nullptr) return;
 
 	// 種類の設定
