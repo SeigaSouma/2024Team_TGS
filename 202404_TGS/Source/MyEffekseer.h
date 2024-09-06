@@ -65,6 +65,7 @@ public:
 		EFKLABEL_CROWD,				// 群衆
 		EFKLABEL_TP,				// テレポート
 		EFKLABEL_HIT,				// ヒット
+		EFKLABEL_WING,				// 羽ばたき
 		EFKLABEL_MAX
 	};
 
