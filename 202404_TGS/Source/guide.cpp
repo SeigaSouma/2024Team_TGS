@@ -70,7 +70,7 @@ CGuide* CGuide::Create()
 	if (pObj != nullptr)
 	{
 		//pObj->m_fLifeTimer = life;
-		pObj->SetPosition(MyLib::Vector3(SCREEN_WIDTH * 0.5f,SCREEN_HEIGHT * 0.5f,0.0f));
+		pObj->SetPosition(MyLib::Vector3(SCREEN_WIDTH * 0.6f,SCREEN_HEIGHT * 0.5f,0.0f));
 
 		// ‰Šú‰»ˆ—
 		pObj->Init();
@@ -112,8 +112,9 @@ HRESULT CGuide::Init()
 	{
 		CKeyConfig* pkeyconfig = CKeyConfigManager::GetInstance()->GetConfig(CKeyConfigManager::CONTROL_INPAD);
 		MyLib::Vector3 keypos = GetPosition();
-		keypos.x -= (size.x * 0.5f + size.y);
-		m_pKeyDisp = CControlKeyDisp::Create(keypos, 0.0f, size.y, size.y, pkeyconfig->GetKey(INGAME::ACT_AIR));
+		keypos.x -= (size.x * 0.5f + size.y * 0.75f);
+		float range = size.y * 0.65f;
+		m_pKeyDisp = CControlKeyDisp::Create(keypos, 0.0f, range, range, pkeyconfig->GetKey(INGAME::ACT_AIR));
 	}
 
 	return S_OK;
