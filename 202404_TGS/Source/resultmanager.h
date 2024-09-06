@@ -13,8 +13,10 @@
 #include "judge.h"
 
 // 前方宣言
-class CEnemy;
-class CBoss;
+class CScroll;
+class CTimer;
+class CClearRank;
+class CToatalRank;
 
 //==========================================================================
 // クラス定義
@@ -37,15 +39,25 @@ public:
 	void SetClearTime(float time) { m_fClearTime = time; }			// クリア時間設定
 	float GetClearTime() { return m_fClearTime; }					// クリア時間取得
 
+	void CreateResultScreen();	// リザルト画面生成
 
 	static CResultManager *Create();	// 生成処理
 	static CResultManager* GetInstance() { return m_pThisPtr; }
 	
 private:
 
+
+	//=============================
+	// メンバ変数
+	//=============================
 	CJudge::JUDGE m_JudgeRank;	// 最終評価
 	float m_fClearTime;			// クリア時間
 	static CResultManager* m_pThisPtr;	// 自身のポインタ
+
+	CScroll* m_pScroll;			// 巻き物のオブジェクト
+	CTimer* m_pTimer;			// タイマーのオブジェクト
+	CClearRank* m_pClearRank;	// クリア時のランク
+	CToatalRank* m_pToatalRank;	// 総合評価
 };
 
 

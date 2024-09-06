@@ -47,6 +47,7 @@ CTimer::STATE_FUNC CTimer::m_StateFuncList[] =
 CTimer::CTimer(int nPriority)
 {
 	// ’l‚ÌƒNƒŠƒA
+	m_nPriority = nPriority;
 	m_state = STATE_WAIT;		// ó‘Ô
 	m_fStateTime = 0.0f;		// ó‘ÔŽžŠÔ
 	m_fTime = 0.0f;				// ŽžŠÔ
@@ -66,7 +67,7 @@ CTimer::~CTimer()
 //==========================================================================
 // ¶¬ˆ—
 //==========================================================================
-CTimer* CTimer::Create(Type type)
+CTimer* CTimer::Create(Type type, int nPriority)
 {
 	if (m_pTimer != nullptr) return m_pTimer;
 
@@ -79,7 +80,7 @@ CTimer* CTimer::Create(Type type)
 		break;
 
 	case Type::TYPE_RESULT:
-		m_pTimer = DEBUG_NEW CTimer_Result;
+		m_pTimer = DEBUG_NEW CTimer_Result(nPriority);
 		break;
 	}
 
@@ -119,7 +120,7 @@ HRESULT CTimer::Init()
 			SIZE_NUMBER,
 			2,
 			CNumber::EObjectType::OBJECTTYPE_2D,
-			TEXTURE, false, 3);
+			TEXTURE, false, m_nPriority);
 		if (m_pClearTime[i] == nullptr){
 			continue;
 		}
@@ -212,6 +213,7 @@ void CTimer::ApplyTimer()
 		MyLib::Vector3 pos = m_pos;
 		pos.x -= DSTANCE_TIMER * i;
 		m_pClearTime[i]->SetPosition(pos);
+
 	}
 }
 

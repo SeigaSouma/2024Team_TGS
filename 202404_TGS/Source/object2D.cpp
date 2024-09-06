@@ -397,6 +397,8 @@ void CObject2D::SetVtx()
 		pVtx[1].pos = RotateVtx(MyLib::Vector3(anchorX + size.x, anchorY - size.y, 0.0f), pos);
 		pVtx[2].pos = RotateVtx(MyLib::Vector3(anchorX - size.x, anchorY + size.y, 0.0f), pos);
 		pVtx[3].pos = RotateVtx(MyLib::Vector3(anchorX + size.x, anchorY + size.y, 0.0f), pos);
+
+		pVtx[0].pos.z = pVtx[1].pos.z = pVtx[2].pos.z = pVtx[3].pos.z = 0.0f;
 	}
 
 	// rhwÇÃê›íË

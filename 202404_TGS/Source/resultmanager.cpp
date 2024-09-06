@@ -8,9 +8,10 @@
 #include "resultmanager.h"
 #include "calculation.h"
 
-//==========================================================================
-// マクロ定義
-//==========================================================================
+#include "timer.h"
+#include "clearrank.h"
+#include "toatalrank.h"
+#include "scroll.h"
 
 //==========================================================================
 // 静的メンバ変数宣言
@@ -25,6 +26,12 @@ CResultManager::CResultManager()
 	// 値のクリア
 	m_JudgeRank = CJudge::JUDGE::JUDGE_DDD;	// 最終評価
 	m_fClearTime = 0.0f;			// クリア時間
+
+	m_pScroll = nullptr;		// 巻き物のオブジェクト
+	m_pTimer = nullptr;			// タイマーのオブジェクト
+	m_pClearRank = nullptr;		// クリア時のランク
+	m_pToatalRank = nullptr;	// 総合評価
+
 }
 
 //==========================================================================
@@ -71,10 +78,38 @@ HRESULT CResultManager::Init()
 }
 
 //==========================================================================
+// リザルト画面生成
+//==========================================================================
+void CResultManager::CreateResultScreen()
+{
+	// 巻き物
+	m_pScroll = CScroll::Create(MyLib::Vector3(640.0f, 360.0f, 0.0f), 1.5f, 350.0f, 1000.0f, true, 1);
+
+	// タイマー
+	m_pTimer = CTimer::Create(CTimer::Type::TYPE_RESULT, 4);
+	m_pTimer->SetTime(m_fClearTime);
+	
+
+	// クリアランク
+	m_pClearRank = CClearRank::Create(m_JudgeRank);
+
+	// トータルランク
+	m_pToatalRank = CToatalRank::Create(m_JudgeRank, m_fClearTime);
+}
+
+//==========================================================================
 // 終了処理
 //==========================================================================
 void CResultManager::Uninit()
 {
+	// タイマーの破棄
+	if (m_pTimer != nullptr)
+	{
+		// 終了処理
+		m_pTimer->Uninit();
+		m_pTimer = nullptr;
+	}
+
 	delete m_pThisPtr;
 	m_pThisPtr = nullptr;
 }
@@ -93,5 +128,27 @@ void CResultManager::Reset()
 //==========================================================================
 void CResultManager::Update()
 {
-	
+
+	// クリアのランク
+	if (m_pClearRank == nullptr) return;
+
+	if (m_pScroll->GetState() == CScroll::STATE::STATE_WAIT &&
+		m_pClearRank->GetState() == CClearRank::State::STATE_NONE)
+	{
+		m_pClearRank->SetState(CClearRank::State::STATE_SCROLL_TEXT);
+	}
+
+	if (m_pClearRank->GetState() == CClearRank::State::STATE_FINISH)
+	{// クリアランク終了時
+
+		m_pTimer;
+	}
+
+
+	// タイマー更新
+	if (m_pTimer != nullptr)
+	{
+		m_pTimer->Update();
+		m_pTimer->SetTime(m_fClearTime);
+	}
 }

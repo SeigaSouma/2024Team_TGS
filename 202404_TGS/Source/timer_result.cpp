@@ -28,12 +28,34 @@ namespace
 	const float MOVEVALUE_TEXT = 3.0f;	//テキストの移動量
 }
 
+namespace StateTime
+{
+	const float WAIT = 0.5f;	// 待機
+}
+
+//==========================================================================
+// 関数ポインタ
+//==========================================================================
+CTimer_Result::STATE_FUNC CTimer_Result::m_StateFunc[] =
+{
+	&CTimer_Result::StateScrollText,	// 文字送り
+	&CTimer_Result::StateSrollVoid,		// 空間送り
+	&CTimer_Result::StateScrollRank,	// ランク送り
+	&CTimer_Result::StateFinish,		// 終了
+	&CTimer_Result::StateNone,			// なにもなし
+
+};
+
 //==========================================================================
 // コンストラクタ
 //==========================================================================
-CTimer_Result::CTimer_Result(int nPriority) : CTimer()
+CTimer_Result::CTimer_Result(int nPriority) : CTimer(nPriority)
 {
 	// 値のクリア
+	m_fStateTime = 0.0f;		// 状態カウンター
+	m_state = State::STATE_SCROLL_TEXT;			// 状態
+	m_fMoveTextLen = 0.0f;	// テキストの移動距離
+	m_fMoveRankLen = 0.0f;	// ランクの移動距離
 }
 
 //==========================================================================
@@ -56,7 +78,22 @@ HRESULT CTimer_Result::Init()
 
 	// 初期化
 	CTimer::Init();
-	m_pos = m_pText->GetPosition() + MyLib::Vector3(m_pText->GetSizeOrigin().x * 2.0f + 200.0f, 0.0f, 0.0f);
+	m_pos = m_pText->GetPosition() + MyLib::Vector3(m_pText->GetSizeOrigin().x * 2.0f + 150.0f, 0.0f, 0.0f);
+
+
+	for (int i = 0; i < 3; i++)
+	{
+		CMultiNumber* pMultiNumber = m_pClearTime[i];
+		CNumber** pNumber = pMultiNumber->GetNumber();
+
+		for (int j = 0; j < pMultiNumber->GetDigit(); j++)
+		{
+			CObject2D* pObj2D = pNumber[j]->GetObject2D();
+
+			pObj2D->SetAnchorType(CObject2D::AnchorPoint::LEFT);
+		}
+
+	}
 
 	// タイマー
 	ApplyTimer();
@@ -109,8 +146,115 @@ void CTimer_Result::Update()
 	// 更新処理
 	CTimer::Update();
 
+	
 }
 
+//==========================================================================
+// 状態更新
+//==========================================================================
+void CTimer_Result::UpdateState()
+{
+	// 状態タイマー
+	m_fStateTime += CManager::GetInstance()->GetDeltaTime();
+
+	(this->*(m_StateFunc[m_state]))();
+
+}
+
+//==========================================================================
+// 文字送り
+//==========================================================================
+void CTimer_Result::StateScrollText()
+{
+	// サイズ取得
+	D3DXVECTOR2 size = m_pText->GetSize(), sizeOrigin = m_pText->GetSizeOrigin();
+
+	// テキスト移動距離加算
+	m_fMoveTextLen += MOVEVALUE_TEXT;
+	m_fMoveTextLen = UtilFunc::Transformation::Clamp(m_fMoveTextLen, 0.0f, sizeOrigin.x);
+
+	if (m_fMoveTextLen >= sizeOrigin.x)
+	{
+		// 状態遷移
+		SetState(State::STATE_SCROLL_VOID);
+	}
+
+	// サイズ設定
+	size.x = m_fMoveTextLen;
+	m_pText->SetSize(size);
+
+	// テクスチャ座標設定
+	D3DXVECTOR2* pTex = m_pText->GetTex();
+	pTex[1].x = pTex[3].x = (size.x / sizeOrigin.x);
+}
+
+//==========================================================================
+// 空間送り
+//==========================================================================
+void CTimer_Result::StateSrollVoid()
+{
+
+	if (m_fStateTime >= StateTime::WAIT)
+	{
+		// 状態遷移
+		SetState(State::STATE_SCROLL_RANK);
+	}
+
+}
+
+//==========================================================================
+// ランク送り
+//==========================================================================
+void CTimer_Result::StateScrollRank()
+{
+	//// サイズ取得
+	//D3DXVECTOR2 size = GetSize(), sizeOrigin = GetSizeOrigin();
+
+	//// テキスト移動距離加算
+	//m_fMoveRankLen += MOVEVALUE_TEXT;
+	//m_fMoveRankLen = UtilFunc::Transformation::Clamp(m_fMoveRankLen, 0.0f, sizeOrigin.x);
+
+	//if (m_fMoveRankLen >= sizeOrigin.x)
+	//{
+	//	// 状態遷移
+	//	SetState(State::STATE_FINISH);
+	//}
+
+	//// サイズ設定
+	//size.x = m_fMoveRankLen;
+	//SetSize(size);
+
+	//// テクスチャ座標設定
+	//D3DXVECTOR2* pTex = GetTex();
+	//pTex[1].x = pTex[3].x = (size.x / sizeOrigin.x);
+}
+
+//==========================================================================
+// 終了
+//==========================================================================
+void CTimer_Result::StateFinish()
+{
+	//// サイズ設定
+	//SetSize(GetSizeOrigin());
+	//m_pText->SetSize(m_pText->GetSizeOrigin());
+
+	//// テクスチャ座標設定
+	//D3DXVECTOR2* pTex = GetTex();
+	//D3DXVECTOR2* pTexText = m_pText->GetTex();
+	//pTex[1].x = pTex[3].x = pTexText[1].x = pTexText[3].x = 1.0f;
+
+	//// 状態遷移
+	//SetState(State::STATE_NONE);
+}
+
+//==========================================================================
+// 状態設定
+//==========================================================================
+void CTimer_Result::SetState(State state)
+{
+	m_state = state;
+	m_fStateTime = 0.0f;
+}
 
 //==========================================================================
 // 描画処理

@@ -44,7 +44,8 @@ public:
 	void Draw() override;
 	void SetVtx() override;
 
-	void SetState(State state);	// ó‘Ôİ’è
+	void SetState(State state);				// ó‘Ôİ’è
+	State GetState() { return m_state; }	// ó‘Ôæ“¾
 
 	//=============================
 	// Ã“IŠÖ”

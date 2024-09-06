@@ -24,7 +24,7 @@ class CNumber2D : public CNumber
 {
 public:
 
-	CNumber2D(int nPriority = 7);
+	CNumber2D(int nPriority = 7, const LAYER layer = LAYER::LAYER_2D);
 	~CNumber2D();
 
 	// ƒƒ“ƒoŠÖ”

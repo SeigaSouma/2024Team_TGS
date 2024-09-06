@@ -43,7 +43,8 @@ public:
 	void Draw() override;
 
 	void Kill();						// íœ
-	void SetState(const STATE& state);	// ó‘Ôİ’è
+	void SetState(const STATE& state);		// ó‘Ôİ’è
+	STATE GetState() { return m_state; }	// ó‘Ôæ“¾
 
 	//=============================
 	// Ã“IŠÖ”

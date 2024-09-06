@@ -22,6 +22,19 @@ class CTimer_Result : public CTimer
 {
 public:
 
+	//=============================
+	// 状態列挙
+	//=============================
+	enum State
+	{
+		STATE_SCROLL_TEXT = 0,	// 文字送り
+		STATE_SCROLL_VOID,		// 空間送り
+		STATE_SCROLL_RANK,		// ランク送り
+		STATE_FINISH,			// 終了
+		STATE_NONE,				// なにもなし
+		STATE_MAX
+	};
+
 	CTimer_Result(int nPriority = 6);
 	~CTimer_Result();
 
@@ -30,11 +43,43 @@ public:
 	void Update() override;
 	void Draw() override;
 
+	void SetState(State state);				// 状態設定
+	State GetState() { return m_state; }	// 状態取得
+
 private:
 
+	//=============================
+	// 関数リスト
+	//=============================
+	// 状態リスト
+	typedef void(CTimer_Result::* STATE_FUNC)();
+	static STATE_FUNC m_StateFunc[];
+
+	//=============================
+	// メンバ関数
+	//=============================
+	// 状態系
+	void UpdateState();
+	void StateScrollText();	// 文字送り
+	void StateSrollVoid();	// 空間送り
+	void StateScrollRank();	// ランク送り
+	void StateFinish();		// 終了
+	void StateNone() {}		// なにもなし
+
+	// その他関数
 	void CreateText();	// 文字生成
 
+	//=============================
+	// メンバ変数
+	//=============================
+	// 状態系
+	float m_fStateTime;		// 状態カウンター
+	State m_state;			// 状態
+
+	// その他
 	CObject2D* m_pText;		// 文字
+	float m_fMoveTextLen;	// テキストの移動距離
+	float m_fMoveRankLen;	// ランクの移動距離
 
 };
 

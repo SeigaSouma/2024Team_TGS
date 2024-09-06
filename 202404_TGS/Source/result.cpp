@@ -15,10 +15,7 @@
 #include "sound.h"
 #include "game.h"
 
-#include "timer.h"
-#include "clearrank.h"
-#include "toatalrank.h"
-#include "scroll.h"
+
 
 //=============================================================================
 // 定数定義
@@ -46,7 +43,6 @@ bool CResult::m_bAllArrival = false;		// 全て到着した判定
 CResult::CResult() : m_clear(false)
 {
 	// 値のクリア
-	m_pTimer = nullptr;	// タイマーのオブジェクト
 	m_bAllArrival = false;	// 全て到着した判定
 }
 
@@ -76,23 +72,8 @@ HRESULT CResult::Init()
 	CSound::GetInstance()->PlaySound(CSound::LABEL_BGM_RESULT);
 
 	// リザルト画面
-
-	// 巻き物
-	CScroll::Create(MyLib::Vector3(640.0f, 360.0f, 0.0f), 1.0f, 350.0f, 1000.0f, true, 0);
-
-	// リザルトマネージャ
 	CResultManager* pResultManager = CResultManager::GetInstance();
-
-	// タイマー
-	m_pTimer = CTimer::Create(CTimer::Type::TYPE_RESULT);
-	m_pTimer->SetTime(pResultManager->GetClearTime());
-
-	// クリアランク
-	CClearRank::Create(pResultManager->GetJudgeRank());
-
-	// トータルランク
-	CToatalRank::Create(pResultManager->GetJudgeRank(), pResultManager->GetClearTime());
-
+	pResultManager->CreateResultScreen();
 
 	// 成功
 	return S_OK;
@@ -104,14 +85,6 @@ HRESULT CResult::Init()
 void CResult::Uninit()
 {
 	m_pResultScore = nullptr;
-
-	// タイマーの破棄
-	if (m_pTimer != nullptr)
-	{
-		// 終了処理
-		m_pTimer->Uninit();
-		m_pTimer = nullptr;
-	}
 
 	// 終了処理
 	CScene::Uninit();
@@ -149,8 +122,10 @@ void CResult::Update()
 		}
 	}
 
-	// タイマー更新
-	m_pTimer->Update();
+	// リザルト画面
+	CResultManager* pResultManager = CResultManager::GetInstance();
+	pResultManager->Update();
+
 }
 
 //==========================================================================

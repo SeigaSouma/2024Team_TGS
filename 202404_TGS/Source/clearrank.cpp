@@ -104,6 +104,9 @@ HRESULT CClearRank::Init()
 	CreateRank();
 
 
+	// ó‘Ô‘JˆÚ
+	SetState(State::STATE_NONE);
+
 	return S_OK;
 }
 

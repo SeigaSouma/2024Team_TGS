@@ -72,7 +72,10 @@ public:
 	void SetValue();		// 値の設定処理
 	void SetValue(int nValue);	// 値の設定処理(オーバーロード)
 	int GetValue();			// 値の取得処理
-	
+	int GetDigit() { return m_nNumNumber; }	// 桁数取得
+
+	CNumber** GetNumber() { return m_ppMultiNumber; }
+	CNumber* GetNumber(int idx) { return m_ppMultiNumber[idx]; }
 
 	void SetPosition(const MyLib::Vector3& pos) override;		// 位置設定
 	void SetRotation(const MyLib::Vector3& pos) override;		// 向き設定
