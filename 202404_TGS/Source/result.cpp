@@ -105,6 +105,14 @@ void CResult::Uninit()
 {
 	m_pResultScore = nullptr;
 
+	// タイマーの破棄
+	if (m_pTimer != nullptr)
+	{
+		// 終了処理
+		m_pTimer->Uninit();
+		m_pTimer = nullptr;
+	}
+
 	// 終了処理
 	CScene::Uninit();
 }
