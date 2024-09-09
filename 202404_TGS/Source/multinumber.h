@@ -74,6 +74,9 @@ public:
 	int GetValue();			// 値の取得処理
 	int GetDigit() { return m_nNumNumber; }	// 桁数取得
 
+	void SetEnableAutoUVSetting(bool frag) { m_bAutoUVSetting = frag; }	// 自動UV座標設定
+	bool IsAutoUVSetting() { return m_bAutoUVSetting; }			// 自動UV座標設定
+
 	CNumber** GetNumber() { return m_ppMultiNumber; }
 	CNumber* GetNumber(int idx) { return m_ppMultiNumber[idx]; }
 
@@ -102,6 +105,7 @@ private:
 	int m_nTexIdx;					// テクスチャのインデックス番号
 	int m_nPriority;				// 優先順位
 	bool m_bDigitDraw;				// 桁数描画
+	bool m_bAutoUVSetting;			// 自動UV座標設定
 	float m_fKerning;				// 文字間隔
 	CNumber **m_ppMultiNumber;		// 数字のオブジェクト
 	CNumber::EObjectType m_objType;	// オブジェクトの種類

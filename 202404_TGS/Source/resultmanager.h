@@ -14,7 +14,7 @@
 
 // 前方宣言
 class CScroll;
-class CTimer;
+class CTimer_Result;
 class CClearRank;
 class CToatalRank;
 
@@ -55,7 +55,7 @@ private:
 	static CResultManager* m_pThisPtr;	// 自身のポインタ
 
 	CScroll* m_pScroll;			// 巻き物のオブジェクト
-	CTimer* m_pTimer;			// タイマーのオブジェクト
+	CTimer_Result* m_pTimer;			// タイマーのオブジェクト
 	CClearRank* m_pClearRank;	// クリア時のランク
 	CToatalRank* m_pToatalRank;	// 総合評価
 };

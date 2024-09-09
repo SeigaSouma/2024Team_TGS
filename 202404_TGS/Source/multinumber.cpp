@@ -38,6 +38,7 @@ CMultiNumber::CMultiNumber(int nPriority) : CObject(nPriority)
 	m_size = D3DXVECTOR2(0.0f, 0.0f);	// 数字のサイズ
 	m_objType = CNumber::OBJECTTYPE_2D;	// オブジェクトの種類
 	m_bDigitDraw = false;				// 桁数描画
+	m_bAutoUVSetting = false;			// 自動UV座標設定
 	m_fKerning = 0.0f;				// 文字間隔
 	m_Alignment = AlignmentType::ALIGNMENT_LEFT;		// 揃え
 }
@@ -151,6 +152,7 @@ HRESULT CMultiNumber::Init()
 
 		// 各種変数の初期化
 		m_ppMultiNumber[nCntNum]->SetSize(m_size);	// サイズ
+		m_ppMultiNumber[nCntNum]->SetSizeOrigin(m_size);	// サイズ
 		m_ppMultiNumber[nCntNum]->SetPosition(MyLib::Vector3(m_pos.x + m_size.y * nCntNum, m_pos.y, m_pos.z));	// 位置
 		m_ppMultiNumber[nCntNum]->SetRotation(m_rot);
 		m_ppMultiNumber[nCntNum]->SetType(CObject::TYPE::TYPE_NUMBER);
@@ -347,6 +349,8 @@ int CMultiNumber::GetValue()
 //==========================================================================
 void CMultiNumber::SetValue()
 {
+	if (m_bAutoUVSetting) return;
+
 	for (int nCntNum = 0; nCntNum < m_nNumNumber; nCntNum++)
 	{
 		if (m_ppMultiNumber[nCntNum] == nullptr)
@@ -360,6 +364,7 @@ void CMultiNumber::SetValue()
 		{
 			aTexU = 0;
 		}
+		m_ppMultiNumber[nCntNum]->SetNum(aTexU);
 
 		// テクスチャポインタ取得
 		D3DXVECTOR2 *pTex = m_ppMultiNumber[nCntNum]->GetTex();

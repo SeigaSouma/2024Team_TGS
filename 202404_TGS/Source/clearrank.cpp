@@ -24,12 +24,14 @@ namespace
 	};
 	const std::string TEXT_TEXTURE = "data\\TEXTURE\\result\\clearrank.png";
 	const float SIZE_HEIGHT = 50.0f;	// 縦幅のサイズ
-	const float MOVEVALUE_TEXT = 3.0f;	//テキストの移動量
+	const float MOVEVALUE_TEXT = 3.0f;	// テキストの移動量
+	const float MOVEVALUE_RANK = 6.0f;	// ランクの移動量
 }
 
 namespace StateTime
 {
 	const float WAIT = 0.5f;	// 待機
+	const int SCROLLEND = 1.0f;	// スクロール終了後
 }
 
 //==========================================================================
@@ -259,17 +261,16 @@ void CClearRank::StateScrollRank()
 	D3DXVECTOR2 size = GetSize(), sizeOrigin = GetSizeOrigin();
 
 	// テキスト移動距離加算
-	m_fMoveRankLen += MOVEVALUE_TEXT;
-	m_fMoveRankLen = UtilFunc::Transformation::Clamp(m_fMoveRankLen, 0.0f, sizeOrigin.x);
+	m_fMoveRankLen += MOVEVALUE_RANK;
 
-	if (m_fMoveRankLen >= sizeOrigin.x)
+	if (m_fMoveRankLen >= sizeOrigin.x + MOVEVALUE_RANK * (StateTime::SCROLLEND * 60.0f))
 	{
 		// 状態遷移
 		SetState(State::STATE_FINISH);
 	}
 
 	// サイズ設定
-	size.x = m_fMoveRankLen;
+	size.x = UtilFunc::Transformation::Clamp(m_fMoveRankLen, 0.0f, sizeOrigin.x);
 	SetSize(size);
 
 	// テクスチャ座標設定

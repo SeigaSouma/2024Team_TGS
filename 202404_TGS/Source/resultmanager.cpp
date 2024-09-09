@@ -8,7 +8,7 @@
 #include "resultmanager.h"
 #include "calculation.h"
 
-#include "timer.h"
+#include "timer_result.h"
 #include "clearrank.h"
 #include "toatalrank.h"
 #include "scroll.h"
@@ -86,7 +86,7 @@ void CResultManager::CreateResultScreen()
 	m_pScroll = CScroll::Create(MyLib::Vector3(640.0f, 360.0f, 0.0f), 1.5f, 350.0f, 1000.0f, true, 1);
 
 	// タイマー
-	m_pTimer = CTimer::Create(CTimer::Type::TYPE_RESULT, 4);
+	m_pTimer = static_cast<CTimer_Result*>(CTimer::Create(CTimer::Type::TYPE_RESULT, 4));
 	m_pTimer->SetTime(m_fClearTime);
 	
 
@@ -138,10 +138,18 @@ void CResultManager::Update()
 		m_pClearRank->SetState(CClearRank::State::STATE_SCROLL_TEXT);
 	}
 
-	if (m_pClearRank->GetState() == CClearRank::State::STATE_FINISH)
+	if (m_pClearRank->GetState() == CClearRank::State::STATE_FINISH &&
+		m_pTimer->GetState() == CTimer_Result::State::STATE_NONE)
 	{// クリアランク終了時
 
-		m_pTimer;
+		m_pTimer->CTimer_Result::SetState(CTimer_Result::State::STATE_SCROLL_TEXT);
+	}
+
+	if (m_pTimer->GetState() == CTimer_Result::State::STATE_FINISH &&
+		m_pToatalRank->GetState() == CToatalRank::State::STATE_NONE)
+	{// クリアランク終了時
+
+		m_pToatalRank->SetState(CToatalRank::State::STATE_SCROLL_TEXT);
 	}
 
 
