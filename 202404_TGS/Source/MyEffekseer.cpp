@@ -33,6 +33,7 @@ std::string CMyEffekseer::m_EffectName[CMyEffekseer::EFKLABEL_MAX] =	// エフェク
 	"data/Effekseer/teleport.efkefc",		// テレポート
 	"data/Effekseer/hit.efkefc",			// ヒット
 	"data/Effekseer/wing.efkefc",			// 羽ばたき
+	"data/Effekseer/smash.efkefc",			// 潰れる
 };
 CMyEffekseer* CMyEffekseer::m_pMyEffekseer = nullptr;	// 自身のポインタ
 
