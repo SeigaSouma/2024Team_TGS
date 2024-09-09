@@ -12,6 +12,7 @@
 
 class CTitleLogo;
 class CTitle_PressEnter;
+class CKeyConfigSetting;
 
 //==========================================================================
 // 前方宣言
@@ -34,6 +35,7 @@ public:
 		SCENETYPE_FADEIN,			// フェードイン
 		SCENETYPE_FADEOUT_LOGO,		// ロゴフェードアウト
 		SCENETYPE_SHOULDTUTORIAL,	// チュートリアル確認
+		SCENETYPE_KEYCONFIGSETTING,	// キーコンフィグ設定
 		SCENETYPE_MAX
 	};
 
@@ -71,6 +73,8 @@ private:
 	void SceneNone();			// なにもなし
 	void SceneFadeInLogo();		// ロゴフェードイン
 	void SceneFadeOutLoGo();		// ロゴフェードアウト
+	void SceneFadeShouldTutorial();		// チュートリアル確認
+	void SceneFadeKeyConfigSetting();	// キーコンフィグ設定
 
 	//=============================
 	// メンバ変数
@@ -78,6 +82,7 @@ private:
 	float m_fSceneTime;			// シーンカウンター
 	SCENETYPE m_SceneType;		// シーンの種類
 	CTitleLogo* m_pLogo;		// ロゴのポインタ
+	CKeyConfigSetting* m_pConfigSetting;
 	CTitle_PressEnter* m_pPressEnter;	// プレスエンター
 	static CTitle* m_pThisPtr;	// 自身のポインタ
 };

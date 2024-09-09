@@ -56,6 +56,7 @@ public:
 	virtual bool GetRepeat(const int type, const int nId = 0) = 0;
 	virtual void Load(const std::string& file) = 0;
 	virtual void Setting(const int type, const int nId = 0) = 0;
+	virtual void Join(const int type, const int nKey, const int nId = 0) = 0;
 	virtual int GetKey(const int type, const int nId = 0) = 0;
 };
 
