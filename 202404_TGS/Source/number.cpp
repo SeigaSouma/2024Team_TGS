@@ -14,7 +14,7 @@
 //==========================================================================
 // コンストラクタ
 //==========================================================================
-CNumber::CNumber(int nPriority) : CObject(nPriority)
+CNumber::CNumber(int nPriority, const LAYER layer) : CObject(nPriority, layer)
 {
 	// 値のクリア
 	m_objType = OBJECTTYPE_2D;	// オブジェクトの種類

@@ -31,9 +31,10 @@ public:
 	void Load(const std::string& file) override;
 	void Setting(const int type, const int nId = 0) override;
 	int GetKey(const int type, const int nId = 0) override;
+	void Join(const int type, const int nKey, const int nId = 0)override { Join(type, nKey); }
 
 public:
-	void Join(const int action, const int key);
+	void Set(const int action, const int key);
 
 private:
 

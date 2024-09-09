@@ -35,7 +35,7 @@ public:
 		OBJECTTYPE_MAX
 	};
 
-	CNumber(int nPriority = 6);
+	CNumber(int nPriority = 6, const LAYER layer = LAYER::LAYER_DEFAULT);
 	~CNumber();
 
 
@@ -67,6 +67,9 @@ public:
 	virtual void BindTexture(int nIdx) = 0;	// テクスチャ割り当て
 	virtual void SetType(const CObject::TYPE type);
 
+	void SetNum(int num) { m_nNum = num; }	// 自分の数字設定
+	int GetNum() { return m_nNum; }			// 自分の数字取得
+
 	static CNumber* Create(EObjectType objtype, int nPriority);
 
 private:
@@ -75,6 +78,7 @@ private:
 	//=============================
 	// メンバ変数
 	//=============================
+	int m_nNum = 0;			// 自分の数字
 	EObjectType m_objType;	// オブジェクトの種類
 };
 

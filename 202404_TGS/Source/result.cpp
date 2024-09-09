@@ -15,10 +15,7 @@
 #include "sound.h"
 #include "game.h"
 
-#include "timer.h"
-#include "clearrank.h"
-#include "toatalrank.h"
-#include "scroll.h"
+
 
 //=============================================================================
 // 定数定義
@@ -38,7 +35,6 @@ namespace
 // 静的メンバ変数宣言
 //==========================================================================
 CResultScore *CResult::m_pResultScore = nullptr;	// リザルトスクリーンのオブジェクト
-bool CResult::m_bAllArrival = false;		// 全て到着した判定
 
 //==========================================================================
 // コンストラクタ
@@ -46,8 +42,6 @@ bool CResult::m_bAllArrival = false;		// 全て到着した判定
 CResult::CResult() : m_clear(false)
 {
 	// 値のクリア
-	m_pTimer = nullptr;	// タイマーのオブジェクト
-	m_bAllArrival = false;	// 全て到着した判定
 }
 
 //==========================================================================
@@ -76,23 +70,8 @@ HRESULT CResult::Init()
 	CSound::GetInstance()->PlaySound(CSound::LABEL_BGM_RESULT);
 
 	// リザルト画面
-
-	// 巻き物
-	CScroll::Create(MyLib::Vector3(640.0f, 360.0f, 0.0f), 1.0f, 350.0f, 1000.0f, true, 0);
-
-	// リザルトマネージャ
 	CResultManager* pResultManager = CResultManager::GetInstance();
-
-	// タイマー
-	m_pTimer = CTimer::Create(CTimer::Type::TYPE_RESULT);
-	m_pTimer->SetTime(pResultManager->GetClearTime());
-
-	// クリアランク
-	CClearRank::Create(pResultManager->GetJudgeRank());
-
-	// トータルランク
-	CToatalRank::Create(pResultManager->GetJudgeRank(), pResultManager->GetClearTime());
-
+	pResultManager->CreateResultScreen();
 
 	// 成功
 	return S_OK;
@@ -105,13 +84,9 @@ void CResult::Uninit()
 {
 	m_pResultScore = nullptr;
 
-	// タイマーの破棄
-	if (m_pTimer != nullptr)
-	{
-		// 終了処理
-		m_pTimer->Uninit();
-		m_pTimer = nullptr;
-	}
+	// リザルトマネージャのリセット
+	CResultManager* pResultManager = CResultManager::GetInstance();
+	pResultManager->Reset();
 
 	// 終了処理
 	CScene::Uninit();
@@ -130,27 +105,19 @@ void CResult::Update()
 	// ゲームパッド情報取得
 	CInputGamepad *pInputGamepad = CInputGamepad::GetInstance();
 
+	// リザルト画面
+	CResultManager* pResultManager = CResultManager::GetInstance();
+	pResultManager->Update();
+
+	if (pResultManager->GetState() != CResultManager::State::STATE_PRESSENTER) return;
+
 	// 画面遷移
 	if (pInputKeyboard->GetTrigger(DIK_RETURN) || pInputGamepad->GetTrigger(CInputGamepad::BUTTON_A, 0))
 	{
-		if (m_bAllArrival)
-		{
-			// モード設定
-			CManager::GetInstance()->GetFade()->SetFade(CScene::MODE_TITLE);
-		}
-
-		if (CManager::GetInstance()->GetFade()->GetState() == CFade::STATE_NONE)
-		{
-			// 全ての到着処理
-			if (m_pResultScore != nullptr)
-			{
-			}
-			m_bAllArrival = true;
-		}
+		// モード設定
+		CManager::GetInstance()->GetFade()->SetFade(CScene::MODE_TITLE);
 	}
 
-	// タイマー更新
-	m_pTimer->Update();
 }
 
 //==========================================================================
@@ -169,10 +136,3 @@ CResultScore *CResult::GetResultScore()
 	return m_pResultScore;
 }
 
-//==========================================================================
-// 到着設定ON
-//==========================================================================
-void CResult::SetEnableArrival()
-{
-	m_bAllArrival = true;
-}

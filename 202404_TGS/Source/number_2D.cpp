@@ -12,7 +12,7 @@
 //==========================================================================
 // コンストラクタ
 //==========================================================================
-CNumber2D::CNumber2D(int nPriority) : CNumber(nPriority)
+CNumber2D::CNumber2D(int nPriority, const LAYER layer) : CNumber(nPriority, layer)
 {
 	// 値のクリア
 	m_aObject2D = nullptr;			// オブジェクト2Dのオブジェクト

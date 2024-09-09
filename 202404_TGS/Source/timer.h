@@ -53,7 +53,7 @@ public:
 	CTimer::eState GetState() { return m_state; }
 	void SetState(eState state) { m_state = state; }
 
-	static CTimer* Create(Type type);
+	static CTimer* Create(Type type, int nPriority = 6);
 	static CTimer* GetInstance() { return m_pTimer; }
 
 private:
@@ -75,6 +75,7 @@ protected:
 	//=============================
 	// ƒƒ“ƒo•Ï”
 	//=============================
+	int m_nPriority;
 	MyLib::Vector3 m_pos;			// ˆÊ’u
 	MyLib::Vector3 m_posOrigin;		// Œ³‚ÌˆÊ’u
 	eState m_state;					// ó‘Ô
