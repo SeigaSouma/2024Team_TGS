@@ -111,14 +111,6 @@ void CLeafFlow::StateFlow()
 
 	// 位置計算
 	m_fMoveLen += 5.0f;
-	/*if (CInputKeyboard::GetInstance()->GetPress(DIK_RIGHT))
-	{
-		m_fMoveLen += 8.0f;
-	}
-	if (CInputKeyboard::GetInstance()->GetPress(DIK_LEFT))
-	{
-		m_fMoveLen -= 8.0f;
-	}*/
 
 	MyLib::Vector3 calpos;
 	calpos = MySpline::GetSplinePosition_NonLoop(pCourse->GetVecPosition(), m_fMoveLen);
@@ -131,20 +123,14 @@ void CLeafFlow::StateFlow()
 	MyLib::Vector3 colPos[3];
 	bool bHit[3] = {};
 
-	//ImGui::Text("courseIdx：%d", courseIdx);
-
 	bHit[0] = pCourse->CollisionVtxQuad(courseIdx, MyLib::Vector3(pos.x, 2000.0f, pos.z), &colPos[0]);
 	/*bHit[1] = pCourse->CollisionVtxQuad(courseIdx - 1, MyLib::Vector3(pos.x, 2000.0f, pos.z), &colPos[1]);
 	bHit[2] = pCourse->CollisionVtxQuad(courseIdx + 1, MyLib::Vector3(pos.x, 2000.0f, pos.z), &colPos[2]);*/
-
-
-	//ImGui::Text("colPos:x%.2f, %.2f, %.2f", colPos.x, colPos.y, colPos.z);
 
 	float minHeight = 2000.0f;
 	bool bAllHit = false;
 	for (int i = 0; i < 3; i++)
 	{
-		//ImGui::Text("colPos[%d]：%.2f", i, colPos[i].y);
 		if (bHit[i] &&
 			minHeight >= colPos[i].y)
 		{
@@ -181,4 +167,26 @@ void CLeafFlow::StateFadeOut()
 
 		Uninit();
 	}
+}
+
+//==========================================================================
+// 移動距離設定
+//==========================================================================
+void CLeafFlow::SetMoveLen(float len)
+{
+
+	// 移動距離設定
+	m_fMoveLen = len;
+
+	// コース取得
+	CCourse* pCourse = CGame::GetInstance()->GetCourse();
+
+	// 位置補正
+	MyLib::Vector3 calpos;
+	MyLib::Vector3 pos = GetPosition();
+	calpos = MySpline::GetSplinePosition_NonLoop(pCourse->GetVecPosition(), m_fMoveLen);
+	pos.x = calpos.x;
+	pos.z = calpos.z;
+	pos.z += GetOriginPosition().z;
+	SetPosition(pos);
 }

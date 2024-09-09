@@ -296,7 +296,7 @@ void CToatalRank::StateScrollRank()
 	// テキスト移動距離加算
 	/*m_fMoveRankLen += MOVEVALUE_TEXT;
 	m_fMoveRankLen = UtilFunc::Transformation::Clamp(m_fMoveRankLen, 0.0f, sizeOrigin.x);*/
-	m_fMoveRankLen = UtilFunc::Correction::EaseInExpo(0.0f, sizeOrigin.x, 0.0f, 0.7f, m_fStateTime);
+	m_fMoveRankLen = UtilFunc::Correction::EaseInExpo(0.0f, sizeOrigin.x, 0.0f, 0.9f, m_fStateTime);
 
 	if (m_fMoveRankLen >= sizeOrigin.x)
 	{

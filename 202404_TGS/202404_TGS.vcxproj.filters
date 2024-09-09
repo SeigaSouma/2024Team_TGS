@@ -707,9 +707,6 @@
     <ClCompile Include="Source\kite.cpp">
       <Filter>people</Filter>
     </ClCompile>
-    <ClCompile Include="Source\tree.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Source\serifeffect.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -754,6 +751,9 @@
     </ClCompile>
     <ClCompile Include="Source\keyconfig_setting.cpp">
       <Filter>keyconfig\setting</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\tree.cpp">
+      <Filter>map</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1318,9 +1318,6 @@
     <ClInclude Include="Source\kite.h">
       <Filter>people</Filter>
     </ClInclude>
-    <ClInclude Include="Source\tree.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Source\serifeffect.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -1365,6 +1362,9 @@
     </ClInclude>
     <ClInclude Include="Source\keyconfig_setting.h">
       <Filter>keyconfig\setting</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\tree.h">
+      <Filter>map</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

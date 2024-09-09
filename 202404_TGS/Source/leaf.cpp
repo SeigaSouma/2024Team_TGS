@@ -226,7 +226,8 @@ void CLeaf::StateFall()
 	ImGui::Text("m_rotDest:x%.2f, %.2f, %.2f", m_rotDest.x, m_rotDest.y, m_rotDest.z);*/
 
 	// 落下
-	pos.y -= UtilFunc::Transformation::Random(80, 120) * 0.01f;
+	pos.y -= UtilFunc::Transformation::Random(150, 190) * 0.01f;
+	//pos.y -= UtilFunc::Transformation::Random(80, 120) * 0.01f;
 
 	// 時間経過、新しい目標向き算出
 	if (m_fStateTimer >= m_fRotateInterval)

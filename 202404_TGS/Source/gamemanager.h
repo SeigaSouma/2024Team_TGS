@@ -16,6 +16,7 @@ class CRequestPeople;
 class CReceiverPeople;
 class CSkip_UI;
 class CGuide;
+class CSpawnEnvironment;
 
 //==========================================================================
 // クラス定義
@@ -91,7 +92,9 @@ public:
 
 protected:
 
+	//=============================
 	// メンバ関数
+	//=============================
 	virtual void SceneTransition();	// 遷移中
 	virtual void SceneWaitAirPush();
 	virtual void SceneStart();			// 開始演出
@@ -103,7 +106,9 @@ protected:
 	virtual void SetEnemy();
 	virtual void SetBoss();
 
+	//=============================
 	// メンバ変数
+	//=============================
 	SceneType m_SceneType;	// シーンの種類
 	SceneType m_OldSceneType;	// シーンの種類
 	bool m_bEndRush;		// ラッシュが終了したか
@@ -118,14 +123,126 @@ protected:
 	float m_fPosRY;			// プレイヤーと荷物を画面内に収めるときに使うposRのY座標
 	float m_fSceneTimer;	// シーンタイマー
 	int m_nJudgeRank;		// クリアランク
-	float m_fAirSpawnTimer;		// 空気の生成タイマー
-	float m_fAirSpawnInterval;	// 空気の生成間隔
 	CGuide* m_pGuide;
 	CRequestPeople* m_pRequestPeople;	// 依頼人のポインタ
 	CReceiverPeople* m_pReceiverPeople;	// 届け先のポインタ
 	CSkip_UI* m_pSkipUI;				// スキップUIのポインタ
+
+private:
+	
+	//=============================
+	// メンバ関数
+	//=============================
+
+	//=============================
+	// メンバ変数
+	//=============================
+	CSpawnEnvironment* m_pSpawn_Air;		// 空気生成
+	CSpawnEnvironment* m_pSpawn_LeafFlow;	// 流れる葉生成
+	CSpawnEnvironment* m_pSpawn_Leaf;		// 降る葉生成
 };
 
+
+
+// 生成クラス
+class CSpawnEnvironment
+{
+public:
+
+	CSpawnEnvironment() : m_fSpawnTimer(0.0f), m_fSpawnInterval(0.0f) {}
+	CSpawnEnvironment(float timer, float interval) : m_fSpawnTimer(timer), m_fSpawnInterval(interval) {}
+	virtual ~CSpawnEnvironment() {}
+
+	// 更新処理
+	virtual void Update(float deltaTime)
+	{
+		// タイマー加算
+		m_fSpawnTimer += deltaTime;
+		
+		if (m_fSpawnTimer >= m_fSpawnInterval)
+		{
+			// 生成時のトリガー
+			TriggerSpawn();
+		}
+	}
+
+protected:
+	
+	//=============================
+	// メンバ関数
+	//=============================
+	virtual void TriggerSpawn() = 0;	// 生成時のトリガー
+
+	//=============================
+	// メンバ変数
+	//=============================
+	float m_fSpawnTimer;	// 生成タイマー
+	float m_fSpawnInterval;	// 生成間隔
+
+	
+};
+
+//=============================
+// 空気の生成クラス
+//=============================
+class CSpawn_Air : public CSpawnEnvironment
+{
+public:
+
+	CSpawn_Air() : CSpawnEnvironment() {}
+	CSpawn_Air(float timer, float interval) : CSpawnEnvironment(timer, interval) {}
+	~CSpawn_Air() {}
+
+protected:
+
+	//=============================
+	// メンバ関数
+	//=============================
+	void TriggerSpawn() override;	// 生成時のトリガー
+
+};
+
+//=============================
+// 流れる葉の生成クラス
+//=============================
+class CSpawn_FlowLeaf : public CSpawnEnvironment
+{
+public:
+
+	CSpawn_FlowLeaf() : CSpawnEnvironment() {}
+	CSpawn_FlowLeaf(float timer, float interval) : CSpawnEnvironment(timer, interval) {}
+	~CSpawn_FlowLeaf() {}
+
+protected:
+
+	//=============================
+	// メンバ関数
+	//=============================
+	void TriggerSpawn() override;	// 生成時のトリガー
+
+};
+
+
+
+//=============================
+// 降る葉の生成クラス
+//=============================
+class CSpawn_Leaf : public CSpawnEnvironment
+{
+public:
+
+	CSpawn_Leaf() : CSpawnEnvironment() {}
+	CSpawn_Leaf(float timer, float interval) : CSpawnEnvironment(timer, interval) {}
+	~CSpawn_Leaf() {}
+
+protected:
+
+	//=============================
+	// メンバ関数
+	//=============================
+	void TriggerSpawn() override;	// 生成時のトリガー
+
+};
 
 
 #endif

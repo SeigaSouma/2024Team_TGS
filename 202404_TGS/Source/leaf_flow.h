@@ -37,6 +37,7 @@ public:
 	HRESULT Init() override;
 	void Update() override;
 
+	void SetMoveLen(float len);	// ˆÚ“®‹——£İ’è
 
 private:
 
