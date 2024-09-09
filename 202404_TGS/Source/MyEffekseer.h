@@ -66,6 +66,7 @@ public:
 		EFKLABEL_TP,				// テレポート
 		EFKLABEL_HIT,				// ヒット
 		EFKLABEL_WING,				// 羽ばたき
+		EFKLABEL_SMASH,				// 潰れる
 		EFKLABEL_MAX
 	};
 

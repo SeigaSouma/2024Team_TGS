@@ -177,6 +177,25 @@ void CObstacle_BirdCircle::Update()
 	{
 		m_fIntervalWing = 0.0f;
 		CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_HABATAKI);
+		
+		for (auto& it : m_BirdList)
+		{
+			if (it.pBird == nullptr) continue;	// 存在していない
+
+			MyLib::Vector3 rot = it.pBird->GetRotation();
+
+			// 位置の設定
+			{
+				MyLib::Matrix mtxRot, mtxTrans, mtxScale, mtxBird;	// 計算用マトリックス宣言
+				MyLib::Matrix mtxParent = m_mtxWorld;	// 親のマトリックス
+				MyLib::Vector3 BirdPos = it.offset;
+
+				// 羽ばたきエフェクト生成
+				CEffekseerObj::Create(
+					CMyEffekseer::EFKLABEL::EFKLABEL_WING,
+					it.pBird->GetPosition(), MyLib::Vector3(0.0f, m_rot.y, 0.0f), 0.0f, 10.0f, true);
+			}
+		}
 	}
 
 	// メイン操作
