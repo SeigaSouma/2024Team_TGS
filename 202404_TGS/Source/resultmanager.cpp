@@ -120,8 +120,22 @@ void CResultManager::Uninit()
 //==========================================================================
 void CResultManager::Reset()
 {
-	// 値のクリア
+	// タイマーの破棄
+	if (m_pTimer != nullptr)
+	{
+		// 終了処理
+		m_pTimer->Uninit();
+		m_pTimer = nullptr;
+	}
 
+	m_state = State::STATE_SCORE;			// 状態
+	m_JudgeRank = CJudge::JUDGE::JUDGE_DDD;	// 最終評価
+	m_fClearTime = 0.0f;					// クリア時間
+
+	m_pScroll = nullptr;		// 巻き物のオブジェクト
+	m_pTimer = nullptr;			// タイマーのオブジェクト
+	m_pClearRank = nullptr;		// クリア時のランク
+	m_pToatalRank = nullptr;	// 総合評価
 }
 
 //==========================================================================

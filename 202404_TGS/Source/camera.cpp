@@ -1297,6 +1297,11 @@ void CCamera::Reset(CScene::MODE mode)
 	m_bFollow = true;	// 追従するかどうか
 	m_bRockON = false;	// ロックオンするか
 
+	// カメラモーションの位置リセット
+	if (m_pCameraMotion != nullptr)
+	{
+		m_pCameraMotion->SetPosition(0.0f);
+	}
 
 	switch (mode)
 	{

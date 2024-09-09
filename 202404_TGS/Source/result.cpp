@@ -84,6 +84,10 @@ void CResult::Uninit()
 {
 	m_pResultScore = nullptr;
 
+	// リザルトマネージャのリセット
+	CResultManager* pResultManager = CResultManager::GetInstance();
+	pResultManager->Reset();
+
 	// 終了処理
 	CScene::Uninit();
 }

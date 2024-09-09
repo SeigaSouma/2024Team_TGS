@@ -72,6 +72,8 @@ public:
 		m_pSuffocation = nullptr;
 	}
 
+	~CPlayerControlBaggage();
+
 	virtual void Action(CPlayer* player, CBaggage* pBaggage);	// アクション
 	void EffectStop();	// エフェクト停止
 	void Reset(CPlayer* player, CBaggage* pBaggage);		// リセット
@@ -84,8 +86,7 @@ private:
 	bool EndCheck(CBaggage* pBaggage);
 	void GoalAction(CPlayer* player, CBaggage* pBaggage);
 	void BressEffect(CPlayer* player, CBaggage* pBaggage);		// 息エフェクト
-	void suffocation();
-	CSuffocation* m_pSuffocation;
+	void Suffocation(CPlayer* player, CBaggage* pBaggage);
 
 	// メンバ変数
 	CEffekseerObj* m_pEffekseerObj = nullptr;
@@ -107,6 +108,7 @@ private:
 	int m_nGoalTimer;					// タイマー
 	STATE m_state;
 	MyLib::Vector3 m_GoalMove;			// ゴール時の移動量
+	CSuffocation* m_pSuffocation;
 };
 
 //=============================
