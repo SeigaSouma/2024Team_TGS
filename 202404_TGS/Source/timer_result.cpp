@@ -40,7 +40,7 @@ CTimer_Result::STATE_FUNC CTimer_Result::m_StateFunc[] =
 {
 	&CTimer_Result::StateScrollText,	// 文字送り
 	&CTimer_Result::StateSrollVoid,		// 空間送り
-	&CTimer_Result::StateScrollRank,	// ランク送り
+	&CTimer_Result::StateScrollTime,	// タイム送り
 	&CTimer_Result::StateFinish,		// 終了
 	&CTimer_Result::StateNone,			// なにもなし
 
@@ -55,7 +55,7 @@ CTimer_Result::CTimer_Result(int nPriority) : CTimer(nPriority)
 	m_fStateTime = 0.0f;		// 状態カウンター
 	m_state = State::STATE_SCROLL_TEXT;			// 状態
 	m_fMoveTextLen = 0.0f;	// テキストの移動距離
-	m_fMoveRankLen = 0.0f;	// ランクの移動距離
+	m_fMoveTimeLen = 0.0f;	// タイムの移動距離
 }
 
 //==========================================================================
@@ -80,7 +80,7 @@ HRESULT CTimer_Result::Init()
 	CTimer::Init();
 	m_pos = m_pText->GetPosition() + MyLib::Vector3(m_pText->GetSizeOrigin().x * 2.0f + 150.0f, 0.0f, 0.0f);
 
-
+	// アンカーポイントを左にする
 	for (int i = 0; i < 3; i++)
 	{
 		CMultiNumber* pMultiNumber = m_pClearTime[i];
@@ -193,35 +193,55 @@ void CTimer_Result::StateScrollText()
 //==========================================================================
 void CTimer_Result::StateSrollVoid()
 {
-
 	if (m_fStateTime >= StateTime::WAIT)
 	{
 		// 状態遷移
-		SetState(State::STATE_SCROLL_RANK);
+		SetState(State::STATE_SCROLL_TIME);
 	}
-
 }
 
 //==========================================================================
-// ランク送り
+// タイム送り
 //==========================================================================
-void CTimer_Result::StateScrollRank()
+void CTimer_Result::StateScrollTime()
 {
+
+	// アンカーポイントを左にする
+	D3DXVECTOR2 size, sizeOrigin;
+
+	for (int i = 0; i < 3; i++)
+	{
+		// ナンバー取得
+		CMultiNumber* pMultiNumber = m_pClearTime[i];
+		CNumber** pNumber = pMultiNumber->GetNumber();
+
+		for (int j = 0; j < pMultiNumber->GetDigit(); j++)
+		{
+			// 数字の2Dオブジェクト取得
+			CObject2D* pObj2D = pNumber[j]->GetObject2D();
+			size = pObj2D->GetSize();
+
+
+		}
+
+	}
+
+
 	//// サイズ取得
 	//D3DXVECTOR2 size = GetSize(), sizeOrigin = GetSizeOrigin();
 
 	//// テキスト移動距離加算
-	//m_fMoveRankLen += MOVEVALUE_TEXT;
-	//m_fMoveRankLen = UtilFunc::Transformation::Clamp(m_fMoveRankLen, 0.0f, sizeOrigin.x);
+	//m_fMoveTimeLen += MOVEVALUE_TEXT;
+	//m_fMoveTimeLen = UtilFunc::Transformation::Clamp(m_fMoveTimeLen, 0.0f, sizeOrigin.x);
 
-	//if (m_fMoveRankLen >= sizeOrigin.x)
+	//if (m_fMoveTimeLen >= sizeOrigin.x)
 	//{
 	//	// 状態遷移
 	//	SetState(State::STATE_FINISH);
 	//}
 
 	//// サイズ設定
-	//size.x = m_fMoveRankLen;
+	//size.x = m_fMoveTimeLen;
 	//SetSize(size);
 
 	//// テクスチャ座標設定

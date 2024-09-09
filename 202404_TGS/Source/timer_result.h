@@ -29,7 +29,7 @@ public:
 	{
 		STATE_SCROLL_TEXT = 0,	// 文字送り
 		STATE_SCROLL_VOID,		// 空間送り
-		STATE_SCROLL_RANK,		// ランク送り
+		STATE_SCROLL_TIME,		// タイム送り
 		STATE_FINISH,			// 終了
 		STATE_NONE,				// なにもなし
 		STATE_MAX
@@ -62,7 +62,7 @@ private:
 	void UpdateState();
 	void StateScrollText();	// 文字送り
 	void StateSrollVoid();	// 空間送り
-	void StateScrollRank();	// ランク送り
+	void StateScrollTime();	// タイム送り
 	void StateFinish();		// 終了
 	void StateNone() {}		// なにもなし
 
@@ -79,7 +79,7 @@ private:
 	// その他
 	CObject2D* m_pText;		// 文字
 	float m_fMoveTextLen;	// テキストの移動距離
-	float m_fMoveRankLen;	// ランクの移動距離
+	float m_fMoveTimeLen;	// タイムの移動距離
 
 };
 
