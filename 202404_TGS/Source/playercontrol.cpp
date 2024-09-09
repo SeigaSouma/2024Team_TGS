@@ -441,12 +441,25 @@ void CPlayerControlMove::Move(CPlayer* player)
 	}
 }
 
+
+
 //==========================================================================
-// サフォケーション
+// アクションのデストラクタ
 //==========================================================================
-void CPlayerControlBaggage::suffocation()
+CPlayerControlBaggage::~CPlayerControlBaggage()
 {
-	CSuffocation::Create();
+	if (m_pEffekseerObj != nullptr)
+	{
+		// SEストップ
+		CSound::GetInstance()->StopSound(CSound::LABEL::LABEL_SE_BRESS_STREAM);
+
+		// トリガー送信
+		m_pEffekseerObj->SetTrigger(1);
+		m_pEffekseerObj->Uninit();
+		m_pEffekseerObj = nullptr;
+	}
+
+
 }
 
 //==========================================================================
@@ -599,15 +612,9 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 
 				// ラ王生成
 				if (hitresult.isdeath)
-				{//=============================================================================
-					CDeadPlayer::Create(player->GetPosition());
-					pBaggage->SetState(CBaggage::STATE::STATE_FALL);
-
-					if (m_pSuffocation == nullptr)
-					{
-						m_pSuffocation = CSuffocation::Create();
-						CSound::GetInstance()->PlaySound(CSound::LABEL_SE_RAOU);
-					}
+				{
+					// 窒息
+					Suffocation(player, pBaggage);
 				}
 			}
 		}
@@ -653,14 +660,8 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 				// ラ王生成
 				if (hitresult.isdeath)
 				{
-					CDeadPlayer::Create(player->GetPosition());
-					pBaggage->SetState(CBaggage::STATE::STATE_FALL);
-
-					if (m_pSuffocation == nullptr)
-					{
-						m_pSuffocation = CSuffocation::Create();
-						CSound::GetInstance()->PlaySound(CSound::LABEL_SE_RAOU);
-					}
+					// 窒息
+					Suffocation(player, pBaggage);
 				}
 			}
 		}
@@ -855,6 +856,25 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 		m_pEffekseerObj->SetPosition(d);
 		m_pEffekseerObj->SetScale(DEFAULT_BRESSSCALE_EFFECT * ratio);
 
+	}
+}
+
+//==========================================================================
+// 窒息
+//==========================================================================
+void CPlayerControlBaggage::Suffocation(CPlayer* player, CBaggage* pBaggage)
+{
+	// 死亡体生成
+	CDeadPlayer::Create(player->GetPosition());
+
+	// 落下状態
+	pBaggage->SetState(CBaggage::STATE::STATE_FALL);
+
+	// 窒息UI生成
+	if (m_pSuffocation == nullptr)
+	{
+		m_pSuffocation = CSuffocation::Create();
+		CSound::GetInstance()->PlaySound(CSound::LABEL_SE_RAOU);
 	}
 }
 

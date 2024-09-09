@@ -8,7 +8,7 @@
 #include "resultmanager.h"
 #include "calculation.h"
 
-#include "timer.h"
+#include "timer_result.h"
 #include "clearrank.h"
 #include "toatalrank.h"
 #include "scroll.h"
@@ -24,6 +24,7 @@ CResultManager* CResultManager::m_pThisPtr = nullptr;	// 自身のポインタ
 CResultManager::CResultManager()
 {
 	// 値のクリア
+	m_state = State::STATE_SCORE;				// 状態
 	m_JudgeRank = CJudge::JUDGE::JUDGE_DDD;	// 最終評価
 	m_fClearTime = 0.0f;			// クリア時間
 
@@ -83,10 +84,10 @@ HRESULT CResultManager::Init()
 void CResultManager::CreateResultScreen()
 {
 	// 巻き物
-	m_pScroll = CScroll::Create(MyLib::Vector3(640.0f, 360.0f, 0.0f), 1.5f, 350.0f, 1000.0f, true, 1);
+	m_pScroll = CScroll::Create(MyLib::Vector3(640.0f, 360.0f, 0.0f), 1.5f, 350.0f, 1000.0f, false, true, 1);
 
 	// タイマー
-	m_pTimer = CTimer::Create(CTimer::Type::TYPE_RESULT, 4);
+	m_pTimer = static_cast<CTimer_Result*>(CTimer::Create(CTimer::Type::TYPE_RESULT, 4));
 	m_pTimer->SetTime(m_fClearTime);
 	
 
@@ -119,8 +120,22 @@ void CResultManager::Uninit()
 //==========================================================================
 void CResultManager::Reset()
 {
-	// 値のクリア
+	// タイマーの破棄
+	if (m_pTimer != nullptr)
+	{
+		// 終了処理
+		m_pTimer->Uninit();
+		m_pTimer = nullptr;
+	}
 
+	m_state = State::STATE_SCORE;			// 状態
+	m_JudgeRank = CJudge::JUDGE::JUDGE_DDD;	// 最終評価
+	m_fClearTime = 0.0f;					// クリア時間
+
+	m_pScroll = nullptr;		// 巻き物のオブジェクト
+	m_pTimer = nullptr;			// タイマーのオブジェクト
+	m_pClearRank = nullptr;		// クリア時のランク
+	m_pToatalRank = nullptr;	// 総合評価
 }
 
 //==========================================================================
@@ -133,17 +148,35 @@ void CResultManager::Update()
 	if (m_pClearRank == nullptr) return;
 
 	if (m_pScroll->GetState() == CScroll::STATE::STATE_WAIT &&
-		m_pClearRank->GetState() == CClearRank::State::STATE_NONE)
-	{
+		m_pClearRank->GetState() == CClearRank::State::STATE_NONE &&
+		!m_pClearRank->IsFinish())
+	{// 巻き物開ききった後
 		m_pClearRank->SetState(CClearRank::State::STATE_SCROLL_TEXT);
 	}
 
-	if (m_pClearRank->GetState() == CClearRank::State::STATE_FINISH)
+	if (m_pClearRank->GetState() == CClearRank::State::STATE_FINISH &&
+		m_pTimer->GetState() == CTimer_Result::State::STATE_NONE &&
+		!m_pTimer->IsFinish())
 	{// クリアランク終了時
 
-		m_pTimer;
+		m_pTimer->CTimer_Result::SetState(CTimer_Result::State::STATE_SCROLL_TEXT);
 	}
 
+	if (m_pTimer->GetState() == CTimer_Result::State::STATE_FINISH &&
+		m_pToatalRank->GetState() == CToatalRank::State::STATE_NONE &&
+		!m_pToatalRank->IsFinish())
+	{// クリアタイム終了時
+
+		m_pToatalRank->SetState(CToatalRank::State::STATE_SCROLL_TEXT);
+	}
+
+
+	if (m_pToatalRank->IsFinish())
+	{// 総合評価も出た
+
+		// 押下待ち
+		m_state = State::STATE_PRESSENTER;
+	}
 
 	// タイマー更新
 	if (m_pTimer != nullptr)

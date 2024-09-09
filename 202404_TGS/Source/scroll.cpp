@@ -36,6 +36,7 @@ CScroll::STATE_FUNC CScroll::m_StateFunc[] =
 	&CScroll::StateNone,	// なし
 	&CScroll::StateOpen,	// オープン
 	&CScroll::StateWait,	// 待機
+	&CScroll::StateWaitPress,	// 押下待機
 	&CScroll::StateClose,	// クローズ
 	&CScroll::StateFadeout,	// フェードアウト
 };
@@ -51,6 +52,7 @@ CScroll::CScroll(int nPriority) : CObject2D(nPriority)
 	m_pPapaer = nullptr;			// 紙部分
 	m_pEdge = nullptr;				// 端部分
 	m_bFinishOpen = false;			// オープン終了判定
+	m_bAutoWaitPress = false;		// 自動押下待機判定
 }
 
 //==========================================================================
@@ -64,7 +66,7 @@ CScroll::~CScroll()
 //==========================================================================
 // 生成処理
 //==========================================================================
-CScroll* CScroll::Create(const MyLib::Vector3& pos, const float toOpenTime, const float height, const float scrollLength, bool bFadeOut, int nPriority)
+CScroll* CScroll::Create(const MyLib::Vector3& pos, const float toOpenTime, const float height, const float scrollLength, bool bAutoWaitPress, bool bFadeOut, int nPriority)
 {
 	// メモリの確保
 	CScroll* pObj = DEBUG_NEW CScroll(nPriority + 1);
@@ -77,7 +79,8 @@ CScroll* CScroll::Create(const MyLib::Vector3& pos, const float toOpenTime, cons
 		pObj->SetSizeOrigin(D3DXVECTOR2(height, height));	// サイズ
 		pObj->m_fToOpenTimer = toOpenTime;					// オープンまでの時間
 		pObj->m_fScrollLength = scrollLength;				// 巻き物の長さ
-		pObj->m_bFadeOut = bFadeOut;		// フェードアウト判定
+		pObj->m_bFadeOut = bFadeOut;						// フェードアウト判定
+		pObj->m_bAutoWaitPress = bAutoWaitPress;			// 自動押下待機判定
 
 		// 初期化処理
 		pObj->Init();
@@ -303,7 +306,14 @@ void CScroll::StateOpen()
 	{// 時間経過
 
 		// 状態遷移
-		SetState(STATE::STATE_WAIT);
+		if (m_bAutoWaitPress)
+		{
+			SetState(STATE::STATE_WAITPRESS);
+		}
+		else
+		{
+			SetState(STATE::STATE_WAIT);
+		}
 
 		// オープン終了判定
 		m_bFinishOpen = true;
@@ -315,6 +325,14 @@ void CScroll::StateOpen()
 //==========================================================================
 void CScroll::StateWait()
 {
+
+}
+
+//==========================================================================
+// 押下待機
+//==========================================================================
+void CScroll::StateWaitPress()
+{
 	// インプット取得
 	CInputKeyboard* pKey = CInputKeyboard::GetInstance();
 	CInputGamepad* pPad = CInputGamepad::GetInstance();
@@ -325,7 +343,6 @@ void CScroll::StateWait()
 		// 状態遷移
 		SetState(STATE::STATE_CLOSE);
 	}
-
 }
 
 //==========================================================================
@@ -367,8 +384,7 @@ void CScroll::StateFadeout()
 
 	if (m_fStateTimer >= StateTime::FADEOUT)
 	{// 時間経過
-
-
+		Kill();
 	}
 }
 

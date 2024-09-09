@@ -87,7 +87,7 @@ void CkeyConfigKeyboard::Uninit() {
 //==========================================================================
 // ƒL[î•ñ“o˜^
 //==========================================================================
-void CkeyConfigKeyboard::Join(const int action, const int key)
+void CkeyConfigKeyboard::Set(const int action, const int key)
 {
 	m_Info[action] = key;
 }
@@ -162,7 +162,7 @@ void CkeyConfigKeyboard::Load(const std::string& file)
 			// ¶¬
 			if (process >= 0 && button >= 0)
 			{
-				Join(process, button);
+				Set(process, button);
 			}
 		}
 
@@ -188,17 +188,17 @@ void CkeyConfigKeyboard::Setting(const int type, const int nId)
 		for (int i = 0; i < CInputGamepad::BUTTON_MAX; i++) {
 			if (pKeyboard->GetTrigger(static_cast<CInputGamepad::BUTTON>(i), 0))
 			{
-				Join(type, static_cast<CInputGamepad::BUTTON>(i));
+				Set(type, static_cast<CInputGamepad::BUTTON>(i));
 				return;
 			}
 			else if (pKeyboard->GetPressLT(0))
 			{
-				Join(type, CInputGamepad::BUTTON_LT);
+				Set(type, CInputGamepad::BUTTON_LT);
 				return;
 			}
 			else if (pKeyboard->GetPressRT(0))
 			{
-				Join(type, CInputGamepad::BUTTON_RT);
+				Set(type, CInputGamepad::BUTTON_RT);
 				return;
 			}
 		}

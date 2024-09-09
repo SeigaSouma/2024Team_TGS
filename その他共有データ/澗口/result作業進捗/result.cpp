@@ -78,8 +78,9 @@ HRESULT CResult::Init()
 
 	// リザルト画面
 	CResult2D::Create();
-	CRankingItem::Create();
-
+	CRankingItem::Create(1,40785421,0);
+	CRankingItem::Create(2,12345678,1);
+	CRankingItem::Create(3, 9,2);
 	// リザルトマネージャ
 	CResultManager* pResultManager = CResultManager::GetInstance();
 

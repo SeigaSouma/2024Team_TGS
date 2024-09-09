@@ -35,7 +35,6 @@ namespace
 // 静的メンバ変数宣言
 //==========================================================================
 CResultScore *CResult::m_pResultScore = nullptr;	// リザルトスクリーンのオブジェクト
-bool CResult::m_bAllArrival = false;		// 全て到着した判定
 
 //==========================================================================
 // コンストラクタ
@@ -43,7 +42,6 @@ bool CResult::m_bAllArrival = false;		// 全て到着した判定
 CResult::CResult() : m_clear(false)
 {
 	// 値のクリア
-	m_bAllArrival = false;	// 全て到着した判定
 }
 
 //==========================================================================
@@ -86,6 +84,10 @@ void CResult::Uninit()
 {
 	m_pResultScore = nullptr;
 
+	// リザルトマネージャのリセット
+	CResultManager* pResultManager = CResultManager::GetInstance();
+	pResultManager->Reset();
+
 	// 終了処理
 	CScene::Uninit();
 }
@@ -103,28 +105,18 @@ void CResult::Update()
 	// ゲームパッド情報取得
 	CInputGamepad *pInputGamepad = CInputGamepad::GetInstance();
 
-	// 画面遷移
-	if (pInputKeyboard->GetTrigger(DIK_RETURN) || pInputGamepad->GetTrigger(CInputGamepad::BUTTON_A, 0))
-	{
-		if (m_bAllArrival)
-		{
-			// モード設定
-			CManager::GetInstance()->GetFade()->SetFade(CScene::MODE_TITLE);
-		}
-
-		if (CManager::GetInstance()->GetFade()->GetState() == CFade::STATE_NONE)
-		{
-			// 全ての到着処理
-			if (m_pResultScore != nullptr)
-			{
-			}
-			m_bAllArrival = true;
-		}
-	}
-
 	// リザルト画面
 	CResultManager* pResultManager = CResultManager::GetInstance();
 	pResultManager->Update();
+
+	if (pResultManager->GetState() != CResultManager::State::STATE_PRESSENTER) return;
+
+	// 画面遷移
+	if (pInputKeyboard->GetTrigger(DIK_RETURN) || pInputGamepad->GetTrigger(CInputGamepad::BUTTON_A, 0))
+	{
+		// モード設定
+		CManager::GetInstance()->GetFade()->SetFade(CScene::MODE_TITLE);
+	}
 
 }
 
@@ -144,10 +136,3 @@ CResultScore *CResult::GetResultScore()
 	return m_pResultScore;
 }
 
-//==========================================================================
-// 到着設定ON
-//==========================================================================
-void CResult::SetEnableArrival()
-{
-	m_bAllArrival = true;
-}

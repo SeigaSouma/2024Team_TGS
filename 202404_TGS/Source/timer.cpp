@@ -24,7 +24,7 @@ namespace
 
 	const MyLib::Vector3 DEFAULT_POSITION = MyLib::Vector3(1100.0f, 100.0f, 0.0f);	// 初期位置
 	const D3DXVECTOR2 SIZE_NUMBER = D3DXVECTOR2(30.0f, 30.0f);
-	const float DSTANCE_TIMER = SIZE_NUMBER.x * 2.25f;
+	const float DSTANCE_MULTIPLAY = 2.25f;
 }
 
 //==========================================================================
@@ -128,7 +128,7 @@ HRESULT CTimer::Init()
 
 		// 位置設定
 		MyLib::Vector3 pos = m_pos;
-		pos.x -= DSTANCE_TIMER * i;
+		pos.x -= (SIZE_NUMBER.x * DSTANCE_MULTIPLAY) * i;
 		pNumber->SetPosition(pos);
 
 		// 右寄せに設定
@@ -211,7 +211,7 @@ void CTimer::ApplyTimer()
 
 		// 位置設定
 		MyLib::Vector3 pos = m_pos;
-		pos.x -= DSTANCE_TIMER * i;
+		pos.x -= (m_pClearTime[i]->GetNumber()[0]->GetSizeOrigin().x * DSTANCE_MULTIPLAY) * i;
 		m_pClearTime[i]->SetPosition(pos);
 
 	}

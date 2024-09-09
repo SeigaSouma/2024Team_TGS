@@ -25,11 +25,19 @@ namespace
 	const MyLib::Vector3 ITEM_POS = MyLib::Vector3(250.0f,250.0f, 0.0f);
 	const D3DXVECTOR2 ITEM_SIZE = D3DXVECTOR2(100.0f, 50.0f);
 	const std::string TEXTURE_ITEM[CRankingItem::ITEM_MAX] = { "data\\TEXTURE\\result\\ranking_num00.png",
-										"data\\TEXTURE\\result\\toatalrank.png" };
+										"data\\TEXTURE\\result\\toatalrank.png",
+										"data\\TEXTURE\\result\\num00.png",
+										"data\\TEXTURE\\result\\rank00.png"};
 
+	const D3DXVECTOR2 SPRITE_SIZE = D3DXVECTOR2(50.0f, 50.0f);
+	const int MAX_SCORE_DEGIT = 8;
 
 	const float TIME_SET = 0.2f;
 }
+//==========================================================================
+// 静的メンバ変数宣言
+//==========================================================================
+int CRankingItem::m_nObjNum = NULL;	//当オブジェクトの生成数
 
 //==========================================================================
 // コンストラクタ
@@ -41,6 +49,21 @@ CRankingItem::CRankingItem(int nPriority) : CObject(nPriority)
 	for (int nCnt = 0; nCnt < ITEM_MAX; nCnt++)
 	{
 		m_pItem[nCnt] = nullptr;
+	}
+
+	for (int nCnt = 0; nCnt < MAX_SCORE_DEGIT; nCnt++)
+	{
+		m_pScoreItem[nCnt] = nullptr;
+	}
+
+	//当オブジェクトの生成数の初期化と加算処理
+	if (m_nObjNum == NULL)
+	{
+		m_nObjNum = 1;
+	}
+	else
+	{
+		m_nObjNum++;
 	}
 	
 }
@@ -55,13 +78,22 @@ CRankingItem::~CRankingItem()
 //==========================================================================
 // 生成処理
 //==========================================================================
-CRankingItem* CRankingItem::Create()
+CRankingItem* CRankingItem::Create(int nNumRank,int nScore, int nAllRank)
 {
 	// メモリの確保
 	CRankingItem *pMarker =  new CRankingItem;
 
 	if (pMarker != nullptr)
 	{
+		//順位を取得
+		pMarker->m_nNumRank = nNumRank;
+
+		//スコアを取得
+		pMarker->m_nScore = nScore;
+
+		//総評を取得
+		pMarker->m_nAllRank = nAllRank;
+
 		// 初期化処理
 		pMarker->Init();
 	}
@@ -75,35 +107,108 @@ CRankingItem* CRankingItem::Create()
 HRESULT CRankingItem::Init()
 {
 	//項目の初期化処理
-	MyLib::Vector3 difpos = MyLib::Vector3(-600.0f,15.0f,0.0f);
+	MyLib::Vector3 difItemPos = MyLib::Vector3(-610.0f,15.0f,0.0f);
+	MyLib::Vector3 difRankPos = MyLib::Vector3(0.0f, 100.0f * (m_nObjNum - 1), 0.0f);
 	D3DXVECTOR2 persize = D3DXVECTOR2(0.5f, 0.5f);
 
 	for (int nCntItem = 0; nCntItem < ITEM_MAX; nCntItem++)
 	{
-		m_pItem[nCntItem] = CObject2D::Create(GetPriority());
+		if (nCntItem < ITEM_SCORE)
+		{//横長文字OBJの初期化
 
-		difpos += MyLib::Vector3(600.0f, -15.0f,0.0f);
+			//Obj2D生成
+			m_pItem[nCntItem] = CObject2D::Create(GetPriority());
 
-		m_pItem[nCntItem]->SetPosition(ITEM_POS+ difpos);
+			//各項目の距離加算
+			difItemPos += MyLib::Vector3(610.0f, -15.0f, 0.0f);
 
-		int nIdxTex = CTexture::GetInstance()->Regist(TEXTURE_ITEM[nCntItem]);
-		m_pItem[nCntItem]->BindTexture(nIdxTex);
+			m_pItem[nCntItem]->SetPosition(ITEM_POS + difItemPos + difRankPos);
 
-		D3DXVECTOR2 size = ITEM_SIZE;
+			//テクスチャ割り当て
+			int nIdxTex = CTexture::GetInstance()->Regist(TEXTURE_ITEM[nCntItem]);
+			m_pItem[nCntItem]->BindTexture(nIdxTex);
 
-		if (nCntItem == 1)
-		{
-			size.x *= persize.x;
-			size.y *= persize.y;
+			//サイズ設定
+			D3DXVECTOR2 size = ITEM_SIZE;
+
+			if (nCntItem == 1)
+			{//縮小処理
+				size.x *= persize.x;
+				size.y *= persize.y;
+			}
+			m_pItem[nCntItem]->SetSize(size);
+			m_pItem[nCntItem]->SetSizeOrigin(size);
+
+			//タイプ設定
+			CObject::SetType(CObject::TYPE::TYPE_OBJECT2D);
+
+			//スプライト調整
+			if (nCntItem == 0)
+			{//順位の調整
+				D3DXVECTOR2 uvpos[4] = { D3DXVECTOR2(0.0f,m_nNumRank * 0.1f - 0.1f), D3DXVECTOR2(1.0f,m_nNumRank * 0.1f - 0.1f),  D3DXVECTOR2(0.0f,m_nNumRank * 0.1f),  D3DXVECTOR2(1.0f,m_nNumRank * 0.1f) };
+				m_pItem[nCntItem]->SetTex(uvpos);
+			}
 		}
-		m_pItem[nCntItem]->SetSize(size);
-		m_pItem[nCntItem]->SetSizeOrigin(size);
+		else if (nCntItem == ITEM_SCORE)
+		{//スコアの初期化
+			difItemPos = MyLib::Vector3(150.0f,0.0f, 0.0f);
+			int nDegitNum[MAX_SCORE_DEGIT+1];
+			int nScore = m_nScore;
 
-		CObject::SetType(CObject::TYPE::TYPE_OBJECT2D);
+			//スコアのみ別管理のためnullptrを代入
+			m_pItem[nCntItem] = nullptr;
 
-		if (nCntItem == 0)
-		{
-			D3DXVECTOR2 uvpos[4] = { D3DXVECTOR2(0.0f,0.0f), D3DXVECTOR2(1.0f,0.0f),  D3DXVECTOR2(0.0f,0.1f),  D3DXVECTOR2(1.0f,0.1f) };
+			//スコアを桁ごとに分解
+			for (int nDegitCnt = MAX_SCORE_DEGIT; nDegitCnt > 0; nDegitCnt--)
+			{
+				nDegitNum[nDegitCnt] = nScore /pow(10,nDegitCnt-1);
+				nScore = nScore - pow(10, nDegitCnt - 1) * nDegitNum[nDegitCnt];
+			}
+			
+			//各桁の初期化
+			for (int nCnt=0, nDegitCnt = MAX_SCORE_DEGIT; nDegitCnt > 0; nDegitCnt--,nCnt++)
+			{
+				MyLib::Vector3 difDegitPos = MyLib::Vector3(50.0f * nCnt, 0.0f, 0.0f);
+				m_pScoreItem[nDegitCnt] = CObject2D::Create(GetPriority());
+
+				m_pScoreItem[nDegitCnt]->SetPosition(ITEM_POS + difItemPos + difDegitPos+ difRankPos);
+
+				int nIdxTex = CTexture::GetInstance()->Regist(TEXTURE_ITEM[nCntItem]);
+				m_pScoreItem[nDegitCnt]->BindTexture(nIdxTex);
+
+				D3DXVECTOR2 size = SPRITE_SIZE;
+
+				m_pScoreItem[nDegitCnt]->SetSize(size);
+				m_pScoreItem[nDegitCnt]->SetSizeOrigin(size);
+
+				CObject::SetType(CObject::TYPE::TYPE_OBJECT2D);
+
+				
+				D3DXVECTOR2 uvpos[4] = { D3DXVECTOR2(nDegitNum[nDegitCnt] * 0.1f,0.0f), D3DXVECTOR2(nDegitNum[nDegitCnt] * 0.1f + 0.1f,0.0f),  D3DXVECTOR2(nDegitNum[nDegitCnt] * 0.1f ,1.0f),  D3DXVECTOR2(nDegitNum[nDegitCnt] * 0.1f + 0.1f,1.0f) };
+				m_pScoreItem[nDegitCnt]->SetTex(uvpos);
+				
+			}
+		}
+
+		else if (nCntItem == ITEM_ALLRANK_DATA)
+		{//総評ランクアイコンの初期化
+			m_pItem[nCntItem] = CObject2D::Create(GetPriority());
+
+			difItemPos += MyLib::Vector3(575.0f, 0.0f, 0.0f);
+
+			m_pItem[nCntItem]->SetPosition(ITEM_POS + difItemPos + difRankPos);
+
+			int nIdxTex = CTexture::GetInstance()->Regist(TEXTURE_ITEM[nCntItem]);
+			m_pItem[nCntItem]->BindTexture(nIdxTex);
+
+			D3DXVECTOR2 size = SPRITE_SIZE;
+
+			m_pItem[nCntItem]->SetSize(size);
+			m_pItem[nCntItem]->SetSizeOrigin(size);
+
+			CObject::SetType(CObject::TYPE::TYPE_OBJECT2D);
+			
+			D3DXVECTOR2 uvpos[4] = { D3DXVECTOR2(0.0f,m_nAllRank * 0.25f), D3DXVECTOR2(1.0f,m_nAllRank * 0.25f),  D3DXVECTOR2(0.0f,m_nAllRank * 0.25f+0.25f),  D3DXVECTOR2(1.0f,m_nAllRank * 0.25f+0.25f) };
 			m_pItem[nCntItem]->SetTex(uvpos);
 		}
 	}
