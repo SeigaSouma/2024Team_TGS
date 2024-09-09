@@ -31,6 +31,7 @@ public:
 	void Load(const std::string& file) override;
 	void Setting(const int type, const int nId = 0) override;
 	int GetKey(const int type, const int nId = 0) override;
+	void Join(const int type, const int nKey, const int nId = 0) override { Join(type, static_cast<CInputGamepad::BUTTON>(nKey)); }
 
 public:
 	void Join(const int action, const CInputGamepad::BUTTON key);
@@ -39,6 +40,7 @@ private:
 
 	// ƒƒ“ƒo•Ï”
 	std::map<int, CInputGamepad::BUTTON> m_Info;
+
 };
 
 #endif

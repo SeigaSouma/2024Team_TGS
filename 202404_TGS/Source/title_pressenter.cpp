@@ -29,6 +29,7 @@ CTitle_PressEnter::STATE_FUNC CTitle_PressEnter::m_StateFunc[] =
 	&CTitle_PressEnter::StateNone,		// なし
 	&CTitle_PressEnter::StateFadeIn,	// フェードイン
 	&CTitle_PressEnter::StateTutorial_FadeOut,		// チュートリアル確認のフェードアウト
+	& CTitle_PressEnter::StateNoActive,	// 反応しない
 };
 
 //==========================================================================
@@ -178,6 +179,15 @@ void CTitle_PressEnter::StateTutorial_FadeOut()
 		m_fStateTime = 0.0f;
 		m_state = STATE_NONE;
 	}
+}
+
+
+//==========================================================================
+// 反応しない
+//==========================================================================
+void CTitle_PressEnter::StateNoActive()
+{
+	
 }
 
 //==========================================================================
