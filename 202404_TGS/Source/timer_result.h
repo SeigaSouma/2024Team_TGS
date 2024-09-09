@@ -31,6 +31,7 @@ public:
 		STATE_SCROLL_VOID,		// 空間送り
 		STATE_SCROLL_TIME,		// タイム送り
 		STATE_FINISH,			// 終了
+		STATE_EMPHASIZE,		// 強調
 		STATE_NONE,				// なにもなし
 		STATE_MAX
 	};
@@ -43,8 +44,13 @@ public:
 	void Update() override;
 	void Draw() override;
 
+	virtual void ApplyTimer() override;	// タイマー反映
+
 	void SetState(State state);				// 状態設定
 	State GetState() { return m_state; }	// 状態取得
+
+
+	bool IsFinish() { return m_bFinish; }	// 終了
 
 private:
 
@@ -64,10 +70,12 @@ private:
 	void StateSrollVoid();	// 空間送り
 	void StateScrollTime();	// タイム送り
 	void StateFinish();		// 終了
+	void StateEmphasize();	// 強調
 	void StateNone() {}		// なにもなし
 
 	// その他関数
 	void CreateText();	// 文字生成
+	void Skip();		// スキップ
 
 	//=============================
 	// メンバ変数
@@ -80,6 +88,7 @@ private:
 	CObject2D* m_pText;		// 文字
 	float m_fMoveTextLen;	// テキストの移動距離
 	float m_fMoveTimeLen;	// タイムの移動距離
+	bool m_bFinish;			// 終了
 
 };
 

@@ -26,6 +26,7 @@ public:
 		STATE_NONE = 0,	// なにもない
 		STATE_OPEN,		// オープン
 		STATE_WAIT,		// 待機
+		STATE_WAITPRESS,		// 押下待機
 		STATE_CLOSE,	// クローズ
 		STATE_FADEOUT,	// フェードアウト
 		STATE_MAX
@@ -49,7 +50,7 @@ public:
 	//=============================
 	// 静的関数
 	//=============================
-	static CScroll* Create(const MyLib::Vector3& pos, const float toOpenTime, const float height, const float scrollLength, bool bFadeOut = false, int nPriority = 7);	// 生成処理
+	static CScroll* Create(const MyLib::Vector3& pos, const float toOpenTime, const float height, const float scrollLength, bool bAutoWaitPress = true, bool bFadeOut = false, int nPriority = 7);	// 生成処理
 
 private:
 	
@@ -68,6 +69,7 @@ private:
 	void StateNone();	// なにもなし
 	void StateOpen();	// オープン
 	void StateWait();	// 待機
+	void StateWaitPress();	// 押下待機
 	void StateClose();	// クローズ
 	void StateFadeout();// フェードアウト
 
@@ -89,6 +91,7 @@ private:
 	float m_fScrollLength;	// 巻き物の長さ
 	bool m_bFinishOpen;		// オープン終了判定
 	bool m_bFadeOut;		// フェードアウト判定
+	bool m_bAutoWaitPress;	// 自動押下待機判定
 
 	// その他
 	CObject2D* m_pPapaer;	// 紙部分

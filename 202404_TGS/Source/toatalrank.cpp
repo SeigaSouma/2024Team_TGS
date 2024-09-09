@@ -46,6 +46,7 @@ namespace
 namespace StateTime
 {
 	const float WAIT = 0.5f;	// 待機
+	const float EMPHASIZE = 1.0f;	// 強調
 }
 
 //==========================================================================
@@ -73,6 +74,7 @@ CToatalRank::CToatalRank(int nPriority) : CObject2D(nPriority)
 	m_state = State::STATE_SCROLL_TEXT;			// 状態
 	m_fMoveTextLen = 0.0f;	// テキストの移動距離
 	m_fMoveRankLen = 0.0f;	// ランクの移動距離
+	m_bFinish = false;		// 終了
 }
 
 //==========================================================================
@@ -118,10 +120,8 @@ HRESULT CToatalRank::Init()
 	//=============================
 	CreateRank();
 
-
 	// 状態遷移
 	SetState(State::STATE_NONE);
-
 
 	return S_OK;
 }
@@ -220,6 +220,26 @@ void CToatalRank::UpdateState()
 }
 
 //==========================================================================
+// スキップ
+//==========================================================================
+void CToatalRank::Skip()
+{
+	CInputKeyboard* pKey = CInputKeyboard::GetInstance();
+	CInputGamepad* pPad = CInputGamepad::GetInstance();
+
+	if (pKey->GetTrigger(DIK_RETURN) ||
+		pPad->GetTrigger(CInputGamepad::BUTTON_A, 0))
+	{
+		// テキスト移動距離加算
+		m_pText->SetSize(m_pText->GetSizeOrigin());
+		D3DXVECTOR2* pTex = m_pText->GetTex();
+		pTex[1].x = pTex[3].x = 1.0f;
+
+		SetState(CToatalRank::State::STATE_SCROLL_RANK);
+	}
+}
+
+//==========================================================================
 // 文字送り
 //==========================================================================
 void CToatalRank::StateScrollText()
@@ -244,6 +264,9 @@ void CToatalRank::StateScrollText()
 	// テクスチャ座標設定
 	D3DXVECTOR2* pTex = m_pText->GetTex();
 	pTex[1].x = pTex[3].x = (size.x / sizeOrigin.x);
+
+	// スキップ
+	Skip();
 }
 
 //==========================================================================
@@ -258,6 +281,8 @@ void CToatalRank::StateSrollVoid()
 		SetState(State::STATE_SCROLL_RANK);
 	}
 
+	// スキップ
+	Skip();
 }
 
 //==========================================================================
@@ -269,8 +294,9 @@ void CToatalRank::StateScrollRank()
 	D3DXVECTOR2 size = GetSize(), sizeOrigin = GetSizeOrigin();
 
 	// テキスト移動距離加算
-	m_fMoveRankLen += MOVEVALUE_TEXT;
-	m_fMoveRankLen = UtilFunc::Transformation::Clamp(m_fMoveRankLen, 0.0f, sizeOrigin.x);
+	/*m_fMoveRankLen += MOVEVALUE_TEXT;
+	m_fMoveRankLen = UtilFunc::Transformation::Clamp(m_fMoveRankLen, 0.0f, sizeOrigin.x);*/
+	m_fMoveRankLen = UtilFunc::Correction::EaseInExpo(0.0f, sizeOrigin.x, 0.0f, 0.7f, m_fStateTime);
 
 	if (m_fMoveRankLen >= sizeOrigin.x)
 	{
@@ -292,6 +318,9 @@ void CToatalRank::StateScrollRank()
 //==========================================================================
 void CToatalRank::StateFinish()
 {
+	// 終了フラグ
+	m_bFinish = true;
+
 	// サイズ設定
 	SetSize(GetSizeOrigin());
 	m_pText->SetSize(m_pText->GetSizeOrigin());

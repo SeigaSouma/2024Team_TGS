@@ -30,7 +30,8 @@ namespace
 
 namespace StateTime
 {
-	const float WAIT = 0.5f;	// 待機
+	const float WAIT = 0.5f;		// 待機
+	const float EMPHASIZE = 1.0f;	// 強調
 	const int SCROLLEND = 1.0f;	// スクロール終了後
 }
 
@@ -43,6 +44,7 @@ CClearRank::STATE_FUNC CClearRank::m_StateFunc[] =
 	&CClearRank::StateSrollVoid,	// 空間送り
 	&CClearRank::StateScrollRank,	// ランク送り
 	&CClearRank::StateFinish,		// 終了
+	&CClearRank::StateEmphasize,	// 強調
 	&CClearRank::StateNone,			// なにもなし
 
 };
@@ -61,6 +63,7 @@ CClearRank::CClearRank(int nPriority) : CObject2D(nPriority)
 	m_state = State::STATE_SCROLL_TEXT;			// 状態
 	m_fMoveTextLen = 0.0f;	// テキストの移動距離
 	m_fMoveRankLen = 0.0f;	// ランクの移動距離
+	m_bFinish = false;		// 終了
 }
 
 //==========================================================================
@@ -212,6 +215,22 @@ void CClearRank::UpdateState()
 }
 
 //==========================================================================
+// スキップ
+//==========================================================================
+void CClearRank::Skip()
+{
+	CInputKeyboard* pKey = CInputKeyboard::GetInstance();
+	CInputGamepad* pPad = CInputGamepad::GetInstance();
+
+	if (pKey->GetTrigger(DIK_RETURN) ||
+		pPad->GetTrigger(CInputGamepad::BUTTON_A, 0))
+	{
+		// モード設定
+		SetState(CClearRank::State::STATE_FINISH);
+	}
+}
+
+//==========================================================================
 // 文字送り
 //==========================================================================
 void CClearRank::StateScrollText()
@@ -236,6 +255,9 @@ void CClearRank::StateScrollText()
 	// テクスチャ座標設定
 	D3DXVECTOR2* pTex = m_pText->GetTex();
 	pTex[1].x = pTex[3].x = (size.x / sizeOrigin.x);
+
+	// スキップ
+	Skip();
 }
 
 //==========================================================================
@@ -250,6 +272,8 @@ void CClearRank::StateSrollVoid()
 		SetState(State::STATE_SCROLL_RANK);
 	}
 
+	// スキップ
+	Skip();
 }
 
 //==========================================================================
@@ -263,7 +287,7 @@ void CClearRank::StateScrollRank()
 	// テキスト移動距離加算
 	m_fMoveRankLen += MOVEVALUE_RANK;
 
-	if (m_fMoveRankLen >= sizeOrigin.x + MOVEVALUE_RANK * (StateTime::SCROLLEND * 60.0f))
+	if (m_fMoveRankLen >= sizeOrigin.x/* + MOVEVALUE_RANK * (StateTime::SCROLLEND * 60.0f)*/)
 	{
 		// 状態遷移
 		SetState(State::STATE_FINISH);
@@ -276,6 +300,9 @@ void CClearRank::StateScrollRank()
 	// テクスチャ座標設定
 	D3DXVECTOR2* pTex = GetTex();
 	pTex[1].x = pTex[3].x = (size.x / sizeOrigin.x);
+
+	// スキップ
+	Skip();
 }
 
 //==========================================================================
@@ -283,6 +310,9 @@ void CClearRank::StateScrollRank()
 //==========================================================================
 void CClearRank::StateFinish()
 {
+	// 終了フラグ
+	m_bFinish = true;
+
 	// サイズ設定
 	SetSize(GetSizeOrigin());
 	m_pText->SetSize(m_pText->GetSizeOrigin());
@@ -293,7 +323,40 @@ void CClearRank::StateFinish()
 	pTex[1].x = pTex[3].x = pTexText[1].x = pTexText[3].x = 1.0f;
 
 	// 状態遷移
-	SetState(State::STATE_NONE);
+	SetState(State::STATE_EMPHASIZE);
+}
+
+//==========================================================================
+// 強調
+//==========================================================================
+void CClearRank::StateEmphasize()
+{
+	// サイズ取得
+	D3DXVECTOR2 size = GetSize(), sizeOrigin = GetSizeOrigin();
+	float ratio = m_fStateTime / StateTime::EMPHASIZE;
+	size.x = sizeOrigin.x + sinf(D3DX_PI * ratio) * (sizeOrigin.x * 0.5f);
+	size.y = sizeOrigin.y + sinf(D3DX_PI * ratio) * (sizeOrigin.y * 0.5f);
+	SetSize(size);
+
+#if 0	// イージング補正
+	if (m_fStateTime <= StateTime::EMPHASIZE * 0.5f)
+	{
+		size.x = UtilFunc::Correction::EaseOutExpo(sizeOrigin.x, sizeOrigin.x * 1.5f, 0.0f, StateTime::EMPHASIZE * 0.5f, m_fStateTime);
+		size.y = UtilFunc::Correction::EaseOutExpo(sizeOrigin.y, sizeOrigin.y * 1.5f, 0.0f, StateTime::EMPHASIZE * 0.5f, m_fStateTime);
+	}
+	else
+	{
+		size.x = UtilFunc::Correction::EaseInExpo(sizeOrigin.x * 1.5f, sizeOrigin.x, StateTime::EMPHASIZE * 0.5f, StateTime::EMPHASIZE, m_fStateTime);
+		size.y = UtilFunc::Correction::EaseInExpo(sizeOrigin.y * 1.5f, sizeOrigin.y, StateTime::EMPHASIZE * 0.5f, StateTime::EMPHASIZE, m_fStateTime);
+	}
+	SetSize(size);
+#endif
+
+	if (m_fStateTime >= StateTime::EMPHASIZE)
+	{
+		// 状態遷移
+		SetState(State::STATE_NONE);
+	}
 }
 
 //==========================================================================

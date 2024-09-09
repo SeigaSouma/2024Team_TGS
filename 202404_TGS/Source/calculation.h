@@ -395,6 +395,173 @@ namespace UtilFunc	// 便利関数
 			return EasingEaseInOut(start, end, ratio);
 		}
 
+
+
+
+		/**
+		@brief	easeInBack関数
+		@details https://easings.net/ja#easeInBack
+		@param	start		[in]	初期値
+		@param	end			[in]	目標値
+		@param	startTime	[in]	開始時間
+		@param	endTime		[in]	終了時間
+		@param	currentTime	[in]	現在の時間
+		@param	c			[in]	バックの強さ
+		@return	補正されたfloat値
+		*/
+		inline float EaseInBack(float start, float end, float startTime, float endTime, float currentTime, float c = 1.70158f)
+		{
+			// 割合
+			float ratio = (currentTime - startTime) / (endTime - startTime);
+			UtilFunc::Transformation::ValueNormalize(ratio, 1.0f, 0.0f);
+
+			float cal = ratio * ratio * ((c + 1) * ratio - c);
+			return start + (end - start) * cal;
+		}
+
+		/**
+		@brief	easeOutBack関数
+		@details https://easings.net/ja#easeInBack
+		@param	start		[in]	初期値
+		@param	end			[in]	目標値
+		@param	startTime	[in]	開始時間
+		@param	endTime		[in]	終了時間
+		@param	currentTime	[in]	現在の時間
+		@param	c			[in]	バックの強さ
+		@return	補正されたfloat値
+		*/
+		inline float EaseOutBack(float start, float end, float startTime, float endTime, float currentTime, float c = 1.70158f)
+		{
+			// 割合
+			float ratio = (currentTime - startTime) / (endTime - startTime);
+			UtilFunc::Transformation::ValueNormalize(ratio, 1.0f, 0.0f);
+
+			ratio -= 1; // t を (t - 1) に変換
+
+			float cal = ratio * ratio * ((c + 1) * ratio + c) + 1;
+			return start + (end - start) * cal;
+		}
+
+		/**
+		@brief	easeInOutBack関数
+		@details https://easings.net/ja#easeInBack
+		@param	start		[in]	初期値
+		@param	end			[in]	目標値
+		@param	startTime	[in]	開始時間
+		@param	endTime		[in]	終了時間
+		@param	currentTime	[in]	現在の時間
+		@param	c			[in]	バックの強さ
+		@return	補正されたfloat値
+		*/
+		inline float EaseInOutBack(float start, float end, float startTime, float endTime, float currentTime, float c = 1.70158f)
+		{
+			c *= 1.525f; // より強調された効果
+
+			// 割合
+			float ratio = (currentTime - startTime) / (endTime - startTime);
+			UtilFunc::Transformation::ValueNormalize(ratio, 1.0f, 0.0f);
+
+			float cal = 0.0f;
+			if (ratio < 0.5f)
+			{
+				cal = 0.5f * (ratio * 2) * (ratio * 2) * ((c + 1) * (ratio * 2) - c);
+			}
+			else 
+			{
+				ratio = ratio * 2 - 2;
+				cal = 0.5f * (ratio * ratio * ((c + 1) * ratio + c) + 2);
+			}
+			return start + (end - start) * cal;
+		}
+
+
+		/**
+		@brief	easeInExpo関数
+		@details https://easings.net/ja#easeInExpo
+		@param	start		[in]	初期値
+		@param	end			[in]	目標値
+		@param	startTime	[in]	開始時間
+		@param	endTime		[in]	終了時間
+		@param	currentTime	[in]	現在の時間
+		@return	補正されたfloat値
+		*/
+		inline float EaseInExpo(float start, float end, float startTime, float endTime, float currentTime)
+		{
+			// 割合
+			float ratio = (currentTime - startTime) / (endTime - startTime);
+			UtilFunc::Transformation::ValueNormalize(ratio, 1.0f, 0.0f);
+
+			// イージング計算
+			float eased = (ratio == 0) ? 0 : pow(2, 10 * (ratio - 1));
+
+			// 線形補間（Lerp）を使用して結果をstartからendの範囲に変換
+			return start + (end - start) * eased;
+		}
+
+		/**
+		@brief	easeOutExpo関数
+		@details https://easings.net/ja#easeOutExpo
+		@param	start		[in]	初期値
+		@param	end			[in]	目標値
+		@param	startTime	[in]	開始時間
+		@param	endTime		[in]	終了時間
+		@param	currentTime	[in]	現在の時間
+		@return	補正されたfloat値
+		*/
+		inline float EaseOutExpo(float start, float end, float startTime, float endTime, float currentTime)
+		{
+			// 割合
+			float ratio = (currentTime - startTime) / (endTime - startTime);
+			UtilFunc::Transformation::ValueNormalize(ratio, 1.0f, 0.0f);
+
+			// イージング計算
+			float eased = (ratio == 1) ? 1 : (1 - pow(2, -10 * ratio));
+
+			// 線形補間（Lerp）を使用して結果をstartからendの範囲に変換
+			return start + (end - start) * eased;
+		}
+
+		/**
+		@brief	easeInOutExpo関数
+		@details https://easings.net/ja#easeInOutExpo
+		@param	start		[in]	初期値
+		@param	end			[in]	目標値
+		@param	startTime	[in]	開始時間
+		@param	endTime		[in]	終了時間
+		@param	currentTime	[in]	現在の時間
+		@return	補正されたfloat値
+		*/
+		inline float EaseInOutExpo(float start, float end, float startTime, float endTime, float currentTime)
+		{
+			// 割合
+			float ratio = (currentTime - startTime) / (endTime - startTime);
+			UtilFunc::Transformation::ValueNormalize(ratio, 1.0f, 0.0f);
+
+			float eased;
+			if (ratio == 0) {
+				eased = 0;
+			}
+			else if (ratio == 1) {
+				eased = 1;
+			}
+			else if (ratio < 0.5f) {
+				eased = pow(2, 20 * ratio - 10) / 2;
+			}
+			else {
+				eased = (2 - pow(2, -20 * ratio + 10)) / 2;
+			}
+
+			// 線形補間（Lerp）を使用して結果をstartからendの範囲に変換
+			return start + (end - start) * eased;
+		}
+
+
+
+
+
+
+
+
 		/**
 		@brief	Catmull-Rom Spline補間(全ての点を通る線形補間)
 		@details https://storage.googleapis.com/zenn-user-upload/cu4a6qn5njn0pskn6pfx6lypic0h

@@ -28,12 +28,14 @@ namespace
 
 	const float SIZE_HEIGHT = 50.0f;	// 縦幅のサイズ
 	const float MOVEVALUE_TEXT = 3.0f;	// テキストの移動量
-	const float MOVEVALUE_TIME = 6.0f;	// タイムの移動量
+	const float MOVEVALUE_TIME = 9.0f;	// タイムの移動量
+	const float DSTANCE_MULTIPLAY = 2.25f;
 }
 
 namespace StateTime
 {
 	const float WAIT = 0.5f;	// 待機
+	const float EMPHASIZE = 1.0f;	// 強調
 	const int SCROLLEND_WAITFRAME = 60;
 }
 
@@ -46,6 +48,7 @@ CTimer_Result::STATE_FUNC CTimer_Result::m_StateFunc[] =
 	&CTimer_Result::StateSrollVoid,		// 空間送り
 	&CTimer_Result::StateScrollTime,	// タイム送り
 	&CTimer_Result::StateFinish,		// 終了
+	&CTimer_Result::StateEmphasize,		// 強調
 	&CTimer_Result::StateNone,			// なにもなし
 
 };
@@ -60,6 +63,7 @@ CTimer_Result::CTimer_Result(int nPriority) : CTimer(nPriority)
 	m_state = State::STATE_SCROLL_TEXT;			// 状態
 	m_fMoveTextLen = 0.0f;	// テキストの移動距離
 	m_fMoveTimeLen = 0.0f;	// タイムの移動距離
+	m_bFinish = false;		// 終了
 }
 
 //==========================================================================
@@ -82,7 +86,7 @@ HRESULT CTimer_Result::Init()
 
 	// 初期化
 	CTimer::Init();
-	m_pos = m_pText->GetPosition() + MyLib::Vector3(m_pText->GetSizeOrigin().x * 2.0f + 150.0f, 0.0f, 0.0f);
+	m_pos = m_pText->GetPosition() + MyLib::Vector3(m_pText->GetSizeOrigin().x * 2.0f + 30.0f, 0.0f, 0.0f);
 
 	// アンカーポイントを左にする
 	for (int i = 0; i < 3; i++)
@@ -162,6 +166,35 @@ void CTimer_Result::Update()
 }
 
 //==========================================================================
+// タイマー反映
+//==========================================================================
+void CTimer_Result::ApplyTimer()
+{
+	// タイマーを分、秒、ミリ秒に変換
+	int time[3];
+	time[2] = static_cast<int>(m_fTime / 60);
+	time[1] = static_cast<int>(m_fTime) % 60;
+	time[0] = static_cast<int>((m_fTime - static_cast<int>(m_fTime)) * 1000);
+	time[0] /= 10;
+
+	for (int i = 0; i < 3; i++)
+	{
+		if (m_pClearTime[i] == nullptr) {
+			continue;
+		}
+
+		// 値の設定
+		m_pClearTime[i]->SetValue(time[i]);
+
+		// 位置設定
+		MyLib::Vector3 pos = m_pos;
+		pos.x += (m_pClearTime[0]->GetNumber()[0]->GetSize().x * DSTANCE_MULTIPLAY) * i;
+		m_pClearTime[i]->SetPosition(pos);
+
+	}
+}
+
+//==========================================================================
 // 状態更新
 //==========================================================================
 void CTimer_Result::UpdateState()
@@ -171,6 +204,22 @@ void CTimer_Result::UpdateState()
 	m_fStateTime += CManager::GetInstance()->GetDeltaTime();
 
 	(this->*(m_StateFunc[m_state]))();
+}
+
+//==========================================================================
+// スキップ
+//==========================================================================
+void CTimer_Result::Skip()
+{
+	CInputKeyboard* pKey = CInputKeyboard::GetInstance();
+	CInputGamepad* pPad = CInputGamepad::GetInstance();
+
+	if (pKey->GetTrigger(DIK_RETURN) ||
+		pPad->GetTrigger(CInputGamepad::BUTTON_A, 0))
+	{
+		// モード設定
+		SetState(CTimer_Result::State::STATE_FINISH);
+	}
 }
 
 //==========================================================================
@@ -198,6 +247,9 @@ void CTimer_Result::StateScrollText()
 	// テクスチャ座標設定
 	D3DXVECTOR2* pTex = m_pText->GetTex();
 	pTex[1].x = pTex[3].x = (size.x / sizeOrigin.x);
+
+	// スキップ
+	Skip();
 }
 
 //==========================================================================
@@ -210,6 +262,9 @@ void CTimer_Result::StateSrollVoid()
 		// 状態遷移
 		SetState(State::STATE_SCROLL_TIME);
 	}
+
+	// スキップ
+	Skip();
 }
 
 //==========================================================================
@@ -225,8 +280,9 @@ void CTimer_Result::StateScrollTime()
 	// テキスト移動距離加算
 	m_fMoveTimeLen += MOVEVALUE_TIME;
 
+
 	// 基点の位置
-	float basePoint = (m_fMoveTimeLen + m_pClearTime[2]->GetNumber()[0]->GetPosition().x);
+	float basePoint = (m_fMoveTimeLen + m_pClearTime[0]->GetNumber()[0]->GetPosition().x);
 
 
 	for (int i = 0; i < 3; i++)
@@ -270,6 +326,9 @@ void CTimer_Result::StateScrollTime()
 		// 状態遷移
 		SetState(State::STATE_FINISH);
 	}
+
+	// スキップ
+	Skip();
 }
 
 //==========================================================================
@@ -277,6 +336,9 @@ void CTimer_Result::StateScrollTime()
 //==========================================================================
 void CTimer_Result::StateFinish()
 {
+	// 終了フラグ
+	m_bFinish = true;
+
 	//=============================
 	// テキスト変更
 	//=============================
@@ -314,7 +376,44 @@ void CTimer_Result::StateFinish()
 
 
 	// 状態遷移
-	SetState(State::STATE_NONE);
+	SetState(State::STATE_EMPHASIZE);
+}
+
+//==========================================================================
+// 強調
+//==========================================================================
+void CTimer_Result::StateEmphasize()
+{
+	D3DXVECTOR2 size, sizeOrigin;
+
+	for (int i = 0; i < 3; i++)
+	{
+		// ナンバー取得
+		CMultiNumber* pMultiNumber = m_pClearTime[i];
+		CNumber** pNumber = pMultiNumber->GetNumber();
+
+		for (int j = 0; j < pMultiNumber->GetDigit(); j++)
+		{
+			// 数字の2Dオブジェクト取得
+			CObject2D* pObj2D = pNumber[j]->GetObject2D();
+			size = pObj2D->GetSize();
+			sizeOrigin = pObj2D->GetSizeOrigin();
+
+			float ratio = m_fStateTime / StateTime::EMPHASIZE;
+			size.x = sizeOrigin.x + sinf(D3DX_PI * ratio) * (sizeOrigin.x * 0.5f);
+			size.y = sizeOrigin.y + sinf(D3DX_PI * ratio) * (sizeOrigin.y * 0.5f);
+
+			pMultiNumber->SetKerning(size.y);
+			pObj2D->SetSize(size);
+		}
+	}
+
+
+	if (m_fStateTime >= StateTime::EMPHASIZE)
+	{
+		// 状態遷移
+		SetState(State::STATE_NONE);
+	}
 }
 
 //==========================================================================

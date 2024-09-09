@@ -46,6 +46,8 @@ public:
 	void SetState(State state);				// 状態設定
 	State GetState() { return m_state; }	// 状態取得
 
+	bool IsFinish() { return m_bFinish; }	// 終了
+
 	//=============================
 	// 静的関数
 	//=============================
@@ -75,6 +77,7 @@ private:
 	CJudge::JUDGE CalRank(CJudge::JUDGE rank, float time);	// ランク計算
 	void CreateText();	// 文字生成
 	void CreateRank();	// ランク生成
+	void Skip();		// スキップ
 
 	//=============================
 	// メンバ変数
@@ -88,6 +91,7 @@ private:
 	CObject2D* m_pText;		// 文字
 	float m_fMoveTextLen;	// テキストの移動距離
 	float m_fMoveRankLen;	// ランクの移動距離
+	bool m_bFinish;			// 終了
 
 };
 
