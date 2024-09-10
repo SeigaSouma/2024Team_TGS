@@ -270,6 +270,9 @@ void CClearRank::StateSrollVoid()
 	{
 		// 状態遷移
 		SetState(State::STATE_SCROLL_RANK);
+
+		// サウンド再生
+		CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_WRITING_FINISH);
 	}
 
 	// スキップ

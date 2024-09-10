@@ -97,7 +97,8 @@ void CResult::Uninit()
 //==========================================================================
 void CResult::Update()
 {
-	
+	// シーンの更新処理
+	CScene::Update();
 
 	// キーボード情報取得
 	CInputKeyboard *pInputKeyboard = CInputKeyboard::GetInstance();

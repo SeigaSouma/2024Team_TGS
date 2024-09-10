@@ -75,6 +75,7 @@ CToatalRank::CToatalRank(int nPriority) : CObject2D(nPriority)
 	m_fMoveTextLen = 0.0f;	// テキストの移動距離
 	m_fMoveRankLen = 0.0f;	// ランクの移動距離
 	m_bFinish = false;		// 終了
+	m_bSoundFinish = false;	// サウンド終了
 }
 
 //==========================================================================
@@ -297,6 +298,16 @@ void CToatalRank::StateScrollRank()
 	/*m_fMoveRankLen += MOVEVALUE_TEXT;
 	m_fMoveRankLen = UtilFunc::Transformation::Clamp(m_fMoveRankLen, 0.0f, sizeOrigin.x);*/
 	m_fMoveRankLen = UtilFunc::Correction::EaseInExpo(0.0f, sizeOrigin.x, 0.0f, 0.9f, m_fStateTime);
+
+	if (m_fStateTime >= 0.4f &&
+		!m_bSoundFinish)
+	{
+		// サウンド再生終了
+		m_bSoundFinish = true;
+
+		// サウンド再生
+		CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_WRITING_FINISH);
+	}
 
 	if (m_fMoveRankLen >= sizeOrigin.x)
 	{

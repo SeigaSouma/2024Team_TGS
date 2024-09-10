@@ -12,6 +12,7 @@
 #include "clearrank.h"
 #include "toatalrank.h"
 #include "scroll.h"
+#include "sound.h"
 
 //==========================================================================
 // 静的メンバ変数宣言
@@ -152,6 +153,9 @@ void CResultManager::Update()
 		!m_pClearRank->IsFinish())
 	{// 巻き物開ききった後
 		m_pClearRank->SetState(CClearRank::State::STATE_SCROLL_TEXT);
+
+		// サウンド再生
+		CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_WRITING);
 	}
 
 	if (m_pClearRank->GetState() == CClearRank::State::STATE_FINISH &&
@@ -160,6 +164,9 @@ void CResultManager::Update()
 	{// クリアランク終了時
 
 		m_pTimer->CTimer_Result::SetState(CTimer_Result::State::STATE_SCROLL_TEXT);
+
+		// サウンド再生
+		CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_WRITING);
 	}
 
 	if (m_pTimer->GetState() == CTimer_Result::State::STATE_FINISH &&
@@ -168,6 +175,9 @@ void CResultManager::Update()
 	{// クリアタイム終了時
 
 		m_pToatalRank->SetState(CToatalRank::State::STATE_SCROLL_TEXT);
+
+		// サウンド再生
+		CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_WRITING);
 	}
 
 

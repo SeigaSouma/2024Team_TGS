@@ -52,6 +52,7 @@ CSound::SOUNDINFO CSound::m_aSoundInfo[LABEL_MAX] =
 	{ TYPE_SE,"data/SE/inthewater1.wav", 0 },
 	{ TYPE_SE,"data/SE/inthewater2.wav", 0 },
 	{ TYPE_SE,"data/SE/writing.wav", 0 },
+	{ TYPE_SE,"data/SE/writeFinish.wav", 0 },
 	{ TYPE_SE,"data/SE/cluckbubbles.wav", 0 },
 	{ TYPE_SE,"data/SE/open.wav", 0 },
 	{ TYPE_SE,"data/SE/dive.wav", 0 },

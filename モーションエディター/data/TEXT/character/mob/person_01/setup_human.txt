@@ -152,7 +152,7 @@ COLLIDER_FILENAME = data/TEXT/character/mob/person_01/sphere_collider.json
 #------------------------------------------------------------------------------
 # ÉÇÅ[ÉVÉáÉìêî
 #------------------------------------------------------------------------------
-NUM_MOTION = 9
+NUM_MOTION = 10
 
 #------------------------------------------------------------------------------
 # ÉÇÉfÉãÉtÉ@ÉCÉãñº
@@ -166,6 +166,7 @@ MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_return.txt			# [1]ï‡Ç
 MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_drown.txt			# [1]ï‡Ç´
 MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_dive.txt			# [1]ï‡Ç´
 MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_yabai.txt			# [1]ï‡Ç´
+MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_result.txt			# [1]ï‡Ç´
 
 
 END_SCRIPT		# Ç±ÇÃçsÇÕê‚ëŒè¡Ç≥Ç»Ç¢Ç±Ç∆ÅI
