@@ -329,6 +329,80 @@ void CGameManager::Update()
 		m_pSpawn_Leaf->Update(deltaTime);
 	}
 
+	static float m_fMoveLength = 0.0f;
+	static bool autoMove = false;
+
+	// 移動距離加算
+
+	ImGui::DragFloat("m_fMoveLength[%.2f]", &m_fMoveLength, 10.0f, 0.0f);
+	ImGui::Checkbox("autoMove", &autoMove);
+
+	if (CInputKeyboard::GetInstance()->GetPress(DIK_RIGHT) ||
+		autoMove)
+	{
+		m_fMoveLength += 10.0f;
+	}
+
+	if (CInputKeyboard::GetInstance()->GetPress(DIK_LEFT))
+	{
+		m_fMoveLength -= 10.0f;
+
+		if (m_fMoveLength <= 0.0f)
+		{
+			m_fMoveLength = 0.0f;
+		}
+	}
+
+
+	static std::vector<MyLib::Vector3> vecccpossss =
+	{
+		{-500.0f, 500.0f, 500.0f},
+		{0.0f, 500.0f, 500.0f},
+		{500.0f, 500.0f, 500.0f},
+		{500.0f, 500.0f, -500.0f},
+	};
+
+
+	// カメラ情報
+	CCamera* pCamera = CManager::GetInstance()->GetCamera();
+
+
+	CInputMouse* pMouse = CInputMouse::GetInstance();
+	if (!CInputKeyboard::GetInstance()->GetPress(DIK_LALT) &&
+		pMouse->GetTrigger(CInputMouse::BUTTON::BUTTON_LEFT))
+	{
+
+		MyLib::Vector3 crosspos = UtilFunc::Transformation::CalcScreenToXZ(
+			pMouse->GetPosition(),
+			D3DXVECTOR2(SCREEN_WIDTH, SCREEN_HEIGHT),
+			pCamera->GetMtxView(),
+			pCamera->GetMtxProjection());
+		
+		crosspos.y = 500.0f;
+
+		vecccpossss.push_back(crosspos);
+	}
+
+
+
+	MyLib::Vector3 ppppp = MySpline::GetSplinePosition(vecccpossss, m_fMoveLength);
+
+	for (const auto& v : vecccpossss)
+	{
+		CEffect3D::Create(
+			v,
+			MyLib::Vector3(0.0f, 0.0f, 0.0f),
+			D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f),
+			30.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+	}
+
+	CEffect3D::Create(
+		ppppp,
+		MyLib::Vector3(0.0f, 0.0f, 0.0f),
+		D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f),
+		40.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+
+
 	// テキストの描画
 	CManager::GetInstance()->GetDebugProc()->Print(
 		"---------------- ゲームマネージャ情報 ----------------\n"
@@ -534,7 +608,7 @@ void CGameManager::SceneWaitAirPush()
 	}
 	else if (pTimer != nullptr)
 	{
-		m_nGuideTimer++;
+		//m_nGuideTimer++;
 
 		if (m_nGuideTimer >= GUIDE_NUM)
 		{
@@ -615,7 +689,7 @@ void CGameManager::TurnAway()
 
 	// 移動方向から角度算出
 	float moveLength = pPlayer->GetMoveLength();
-	MyLib::Vector3 posDest = MySpline::GetSplinePosition_NonLoop(CGame::GetInstance()->GetCourse()->GetVecPosition(), moveLength + 1.0f);
+	MyLib::Vector3 posDest = MySpline::GetSplinePosition/*_NonLoop*/(CGame::GetInstance()->GetCourse()->GetVecPosition(), moveLength + 1.0f);
 	
 	float angleXZ = pPlayer->GetPosition().AngleXZ(posDest);
 	angleXZ += (D3DX_PI * 0.5f);

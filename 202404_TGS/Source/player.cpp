@@ -555,7 +555,7 @@ void CPlayer::Controll()
 
 	// 移動距離加算
 	m_fMoveLength += fabsf(move.x) + fabsf(move.z);
-	newPosition = MySpline::GetSplinePosition_NonLoop(CGame::GetInstance()->GetCourse()->GetVecPosition(), m_fMoveLength);
+	newPosition = MySpline::GetSplinePosition/*_NonLoop*/(CGame::GetInstance()->GetCourse()->GetVecPosition(), m_fMoveLength);
 	newPosition.y += pos.y;
 
 	CManager::GetInstance()->GetDebugProc()->Print("プレイヤー移動距離[ %f ]\n", m_fMoveLength);
