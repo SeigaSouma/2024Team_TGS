@@ -25,6 +25,7 @@ public:
 	{
 		STATE_FALL = 0,		// 落下
 		STATE_WAIT,			// 待機
+		STATE_FADEIN,		// フェードイン
 		STATE_FADEOUT,		// フェードアウト
 		STATE_MAX
 	};
@@ -68,6 +69,7 @@ private:
 	void UpdateState();		// 状態更新
 	void StateFall();		// 落下
 	void StateWait();		// 待機
+	void StateFadeIn();		// フェードイン
 	void StateFadeOut();	// フェードアウト
 
 	// その他関数
@@ -84,6 +86,7 @@ private:
 	MyLib::Vector3 m_rotStart;	// 開始時の向き
 	MyLib::Vector3 m_rotDest;	// 目標の向き
 	float m_fFallWidth;			// 落下幅
+	float m_fWidthMoveTimer;	// 幅移動のタイマー
 	float m_fRotateTimer;		// 回転までの時間
 	float m_fRotateInterval;	// 回転までの間隔
 };

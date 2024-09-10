@@ -25,6 +25,7 @@ namespace
 namespace StateTime	// 状態別時間
 {
 	const float WAIT = 0.2f;	// 待機
+	const float FADEIN = 0.5f;	// フェードイン
 	const float FADEOUT = 0.3f;	// フェードアウト
 }
 
@@ -35,6 +36,7 @@ CLeaf::STATE_FUNC CLeaf::m_StateFunc[] =
 {
 	&CLeaf::StateFall,		// 落下
 	&CLeaf::StateWait,		// 待機
+	&CLeaf::StateFadeIn,	// フェードイン
 	&CLeaf::StateFadeOut,	// フェードアウト
 };
 
@@ -49,6 +51,7 @@ CLeaf::CLeaf(int nPriority, const LAYER layer) : CObject3D(nPriority, layer)
 	m_rotStart = MyLib::Vector3();	// 開始時の向き
 	m_rotDest = MyLib::Vector3();	// 目標の向き
 	m_fFallWidth = 0.0f;			// 落下幅
+	m_fWidthMoveTimer = 0.0f;		// 幅移動のタイマー
 	m_fRotateTimer = 0.0f;			// 回転までの時間
 	m_fRotateInterval = 0.0f;		// 回転までの間隔
 }
@@ -140,6 +143,7 @@ HRESULT CLeaf::Init()
 	// 状態
 	m_fRotateInterval = UtilFunc::Transformation::Random(60, 90) * 0.01f;
 	m_fFallWidth = static_cast<float>(UtilFunc::Transformation::Random(80, 150));	// 落下幅
+	m_state = State::STATE_FADEIN;	// 状態
 
 	return S_OK;
 }
@@ -207,32 +211,29 @@ void CLeaf::StateFall()
 	// 回転までの時間加算
 	m_fRotateTimer += CManager::GetInstance()->GetDeltaTime();
 
+	// 幅移動のタイマー
+	m_fWidthMoveTimer += CManager::GetInstance()->GetDeltaTime();
+
 
 	// 移動
-	float ratio = sinf(D3DX_PI * (1.0f * (m_fRotateTimer / m_fRotateInterval)));
+	float ratio = sinf(D3DX_PI * (1.0f * (m_fWidthMoveTimer / m_fRotateInterval)));
 	float len = ratio * m_fFallWidth;
 	pos.x = posOrigin.x + sinf(rot.y) * len;
 	pos.z = posOrigin.z + cosf(rot.y) * len;
 
 
 	// 回転線形補間
-	rot = UtilFunc::Correction::EasingEaseOut(m_rotStart, m_rotDest, 0.0f, m_fRotateInterval, m_fStateTimer);
+	rot = UtilFunc::Correction::EasingEaseOut(m_rotStart, m_rotDest, 0.0f, m_fRotateInterval, m_fRotateTimer);
 	UtilFunc::Transformation::RotNormalize(rot);
 	SetRotation(rot);
 
-	/*ImGui::Text("ratio:%.2f", ratio);
-	ImGui::Text("len:%.2f", len);
-	ImGui::Text("rot:x%.2f, %.2f, %.2f", rot.x, rot.y, rot.z);
-	ImGui::Text("m_rotDest:x%.2f, %.2f, %.2f", m_rotDest.x, m_rotDest.y, m_rotDest.z);*/
-
 	// 落下
 	pos.y -= UtilFunc::Transformation::Random(150, 190) * 0.01f;
-	//pos.y -= UtilFunc::Transformation::Random(80, 120) * 0.01f;
 
 	// 時間経過、新しい目標向き算出
-	if (m_fStateTimer >= m_fRotateInterval)
+	if (m_fRotateTimer >= m_fRotateInterval)
 	{
-		m_fStateTimer = 0.0f;
+		m_fRotateTimer = 0.0f;
 
 		// 目標の向き
 		CalDestRotation();
@@ -275,6 +276,30 @@ void CLeaf::StateWait()
 		m_fStateTimer = 0.0f;
 
 		SetOriginPosition(pos);
+	}
+}
+
+//==========================================================================
+// フェードイン
+//==========================================================================
+void CLeaf::StateFadeIn()
+{
+	// 不透明度設定
+	float alpha = m_fStateTimer / StateTime::FADEIN;
+	SetAlpha(alpha);
+
+	// 降下は行う
+	StateFall();
+
+	if (m_fStateTimer >= StateTime::FADEIN)
+	{// 時間経過
+
+		// 不透明度設定
+		SetAlpha(1.0f);
+
+		// 状態
+		m_state = State::STATE_FALL;
+		m_fStateTimer = 0.0f;
 	}
 }
 

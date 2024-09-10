@@ -814,9 +814,31 @@ void CSpawn_FlowLeaf::TriggerSpawn()
 		CLeaf::Type::TYPE_FLOW));
 
 	pLeaf->SetMoveLen(playerMoveLen - 1000.0f);
-
+	pLeaf->SetOriginPosition(pLeaf->GetPosition());
 }
 
+
+//==========================================================================
+// 降る葉の更新処理
+//==========================================================================
+void CSpawn_Leaf::Update(float deltaTime)
+{
+	// プレイヤー取得
+	CPlayer* pPlayer = CPlayer::GetListObj().GetData(0);
+	MyLib::Vector3 playerMove = pPlayer->GetMove();	// 移動量取得
+	float fVelocity = pPlayer->GetVelocity();		// 移動速度取得
+
+	// 移動速度割合
+	float ratio = playerMove.x / (fVelocity);
+
+	ImGui::Text("ratio[%.2f]", ratio);
+
+	// 移動速度に応じて生成間隔短くする
+	m_fSpawnTimer += deltaTime * ratio;
+	
+	// 親の更新処理
+	CSpawnEnvironment::Update(deltaTime);
+}
 
 //==========================================================================
 // 降る葉の生成時のトリガー
@@ -831,13 +853,16 @@ void CSpawn_Leaf::TriggerSpawn()
 	CPlayer* pPlayer = CPlayer::GetListObj().GetData(0);
 	MyLib::Vector3 playerPos = pPlayer->GetPosition();
 
+	// カメラ取得
+	CCamera* pCamera = CManager::GetInstance()->GetCamera();
+
 	// 基点の位置
-	MyLib::Vector3 basepos = MyLib::Vector3(playerPos.x, 0.0f, playerPos.z) + MyLib::Vector3(0.0f, 900.0f, 0.0f);
+	MyLib::Vector3 basepos = MyLib::Vector3(playerPos.x, 0.0f, playerPos.z) + MyLib::Vector3(0.0f, 700.0f + pCamera->GetPositionR().y, 0.0f);
 
 	// 降る葉生成
 	CLeaf* pLeaf = CLeaf::Create(
 		basepos + MyLib::Vector3(
-			UtilFunc::Transformation::Random(-15, 15) * 100.0f + UtilFunc::Transformation::Random(-90, 90),
+			UtilFunc::Transformation::Random(-5, 20) * 100.0f + UtilFunc::Transformation::Random(-90, 90),
 			UtilFunc::Transformation::Random(0, 3) * 100.0f,
 			UtilFunc::Transformation::Random(-5, 5) * 100.0f + UtilFunc::Transformation::Random(-90, 90)),
 		CLeaf::Type::TYPE_FALL);

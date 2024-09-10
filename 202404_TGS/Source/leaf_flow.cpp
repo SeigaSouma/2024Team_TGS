@@ -79,6 +79,7 @@ HRESULT CLeafFlow::Init()
 //==========================================================================
 void CLeafFlow::Update()
 {
+	// ó‘ÔXV
 	UpdateState();
 	if (IsDeath()) return;
 
@@ -146,7 +147,7 @@ void CLeafFlow::StateFlow()
 	}
 	SetPosition(pos);
 
-	if (pos.x >= 20000.0f)
+	if (pos.x >= GetOriginPosition().x + 20000.0f)
 	{// ŽžŠÔŒo‰ß
 
 		m_state = State::STATE_FADEOUT;

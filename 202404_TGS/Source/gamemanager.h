@@ -235,6 +235,9 @@ public:
 	CSpawn_Leaf(float timer, float interval) : CSpawnEnvironment(timer, interval) {}
 	~CSpawn_Leaf() {}
 
+	// XVˆ—
+	virtual void Update(float deltaTime) override;
+	
 protected:
 
 	//=============================
