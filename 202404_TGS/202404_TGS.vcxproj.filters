@@ -755,6 +755,9 @@
     <ClCompile Include="Source\tree.cpp">
       <Filter>map</Filter>
     </ClCompile>
+    <ClCompile Include="Source\title_select.cpp">
+      <Filter>mode\title</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ballast.h">
@@ -1365,6 +1368,9 @@
     </ClInclude>
     <ClInclude Include="Source\tree.h">
       <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\title_select.h">
+      <Filter>mode\title</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

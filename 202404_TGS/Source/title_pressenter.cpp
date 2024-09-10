@@ -127,6 +127,8 @@ void CTitle_PressEnter::StateNone()
 	CInputKeyboard* pInputKeyboard = CInputKeyboard::GetInstance();
 	CInputGamepad* pInputGamepad = CInputGamepad::GetInstance();
 
+	SetEnableDisp(true);
+
 	if (pInputGamepad->GetTrigger(CInputGamepad::BUTTON::BUTTON_A, 0) ||
 		pInputGamepad->GetTrigger(CInputGamepad::BUTTON::BUTTON_B, 0) ||
 		pInputGamepad->GetTrigger(CInputGamepad::BUTTON::BUTTON_X, 0) ||
@@ -137,7 +139,9 @@ void CTitle_PressEnter::StateNone()
 		pInputKeyboard->GetTrigger(DIK_BACKSPACE)
 		)
 	{
-		CManager::GetInstance()->GetFade()->SetFade(CScene::MODE::MODE_GAME);
+		SetState(CTitle_PressEnter::STATE_NOACTIVE);
+		SetEnableDisp(false);
+		//CManager::GetInstance()->GetFade()->SetFade(CScene::MODE::MODE_GAME);
 	}
 }
 
