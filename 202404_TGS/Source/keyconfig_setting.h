@@ -31,6 +31,18 @@ private:
 		KEYINFO() { s_p2D = nullptr; s_pKeyDisp = nullptr; s_p2DFront = nullptr; }
 	};
 
+	// 切り替え情報
+	struct CHENGEINFO
+	{
+		CObject2D* s_p2D;				// 2Dポリゴン
+		CObject2D* s_p2DFront;			// 表面
+		CControlKeyDisp* s_pKeyDispOK;	// キーコンフィグ表示
+		CControlKeyDisp* s_pKeyDispNO;	// キーコンフィグ表示
+
+		// コンストラクタ
+		CHENGEINFO() { s_p2D = nullptr; s_pKeyDispOK = nullptr; s_pKeyDispNO = nullptr; s_p2DFront = nullptr; }
+	};
+
 public:
 
 	// コンストラクタ
@@ -57,7 +69,8 @@ private:
 	int m_SelectKey;	// 選択中
 	bool m_bNowChange;	// 変更中か否か
 	bool m_bDeath;		// 死亡フラグ
-	KEYINFO m_apKeyConfig[INGAME::ACT_MAX];
+	KEYINFO m_aKeyConfig[INGAME::ACT_MAX];
+	CHENGEINFO m_checkconfig;
 };
 
 #endif
