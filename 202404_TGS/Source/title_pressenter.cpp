@@ -11,6 +11,7 @@
 #include "calculation.h"
 #include "input.h"
 #include "fade.h"
+#include "title_select.h"
 
 //==========================================================================
 // 定数定義
@@ -40,6 +41,7 @@ CTitle_PressEnter::CTitle_PressEnter(float fadetime, int nPriority) : m_fFadeOut
 	// 値のクリア
 	m_state = STATE::STATE_NONE;		// 状態
 	m_fStateTime = 0.0f;			// 状態カウンター
+	m_pSelect = nullptr;
 }
 
 //==========================================================================
@@ -94,7 +96,24 @@ HRESULT CTitle_PressEnter::Init()
 	// 状態カウンター
 	m_fStateTime = m_fFadeOutTime;
 	m_state = STATE_FADEIN;
+
+	m_pSelect = CTitle_Select::Create(m_fFadeOutTime);
+	m_pSelect->SetDraw(false);
 	return S_OK;
+}
+
+//==========================================================================
+// 終了処理
+//==========================================================================
+void CTitle_PressEnter::Uninit()
+{
+	if (m_pSelect != nullptr)
+	{
+		m_pSelect->Uninit();
+		m_pSelect = nullptr;
+	}
+
+	CObject2D::Uninit();
 }
 
 //==========================================================================
@@ -128,6 +147,7 @@ void CTitle_PressEnter::StateNone()
 	CInputGamepad* pInputGamepad = CInputGamepad::GetInstance();
 
 	SetEnableDisp(true);
+	m_pSelect->SetDraw(false);
 
 	if (pInputGamepad->GetTrigger(CInputGamepad::BUTTON::BUTTON_A, 0) ||
 		pInputGamepad->GetTrigger(CInputGamepad::BUTTON::BUTTON_B, 0) ||
@@ -139,6 +159,8 @@ void CTitle_PressEnter::StateNone()
 		pInputKeyboard->GetTrigger(DIK_BACKSPACE)
 		)
 	{
+		m_pSelect->SetDraw(true);
+		m_pSelect->SetState(CTitle_Select::STATE_NONE);
 		SetState(CTitle_PressEnter::STATE_NOACTIVE);
 		SetEnableDisp(false);
 		//CManager::GetInstance()->GetFade()->SetFade(CScene::MODE::MODE_GAME);
@@ -191,7 +213,14 @@ void CTitle_PressEnter::StateTutorial_FadeOut()
 //==========================================================================
 void CTitle_PressEnter::StateNoActive()
 {
-	
+	SetEnableDisp(false);
+
+	m_pSelect->Update();
+
+	if (m_pSelect->GetState() == CTitle_Select::STATE_NOACTIVE)
+	{
+		SetState(STATE::STATE_NONE);
+	}
 }
 
 //==========================================================================

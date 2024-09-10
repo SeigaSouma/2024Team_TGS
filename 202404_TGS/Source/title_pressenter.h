@@ -10,6 +10,8 @@
 
 #include "object2D.h"
 
+class CTitle_Select;
+
 //==========================================================================
 // クラス定義
 //==========================================================================
@@ -35,10 +37,12 @@ public:
 	
 	//  オーバーライドされた関数
 	HRESULT Init() override;
+	void Uninit() override;
 	void Update() override;
 
 	void SetState(STATE state);
 	STATE GetState() { return m_state; }
+	CTitle_Select* GetSelect() { return m_pSelect; }
 
 	static CTitle_PressEnter* Create(float fadetime);	// 生成処理
 
@@ -64,6 +68,7 @@ private:
 	STATE m_state;		// 状態
 	float m_fStateTime;	// 状態カウンター
 	const float m_fFadeOutTime;	// フェードにかかる時間
+	CTitle_Select* m_pSelect;
 };
 
 #endif

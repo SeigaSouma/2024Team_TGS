@@ -17,6 +17,7 @@
 #include "title_pressenter.h"
 #include "camera.h"
 #include "keyconfig_setting.h"
+#include "title_select.h"
 
 //==========================================================================
 // 定数定義
@@ -236,13 +237,20 @@ void CTitle::SceneFadeShouldTutorial()
 
 }
 
+
 //==========================================================================
 // キーコンフィグ確認
 //==========================================================================
 void CTitle::SceneFadeKeyConfigSetting()
 {
+	if (m_pConfigSetting == nullptr)
+	{
+		m_pConfigSetting = CKeyConfigSetting::Create();
+	}
+
 	// 入力情報取得
-	CInputGamepad* pInputGamepad = CInputGamepad::GetInstance();
+	CKeyConfig* pInputGamepad = CKeyConfigManager::GetInstance()->GetConfig(CKeyConfigManager::CONTROL_INPAD);
+	CKeyConfig* pInputKey = CKeyConfigManager::GetInstance()->GetConfig(CKeyConfigManager::CONTROL_INKEY);
 
 	// 入力中か確認
 	if (m_pConfigSetting != nullptr)
@@ -256,10 +264,10 @@ void CTitle::SceneFadeKeyConfigSetting()
 	}
 
 	// 入力があればキーコンフィグ設定を行う
-	if (pInputGamepad->GetTrigger(CInputGamepad::BUTTON::BUTTON_BACK, 0))
+	if (pInputGamepad->GetTrigger(INGAME::ACT_BACK) || pInputKey->GetTrigger(INGAME::ACT_BACK))
 	{
 		m_SceneType = SCENETYPE::SCENETYPE_NONE;
-		m_pPressEnter->SetState(CTitle_PressEnter::STATE_NONE);
+		m_pPressEnter->GetSelect()->SetState(CTitle_Select::STATE::STATE_NONE);
 
 		if (m_pConfigSetting != nullptr)
 		{

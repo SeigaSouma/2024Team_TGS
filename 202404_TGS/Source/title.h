@@ -54,6 +54,7 @@ public:
 
 	// その他
 	CTitle_PressEnter* GetTitlePressEnter() { return m_pPressEnter; }
+	CKeyConfigSetting* GetSetting() { return m_pConfigSetting; }
 
 	// 静的関数
 	static CTitle* GetInstance();	// インスタンス取得
