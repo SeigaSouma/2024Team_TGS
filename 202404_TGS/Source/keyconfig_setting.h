@@ -11,6 +11,7 @@
 
 // 前方宣言
 class CControlKeyDisp;
+class CScroll;
 
 //==========================================================================
 // クラス定義
@@ -63,14 +64,18 @@ private:
 
 	// メンバ関数
 	void Chenge();
+	void SetAlpha();
 
 	// メンバ変数
-	float m_AlphaSin;
+	float m_Alpha;
+	float m_fTime;
 	int m_SelectKey;	// 選択中
 	bool m_bNowChange;	// 変更中か否か
 	bool m_bDeath;		// 死亡フラグ
-	KEYINFO m_aKeyConfig[INGAME::ACT_MAX];
-	CHENGEINFO m_checkconfig;
+	KEYINFO m_aKeyConfig[INGAME::ACT_MAX];	// キーコンフィグ用
+	CHENGEINFO m_checkconfig;	// 決定戻る変更用
+	CObject2D* m_pTitle2D;		// 説明用ポリゴン
+	CScroll* m_pScroll;
 };
 
 #endif

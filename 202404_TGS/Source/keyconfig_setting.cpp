@@ -11,6 +11,7 @@
 #include "controlkeydisp.h"
 #include "input_gamepad.h"
 #include "texture.h"
+#include "scroll.h"
 
 //==========================================================================
 // 定数定義
@@ -21,8 +22,9 @@ namespace
 	const float DOWN_POSY = 100.0f;
 	const float KEY_SIZE = 50.0f;
 	const float FONT_WIDTH = 150.0f;
-	const D3DXCOLOR FRONT_COL = D3DXCOLOR(0.3f, 0.3f, 0.3f, 0.5f);
-	const float ADD_ALPHA = (1.0f / 120.0f);
+	const float TITLE_HEIGHT = KEY_SIZE * 1.3f;
+	const D3DXCOLOR FRONT_COL = D3DXCOLOR(0.2f, 0.2f, 0.2f, 0.0f);
+	const float ADD_ALPHA = (1.0f / 20.0f);
 }
 
 // ファイル名
@@ -38,6 +40,8 @@ namespace FILENAME
 		"data\\TEXTURE\\ui_setting\\retry.png",
 		"data\\TEXTURE\\ui_setting\\pause.png",
 	};
+
+	const std::string FRONT = "data\\TEXTURE\\ui_setting\\front.png";
 }
 
 //==========================================================================
@@ -60,10 +64,12 @@ CKeyConfigSetting::CKeyConfigSetting()
 	m_checkconfig.s_pKeyDispOK = nullptr;
 	m_checkconfig.s_pKeyDispNO = nullptr;
 	m_checkconfig.s_p2DFront = nullptr;
-
+	m_pTitle2D = nullptr;
+	m_pScroll = nullptr;
 	m_bNowChange = false;
 	m_SelectKey = 0;
-	m_AlphaSin = 0.0f;
+	m_Alpha = 0.0f;
+	m_fTime = 0.0f;
 }
 
 //==========================================================================
@@ -88,6 +94,27 @@ HRESULT CKeyConfigSetting::Init()
 {
 	CKeyConfig* pConfigPad = CKeyConfigManager::GetInstance()->GetConfig(CKeyConfigManager::CONTROL_INPAD);
 	CTexture* pTexture = CTexture::GetInstance();
+	D3DXCOLOR col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f);
+
+	// 背景
+	{
+		MyLib::Vector3 pos = DEFAULT_POS;
+		pos.y = SCREEN_HEIGHT * 0.5f;
+		m_pScroll = CScroll::Create(pos, 0.05f, DOWN_POSY * INGAME::ACTION::ACT_MAX * 0.6f, FONT_WIDTH * 5.5f, false, false, 8);
+	}
+
+	// 説明文字生成
+	{
+		MyLib::Vector3 pos = DEFAULT_POS;
+		pos.y += DOWN_POSY;
+		m_pTitle2D = CObject2D::Create(11);
+		m_pTitle2D->SetType(CObject::TYPE_OBJECT2D);
+		m_pTitle2D->SetPosition(pos);
+		m_pTitle2D->BindTexture(pTexture->Regist("data\\TEXTURE\\ui_setting\\setting.png"));
+		D3DXVECTOR2 texture = pTexture->GetImageSize(m_pTitle2D->GetIdxTexture());
+		m_pTitle2D->SetSize(UtilFunc::Transformation::AdjustSizeByHeight(texture, TITLE_HEIGHT));
+		m_pTitle2D->SetColor(col);
+	}
 
 	// ポリゴンを生成する
 	for (int i = 0; i < INGAME::ACTION::ACT_MAX; i++)
@@ -97,6 +124,7 @@ HRESULT CKeyConfigSetting::Init()
 		pos.y += i * DOWN_POSY;
 		pos.x += FONT_WIDTH;
 		m_aKeyConfig[i].s_pKeyDisp = CControlKeyDisp::Create(pos, 0.0f, KEY_SIZE, KEY_SIZE, pConfigPad->GetKey(i));
+		m_aKeyConfig[i].s_pKeyDisp->SetColor(col);
 
 		// 文字を生成
 		pos.x = DEFAULT_POS.x - FONT_WIDTH;
@@ -106,13 +134,15 @@ HRESULT CKeyConfigSetting::Init()
 		m_aKeyConfig[i].s_p2D->BindTexture(pTexture->Regist(FILENAME::CONFIG[i]));
 		D3DXVECTOR2 texture = pTexture->GetImageSize(m_aKeyConfig[i].s_p2D->GetIdxTexture());
 		m_aKeyConfig[i].s_p2D->SetSize(UtilFunc::Transformation::AdjustSizeByHeight(texture, KEY_SIZE));
+		m_aKeyConfig[i].s_p2D->SetColor(col);
 
 		// 暗くする用のポリゴン生成
 		pos.x = DEFAULT_POS.x;
-		m_aKeyConfig[i].s_p2DFront = CObject2D::Create(11);
+		m_aKeyConfig[i].s_p2DFront = CObject2D::Create(10);
 		m_aKeyConfig[i].s_p2DFront->SetPosition(pos);
 		m_aKeyConfig[i].s_p2DFront->SetSize(D3DXVECTOR2(KEY_SIZE * 6, KEY_SIZE));
 		m_aKeyConfig[i].s_p2DFront->SetColor(FRONT_COL);
+		m_aKeyConfig[i].s_p2DFront->BindTexture(pTexture->Regist(FILENAME::FRONT));
 
 		if (i <= INGAME::ACT_BACK)
 		{
@@ -135,6 +165,7 @@ HRESULT CKeyConfigSetting::Init()
 		m_checkconfig.s_p2D->BindTexture(pTexture->Regist("data\\TEXTURE\\ui_setting\\change.png"));
 		D3DXVECTOR2 texture = pTexture->GetImageSize(m_checkconfig.s_p2D->GetIdxTexture());
 		m_checkconfig.s_p2D->SetSize(UtilFunc::Transformation::AdjustSizeByHeight(texture, KEY_SIZE * 0.8f));
+		m_checkconfig.s_p2D->SetColor(col);
 
 		// キーコンフィグを生成
 		float size = KEY_SIZE * 0.75f;
@@ -142,16 +173,19 @@ HRESULT CKeyConfigSetting::Init()
 		m_checkconfig.s_pKeyDispOK = CControlKeyDisp::Create(pos, 0.0f, size, size,
 			pConfigPad->GetKey(INGAME::ACT_OK));
 		pos.x += (size * 3);
+		m_checkconfig.s_pKeyDispOK->SetColor(col);
 		m_checkconfig.s_pKeyDispNO = CControlKeyDisp::Create(pos, 0.0f, size, size,
 			pConfigPad->GetKey(INGAME::ACT_BACK));
+		m_checkconfig.s_pKeyDispNO->SetColor(col);
 
 		// 暗くする用のポリゴン生成
 		pos = DEFAULT_POS;
 		pos.y += DOWN_POSY * INGAME::ACTION::ACT_MAX;
-		m_checkconfig.s_p2DFront = CObject2D::Create(11);
+		m_checkconfig.s_p2DFront = CObject2D::Create(10);
 		m_checkconfig.s_p2DFront->SetPosition(pos);
 		m_checkconfig.s_p2DFront->SetSize(D3DXVECTOR2(KEY_SIZE * 6, KEY_SIZE));
 		m_checkconfig.s_p2DFront->SetColor(FRONT_COL);
+		m_checkconfig.s_p2DFront->BindTexture(pTexture->Regist(FILENAME::FRONT));
 	}
 
 	m_SelectKey = INGAME::ACT_BACK + 1;
@@ -217,6 +251,20 @@ void CKeyConfigSetting::Uninit()
 		}
 	}
 
+	// タイトル
+	if (m_pTitle2D != nullptr)
+	{
+		m_pTitle2D->Uninit();
+		m_pTitle2D = nullptr;
+	}
+
+	// 背景
+	if (m_pScroll != nullptr)
+	{
+		m_pScroll->SetState(CScroll::STATE::STATE_CLOSE);
+		m_pScroll = nullptr;
+	}
+
 	delete this;
 }
 
@@ -227,6 +275,17 @@ void CKeyConfigSetting::Update()
 {
 	CInputGamepad* pPad = CInputGamepad::GetInstance();
 	CKeyConfig* pKeyConfig = CKeyConfigManager::GetInstance()->GetConfig(CKeyConfigManager::CONTROL_INPAD);
+
+	if (m_pScroll != nullptr)
+	{
+		// スクロール終了まで反応しない
+		if (m_pScroll->GetState() != CScroll::STATE::STATE_WAIT)
+		{
+			return;
+		}
+
+		SetAlpha();
+	}
 
 	if (m_bNowChange) { return; }
 
@@ -275,18 +334,13 @@ void CKeyConfigSetting::Update()
 		{
 			m_SelectKey = INGAME::ACTION::ACT_MAX;
 		}
-
-		m_AlphaSin = 0.0f;
 	}
 	else if (pPad->GetTrigger(CInputGamepad::BUTTON::BUTTON_DOWN, 0))
 	{
 		// 下に移動
 		m_SelectKey = (m_SelectKey + 1) % (INGAME::ACTION::ACT_MAX + 1);
 		m_SelectKey = UtilFunc::Transformation::Clamp(m_SelectKey, 2, static_cast<int>(INGAME::ACTION::ACT_MAX));
-		m_AlphaSin = 0.0f;
 	}
-
-	m_AlphaSin += ADD_ALPHA;
 
 	// ポリゴンを生成する
 	for (int i = 0; i < INGAME::ACTION::ACT_MAX; i++)
@@ -300,19 +354,11 @@ void CKeyConfigSetting::Update()
 		{
 			if (m_SelectKey == i)
 			{
-				col.a = sinf(m_AlphaSin);
-				col.a = fabsf(col.a);
-				col.a *= FRONT_COL.a;
-
-				m_aKeyConfig[i].s_p2DFront->SetColor(col);
-				m_aKeyConfig[i].s_p2DFront->SetVtx();
-
-				continue;
+				col.a = m_Alpha;
 			}
 		}
 
 		m_aKeyConfig[i].s_p2DFront->SetColor(col);
-		m_aKeyConfig[i].s_p2DFront->SetVtx();
 	}
 
 	// 切り替えの色変更
@@ -321,13 +367,10 @@ void CKeyConfigSetting::Update()
 
 		if (m_SelectKey == INGAME::ACT_MAX)
 		{
-			col.a = sinf(m_AlphaSin);
-			col.a = fabsf(col.a);
-			col.a *= FRONT_COL.a;
+			col.a = m_Alpha;
 		}
 
 		m_checkconfig.s_p2DFront->SetColor(col);
-		m_checkconfig.s_p2DFront->SetVtx();
 	}
 }
 
@@ -390,4 +433,60 @@ void CKeyConfigSetting::Chenge()
 	}
 
 	m_bNowChange = false;
+}
+
+//==========================================================================
+// 透明度調整
+//==========================================================================
+void CKeyConfigSetting::SetAlpha()
+{
+	if (m_Alpha >= 1.0f) { return; }
+
+	m_fTime += ADD_ALPHA;
+	m_Alpha = UtilFunc::Correction::EaseInOutExpo(0.0f, 1.0f, 0, 2.0f, m_fTime);
+	m_Alpha = UtilFunc::Transformation::Clamp(m_Alpha, 0.0f, 1.0f);
+
+	// 色を調整する
+
+	// タイトル
+	D3DXCOLOR col = m_pTitle2D->GetColor();
+	col.a = m_Alpha;
+	m_pTitle2D->SetColor(col);
+
+	// 色を調整する
+	for (int i = 0; i < INGAME::ACTION::ACT_MAX; i++)
+	{
+		// 文字
+		col = m_aKeyConfig[i].s_p2D->GetColor();
+		col.a = m_Alpha;
+		m_aKeyConfig[i].s_p2D->SetColor(col);
+
+		// キーコンフィグ
+		col = m_aKeyConfig[i].s_pKeyDisp->GetColor();
+		col.a = m_Alpha;
+		m_aKeyConfig[i].s_pKeyDisp->SetColor(col);
+
+		// 炭
+		col = m_aKeyConfig[i].s_p2DFront->GetColor();
+		col.a = m_Alpha;
+		m_aKeyConfig[i].s_p2DFront->SetColor(col);
+	}
+
+	// 文字の生成
+	col = m_checkconfig.s_p2D->GetColor();
+	col.a = m_Alpha;
+	m_checkconfig.s_p2D->SetColor(col);
+
+	// キーコンフィグを生成
+	col = m_checkconfig.s_pKeyDispOK->GetColor();
+	col.a = m_Alpha;
+	m_checkconfig.s_pKeyDispOK->SetColor(col);
+	col = m_checkconfig.s_pKeyDispNO->GetColor();
+	col.a = m_Alpha;
+	m_checkconfig.s_pKeyDispNO->SetColor(col);
+
+	// 暗くする用のポリゴン生成
+	col = m_checkconfig.s_p2DFront->GetColor();
+	col.a = m_Alpha;
+	m_checkconfig.s_p2DFront->SetColor(col);
 }

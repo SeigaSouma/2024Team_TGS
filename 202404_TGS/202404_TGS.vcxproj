@@ -362,6 +362,7 @@
     <ClCompile Include="Source\waterstone.cpp" />
     <ClCompile Include="Source\waterstoneManager.cpp" />
     <ClCompile Include="Source\Xload.cpp" />
+    <ClCompile Include="Source\title_select.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\frontobj_manager.h" />
@@ -567,6 +568,7 @@
     <ClInclude Include="Source\waterstone.h" />
     <ClInclude Include="Source\waterstoneManager.h" />
     <ClInclude Include="Source\Xload.h" />
+    <ClInclude Include="Source\title_select.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
