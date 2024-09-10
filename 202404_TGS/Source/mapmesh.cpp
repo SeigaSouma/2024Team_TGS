@@ -76,6 +76,10 @@ CMapMesh* CMapMesh::Create(MeshType type)
 		pObjMeshField = DEBUG_NEW CTownField_FixedPlane;
 		break;
 
+	case CMapMesh::TYPE_TOWNFIELD_FIXEDPLANE_RESULT:
+		pObjMeshField = DEBUG_NEW CTownField_FixedPlane_Result;
+		break;
+
 	default:
 		return nullptr;
 		break;

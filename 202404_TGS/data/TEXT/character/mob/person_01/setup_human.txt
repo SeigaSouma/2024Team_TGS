@@ -159,14 +159,14 @@ NUM_MOTION = 10
 #------------------------------------------------------------------------------
 MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_def.txt				# [0]デフォルト
 MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_walk.txt			# [1]歩き
-MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_pass.txt			# [1]歩き
-MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_bye.txt			# [1]歩き
-MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_get.txt			# [1]歩き
-MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_return.txt			# [1]歩き
-MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_drown.txt			# [1]歩き
-MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_dive.txt			# [1]歩き
-MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_yabai.txt			# [1]歩き
-MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_result.txt			# [1]歩き
+MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_pass.txt			# [2]歩き
+MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_bye.txt			# [3]歩き
+MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_get.txt			# [4]歩き
+MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_return.txt			# [5]歩き
+MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_drown.txt			# [6]歩き
+MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_dive.txt			# [7]歩き
+MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_yabai.txt			# [8]歩き
+MOTION_FILENAME = data/TEXT/character/mob/person_01/motion_result.txt			# [9]歩き
 
 
 END_SCRIPT		# この行は絶対消さないこと！

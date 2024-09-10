@@ -157,6 +157,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\cameratrigger_result.cpp" />
     <ClCompile Include="Source\frontobj_manager.cpp" />
     <ClCompile Include="Libraries\Imgui\imgui.cpp" />
     <ClCompile Include="Libraries\Imgui\imgui_demo.cpp" />
@@ -316,6 +317,7 @@
     <ClCompile Include="Source\result.cpp" />
     <ClCompile Include="Source\resultmanager.cpp" />
     <ClCompile Include="Source\resultscore.cpp" />
+    <ClCompile Include="Source\result_people.cpp" />
     <ClCompile Include="Source\retryui.cpp" />
     <ClCompile Include="Source\rockon_marker.cpp" />
     <ClCompile Include="Source\sample_character.cpp" />
@@ -365,6 +367,7 @@
     <ClCompile Include="Source\title_select.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\cameratrigger_result.h" />
     <ClInclude Include="Source\frontobj_manager.h" />
     <ClInclude Include="Libraries\Imgui\imconfig.h" />
     <ClInclude Include="Libraries\Imgui\imgui.h" />
@@ -522,6 +525,7 @@
     <ClInclude Include="Source\result.h" />
     <ClInclude Include="Source\resultmanager.h" />
     <ClInclude Include="Source\resultscore.h" />
+    <ClInclude Include="Source\result_people.h" />
     <ClInclude Include="Source\retryui.h" />
     <ClInclude Include="Source\rockon_marker.h" />
     <ClInclude Include="Source\sample_character.h" />

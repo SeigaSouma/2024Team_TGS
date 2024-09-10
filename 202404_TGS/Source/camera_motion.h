@@ -26,6 +26,7 @@ public:
 		MOTION_PASS = 0,	// パスモーション
 		MOTION_GOAL,		// ゴール
 		MOTION_GOALBAG,		// ゴールフット橋
+		MOTION_RESULT,		// リザルト
 		MOTION_MAX
 	};
 

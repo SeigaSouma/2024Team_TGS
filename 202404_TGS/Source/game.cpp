@@ -280,7 +280,7 @@ HRESULT CGame::Init()
 	//=============================
 	// 人マネージャ
 	//=============================
-	m_pPeopleManager = CPeopleManager::Create();
+	m_pPeopleManager = CPeopleManager::Create(CPeopleManager::Type::TYPE_GAME);
 
 	// BGM再生
 	CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_BGM_GAME);

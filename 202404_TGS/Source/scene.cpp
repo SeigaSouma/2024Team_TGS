@@ -37,7 +37,7 @@ namespace
 		"data\\TEXT\\map\\info.txt",	// チュートリアル
 		"data\\TEXT\\map\\info.txt",	// ゲーム
 		"data\\TEXT\\map\\info.txt",	// ゲーム
-		"data\\TEXT\\map\\info.txt",	// リザルト
+		"data\\TEXT\\map\\map_result.txt",	// リザルト
 		"data\\TEXT\\map\\info.txt",	// ランキング
 	};
 	

@@ -758,6 +758,12 @@
     <ClCompile Include="Source\title_select.cpp">
       <Filter>mode\title</Filter>
     </ClCompile>
+    <ClCompile Include="Source\result_people.cpp">
+      <Filter>people</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\cameratrigger_result.cpp">
+      <Filter>camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ballast.h">
@@ -1371,6 +1377,12 @@
     </ClInclude>
     <ClInclude Include="Source\title_select.h">
       <Filter>mode\title</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\result_people.h">
+      <Filter>people</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\cameratrigger_result.h">
+      <Filter>camera</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

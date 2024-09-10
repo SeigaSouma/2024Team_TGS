@@ -1503,7 +1503,7 @@ void CCamera::ResetResult()
 	m_posRDest = m_posR;								// 目標の注視点
 
 
-	m_posR = MyLib::Vector3(76329.0f, 440.0f, 2689.0f);				// 注視点(見たい場所)
+	m_posR = MyLib::Vector3(76329.0f, 440.0f, 2989.0f);				// 注視点(見たい場所)
 	m_posV = MyLib::Vector3(76326.0f, 545.27, 2017.0f);	// 視点(カメラの位置)
 	m_posVDest = m_posV;									// 目標の視点
 	m_posRDest = m_posR;									// 目標の注視点

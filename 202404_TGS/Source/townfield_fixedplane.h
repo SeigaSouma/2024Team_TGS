@@ -1,7 +1,7 @@
 //=============================================================================
 // 
 //  街フィールド(固定平面)ヘッダー [townfield_fixedplane.h]
-//  Author : 石原颯馬
+//  Author : 相馬 靜雅
 // 
 //=============================================================================
 
@@ -33,5 +33,16 @@ private:
 };
 
 
+// 街フィールド(固定平面/リザルト)クラス
+class CTownField_FixedPlane_Result : public CTownField_FixedPlane
+{
+public:
+
+	CTownField_FixedPlane_Result();
+	~CTownField_FixedPlane_Result() {}
+
+	// オーバーライドされた関数
+	virtual HRESULT Init() override;
+};
 
 #endif
