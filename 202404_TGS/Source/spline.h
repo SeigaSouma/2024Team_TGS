@@ -251,6 +251,8 @@ namespace MySpline
 	*/
 	inline MyLib::Vector3 GetSplinePosition_NonLoop(const std::vector<MyLib::Vector3>& posvec, float _distance, float endDistance = 10.0f, int* pIdx = nullptr)
 	{
+		//return GetSplinePosition(posvec, _distance);
+
 		int posvecSize = posvec.size();
 
 		// セグメントの長さを計算

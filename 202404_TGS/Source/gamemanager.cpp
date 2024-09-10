@@ -608,7 +608,7 @@ void CGameManager::SceneWaitAirPush()
 	}
 	else if (pTimer != nullptr)
 	{
-		//m_nGuideTimer++;
+		m_nGuideTimer++;
 
 		if (m_nGuideTimer >= GUIDE_NUM)
 		{

@@ -350,7 +350,12 @@ void CCourseManager::Load()
 		}
 		else
 		{
-			segmentpos.push_back(segmentpos.back() + MyLib::Vector3(DISTANCE_TO_CHUNCK, 0.0f, 0.0f));
+			float distance = DISTANCE_TO_CHUNCK / 8.0f;
+			
+			for (int push = 0; push < 8; push++)
+			{
+				segmentpos.push_back(segmentpos.back() + MyLib::Vector3(distance, 0.0f, 0.0f));
+			}
 			start = segmentpos.back() + MyLib::Vector3(DISTANCE_TO_CHUNCK, 0.0f, 0.0f);
 		}
 		vecstart.push_back(start);
@@ -390,7 +395,7 @@ void CCourseManager::Load()
 
 	//この中で障害物、チェックポイント
 
-#if 1
+#if 0
 	//=============================
 	// 石垣(奥)
 	//=============================
