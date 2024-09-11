@@ -18,7 +18,6 @@
 //==========================================================================
 namespace
 {
-	const char* TEXTURE = "data\\TEXTURE\\title\\enter.png";
 	const float TIME_TUTORIAL_FADEOUT = 0.3f;	// チュートリアル確認のフェードアウト
 	const MyLib::Vector3 SET_POS = MyLib::Vector3(SCREEN_WIDTH * 0.3f, SCREEN_HEIGHT * 0.85f, 0.0f);
 	const float HEIGHT = 100.0f;
@@ -35,6 +34,11 @@ namespace FILENAME
 	const std::string BG = "data\\TEXTURE\\ui_setting\\front.png";
 }
 
+namespace StateTime
+{
+	const float FADE = 1.0f;
+}
+
 //==========================================================================
 // 関数ポインタ
 //==========================================================================
@@ -42,6 +46,7 @@ CTitle_Select::STATE_FUNC CTitle_Select::m_StateFunc[] =
 {
 	&CTitle_Select::StateNone,		// なし
 	&CTitle_Select::StateFadeIn,	// フェードイン
+	&CTitle_Select::StateFadeOut,	// フェードアウト
 	&CTitle_Select::StateTutorial_FadeOut,		// チュートリアル確認のフェードアウト
 	&CTitle_Select::StateNoActive,	// 反応しない
 	& CTitle_Select::StateSetting,	// 設定中
@@ -92,25 +97,38 @@ HRESULT CTitle_Select::Init()
 
 	MyLib::Vector3 pos = SET_POS;
 
+	//=============================
 	// 背景を生成
+	//=============================
 	m_pSelect = CObject2D::Create(8);
 	m_pSelect->SetType(CObject::TYPE_OBJECT2D);
 	m_pSelect->SetPosition(pos);
+
+	// テクスチャ設定
 	m_pSelect->BindTexture(pTexture->Regist(FILENAME::BG));
 	D3DXVECTOR2 texture = pTexture->GetImageSize(m_pSelect->GetIdxTexture());
 	m_pSelect->SetSize(UtilFunc::Transformation::AdjustSizeByHeight(texture, HEIGHT));
+	m_pSelect->SetSizeOrigin(m_pSelect->GetSize());
 
+	//=============================
 	// 選択肢を生成
+	//=============================
 	for (int i = 0; i < SELECT_MAX; i++)
 	{
 		if (m_ap2D[i] == nullptr)
 		{
+			// 生成
 			m_ap2D[i] = CObject2D::Create(8);
-			m_ap2D[i]->SetType(CObject::TYPE_OBJECT2D);
-			m_ap2D[i]->SetPosition(pos);
-			m_ap2D[i]->BindTexture(pTexture->Regist(FILENAME::TEXTURE[i]));
-			D3DXVECTOR2 texture = pTexture->GetImageSize(m_ap2D[i]->GetIdxTexture());
-			m_ap2D[i]->SetSize(UtilFunc::Transformation::AdjustSizeByHeight(texture, HEIGHT));
+			CObject2D* pObj2D = m_ap2D[i];
+
+			pObj2D->SetType(CObject::TYPE_OBJECT2D);
+			pObj2D->SetPosition(pos);
+
+			// テクスチャ設定
+			pObj2D->BindTexture(pTexture->Regist(FILENAME::TEXTURE[i]));
+			D3DXVECTOR2 texture = pTexture->GetImageSize(pObj2D->GetIdxTexture());
+			pObj2D->SetSize(UtilFunc::Transformation::AdjustSizeByHeight(texture, HEIGHT));
+			pObj2D->SetSizeOrigin(pObj2D->GetSize());
 		}
 
 		pos.x += SCREEN_WIDTH * 0.4f;
@@ -151,6 +169,9 @@ void CTitle_Select::Update()
 	{// フェード中は抜ける
 		return;
 	}
+
+	// 状態遷移カウンター加算
+	m_fStateTime += CManager::GetInstance()->GetDeltaTime();
 
 	// 状態別更新処理
 	(this->*(m_StateFunc[m_state]))();
@@ -224,26 +245,47 @@ void CTitle_Select::StateNone()
 //==========================================================================
 void CTitle_Select::StateFadeIn()
 {
-	// 状態遷移カウンター減算
-	m_fStateTime -= CManager::GetInstance()->GetDeltaTime();
-
 	// 不透明度更新
-	float alpha = 1.0f - (m_fStateTime / m_fFadeOutTime);
+	float alpha = m_fStateTime / StateTime::FADE;
 	
+	if (m_fStateTime <= StateTime::FADE)
+	{
+		// 状態遷移
+		SetState(STATE::STATE_NONE);
+		alpha = 1.0f;
+	}
+
+	for (int i = 0; i < SELECT_MAX; i++)
+	{
+		if (m_ap2D[i] != nullptr)
+		{
+			m_ap2D[i]->SetAlpha(alpha);
+		}
+	}
+}
+
+//==========================================================================
+// フェードアウト
+//==========================================================================
+void CTitle_Select::StateFadeOut()
+{
+	// 不透明度更新
+	float alpha = 1.0f - (m_fStateTime / StateTime::FADE);
+
 
 	if (m_fStateTime <= 0.0f)
 	{
-		m_fStateTime = 0.0f;
-		m_state = STATE_NONE;
+		// 状態遷移
+		SetState(STATE::STATE_NONE);
+		alpha = 0.0f;
+	}
 
-		for (int i = 0; i < SELECT_MAX; i++)
+	for (int i = 0; i < SELECT_MAX; i++)
+	{
+		if (m_ap2D[i] != nullptr)
 		{
-			if (m_ap2D[i] != nullptr)
-			{
-				m_ap2D[i]->SetAlpha(1.0f);
-			}
+			m_ap2D[i]->SetAlpha(alpha);
 		}
-		return;
 	}
 }
 
