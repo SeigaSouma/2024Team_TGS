@@ -62,6 +62,7 @@ CTitle_Select::CTitle_Select(float fadetime) : CObject() , m_fFadeOutTime(fadeti
 	// 値のクリア
 	m_state = STATE::STATE_NONE;	// 状態
 	m_fStateTime = 0.0f;			// 状態カウンター
+	m_fSelectDrawTime = 0.0f;		// 選択肢の書く時間
 	m_nSelect = 0;
 
 	for (int i = 0; i < SELECT_MAX; i++)
@@ -110,12 +111,15 @@ HRESULT CTitle_Select::Init()
 	m_pSelect->SetType(CObject::TYPE_OBJECT2D);
 	m_pSelect->SetPosition(pos);
 	m_pSelect->SetAlpha(0.0f);
+	m_pSelect->SetAnchorType(CObject2D::AnchorPoint::LEFT);
 
 	// テクスチャ設定
 	m_pSelect->BindTexture(pTexture->Regist(FILENAME::BG));
 	D3DXVECTOR2 texture = pTexture->GetImageSize(m_pSelect->GetIdxTexture());
-	m_pSelect->SetSize(UtilFunc::Transformation::AdjustSizeByHeight(texture, HEIGHT));
-	m_pSelect->SetSizeOrigin(m_pSelect->GetSize());
+	D3DXVECTOR2 setsize = UtilFunc::Transformation::AdjustSizeByHeight(texture, HEIGHT);
+
+	m_pSelect->SetSize(D3DXVECTOR2(0.0f, setsize.y));
+	m_pSelect->SetSizeOrigin(setsize);
 
 	//=============================
 	// 選択肢を生成
@@ -144,6 +148,7 @@ HRESULT CTitle_Select::Init()
 
 	// 状態遷移
 	SetState(STATE::STATE_FADEIN);
+	m_pSelect->SetPosition(m_ap2D[m_nSelect]->GetPosition() - MyLib::Vector3(m_pSelect->GetSizeOrigin().x, 0.0f, 0.0f));
 
 	return S_OK;
 }
@@ -198,9 +203,33 @@ void CTitle_Select::Update()
 	// 状態遷移カウンター加算
 	m_fStateTime += CManager::GetInstance()->GetDeltaTime();
 
+	// 選択肢を書く
+	DrawSelect();
+
+
 	// 状態別更新処理
 	(this->*(m_StateFunc[m_state]))();
 }
+
+//==========================================================================
+// 選択肢を書く
+//==========================================================================
+void CTitle_Select::DrawSelect()
+{
+	// 書く時間加算
+	m_fSelectDrawTime += CManager::GetInstance()->GetDeltaTime();
+
+	// 書くように拡縮
+	D3DXVECTOR2 size = m_pSelect->GetSize(), sizeOrigin = m_pSelect->GetSizeOrigin();
+	size.x = UtilFunc::Correction::EaseInExpo(0.0f, sizeOrigin.x, 0.0f, 0.1f, m_fSelectDrawTime);
+	m_pSelect->SetSize(size);
+
+	// UV座標設定
+	D3DXVECTOR2* pTex = m_pSelect->GetTex();
+	pTex[1].x = pTex[3].x = UtilFunc::Transformation::Clamp(size.x / sizeOrigin.x, 0.0f, 1.0f);
+	int n = 0;
+}
+
 
 //==========================================================================
 // なにもなし
@@ -231,12 +260,16 @@ void CTitle_Select::StateNone()
 	if (pInputGamepad->GetTrigger(CInputGamepad::BUTTON_LEFT, 0) || pInputGamepad->GetTrigger(CInputGamepad::BUTTON_RIGHT, 0)
 		|| pInputKeyboard->GetTrigger(DIK_A) || pInputKeyboard->GetTrigger(DIK_D))
 	{
+		// 切り替え
 		m_nSelect ^= 1;
+		m_pSelect->SetPosition(m_ap2D[m_nSelect]->GetPosition() - MyLib::Vector3(m_pSelect->GetSizeOrigin().x, 0.0f, 0.0f));
 
-		MyLib::Vector3 pos = SET_POS;
-		pos.x += (SCREEN_WIDTH * 0.4f * m_nSelect);
-		m_pSelect->SetPosition(pos);
+		// 書く時間リセット
+		m_fSelectDrawTime = 0.0f;
+		m_pSelect->SetSize(D3DXVECTOR2(0.0f, m_pSelect->GetSize().y));
 
+		// サウンド再生
+		CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_CURSOR_MOVE);
 		return;
 	}
 

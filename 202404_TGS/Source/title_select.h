@@ -77,11 +77,14 @@ private:
 	void StateSetting();		// 反応しない
 	void StateBack();			// 戻る
 
+	void DrawSelect();	// 選択肢を書く
+
 	//=============================
 	// メンバ変数
 	//=============================
 	STATE m_state;				// 状態
 	float m_fStateTime;			// 状態カウンター
+	float m_fSelectDrawTime;	// 選択肢の書く時間
 	const float m_fFadeOutTime;	// フェードにかかる時間
 	CObject2D* m_ap2D[SELECT_MAX];	// 選択肢
 	CObject2D* m_pSelect;			// 背景筆

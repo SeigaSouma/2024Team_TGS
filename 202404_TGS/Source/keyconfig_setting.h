@@ -27,9 +27,10 @@ private:
 		CObject2D* s_p2D;				// 2Dポリゴン
 		CObject2D* s_p2DFront;			// 表面
 		CControlKeyDisp* s_pKeyDisp;	// キーコンフィグ表示
+		float drawtime;					// 書く時間
 
 		// コンストラクタ
-		KEYINFO() { s_p2D = nullptr; s_pKeyDisp = nullptr; s_p2DFront = nullptr; }
+		KEYINFO() : drawtime(0.0f) { s_p2D = nullptr; s_pKeyDisp = nullptr; s_p2DFront = nullptr; }
 	};
 
 	// 切り替え情報

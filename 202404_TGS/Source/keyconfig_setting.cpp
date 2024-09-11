@@ -12,6 +12,7 @@
 #include "input_gamepad.h"
 #include "texture.h"
 #include "scroll.h"
+#include "manager.h"
 
 //==========================================================================
 // 定数定義
@@ -133,16 +134,23 @@ HRESULT CKeyConfigSetting::Init()
 		m_aKeyConfig[i].s_p2D->SetPosition(pos);
 		m_aKeyConfig[i].s_p2D->BindTexture(pTexture->Regist(FILENAME::CONFIG[i]));
 		D3DXVECTOR2 texture = pTexture->GetImageSize(m_aKeyConfig[i].s_p2D->GetIdxTexture());
-		m_aKeyConfig[i].s_p2D->SetSize(UtilFunc::Transformation::AdjustSizeByHeight(texture, KEY_SIZE));
+
+		// サイズ設定
+		D3DXVECTOR2 setsize = UtilFunc::Transformation::AdjustSizeByHeight(texture, KEY_SIZE);
+		m_aKeyConfig[i].s_p2D->SetSize(setsize);
+		m_aKeyConfig[i].s_p2D->SetSizeOrigin(setsize);
 		m_aKeyConfig[i].s_p2D->SetColor(col);
 
 		// 暗くする用のポリゴン生成
 		pos.x = DEFAULT_POS.x;
 		m_aKeyConfig[i].s_p2DFront = CObject2D::Create(10);
-		m_aKeyConfig[i].s_p2DFront->SetPosition(pos);
-		m_aKeyConfig[i].s_p2DFront->SetSize(D3DXVECTOR2(KEY_SIZE * 6, KEY_SIZE));
+		m_aKeyConfig[i].s_p2DFront->SetSize(D3DXVECTOR2(0.0f, KEY_SIZE));
+		m_aKeyConfig[i].s_p2DFront->SetSizeOrigin(D3DXVECTOR2(KEY_SIZE * 6, KEY_SIZE));
 		m_aKeyConfig[i].s_p2DFront->SetColor(FRONT_COL);
 		m_aKeyConfig[i].s_p2DFront->BindTexture(pTexture->Regist(FILENAME::FRONT));
+
+		m_aKeyConfig[i].s_p2DFront->SetAnchorType(CObject2D::AnchorPoint::LEFT);
+		m_aKeyConfig[i].s_p2DFront->SetPosition(pos - MyLib::Vector3(KEY_SIZE * 6.0f, 0.0f, 0.0f));
 
 		if (i <= INGAME::ACT_BACK)
 		{
@@ -334,13 +342,22 @@ void CKeyConfigSetting::Update()
 		{
 			m_SelectKey = INGAME::ACTION::ACT_MAX;
 		}
+
+		// タイマーリセット
+		m_aKeyConfig[m_SelectKey].drawtime = 0.0f;
 	}
 	else if (pPad->GetTrigger(CInputGamepad::BUTTON::BUTTON_DOWN, 0))
 	{
 		// 下に移動
 		m_SelectKey = (m_SelectKey + 1) % (INGAME::ACTION::ACT_MAX + 1);
 		m_SelectKey = UtilFunc::Transformation::Clamp(m_SelectKey, 2, static_cast<int>(INGAME::ACTION::ACT_MAX));
+
+		// タイマーリセット
+		m_aKeyConfig[m_SelectKey].drawtime = 0.0f;
 	}
+
+	// デルタタイム
+	float deltaTime = CManager::GetInstance()->GetDeltaTime();
 
 	// ポリゴンを生成する
 	for (int i = 0; i < INGAME::ACTION::ACT_MAX; i++)
@@ -357,6 +374,22 @@ void CKeyConfigSetting::Update()
 				col.a = m_Alpha;
 			}
 		}
+
+		// タイマー加算
+		m_aKeyConfig[i].drawtime += deltaTime;
+
+
+
+		CObject2D* pObj2D = m_aKeyConfig[i].s_p2DFront;
+
+		// サイズ設定
+		D3DXVECTOR2 size = pObj2D->GetSize(), sizeOrigin = pObj2D->GetSizeOrigin();
+		size.x = UtilFunc::Correction::EaseInExpo(0.0f, sizeOrigin.x, 0.0f, 0.2f, m_aKeyConfig[i].drawtime);
+		m_aKeyConfig[i].s_p2DFront->SetSize(size);
+
+		// UV座標設定
+		D3DXVECTOR2* pTex = pObj2D->GetTex();
+		pTex[1].x = pTex[3].x = UtilFunc::Transformation::Clamp(size.x / sizeOrigin.x, 0.0f, 1.0f);
 
 		m_aKeyConfig[i].s_p2DFront->SetColor(col);
 	}
