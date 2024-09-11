@@ -518,6 +518,11 @@ void CReceiverPeople::StateGet()
 	{
 		// モーション設定
 		pMotion->Set(MOTION::MOTION_GET);
+
+		// 潰れるエフェクト
+		CEffekseerObj::Create(
+			CMyEffekseer::EFKLABEL::EFKLABEL_SMASH,
+			GetPosition(), MyLib::Vector3(0.0f, 0.0f, 0.0f), 0.0f, 20.0f, true);
 	}
 	nType = pMotion->GetType();
 
@@ -586,6 +591,11 @@ void CReceiverPeople::StateReturn()
 		// 手の位置まで線形補間
 		bagpos = UtilFunc::Correction::EasingLinear(m_StartPos, weponpos, 0.0f, STATE_TIME::CATCH, m_fMoveTimer);
 		pBaggage->SetPosition(bagpos);
+
+		// レシーブエフェクト
+		CEffekseerObj::Create(
+			CMyEffekseer::EFKLABEL::EFKLABEL_HIT,
+			weponpos, MyLib::Vector3(0.0f,D3DX_PI * 0.5f, 0.0f), 0.0f, 20.0f, true);
 	}
 
 	// 終了確認
