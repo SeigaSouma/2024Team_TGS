@@ -632,11 +632,13 @@ void CReceiverPeople::StateYabai()
 		pMotion->Set(MOTION::MOTION_YABAI);
 	}
 
+	// ダイブ設定
 	if (type == MOTION::MOTION_YABAI &&
 		pMotion->IsFinish())
 	{
 		m_state = STATE::STATE_DIVE;
 		m_fStateTime = 0.0f;
+		CSound::GetInstance()->PlaySound(CSound::LABEL_SE_DIVE);
 	}
 }
 
@@ -657,7 +659,6 @@ void CReceiverPeople::StateDive()
 		// モーション設定
 		pMotion->Set(MOTION::MOTION_DIVE);
 
-		CSound::GetInstance()->PlaySound(CSound::LABEL_SE_DIVE);
 	}
 
 	// 移動時間加算
