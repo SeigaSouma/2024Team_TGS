@@ -7,6 +7,7 @@
 #ifndef _TITLE_SELECT_H_
 #define _TITLE_SELECT_H_		// 二重インクルード防止のマクロを定義する
 
+#include "object.h"
 #include "object2D.h"
 
 class CObject2D;
@@ -15,7 +16,7 @@ class CObject2D;
 // クラス定義
 //==========================================================================
 // タイトルエンター
-class CTitle_Select
+class CTitle_Select : public CObject
 {
 public:
 
@@ -30,6 +31,7 @@ public:
 		STATE_TUTORIAL_FADEOUT,	// チュートリアル確認のフェードアウト
 		STATE_NOACTIVE,			// 反応しない
 		STATE_SETTING,			// 設定中
+		STATE_BACK,				// 戻る
 		STATE_MAX
 	};
 
@@ -44,10 +46,12 @@ public:
 	~CTitle_Select() {}
 
 	//  オーバーライドされた関数
-	HRESULT Init();
-	void Uninit();
-	void Update();
-	void SetDraw(const bool bDraw = true);
+	HRESULT Init() override;
+	void Uninit() override;
+	void Update() override;
+	void Draw() override;
+
+	void Kill();	// 削除
 
 	void SetState(STATE state);
 	STATE GetState() { return m_state; }
@@ -71,6 +75,7 @@ private:
 	void StateTutorial_FadeOut();		// チュートリアル確認のフェードアウト
 	void StateNoActive();		// 反応しない
 	void StateSetting();		// 反応しない
+	void StateBack();			// 戻る
 
 	//=============================
 	// メンバ変数

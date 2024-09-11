@@ -19,7 +19,7 @@
 namespace
 {
 	const char* TEXTURE = "data\\TEXTURE\\title\\enter.png";
-	const float TIME_TUTORIAL_FADEOUT = 0.3f;	// チュートリアル確認のフェードアウト
+	const float TIME_TUTORIAL_FADEOUT = 0.3f;	// フェードアウト
 }
 
 //==========================================================================
@@ -29,8 +29,8 @@ CTitle_PressEnter::STATE_FUNC CTitle_PressEnter::m_StateFunc[] =
 {
 	&CTitle_PressEnter::StateNone,		// なし
 	&CTitle_PressEnter::StateFadeIn,	// フェードイン
-	&CTitle_PressEnter::StateTutorial_FadeOut,		// チュートリアル確認のフェードアウト
-	& CTitle_PressEnter::StateNoActive,	// 反応しない
+	&CTitle_PressEnter::StateFadeOut,	// フェードアウト
+	&CTitle_PressEnter::StateNoActive,	// 反応しない
 };
 
 //==========================================================================
@@ -97,8 +97,6 @@ HRESULT CTitle_PressEnter::Init()
 	m_fStateTime = m_fFadeOutTime;
 	m_state = STATE_FADEIN;
 
-	m_pSelect = CTitle_Select::Create(m_fFadeOutTime);
-	m_pSelect->SetDraw(false);
 	return S_OK;
 }
 
@@ -107,11 +105,7 @@ HRESULT CTitle_PressEnter::Init()
 //==========================================================================
 void CTitle_PressEnter::Uninit()
 {
-	if (m_pSelect != nullptr)
-	{
-		m_pSelect->Uninit();
-		m_pSelect = nullptr;
-	}
+	m_pSelect = nullptr;
 
 	CObject2D::Uninit();
 }
@@ -146,8 +140,7 @@ void CTitle_PressEnter::StateNone()
 	CInputKeyboard* pInputKeyboard = CInputKeyboard::GetInstance();
 	CInputGamepad* pInputGamepad = CInputGamepad::GetInstance();
 
-	SetEnableDisp(true);
-	m_pSelect->SetDraw(false);
+	
 
 	if (pInputGamepad->GetTrigger(CInputGamepad::BUTTON::BUTTON_A, 0) ||
 		pInputGamepad->GetTrigger(CInputGamepad::BUTTON::BUTTON_B, 0) ||
@@ -159,11 +152,17 @@ void CTitle_PressEnter::StateNone()
 		pInputKeyboard->GetTrigger(DIK_BACKSPACE)
 		)
 	{
-		m_pSelect->SetDraw(true);
-		m_pSelect->SetState(CTitle_Select::STATE_NONE);
-		SetState(CTitle_PressEnter::STATE_NOACTIVE);
-		SetEnableDisp(false);
-		//CManager::GetInstance()->GetFade()->SetFade(CScene::MODE::MODE_GAME);
+		SetState(CTitle_PressEnter::STATE::STATE_FADEOUT);
+
+		// 選択肢生成
+		if (m_pSelect == nullptr)
+		{
+			m_pSelect = CTitle_Select::Create(m_fFadeOutTime);
+		}
+		else
+		{
+			m_pSelect->SetState(CTitle_Select::STATE::STATE_FADEIN);
+		}
 	}
 }
 
@@ -173,16 +172,15 @@ void CTitle_PressEnter::StateNone()
 void CTitle_PressEnter::StateFadeIn()
 {
 	// 状態遷移カウンター減算
-	m_fStateTime -= CManager::GetInstance()->GetDeltaTime();
+	m_fStateTime += CManager::GetInstance()->GetDeltaTime();
 
 	// 不透明度更新
-	float alpha = 1.0f - (m_fStateTime / m_fFadeOutTime);
+	float alpha = UtilFunc::Correction::EasingLinear(0.0f, 1.0f, 0.0f, TIME_TUTORIAL_FADEOUT, m_fStateTime);
 	SetAlpha(alpha);
 
-	if (m_fStateTime <= 0.0f)
+	if (m_fStateTime >= TIME_TUTORIAL_FADEOUT)
 	{
-		m_fStateTime = 0.0f;
-		m_state = STATE_NONE;
+		SetState(STATE::STATE_NONE);
 
 		// 不透明度更新
 		SetAlpha(1.0f);
@@ -191,19 +189,19 @@ void CTitle_PressEnter::StateFadeIn()
 }
 
 //==========================================================================
-// チュートリアル確認のフェードアウト
+// フェードアウト
 //==========================================================================
-void CTitle_PressEnter::StateTutorial_FadeOut()
+void CTitle_PressEnter::StateFadeOut()
 {
 	// 状態遷移カウンター加算
 	m_fStateTime += CManager::GetInstance()->GetDeltaTime();
 
 	float alpha = UtilFunc::Correction::EasingLinear(1.0f, 0.0f, 0.0f, TIME_TUTORIAL_FADEOUT, m_fStateTime);
+	SetAlpha(alpha);
 
 	if (m_fStateTime >= TIME_TUTORIAL_FADEOUT)
 	{
-		m_fStateTime = 0.0f;
-		m_state = STATE_NONE;
+		SetState(STATE::STATE_NOACTIVE);
 	}
 }
 
@@ -213,10 +211,6 @@ void CTitle_PressEnter::StateTutorial_FadeOut()
 //==========================================================================
 void CTitle_PressEnter::StateNoActive()
 {
-	SetEnableDisp(false);
-
-	m_pSelect->Update();
-
 	if (m_pSelect->GetState() == CTitle_Select::STATE_NOACTIVE)
 	{
 		SetState(STATE::STATE_NONE);

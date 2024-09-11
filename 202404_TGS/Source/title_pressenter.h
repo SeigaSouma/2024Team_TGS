@@ -27,7 +27,7 @@ public:
 	{
 		STATE_NONE = 0,			// なにもなし
 		STATE_FADEIN,			// フェードイン
-		STATE_TUTORIAL_FADEOUT,	// チュートリアル確認のフェードアウト
+		STATE_FADEOUT,		// フェードアウト
 		STATE_NOACTIVE,			// 反応しない
 		STATE_MAX
 	};
@@ -59,7 +59,7 @@ private:
 	//=============================
 	void StateNone();		// なにもなし
 	void StateFadeIn();		// フェードイン
-	void StateTutorial_FadeOut();		// チュートリアル確認のフェードアウト
+	void StateFadeOut();		// フェードアウト
 	void StateNoActive();		// 反応しない
 
 	//=============================
