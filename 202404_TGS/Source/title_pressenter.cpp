@@ -159,6 +159,10 @@ void CTitle_PressEnter::StateNone()
 		{
 			m_pSelect = CTitle_Select::Create(m_fFadeOutTime);
 		}
+		else
+		{
+			m_pSelect->SetState(CTitle_Select::STATE::STATE_FADEIN);
+		}
 	}
 }
 
@@ -168,16 +172,15 @@ void CTitle_PressEnter::StateNone()
 void CTitle_PressEnter::StateFadeIn()
 {
 	// 状態遷移カウンター減算
-	m_fStateTime -= CManager::GetInstance()->GetDeltaTime();
+	m_fStateTime += CManager::GetInstance()->GetDeltaTime();
 
 	// 不透明度更新
-	float alpha = 1.0f - (m_fStateTime / m_fFadeOutTime);
+	float alpha = UtilFunc::Correction::EasingLinear(0.0f, 1.0f, 0.0f, TIME_TUTORIAL_FADEOUT, m_fStateTime);
 	SetAlpha(alpha);
 
-	if (m_fStateTime <= 0.0f)
+	if (m_fStateTime >= TIME_TUTORIAL_FADEOUT)
 	{
-		m_fStateTime = 0.0f;
-		m_state = STATE_NONE;
+		SetState(STATE::STATE_NONE);
 
 		// 不透明度更新
 		SetAlpha(1.0f);

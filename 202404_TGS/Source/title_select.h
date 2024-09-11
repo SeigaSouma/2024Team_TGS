@@ -31,6 +31,7 @@ public:
 		STATE_TUTORIAL_FADEOUT,	// チュートリアル確認のフェードアウト
 		STATE_NOACTIVE,			// 反応しない
 		STATE_SETTING,			// 設定中
+		STATE_BACK,				// 戻る
 		STATE_MAX
 	};
 
@@ -74,6 +75,7 @@ private:
 	void StateTutorial_FadeOut();		// チュートリアル確認のフェードアウト
 	void StateNoActive();		// 反応しない
 	void StateSetting();		// 反応しない
+	void StateBack();			// 戻る
 
 	//=============================
 	// メンバ変数

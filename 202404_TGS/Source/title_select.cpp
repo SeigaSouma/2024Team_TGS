@@ -12,6 +12,7 @@
 #include "input.h"
 #include "fade.h"
 #include "keyconfig.h"
+#include "title_pressenter.h"
 
 //==========================================================================
 // 定数定義
@@ -49,7 +50,8 @@ CTitle_Select::STATE_FUNC CTitle_Select::m_StateFunc[] =
 	&CTitle_Select::StateFadeOut,	// フェードアウト
 	&CTitle_Select::StateTutorial_FadeOut,		// チュートリアル確認のフェードアウト
 	&CTitle_Select::StateNoActive,	// 反応しない
-	& CTitle_Select::StateSetting,	// 設定中
+	&CTitle_Select::StateSetting,	// 設定中
+	&CTitle_Select::StateBack,		// 戻る
 };
 
 //==========================================================================
@@ -261,7 +263,15 @@ void CTitle_Select::StateNone()
 
 	if (pKeyConfigPad->GetTrigger(INGAME::ACT_BACK) || pKeyConfigKey->GetTrigger(INGAME::ACT_BACK))
 	{
-		SetState(STATE::STATE_NOACTIVE);
+		SetState(STATE::STATE_BACK);
+
+		// プレスエンター呼び戻し
+		CTitle_PressEnter* pEnter = CTitle::GetInstance()->GetTitlePressEnter();
+		if (pEnter != nullptr)
+		{
+			pEnter->SetState(CTitle_PressEnter::STATE::STATE_FADEIN);
+		}
+
 	}
 }
 
@@ -355,6 +365,33 @@ void CTitle_Select::StateNoActive()
 void CTitle_Select::StateSetting()
 {
 	m_bPress = true;
+}
+
+//==========================================================================
+// 戻る
+//==========================================================================
+void CTitle_Select::StateBack()
+{
+	// 不透明度更新
+	float alpha = 1.0f - (m_fStateTime / StateTime::FADE);
+	alpha = UtilFunc::Transformation::Clamp(alpha, 0.0f, 1.0f);
+
+	if (m_fStateTime >= StateTime::FADE)
+	{
+		SetState(STATE::STATE_NOACTIVE);
+	}
+
+	// 背景の不透明度
+	m_pSelect->SetAlpha(alpha);
+
+	// 選択肢の不透明度
+	for (int i = 0; i < SELECT_MAX; i++)
+	{
+		if (m_ap2D[i] != nullptr)
+		{
+			m_ap2D[i]->SetAlpha(alpha);
+		}
+	}
 }
 
 //==========================================================================
