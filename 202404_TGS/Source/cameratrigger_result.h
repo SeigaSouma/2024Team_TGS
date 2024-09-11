@@ -36,7 +36,11 @@ private:
 	typedef void(CCameraTrigger_Result::*TRIGGER_FUNC)();
 	static TRIGGER_FUNC m_TriggerFunc[];
 
+	//=============================
+	// ƒƒ“ƒoŠÖ”
+	//=============================
 	void CameraShake();	// ƒJƒƒ‰—h‚ê
+	void OpenScroll();	// Šª‚«•¨ŠJ••
 
 };
 
