@@ -20,11 +20,11 @@
 //==========================================================================
 namespace
 {
-	const char* TEXTURE = "data\\TEXTURE\\number\\number_oradano.png";	// テクスチャのファイル
+	const char* TEXTURE = "data\\TEXTURE\\number\\number_oradano03.png";	// テクスチャのファイル
 
 	const MyLib::Vector3 DEFAULT_POSITION = MyLib::Vector3(1100.0f, 100.0f, 0.0f);	// 初期位置
-	const D3DXVECTOR2 SIZE_NUMBER = D3DXVECTOR2(30.0f, 30.0f);
-	const float DSTANCE_MULTIPLAY = 2.25f;
+	const D3DXVECTOR2 SIZE_NUMBER = D3DXVECTOR2(35.0f, 35.0f);
+	const float DSTANCE_MULTIPLAY = 2.5f;
 }
 
 //==========================================================================
