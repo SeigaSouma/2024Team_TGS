@@ -84,16 +84,11 @@ HRESULT CResult::Init()
 	m_pPeopleManager = CPeopleManager::Create(CPeopleManager::Type::TYPE_RESULT);
 
 
-
 	// 黒フレームイン
 	CBlackFrame::GetInstance()->SetState(CBlackFrame::STATE::STATE_INCOMPLETION);
 
 	// カメラモーション再生
 	CManager::GetInstance()->GetCamera()->GetCameraMotion()->SetMotion(CCameraMotion::MOTION::MOTION_RESULT, CCameraMotion::EASING::Linear);
-
-	// リザルト画面
-	CResultManager* pResultManager = CResultManager::GetInstance();
-	//pResultManager->CreateResultScreen();
 
 	// リザルトの人生成
 	CResultPeople::Create(MyLib::Vector3(76325.0f, 300.0f, 3060.0f));

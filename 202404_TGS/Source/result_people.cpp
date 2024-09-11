@@ -302,19 +302,32 @@ void CResultPeople::UpdateScroll()
 
 		// 位置設定
 		m_pScroll->SetPosition(pos);
+
+		// 移動量設定
+		m_pScroll->SetMove(MyLib::Vector3(0.0f, 4.0f, 0.0f));
+
 	}
 	else
 	{
 		// 線形補間
 		MyLib::Vector3 pos = m_pScroll->GetPosition();
 		MyLib::Vector3 move = m_pScroll->GetMove();
+		MyLib::Vector3 rot = m_pScroll->GetRotation();
 
+		// 落下
 		pos.y += move.y;
 		move.y -= 0.6f;
+
+		pos.z -= 5.0f;
+
+		// ランダム回転
+		rot.y += D3DX_PI * UtilFunc::Transformation::Random(10, 40) * 0.001f;
+		rot.x += D3DX_PI * UtilFunc::Transformation::Random(10, 40) * 0.001f;
 
 		// 位置設定
 		m_pScroll->SetPosition(pos);
 		m_pScroll->SetMove(move);
+		m_pScroll->SetRotation(rot);
 	}
 }
 
