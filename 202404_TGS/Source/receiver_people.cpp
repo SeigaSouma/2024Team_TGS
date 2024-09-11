@@ -566,7 +566,6 @@ void CReceiverPeople::StateReturn()
 		// ƒ‚[ƒVƒ‡ƒ“Ý’è
 		pMotion->Set(MOTION::MOTION_RETURN);
 
-		CSound::GetInstance()->PlaySound(CSound::LABEL_SE_SMASHATTACK);
 	}
 
 	// UŒ‚î•ñŽæ“¾
@@ -908,6 +907,7 @@ void CReceiverPeople::AttackAction(CMotion::AttackInfo ATKInfo, int nCntATK)
 		CCamera* pCamera = CManager::GetInstance()->GetCamera();
 		pCamera->SetPositionRDest(pCamera->GetPositionR());
 		pCamera->SetPositionVDest(pCamera->GetPositionV());
+		CSound::GetInstance()->PlaySound(CSound::LABEL_SE_SMASHATTACK);
 	}
 	break;
 
