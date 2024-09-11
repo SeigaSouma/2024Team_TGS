@@ -7,6 +7,7 @@
 #ifndef _TITLE_SELECT_H_
 #define _TITLE_SELECT_H_		// 二重インクルード防止のマクロを定義する
 
+#include "object.h"
 #include "object2D.h"
 
 class CObject2D;
@@ -15,7 +16,7 @@ class CObject2D;
 // クラス定義
 //==========================================================================
 // タイトルエンター
-class CTitle_Select
+class CTitle_Select : public CObject
 {
 public:
 
@@ -44,10 +45,12 @@ public:
 	~CTitle_Select() {}
 
 	//  オーバーライドされた関数
-	HRESULT Init();
-	void Uninit();
-	void Update();
-	void SetDraw(const bool bDraw = true);
+	HRESULT Init() override;
+	void Uninit() override;
+	void Update() override;
+	void Draw() override;
+
+	void Kill();	// 削除
 
 	void SetState(STATE state);
 	STATE GetState() { return m_state; }

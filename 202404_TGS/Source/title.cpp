@@ -18,6 +18,7 @@
 #include "camera.h"
 #include "keyconfig_setting.h"
 #include "title_select.h"
+#include "scroll.h"
 
 //==========================================================================
 // 定数定義
@@ -169,23 +170,7 @@ void CTitle::Update()
 //==========================================================================
 void CTitle::SceneNone()
 {
-	// シーンカウンター
-	m_fSceneTime = TIME_FADELOGO;
-
-	// 入力情報取得
-	CInputGamepad* pInputGamepad = CInputGamepad::GetInstance();
-
-	// 入力があればキーコンフィグ設定を行う
-	if (pInputGamepad->GetTrigger(CInputGamepad::BUTTON::BUTTON_BACK, 0))
-	{
-		m_SceneType = SCENETYPE::SCENETYPE_KEYCONFIGSETTING;
-		m_pPressEnter->SetState(CTitle_PressEnter::STATE::STATE_NOACTIVE);
-
-		if(m_pConfigSetting == nullptr)
-		{
-			m_pConfigSetting = CKeyConfigSetting::Create();
-		}
-	}
+	
 }
 
 //==========================================================================
@@ -263,11 +248,17 @@ void CTitle::SceneFadeKeyConfigSetting()
 		}
 	}
 
+	// 巻き物取得
+	CScroll* pScroll = m_pConfigSetting->GetScroll();
+
+	if (pScroll == nullptr ||
+		(pScroll != nullptr && pScroll->GetState() != CScroll::STATE::STATE_WAIT)) return;
+
 	// 入力があればキーコンフィグ設定を行う
 	if (pInputGamepad->GetTrigger(INGAME::ACT_BACK) || pInputKey->GetTrigger(INGAME::ACT_BACK))
 	{
 		m_SceneType = SCENETYPE::SCENETYPE_NONE;
-		m_pPressEnter->GetSelect()->SetState(CTitle_Select::STATE::STATE_NONE);
+		m_pPressEnter->GetSelect()->SetState(CTitle_Select::STATE::STATE_FADEIN);
 
 		if (m_pConfigSetting != nullptr)
 		{

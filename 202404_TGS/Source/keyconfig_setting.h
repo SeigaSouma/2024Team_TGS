@@ -60,6 +60,8 @@ public:
 	bool IsDeath(void) { return m_bDeath; }
 	bool IsChange(void) { return m_bNowChange; }
 
+	CScroll* GetScroll() { return m_pScroll; }	// Šª‚«•¨æ“¾
+
 private:
 
 	// ƒƒ“ƒoŠÖ”
