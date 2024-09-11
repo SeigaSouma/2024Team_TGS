@@ -39,6 +39,8 @@ private:
 	//=============================
 	// ƒƒ“ƒoŠÖ”
 	//=============================
+	void Subtitle01();	// š–‹01
+	void Subtitle02();	// š–‹02
 	void CameraShake();	// ƒJƒƒ‰—h‚ê
 	void OpenScroll();	// Šª‚«•¨ŠJ••
 
