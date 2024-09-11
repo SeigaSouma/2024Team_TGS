@@ -7,6 +7,7 @@
 #ifndef _TITLE_SELECT_H_
 #define _TITLE_SELECT_H_		// 二重インクルード防止のマクロを定義する
 
+#include "object.h"
 #include "object2D.h"
 
 class CObject2D;
@@ -15,7 +16,7 @@ class CObject2D;
 // クラス定義
 //==========================================================================
 // タイトルエンター
-class CTitle_Select
+class CTitle_Select : public CObject
 {
 public:
 
@@ -26,6 +27,7 @@ public:
 	{
 		STATE_NONE = 0,			// なにもなし
 		STATE_FADEIN,			// フェードイン
+		STATE_FADEOUT,			// フェードアウト
 		STATE_TUTORIAL_FADEOUT,	// チュートリアル確認のフェードアウト
 		STATE_NOACTIVE,			// 反応しない
 		STATE_SETTING,			// 設定中
@@ -43,10 +45,12 @@ public:
 	~CTitle_Select() {}
 
 	//  オーバーライドされた関数
-	HRESULT Init();
-	void Uninit();
-	void Update();
-	void SetDraw(const bool bDraw = true);
+	HRESULT Init() override;
+	void Uninit() override;
+	void Update() override;
+	void Draw() override;
+
+	void Kill();	// 削除
 
 	void SetState(STATE state);
 	STATE GetState() { return m_state; }
@@ -66,6 +70,7 @@ private:
 	//=============================
 	void StateNone();			// なにもなし
 	void StateFadeIn();			// フェードイン
+	void StateFadeOut();			// フェードアウト
 	void StateTutorial_FadeOut();		// チュートリアル確認のフェードアウト
 	void StateNoActive();		// 反応しない
 	void StateSetting();		// 反応しない
@@ -76,8 +81,8 @@ private:
 	STATE m_state;				// 状態
 	float m_fStateTime;			// 状態カウンター
 	const float m_fFadeOutTime;	// フェードにかかる時間
-	CObject2D* m_ap2D[SELECT_MAX];
-	CObject2D* m_pSelect;
+	CObject2D* m_ap2D[SELECT_MAX];	// 選択肢
+	CObject2D* m_pSelect;			// 背景筆
 	int m_nSelect;				// 
 	bool m_bPress;
 };

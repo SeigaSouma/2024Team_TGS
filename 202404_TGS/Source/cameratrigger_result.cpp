@@ -17,6 +17,8 @@
 //==========================================================================
 CCameraTrigger_Result::TRIGGER_FUNC CCameraTrigger_Result::m_TriggerFunc[] =
 {
+	&CCameraTrigger_Result::Subtitle01,		// Žš–‹01
+	&CCameraTrigger_Result::Subtitle02,		// Žš–‹01
 	&CCameraTrigger_Result::CameraShake,	// ƒJƒƒ‰—h‚ê
 	&CCameraTrigger_Result::OpenScroll,		// Šª‚«•¨ŠJ••
 };
@@ -38,6 +40,30 @@ CCameraTrigger_Result::~CCameraTrigger_Result()
 }
 
 //==========================================================================
+// Žš–‹01
+//==========================================================================
+void CCameraTrigger_Result::Subtitle01()
+{
+	CSubTitle* pSubTitle = CSubTitle::Create(MyLib::Vector3(640.0f, 670.0f, 0.0f), 2.0f);
+	pSubTitle->BindSubtitle("data\\TEXTURE\\subtitle\\result_01.png");
+	pSubTitle->SetSizeByHeight(40.0f);
+
+	CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_HNSW_000);
+}
+
+//==========================================================================
+// Žš–‹02
+//==========================================================================
+void CCameraTrigger_Result::Subtitle02()
+{
+	CSubTitle* pSubTitle = CSubTitle::Create(MyLib::Vector3(640.0f, 670.0f, 0.0f), 2.0f);
+	pSubTitle->BindSubtitle("data\\TEXTURE\\subtitle\\result_02.png");
+	pSubTitle->SetSizeByHeight(40.0f);
+
+	CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_OKSD_001);
+}
+
+//==========================================================================
 // ƒJƒƒ‰—h‚ê
 //==========================================================================
 void CCameraTrigger_Result::CameraShake()
@@ -45,6 +71,7 @@ void CCameraTrigger_Result::CameraShake()
 	CCamera* pCamera = CManager::GetInstance()->GetCamera();
 
 	pCamera->SetShake(18, 25.0f, 25.0f);
+	CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_SMASHATTACK);
 }
 
 //==========================================================================
