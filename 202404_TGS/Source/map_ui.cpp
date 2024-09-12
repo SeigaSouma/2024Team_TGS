@@ -84,13 +84,6 @@ HRESULT CMapUI::Init()
 		m_apObj[i]->SetRotation(MyLib::Vector3(0.0f, MODEL_ROTY, MODEL_ROTZ));
 	}
 
-	// •`‰æ—pƒJƒƒ‰‚Ì¶¬‚ÆÝ’è
-	m_pMyCamera = DEBUG_NEW CCamera;
-	m_pMyCamera->Init();
-	m_pMyCamera->SetRotation(MyLib::Vector3(0.0f, ROTY, 0.0f));
-	m_pMyCamera->SetDistance(DISTANCE);
-	m_pMyCamera->WarpCamera(POS + CAMPOS);
-
 	return S_OK;
 }
 

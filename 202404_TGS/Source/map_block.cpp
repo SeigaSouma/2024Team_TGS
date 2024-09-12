@@ -172,7 +172,6 @@ void CMapBlock::Kill()
 void CMapBlock::Update()
 {
 
-
 }
 
 //==========================================================================
@@ -185,8 +184,6 @@ void CMapBlock::SaveBin_CheckPoint()
 	if (!File.is_open()) {
 		return;
 	}
-
-
 
 	// æ“ª‚ğ•Û‘¶
 	std::list<CMapBlockInfo*>::iterator itr = m_InfoList.GetEnd();

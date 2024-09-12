@@ -11,6 +11,9 @@
 #include "calculation.h"
 #include "game.h"
 #include "gamemanager.h"
+#include "camera.h"
+#include "baggage.h"
+#include "baggageManager.h"
 
 // 派生先
 #include "timer_result.h"
@@ -21,10 +24,13 @@
 namespace
 {
 	const char* TEXTURE = "data\\TEXTURE\\number\\number_oradano03.png";	// テクスチャのファイル
-
-	const MyLib::Vector3 DEFAULT_POSITION = MyLib::Vector3(1100.0f, 100.0f, 0.0f);	// 初期位置
+	const std::string BGTEXTURE = "data\\TEXTURE\\timer\\bg.png";	// テクスチャのファイル
+	const float DISTANCE = 1300.0f;	// 距離
+	const MyLib::Vector3 DEFAULT_POSITION = MyLib::Vector3(1070.0f, 70.0f, 0.0f);	// 初期位置
 	const D3DXVECTOR2 SIZE_NUMBER = D3DXVECTOR2(35.0f, 35.0f);
 	const float DSTANCE_MULTIPLAY = 2.5f;
+	const float ROTY = D3DX_PI * 0.0f;	// Y軸角度
+	MyLib::Vector3 CAMERA_POS = MyLib::Vector3(-845.0f, -390.0f, 0.0f);
 }
 
 //==========================================================================
@@ -54,6 +60,8 @@ CTimer::CTimer(int nPriority)
 	m_pos = mylib_const::DEFAULT_VECTOR3;	// 位置
 	m_posOrigin = mylib_const::DEFAULT_VECTOR3;	// 元の位置
 	m_bAddTime = false;			// タイマー加算のフラグ
+	m_pMyCamera = nullptr;
+	m_pBg = nullptr;
 }
 
 //==========================================================================
@@ -105,6 +113,16 @@ HRESULT CTimer::Init()
 	m_state = STATE_WAIT;			// 状態
 	m_bAddTime = false;			// タイマー加算のフラグ
 
+	// 背景を生成するお
+	{
+		MyLib::Vector3 bgpos = DEFAULT_POSITION;
+		bgpos.x = 20.0f;
+		m_pBg = CObject2D::Create(2);
+		m_pBg->BindTexture(CTexture::GetInstance()->Regist(BGTEXTURE));
+		m_pBg->SetPosition(DEFAULT_POSITION);
+		D3DXVECTOR2 texture = CTexture::GetInstance()->GetImageSize(m_pBg->GetIdxTexture());
+		m_pBg->SetSize(UtilFunc::Transformation::AdjustSizeByHeight(texture, SIZE_NUMBER.y * 2.0f));
+	}
 
 	// 分、秒、ミリ秒の計算
 	int time[3];
@@ -139,6 +157,12 @@ HRESULT CTimer::Init()
 		pNumber->SetType(CObject::TYPE::TYPE_NUMBER);
 	}
 
+	// 描画用カメラの生成と設定
+	m_pMyCamera = DEBUG_NEW CCamera;
+	m_pMyCamera->Init();
+	m_pMyCamera->SetRotation(MyLib::Vector3(0.0f, ROTY, 0.0f));
+	m_pMyCamera->SetDistance(DISTANCE);
+
 	return S_OK;
 }
 
@@ -147,6 +171,7 @@ HRESULT CTimer::Init()
 //==========================================================================
 void CTimer::Uninit()
 {
+
 	delete m_pTimer;
 	m_pTimer = nullptr;
 }
@@ -158,6 +183,9 @@ void CTimer::Update()
 {
 	// 状態別処理
 	(this->*(m_StateFuncList[m_state]))();
+
+	// カメラ更新
+	SetCamera();
 
 	if (!m_bAddTime)
 	{
@@ -208,12 +236,6 @@ void CTimer::ApplyTimer()
 
 		// 値の設定
 		m_pClearTime[i]->SetValue(time[i]);
-
-		// 位置設定
-		MyLib::Vector3 pos = m_pos;
-		pos.x -= (m_pClearTime[i]->GetNumber()[0]->GetSizeOrigin().x * DSTANCE_MULTIPLAY) * i;
-		m_pClearTime[i]->SetPosition(pos);
-
 	}
 }
 
@@ -232,4 +254,23 @@ void CTimer::SetTime(const float time)
 {
 	m_fTime = time;
 	ApplyTimer();
+}
+
+//==========================================================================
+// カメラ
+//==========================================================================
+void CTimer::SetCamera()
+{
+	// カメラがない
+	if (m_pMyCamera == nullptr) { return; }
+
+	CBaggage* pBag = CBaggage::GetListObj().GetData(0);
+
+	// 荷物がない
+	if (pBag == nullptr) { return; }
+
+	// 座標を更新
+	MyLib::Vector3 pos = CAMERA_POS;
+	m_pMyCamera->SetPositionR(pos);
+	m_pMyCamera->SetPositionV();
 }
