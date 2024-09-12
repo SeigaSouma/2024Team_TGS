@@ -60,6 +60,7 @@ CTitle_OptionSelect::CTitle_OptionSelect(int nPriority) : CObject(nPriority)
 	
 	memset(m_pSelect, 0, sizeof(m_pSelect));	// 選択肢のオブジェクト
 	m_pScroll = nullptr;					// 巻き物
+	m_pOptionMenu = nullptr;				// オプションメニュー
 
 }
 
@@ -266,6 +267,9 @@ void CTitle_OptionSelect::StateSelect()
 	{
 		// パターンNo.を更新
 		m_select = static_cast<Select>((m_select + (Select::SELECT_MAX - 1)) % Select::SELECT_MAX);
+
+		// オプションメニュー切り替え
+		ChangeOptionMenu();
 	}
 
 	// 下
@@ -275,6 +279,9 @@ void CTitle_OptionSelect::StateSelect()
 	{
 		// パターンNo.を更新
 		m_select = static_cast<Select>(((int)m_select + 1) % Select::SELECT_MAX);
+
+		// オプションメニュー切り替え
+		ChangeOptionMenu();
 	}
 
 
@@ -287,6 +294,12 @@ void CTitle_OptionSelect::StateSelect()
 
 		// 編集状態
 		SetState(STATE::STATE_EDIT);
+
+		// エディット
+		if (m_pOptionMenu != nullptr)
+		{
+			m_pOptionMenu->SetState(COptionMenu::STATE::STATE_EDIT);
+		}
 	}
 
 	// 選択肢に戻る設定
@@ -312,6 +325,12 @@ void CTitle_OptionSelect::StateEdit()
 
 		// 選択状態
 		SetState(STATE::STATE_SELECT);
+
+		// エディット終了
+		if (m_pOptionMenu != nullptr)
+		{
+			m_pOptionMenu->SetState(COptionMenu::STATE::STATE_NONE);
+		}
 	}
 }
 
@@ -332,8 +351,6 @@ void CTitle_OptionSelect::StateFadeIn()
 	if (m_fStateTimer >= StateTime::FADE)
 	{
 		SetState(STATE::STATE_SELECT);
-
-		COptionMenu::Create(Select::SELECT_SOUND);
 	}
 }
 
@@ -400,6 +417,22 @@ void CTitle_OptionSelect::SetBackSelect()
 		// フェードアウト
 		SetState(STATE::STATE_FADEOUT);
 	}
+}
+
+//==========================================================================
+// オプションメニュー切り替え
+//==========================================================================
+void CTitle_OptionSelect::ChangeOptionMenu()
+{
+	if (m_pOptionMenu != nullptr)
+	{
+		m_pOptionMenu->Kill();
+		m_pOptionMenu = nullptr;
+	}
+
+	// 選択中のオプションを生成
+	m_pOptionMenu = COptionMenu::Create(m_select);
+
 }
 
 //==========================================================================

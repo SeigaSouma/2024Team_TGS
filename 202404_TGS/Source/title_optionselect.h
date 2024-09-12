@@ -12,6 +12,7 @@
 
 class CObject2D;
 class CScroll;
+class COptionMenu;
 
 //==========================================================================
 // クラス定義
@@ -91,7 +92,8 @@ private:
 	void StateFadeOut();	// フェードアウト
 
 	// その他
-	void CreateSelect();	// 選択肢生成
+	void CreateSelect();		// 選択肢生成
+	void ChangeOptionMenu();	// オプションメニュー切り替え
 
 	//=============================
 	// メンバ変数
@@ -105,6 +107,7 @@ private:
 	Select m_Oldselect;		// 前回の選択肢
 	CObject2D* m_pSelect[Select::SELECT_MAX];	// 選択肢のオブジェクト
 	CScroll* m_pScroll;		// 巻き物
+	COptionMenu* m_pOptionMenu;	// オプションメニュー
 };
 
 

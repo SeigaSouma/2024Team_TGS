@@ -18,9 +18,10 @@
 //==========================================================================
 namespace
 {
-	const MyLib::Vector3 BASEPOINT = MyLib::Vector3(800.0f, 200.0f, 0.0f);
+	const MyLib::Vector3 BASEPOINT = MyLib::Vector3(850.0f, 200.0f, 0.0f);
 	const D3DXVECTOR2 SIZE_NUMBER = D3DXVECTOR2(40.0f, 40.0f);
 	const float DISTANCE_Y = 120.0f;
+	const float MULTIPLY_SELECT = 1.25f;
 	const char* TEXTURE = "data\\TEXTURE\\number\\number_oradano03.png";	// テクスチャのファイル
 	const char* TEXTURE_TEXT[] =
 	{
@@ -40,6 +41,13 @@ COptionMenu_Sound::COptionMenu_Sound(int nPriority) : COptionMenu(nPriority)
 	m_selectType = Select::SELECT_MASTER;	// 選択中の種類
 	m_bChange = false;						// 変更のフラグ
 	m_pDrawing = nullptr;		// 選択肢筆
+
+
+	m_pNumber_Master = nullptr;			// マスターボリュームの数字
+	m_pNumber_SE = nullptr;				// SEの数字
+	m_pNumber_BGM = nullptr;			// BGMの数字
+	memset(m_pText, 0, sizeof(m_pText));// テキスト
+	m_pDrawing = nullptr;				// 選択肢筆
 }
 
 //==========================================================================
@@ -73,6 +81,7 @@ HRESULT COptionMenu_Sound::Init()
 		TEXTURE, true, 4);
 	m_pNumber_Master->SetAlignmentType(CMultiNumber::ALIGNMENT_RIGHT);
 	m_pNumber_Master->SetType(CObject::TYPE::TYPE_NUMBER);
+	m_pNumber_Master->SetPosition(m_pNumber_Master->GetPosition());
 
 	// SEの数字
 	setpos.y += DISTANCE_Y;
@@ -84,6 +93,7 @@ HRESULT COptionMenu_Sound::Init()
 		TEXTURE, true, 4);
 	m_pNumber_SE->SetAlignmentType(CMultiNumber::ALIGNMENT_RIGHT);
 	m_pNumber_SE->SetType(CObject::TYPE::TYPE_NUMBER);
+	m_pNumber_SE->SetPosition(m_pNumber_SE->GetPosition());
 
 	// BGMの数字
 	setpos.y += DISTANCE_Y;
@@ -95,12 +105,34 @@ HRESULT COptionMenu_Sound::Init()
 		TEXTURE, true, 4);
 	m_pNumber_BGM->SetAlignmentType(CMultiNumber::ALIGNMENT_RIGHT);
 	m_pNumber_BGM->SetType(CObject::TYPE::TYPE_NUMBER);
+	m_pNumber_BGM->SetPosition(m_pNumber_BGM->GetPosition());
+
 
 
 	// 選択肢筆
 	m_pDrawing = CSelectDraw::Create(BASEPOINT);
 	m_pDrawing->SetSizeOrigin(D3DXVECTOR2(200.0f, HEIGHT));
 	m_pDrawing->SetSize(m_pDrawing->GetSizeOrigin());
+
+
+	// サウンド取得
+	CSound* pSound = CSound::GetInstance();
+
+	// マスターボリューム
+	float masterVolume = pSound->GetVolume();
+
+	// 各ボリューム
+	float volumeSE = pSound->GetVolume(CSound::TYPE::TYPE_SE), volumeBGM = pSound->GetVolume(CSound::TYPE::TYPE_BGM);
+
+	// 値の設定
+	m_pNumber_Master->SetValue(pSound->GetVolumeNum() / 2);
+	m_pNumber_SE->SetValue(pSound->GetVolumeNum(CSound::TYPE::TYPE_SE) / 2);
+	m_pNumber_BGM->SetValue(pSound->GetVolumeNum(CSound::TYPE::TYPE_BGM) / 2);
+
+
+
+	// 選択肢筆の初期位置設定
+	m_pDrawing->SetPosition(m_pNumber_Master->GetPosition());
 
 	return S_OK;
 }
@@ -114,7 +146,7 @@ void COptionMenu_Sound::CreateText()
 
 	// 設定位置
 	MyLib::Vector3 setpos = BASEPOINT;
-	setpos.x -= 300.0f;
+	setpos.x -= 400.0f;
 
 	for (int i = 0; i < Select::SELECT_MAX; i++)
 	{
@@ -159,6 +191,42 @@ void COptionMenu_Sound::Uninit()
 //==========================================================================
 void COptionMenu_Sound::Kill()
 {
+	// マスターボリュームの数字
+	if (m_pNumber_Master != nullptr)
+	{
+		m_pNumber_Master->Kill();
+		m_pNumber_Master = nullptr;
+	}
+
+	// マスターボリュームの数字
+	if (m_pNumber_SE != nullptr)
+	{
+		m_pNumber_SE->Kill();
+		m_pNumber_SE = nullptr;
+	}
+
+	// マスターボリュームの数字
+	if (m_pNumber_BGM != nullptr)
+	{
+		m_pNumber_BGM->Kill();
+		m_pNumber_BGM = nullptr;
+	}
+
+	// テキスト
+	for (int i = 0; i < Select::SELECT_MAX; i++)
+	{
+		if (m_pText[i] == nullptr) continue;
+		m_pText[i]->Uninit();
+		m_pText[i] = nullptr;
+	}
+	
+	// 選択肢筆
+	if (m_pDrawing != nullptr)
+	{
+		m_pDrawing->Uninit();
+		m_pDrawing = nullptr;
+	}
+
 	// 削除処理
 	COptionMenu::Kill();
 }
@@ -280,21 +348,21 @@ void COptionMenu_Sound::StateEdit()
 		{
 		case COptionMenu_Sound::SELECT_MASTER:
 			fVolume = pSound->GetVolume();
-			m_pNumber_Master->SetSize(m_pNumber_Master->GetSizeOrigin() * 1.5f);
+			m_pNumber_Master->SetSize(m_pNumber_Master->GetSizeOrigin() * MULTIPLY_SELECT);
 			m_pNumber_Master->SetKerning(m_pNumber_Master->GetSize().y);
 			m_pNumber_Master->SetPosition(m_pNumber_Master->GetPosition());
 			break;
 
 		case COptionMenu_Sound::SELECT_SE:
 			fVolume = pSound->GetVolume(CSound::TYPE::TYPE_SE);
-			m_pNumber_SE->SetSize(m_pNumber_SE->GetSizeOrigin() * 1.5f);
+			m_pNumber_SE->SetSize(m_pNumber_SE->GetSizeOrigin() * MULTIPLY_SELECT);
 			m_pNumber_SE->SetKerning(m_pNumber_SE->GetSize().y);
 			m_pNumber_SE->SetPosition(m_pNumber_SE->GetPosition());
 			break;
 
 		case COptionMenu_Sound::SELECT_BGM:
 			fVolume = pSound->GetVolume(CSound::TYPE::TYPE_BGM);
-			m_pNumber_BGM->SetSize(m_pNumber_BGM->GetSizeOrigin() * 1.5f);
+			m_pNumber_BGM->SetSize(m_pNumber_BGM->GetSizeOrigin() * MULTIPLY_SELECT);
 			m_pNumber_BGM->SetKerning(m_pNumber_BGM->GetSize().y);
 			m_pNumber_BGM->SetPosition(m_pNumber_BGM->GetPosition());
 			break;
