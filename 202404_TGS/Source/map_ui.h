@@ -26,6 +26,7 @@ public:
 	{
 		TYPE_MAP = 0,	// マップ
 		TYPE_PLAYER,	// プレイヤー
+		TYPE_WATER,
 		TYPE_MAX
 	};
 

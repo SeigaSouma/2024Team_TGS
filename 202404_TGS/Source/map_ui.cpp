@@ -24,16 +24,19 @@ namespace
 	const std::string TEXTURELIST[CMapUI::TYPE::TYPE_MAX] = {	// テクスチャリスト
 		"data\\TEXTURE\\map_ui\\map.png",
 		"data\\TEXTURE\\map_ui\\player.png",
+		"data\\TEXTURE\\map_ui\\water.png",
 	};
 
 	const float HEIGHTLIST[CMapUI::TYPE::TYPE_MAX] = {	// 高さリスト
 		100.0f,
 		50.0f,
+		100.0f,
 	};
 
 	const float STARTX = SCREEN_WIDTH * 0.09f;
 	const float GOALX = SCREEN_WIDTH * 0.9f;
 	const float ADD_TIME = (1.0f / 25.0f);
+	const float WATER_MOVE = (1.0f / 1800.0f);
 	const float UPDOWN_HEIGHT = (6.0f);
 }
 
@@ -83,7 +86,7 @@ HRESULT CMapUI::Init()
 	// オブジェクトの生成と設定
 	for (int i = 0; i < TYPE::TYPE_MAX; i++)
 	{
-		m_apObj[i] = CObject2D::Create(6);
+		m_apObj[i] = CObject2D::Create(1);
 		int texidx = CTexture::GetInstance()->Regist(TEXTURELIST[i]);
 		m_apObj[i]->BindTexture(texidx);
 		m_apObj[i]->SetType(CObject::TYPE_OBJECT2D);
@@ -195,4 +198,9 @@ void CMapUI::SetMapPosition()
 	pos.x = x;
 	pos.y = (DEF_POS.y + UPDOWN_HEIGHT) + sinf(m_fSin) * UPDOWN_HEIGHT;
 	m_apObj[TYPE::TYPE_PLAYER]->SetPosition(pos);
+	D3DXVECTOR2* ptex = m_apObj[TYPE::TYPE_WATER]->GetTex();
+	for (int i = 0; i < 4; i++)
+	{
+		ptex[i].x -= WATER_MOVE;
+	}
 }
