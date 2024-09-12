@@ -15,6 +15,7 @@
 #include "object2D.h"
 #include "scroll.h"
 #include "keyconfig_setting.h"
+#include "optionmenu.h"
 
 //==========================================================================
 // ’è”’è‹`
@@ -331,6 +332,8 @@ void CTitle_OptionSelect::StateFadeIn()
 	if (m_fStateTimer >= StateTime::FADE)
 	{
 		SetState(STATE::STATE_SELECT);
+
+		COptionMenu::Create(Select::SELECT_SOUND);
 	}
 }
 

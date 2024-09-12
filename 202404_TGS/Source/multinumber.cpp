@@ -104,10 +104,11 @@ CMultiNumber* CMultiNumber::Create(MyLib::Vector3 pos, D3DXVECTOR2 size, int nNu
 
 		// サイズ
 		pNumber->m_size = size;
+		pNumber->m_sizeOrigin = size;
 
 		// 位置
 		pNumber->SetPosition(pos);
-		pNumber->SetPosition(pos);
+		pNumber->SetOriginPosition(pos);
 
 		// 数字の数
 		pNumber->m_nNumNumber = nNum;
@@ -177,6 +178,9 @@ HRESULT CMultiNumber::Init()
 
 	// 文字間隔
 	m_fKerning = m_size.y;
+
+	// 数字設定
+	SetValue();
 
 	return S_OK;
 }
