@@ -16,6 +16,8 @@
 #include "blackframe.h"
 #include "splashwater.h"
 #include "guide.h"
+#include "timer.h"
+#include "object3D.h"
 
 //==========================================================================
 // 定数定義
@@ -93,6 +95,7 @@ CBaggage::CBaggage(int nPriority) : CObjectQuaternion(nPriority)
 	m_bLand = false;	// 着地判定
 	m_bEnd = false;		// 終了処理
 	m_bfall = false;
+	m_p3D = nullptr;
 	m_velorot = MyLib::Vector3(0.0f, 0.0f, 0.0f);
 	m_baggageInfo = {};
 	m_fDeviation = 0.0f;
@@ -157,6 +160,23 @@ HRESULT CBaggage::Init()
 	// スケールゼロ
 	SetScale(0.0f);
 	m_state = STATE::STATE_APPEARANCE_WAIT;
+
+	{
+		m_p3D = CObject3D::Create(3);
+		m_p3D->SetType(CObject::TYPE_OBJECT3D);
+		m_p3D->BindTexture(CTexture::GetInstance()->Regist("data\\TEXTURE\\timer\\circle.png"));
+		MyLib::Vector3 bgpos = 0.0f;
+		bgpos.x += 5.0f;
+		bgpos.y += 60.0f;
+		m_p3D->SetPosition(bgpos);
+		D3DXVECTOR2 texture = CTexture::GetInstance()->GetImageSize(CTexture::GetInstance()->Regist("data\\TEXTURE\\timer\\circle.png"));
+		MyLib::Vector3 vec = 0.0f;
+		D3DXVECTOR2 size = UtilFunc::Transformation::AdjustSizeByHeight(texture, 110.0f);
+		vec.x = size.x;
+		vec.y = size.y;
+		m_p3D->SetSize(vec);
+		m_p3D->SetEnableDisp(false);
+	}
 	return S_OK;
 }
 
@@ -643,6 +663,104 @@ void CBaggage::Draw()
 
 	// 普通の描画
 	CObjectQuaternion::Draw();
+
+	// タイマー用の荷物を描画
+	CTimer* pTimer = CTimer::GetInstance();
+	if (pTimer == nullptr) { return; }
+
+	if (pTimer->GetCamera() == nullptr) { return; }
+
+	D3DXMATRIX mtxView, mtxProjection;
+	D3DVIEWPORT9 viewportDef;
+
+	// 現在のビューポートの取得
+	pDevice->GetViewport(&viewportDef);
+
+	// 現在のビューマトリックスの取得
+	pDevice->GetTransform(D3DTS_VIEW, &mtxView);
+
+	// 現在のプロジェクションマトリックスの取得
+	pDevice->GetTransform(D3DTS_PROJECTION, &mtxProjection);
+
+	// 別のカメラを設定して描画する
+	if (pTimer->GetCamera() != nullptr)
+	{
+		pTimer->GetCamera()->SetCamera();
+
+		MyLib::Vector3 pos = GetPosition();
+		MyLib::Vector3 oldpos = pos;
+		pos = 0.0f;
+		SetPosition(pos);
+
+		// 描画処理
+		CObjectQuaternion::Draw();
+
+		SetPosition(oldpos);
+	}
+
+	m_p3D->SetEnableDisp(true);
+	m_p3D->Draw();
+	m_p3D->SetEnableDisp(false);
+
+	// 現在のビューポートの取得
+	pDevice->SetViewport(&viewportDef);
+
+	// 現在のビューマトリックスの取得
+	pDevice->SetTransform(D3DTS_VIEW, &mtxView);
+
+	// 現在のプロジェクションマトリックスの取得
+	pDevice->SetTransform(D3DTS_PROJECTION, &mtxProjection);
+}
+
+//==========================================================================
+// UI描画
+//==========================================================================
+void CBaggage::UIDraw()
+{
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
+
+	// タイマー用の荷物を描画
+	CTimer* pTimer = CTimer::GetInstance();
+	if (pTimer == nullptr) { return; }
+
+	if (pTimer->GetCamera() == nullptr) { return; }
+
+	D3DXMATRIX mtxView, mtxProjection;
+	D3DVIEWPORT9 viewportDef;
+
+	// 現在のビューポートの取得
+	pDevice->GetViewport(&viewportDef);
+
+	// 現在のビューマトリックスの取得
+	pDevice->GetTransform(D3DTS_VIEW, &mtxView);
+
+	// 現在のプロジェクションマトリックスの取得
+	pDevice->GetTransform(D3DTS_PROJECTION, &mtxProjection);
+
+	// 別のカメラを設定して描画する
+	if (pTimer->GetCamera() != nullptr)
+	{
+		pTimer->GetCamera()->SetCamera();
+
+		MyLib::Vector3 pos = GetPosition();
+		MyLib::Vector3 oldpos = pos;
+		pos = 0.0f;
+		SetPosition(pos);
+
+		// 描画処理
+		CObjectQuaternion::Draw();
+
+		SetPosition(oldpos);
+	}
+
+	// 現在のビューポートの取得
+	pDevice->SetViewport(&viewportDef);
+
+	// 現在のビューマトリックスの取得
+	pDevice->SetTransform(D3DTS_VIEW, &mtxView);
+
+	// 現在のプロジェクションマトリックスの取得
+	pDevice->SetTransform(D3DTS_PROJECTION, &mtxProjection);
 }
 
 //==========================================================================

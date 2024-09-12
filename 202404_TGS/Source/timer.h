@@ -14,6 +14,8 @@
 // 前方宣言
 //==========================================================================
 class CMultiNumber;
+class CCamera;
+class CObject2D;
 
 //==========================================================================
 // クラス定義
@@ -49,6 +51,7 @@ public:
 	void SetTime(const float time);
 	void SetEnableAddTime(bool frag) { m_bAddTime = frag; }	// 時間加算フラグ設定
 	virtual void ApplyTimer();	// タイマー反映
+	CCamera* GetCamera() { return m_pMyCamera; }
 
 	CTimer::eState GetState() { return m_state; }
 	void SetState(eState state) { m_state = state; }
@@ -69,6 +72,7 @@ private:
 	//=============================
 	virtual void StateWait();
 	virtual void StateGoal();
+	void SetCamera();
 
 protected:
 
@@ -83,7 +87,9 @@ protected:
 	float m_fTime;					// 時間
 	bool m_bAddTime;				// タイマー加算のフラグ
 	CMultiNumber* m_pClearTime[3];	// 種類ごとの数字
-	static CTimer *m_pTimer;	// 自身のポインタ
+	static CTimer *m_pTimer;		// 自身のポインタ
+	CCamera* m_pMyCamera;			// カメラ
+	CObject2D* m_pBg;				// 背景
 };
 
 
