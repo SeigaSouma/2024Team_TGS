@@ -100,8 +100,10 @@ public:
 	void VolumeChange(LABEL label, float volume);	// 音量設定
 	void VolumeChange(float fVolume);				// マスターボリューム設定
 	void VolumeChange(TYPE type, float fVolume);	// 種類別ボリューム設定
-	int GetVolume();								// 音量取得（マスターボリューム）
-	int GetVolume(TYPE type);						// 音量取得（種類別）
+	int GetVolumeNum();								// 音量取得（マスターボリューム）
+	int GetVolumeNum(TYPE type);					// 音量取得（種類別）
+	float GetVolume() { return m_fMasterVolume; }			// 音量取得（マスターボリューム）
+	float GetVolume(TYPE type) { return m_aVolume[type]; }	// 音量取得（種類別）
 	void SetFrequency(LABEL label, float fValue);	// 周波数設定
 
 	static CSound* Create(HWND hWnd);	// 生成処理

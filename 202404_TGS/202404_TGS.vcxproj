@@ -293,6 +293,8 @@
     <ClCompile Include="Source\objectQuaternion.cpp" />
     <ClCompile Include="Source\objectX.cpp" />
     <ClCompile Include="Source\object_circlegauge2D.cpp" />
+    <ClCompile Include="Source\optionmenu.cpp" />
+    <ClCompile Include="Source\optionmenu_sound.cpp" />
     <ClCompile Include="Source\particle.cpp" />
     <ClCompile Include="Source\pause.cpp" />
     <ClCompile Include="Source\pause_game.cpp" />
@@ -327,6 +329,7 @@
     <ClCompile Include="Source\scene.cpp" />
     <ClCompile Include="Source\score.cpp" />
     <ClCompile Include="Source\scroll.cpp" />
+    <ClCompile Include="Source\selectdraw.cpp" />
     <ClCompile Include="Source\serifeffect.cpp" />
     <ClCompile Include="Source\shadow.cpp" />
     <ClCompile Include="Source\skip_ui.cpp" />
@@ -507,6 +510,8 @@
     <ClInclude Include="Source\objectQuaternion.h" />
     <ClInclude Include="Source\objectX.h" />
     <ClInclude Include="Source\object_circlegauge2D.h" />
+    <ClInclude Include="Source\optionmenu.h" />
+    <ClInclude Include="Source\optionmenu_sound.h" />
     <ClInclude Include="Source\particle.h" />
     <ClInclude Include="Source\pause.h" />
     <ClInclude Include="Source\pause_game.h" />
@@ -536,6 +541,7 @@
     <ClInclude Include="Source\scene.h" />
     <ClInclude Include="Source\score.h" />
     <ClInclude Include="Source\scroll.h" />
+    <ClInclude Include="Source\selectdraw.h" />
     <ClInclude Include="Source\serifeffect.h" />
     <ClInclude Include="Source\shadow.h" />
     <ClInclude Include="Source\skip_ui.h" />

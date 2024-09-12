@@ -230,22 +230,6 @@ void CTitle::SceneFadeKeyConfigSetting()
 	{
 		m_pConfigSetting = CKeyConfigSetting::Create();
 	}
-
-	// “ü—Íî•ñŽæ“¾
-	CKeyConfig* pInputGamepad = CKeyConfigManager::GetInstance()->GetConfig(CKeyConfigManager::CONTROL_INPAD);
-	CKeyConfig* pInputKey = CKeyConfigManager::GetInstance()->GetConfig(CKeyConfigManager::CONTROL_INKEY);
-
-	// “ü—Í’†‚©Šm”F
-	if (m_pConfigSetting != nullptr)
-	{
-		m_pConfigSetting->Update();
-
-		if (m_pConfigSetting->IsChange())
-		{
-			return;
-		}
-	}
-
 }
 
 //==========================================================================
