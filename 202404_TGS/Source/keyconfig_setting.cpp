@@ -66,7 +66,6 @@ CKeyConfigSetting::CKeyConfigSetting()
 	m_checkconfig.s_pKeyDispNO = nullptr;
 	m_checkconfig.s_p2DFront = nullptr;
 	m_pTitle2D = nullptr;
-	m_pScroll = nullptr;
 	m_bNowChange = false;
 	m_SelectKey = 0;
 	m_Alpha = 0.0f;
@@ -96,13 +95,6 @@ HRESULT CKeyConfigSetting::Init()
 	CKeyConfig* pConfigPad = CKeyConfigManager::GetInstance()->GetConfig(CKeyConfigManager::CONTROL_INPAD);
 	CTexture* pTexture = CTexture::GetInstance();
 	D3DXCOLOR col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f);
-
-	// 背景
-	{
-		MyLib::Vector3 pos = DEFAULT_POS;
-		pos.y = SCREEN_HEIGHT * 0.5f;
-		m_pScroll = CScroll::Create(pos, 0.05f, DOWN_POSY * INGAME::ACTION::ACT_MAX * 0.6f, FONT_WIDTH * 5.5f, false, false, 8);
-	}
 
 	// 説明文字生成
 	{
@@ -266,13 +258,6 @@ void CKeyConfigSetting::Uninit()
 		m_pTitle2D = nullptr;
 	}
 
-	// 背景
-	if (m_pScroll != nullptr)
-	{
-		m_pScroll->SetState(CScroll::STATE::STATE_CLOSE);
-		m_pScroll = nullptr;
-	}
-
 	delete this;
 }
 
@@ -284,16 +269,8 @@ void CKeyConfigSetting::Update()
 	CInputGamepad* pPad = CInputGamepad::GetInstance();
 	CKeyConfig* pKeyConfig = CKeyConfigManager::GetInstance()->GetConfig(CKeyConfigManager::CONTROL_INPAD);
 
-	if (m_pScroll != nullptr)
-	{
-		// スクロール終了まで反応しない
-		if (m_pScroll->GetState() != CScroll::STATE::STATE_WAIT)
-		{
-			return;
-		}
-
-		SetAlpha();
-	}
+	// 不透明度設定
+	SetAlpha();
 
 	if (m_bNowChange) { return; }
 
@@ -378,18 +355,19 @@ void CKeyConfigSetting::Update()
 		// タイマー加算
 		m_aKeyConfig[i].drawtime += deltaTime;
 
+		// 書く動き
+		{
+			CObject2D* pObj2D = m_aKeyConfig[i].s_p2DFront;
 
+			// サイズ設定
+			D3DXVECTOR2 size = pObj2D->GetSize(), sizeOrigin = pObj2D->GetSizeOrigin();
+			size.x = UtilFunc::Correction::EaseInExpo(0.0f, sizeOrigin.x, 0.0f, 0.2f, m_aKeyConfig[i].drawtime);
+			m_aKeyConfig[i].s_p2DFront->SetSize(size);
 
-		CObject2D* pObj2D = m_aKeyConfig[i].s_p2DFront;
-
-		// サイズ設定
-		D3DXVECTOR2 size = pObj2D->GetSize(), sizeOrigin = pObj2D->GetSizeOrigin();
-		size.x = UtilFunc::Correction::EaseInExpo(0.0f, sizeOrigin.x, 0.0f, 0.2f, m_aKeyConfig[i].drawtime);
-		m_aKeyConfig[i].s_p2DFront->SetSize(size);
-
-		// UV座標設定
-		D3DXVECTOR2* pTex = pObj2D->GetTex();
-		pTex[1].x = pTex[3].x = UtilFunc::Transformation::Clamp(size.x / sizeOrigin.x, 0.0f, 1.0f);
+			// UV座標設定
+			D3DXVECTOR2* pTex = pObj2D->GetTex();
+			pTex[1].x = pTex[3].x = UtilFunc::Transformation::Clamp(size.x / sizeOrigin.x, 0.0f, 1.0f);
+		}
 
 		m_aKeyConfig[i].s_p2DFront->SetColor(col);
 	}

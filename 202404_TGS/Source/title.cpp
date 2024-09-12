@@ -17,8 +17,6 @@
 #include "title_pressenter.h"
 #include "camera.h"
 #include "keyconfig_setting.h"
-#include "title_select.h"
-#include "scroll.h"
 
 //==========================================================================
 // 定数定義
@@ -248,24 +246,6 @@ void CTitle::SceneFadeKeyConfigSetting()
 		}
 	}
 
-	// 巻き物取得
-	CScroll* pScroll = m_pConfigSetting->GetScroll();
-
-	if (pScroll == nullptr ||
-		(pScroll != nullptr && pScroll->GetState() != CScroll::STATE::STATE_WAIT)) return;
-
-	// 入力があればキーコンフィグ設定を行う
-	if (pInputGamepad->GetTrigger(INGAME::ACT_BACK) || pInputKey->GetTrigger(INGAME::ACT_BACK))
-	{
-		m_SceneType = SCENETYPE::SCENETYPE_NONE;
-		m_pPressEnter->GetSelect()->SetState(CTitle_Select::STATE::STATE_FADEIN);
-
-		if (m_pConfigSetting != nullptr)
-		{
-			m_pConfigSetting->Uninit();
-			m_pConfigSetting = nullptr;
-		}
-	}
 }
 
 //==========================================================================

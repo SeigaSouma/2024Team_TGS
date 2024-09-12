@@ -36,6 +36,8 @@ public:
 		SCENETYPE_FADEOUT_LOGO,		// ロゴフェードアウト
 		SCENETYPE_SHOULDTUTORIAL,	// チュートリアル確認
 		SCENETYPE_KEYCONFIGSETTING,	// キーコンフィグ設定
+		SCENETYPE_SOUNDSETTING,		// サウンド設定
+		SCENETYPE_OTHERSETTING,		// その他設定
 		SCENETYPE_MAX
 	};
 
@@ -55,6 +57,7 @@ public:
 	// その他
 	CTitle_PressEnter* GetTitlePressEnter() { return m_pPressEnter; }
 	CKeyConfigSetting* GetSetting() { return m_pConfigSetting; }
+	void SetSetting(CKeyConfigSetting* pSetting) { m_pConfigSetting = pSetting; }
 
 	// 静的関数
 	static CTitle* GetInstance();	// インスタンス取得

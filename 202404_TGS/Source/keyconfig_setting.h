@@ -11,7 +11,6 @@
 
 // 前方宣言
 class CControlKeyDisp;
-class CScroll;
 
 //==========================================================================
 // クラス定義
@@ -61,7 +60,6 @@ public:
 	bool IsDeath(void) { return m_bDeath; }
 	bool IsChange(void) { return m_bNowChange; }
 
-	CScroll* GetScroll() { return m_pScroll; }	// 巻き物取得
 
 private:
 
@@ -78,7 +76,6 @@ private:
 	KEYINFO m_aKeyConfig[INGAME::ACT_MAX];	// キーコンフィグ用
 	CHENGEINFO m_checkconfig;	// 決定戻る変更用
 	CObject2D* m_pTitle2D;		// 説明用ポリゴン
-	CScroll* m_pScroll;
 };
 
 #endif

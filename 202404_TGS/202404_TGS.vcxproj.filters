@@ -764,6 +764,9 @@
     <ClCompile Include="Source\cameratrigger_result.cpp">
       <Filter>camera</Filter>
     </ClCompile>
+    <ClCompile Include="Source\title_optionselect.cpp">
+      <Filter>mode\title</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ballast.h">
@@ -1383,6 +1386,9 @@
     </ClInclude>
     <ClInclude Include="Source\cameratrigger_result.h">
       <Filter>camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\title_optionselect.h">
+      <Filter>mode\title</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

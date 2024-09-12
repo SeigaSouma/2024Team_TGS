@@ -11,6 +11,7 @@
 #include "object2D.h"
 
 class CObject2D;
+class CTitle_OptionSelect;
 
 //==========================================================================
 // クラス定義
@@ -56,6 +57,8 @@ public:
 	void SetState(STATE state);
 	STATE GetState() { return m_state; }
 
+	CTitle_OptionSelect* GetOptionSelect() { return m_pOptionSelect; }	// オプションの選択肢
+
 	static CTitle_Select* Create(float fadetime);	// 生成処理
 
 private:
@@ -77,6 +80,8 @@ private:
 	void StateSetting();		// 反応しない
 	void StateBack();			// 戻る
 
+	// その他
+	void DecideOptionSetting();	// オプション決定時の設定
 	void DrawSelect();	// 選択肢を書く
 
 	//=============================
@@ -88,6 +93,7 @@ private:
 	const float m_fFadeOutTime;	// フェードにかかる時間
 	CObject2D* m_ap2D[SELECT_MAX];	// 選択肢
 	CObject2D* m_pSelect;			// 背景筆
+	CTitle_OptionSelect* m_pOptionSelect;	// オプションの選択肢
 	int m_nSelect;				// 
 	bool m_bPress;
 };

@@ -13,6 +13,7 @@
 #include "fade.h"
 #include "keyconfig.h"
 #include "title_pressenter.h"
+#include "title_optionselect.h"
 
 //==========================================================================
 // 定数定義
@@ -38,6 +39,7 @@ namespace FILENAME
 namespace StateTime
 {
 	const float FADE = 0.3f;
+	const float DRAW = 0.15f;
 }
 
 //==========================================================================
@@ -69,6 +71,7 @@ CTitle_Select::CTitle_Select(float fadetime) : CObject() , m_fFadeOutTime(fadeti
 	{
 		m_ap2D[i] = nullptr;
 	}
+	m_pOptionSelect = nullptr;	// オプションの選択肢
 
 	m_pSelect = nullptr;
 	m_bPress = false;
@@ -150,6 +153,12 @@ HRESULT CTitle_Select::Init()
 	SetState(STATE::STATE_FADEIN);
 	m_pSelect->SetPosition(m_ap2D[m_nSelect]->GetPosition() - MyLib::Vector3(m_pSelect->GetSizeOrigin().x, 0.0f, 0.0f));
 
+	// オプション選択肢の生成
+	if (m_pOptionSelect == nullptr)
+	{
+		m_pOptionSelect = CTitle_OptionSelect::Create();
+	}
+
 	return S_OK;
 }
 
@@ -221,7 +230,7 @@ void CTitle_Select::DrawSelect()
 
 	// 書くように拡縮
 	D3DXVECTOR2 size = m_pSelect->GetSize(), sizeOrigin = m_pSelect->GetSizeOrigin();
-	size.x = UtilFunc::Correction::EaseInExpo(0.0f, sizeOrigin.x, 0.0f, 0.1f, m_fSelectDrawTime);
+	size.x = UtilFunc::Correction::EaseInExpo(0.0f, sizeOrigin.x, 0.0f, StateTime::DRAW, m_fSelectDrawTime);
 	m_pSelect->SetSize(size);
 
 	// UV座標設定
@@ -236,10 +245,10 @@ void CTitle_Select::DrawSelect()
 //==========================================================================
 void CTitle_Select::StateNone()
 {
-	if (CTitle::GetInstance()->GetSetting() != nullptr)
+	/*if (CTitle::GetInstance()->GetSetting() != nullptr)
 	{
 		return;
-	}
+	}*/
 
 	// 入力情報取得
 	CInputKeyboard* pInputKeyboard = CInputKeyboard::GetInstance();
@@ -256,7 +265,9 @@ void CTitle_Select::StateNone()
 		return;
 	}
 
+	//=============================
 	// 方向入力
+	//=============================
 	if (pInputGamepad->GetTrigger(CInputGamepad::BUTTON_LEFT, 0) || pInputGamepad->GetTrigger(CInputGamepad::BUTTON_RIGHT, 0)
 		|| pInputKeyboard->GetTrigger(DIK_A) || pInputKeyboard->GetTrigger(DIK_D))
 	{
@@ -273,27 +284,35 @@ void CTitle_Select::StateNone()
 		return;
 	}
 
+	//=============================
+	// 決定
+	//=============================
 	if (pKeyConfigPad->GetTrigger(INGAME::ACT_OK) || pKeyConfigKey->GetTrigger(INGAME::ACT_OK))
 	{
 		switch (m_nSelect)
 		{
 		case SELECT::SELECT_START:	// ゲーム開始
-		{
 			CManager::GetInstance()->GetFade()->SetFade(CScene::MODE::MODE_GAME);
-		}
 			break;
 
 		case SELECT::SELECT_OPTION:	// オプション
-		{
+			
+			// オプション決定時の設定
+			DecideOptionSetting();	
+
+
+			// 状態遷移
 			SetState(STATE::STATE_FADEOUT);
 
 			// キーコンフィグ設定
 			CTitle::GetInstance()->SetSceneType(CTitle::SCENETYPE::SCENETYPE_KEYCONFIGSETTING);
-		}
 			break;
 		}
 	}
 
+	//=============================
+	// 戻る
+	//=============================
 	if (pKeyConfigPad->GetTrigger(INGAME::ACT_BACK) || pKeyConfigKey->GetTrigger(INGAME::ACT_BACK))
 	{
 		SetState(STATE::STATE_BACK);
@@ -306,6 +325,25 @@ void CTitle_Select::StateNone()
 		}
 
 	}
+}
+
+//==========================================================================
+// オプション決定時の設定
+//==========================================================================
+void CTitle_Select::DecideOptionSetting()
+{
+	// 状態遷移
+	SetState(STATE::STATE_FADEOUT);
+
+	// キーコンフィグ設定
+	CTitle::GetInstance()->SetSceneType(CTitle::SCENETYPE::SCENETYPE_KEYCONFIGSETTING);
+
+	// オプション選択肢の状態設定
+	if (m_pOptionSelect != nullptr)
+	{
+		m_pOptionSelect->SetState(CTitle_OptionSelect::STATE::STATE_SCROLLWAIT);
+	}
+
 }
 
 //==========================================================================
