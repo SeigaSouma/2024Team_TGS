@@ -29,7 +29,7 @@ public:
 		STATE_MAX
 	};
 
-	CTitleLogo(float fadetime, int nPriority = 8);
+	CTitleLogo(float fadetime, int nPriority = 0);
 	~CTitleLogo();
 	
 	//  オーバーライドされた関数
