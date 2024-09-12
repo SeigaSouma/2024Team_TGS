@@ -166,8 +166,9 @@ HRESULT CBaggage::Init()
 		m_p3D->SetType(CObject::TYPE_OBJECT3D);
 		m_p3D->BindTexture(CTexture::GetInstance()->Regist("data\\TEXTURE\\timer\\circle.png"));
 		MyLib::Vector3 bgpos = 0.0f;
-		bgpos.x += 5.0f;
-		bgpos.y += 60.0f;
+		bgpos.x += 40.0f;
+		bgpos.y += 80.0f;
+		bgpos.z += 60.0f;
 		m_p3D->SetPosition(bgpos);
 		D3DXVECTOR2 texture = CTexture::GetInstance()->GetImageSize(CTexture::GetInstance()->Regist("data\\TEXTURE\\timer\\circle.png"));
 		MyLib::Vector3 vec = 0.0f;
