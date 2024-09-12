@@ -116,12 +116,13 @@ HRESULT CTimer::Init()
 	// 背景を生成するお
 	{
 		MyLib::Vector3 bgpos = DEFAULT_POSITION;
-		bgpos.x = 20.0f;
-		m_pBg = CObject2D::Create(2);
+		bgpos.x -= 10.0f;
+		m_pBg = CObject2D::Create(6);
 		m_pBg->BindTexture(CTexture::GetInstance()->Regist(BGTEXTURE));
-		m_pBg->SetPosition(DEFAULT_POSITION);
+		m_pBg->SetPosition(bgpos);
 		D3DXVECTOR2 texture = CTexture::GetInstance()->GetImageSize(m_pBg->GetIdxTexture());
 		m_pBg->SetSize(UtilFunc::Transformation::AdjustSizeByHeight(texture, SIZE_NUMBER.y * 2.0f));
+		m_pBg->SetAlpha(0.7f);
 	}
 
 	// 分、秒、ミリ秒の計算
