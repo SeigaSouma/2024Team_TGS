@@ -85,6 +85,7 @@ CManager::CManager()
 	m_fLoadTimer = 0.0f;			// ロードのタイマー
 	m_bLoadComplete = false;		// ロード完了のフラグ
 	m_bFirstLoad = false;			// 初回ロード
+	m_b2DDisp = false;				// 2Dの表示
 
 	// ロードフラグリセット
 	m_bLoadComplete = false;
@@ -845,6 +846,7 @@ void CManager::Update()
 		}
 		ImGui::Checkbox("Disp BoxColliders", &m_bDisp_BoxColliders);
 		ImGui::Checkbox("Disp CheckPoint", &m_bDisp_CheckPoint);
+		ImGui::Checkbox("Disp 2D", &m_b2DDisp);
 
 		if (pInputKeyboard->GetTrigger(DIK_F2))
 		{// F2でワイヤーフレーム切り替え

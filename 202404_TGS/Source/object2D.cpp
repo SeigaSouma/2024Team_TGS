@@ -228,10 +228,8 @@ void CObject2D::Draw()
 #if _DEBUG
 	if (CManager::GetInstance()->GetPause() != nullptr)
 	{
-		if (CManager::GetInstance()->GetPause()->IsPause())
-		{
-			return;
-		}
+		if (CManager::GetInstance()->GetPause()->IsPause()) return;
+		if (CManager::GetInstance()->Is2DDisp()) return;
 	}
 #endif
 

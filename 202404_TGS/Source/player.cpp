@@ -1193,6 +1193,7 @@ void CPlayer::CollisionMapObject()
 MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 {
 	MyLib::HitResult_Character hitresult = {};
+	return hitresult;
 
 	if (m_state == STATE::STATE_DEAD ||
 		m_state == STATE::STATE_DEADWAIT ||

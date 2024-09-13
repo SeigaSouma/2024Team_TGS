@@ -118,8 +118,10 @@ HRESULT CTimer::Init()
 		MyLib::Vector3 bgpos = DEFAULT_POSITION;
 		bgpos.x -= 10.0f;
 		m_pBg = CObject2D::Create(6);
-		m_pBg->BindTexture(CTexture::GetInstance()->Regist(BGTEXTURE));
 		m_pBg->SetPosition(bgpos);
+
+		// テクスチャ設定
+		m_pBg->BindTexture(CTexture::GetInstance()->Regist(BGTEXTURE));
 		D3DXVECTOR2 texture = CTexture::GetInstance()->GetImageSize(m_pBg->GetIdxTexture());
 		m_pBg->SetSize(UtilFunc::Transformation::AdjustSizeByHeight(texture, SIZE_NUMBER.y * 2.0f));
 		m_pBg->SetAlpha(0.7f);
@@ -159,10 +161,10 @@ HRESULT CTimer::Init()
 	}
 
 	// 描画用カメラの生成と設定
-	m_pMyCamera = DEBUG_NEW CCamera;
-	m_pMyCamera->Init();
-	m_pMyCamera->SetRotation(MyLib::Vector3(0.0f, ROTY, 0.0f));
-	m_pMyCamera->SetDistance(DISTANCE);
+	//m_pMyCamera = DEBUG_NEW CCamera;
+	//m_pMyCamera->Init();
+	//m_pMyCamera->SetRotation(MyLib::Vector3(0.0f, ROTY, 0.0f));
+	//m_pMyCamera->SetDistance(DISTANCE);
 
 	return S_OK;
 }

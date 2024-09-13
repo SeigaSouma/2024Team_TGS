@@ -75,6 +75,7 @@ namespace
 	const MyLib::Vector3 GOAL_ROT = MyLib::Vector3(0.0f, D3DX_PI * 0.3f, 0.06f);	// 祈り時の向き
 	const float GOAL_MULTI = (0.03f);
 	const float GOAL_LEN = (500.0f);
+	const float MOVE_WASD = 20.0f;
 }
 
 //==========================================================================
@@ -399,85 +400,132 @@ void CCamera::MoveCameraMouse()
 {
 #if 1
 
-	/*if (CManager::GetInstance()->GetMode() == CScene::MODE::MODE_GAME ||
-		CManager::GetInstance()->GetMode() == CScene::MODE::MODE_GAMETUTORIAL)*/
-	{
-		// キーボード情報取得
-		CInputKeyboard* pInputKeyboard = CInputKeyboard::GetInstance();
+	// キーボード情報取得
+	CInputKeyboard* pInputKeyboard = CInputKeyboard::GetInstance();
 
-		// キーボード情報取得
-		CInputMouse* pInputMouse = CInputMouse::GetInstance();
+	// キーボード情報取得
+	CInputMouse* pInputMouse = CInputMouse::GetInstance();
 
-		if (pInputMouse->GetPress(CInputMouse::BUTTON_LEFT) &&
-			pInputMouse->GetPress(CInputMouse::BUTTON_RIGHT))
-		{// 左右同時押し
+	if (pInputMouse->GetPress(CInputMouse::BUTTON_LEFT) &&
+		pInputMouse->GetPress(CInputMouse::BUTTON_RIGHT))
+	{// 左右同時押し
 
-	//#if _DEBUG
-			m_move.x += (pInputMouse->GetMouseMove().x * sinf(-D3DX_PI * MOVE_LR + m_rot.y) * MOVE) -
-				(pInputMouse->GetMouseMove().y * cosf(-D3DX_PI * MOVE_LR + m_rot.y) * MOVE);
+		m_move.x += (pInputMouse->GetMouseMove().x * sinf(-D3DX_PI * MOVE_LR + m_rot.y) * MOVE) -
+			(pInputMouse->GetMouseMove().y * cosf(-D3DX_PI * MOVE_LR + m_rot.y) * MOVE);
 
-			m_move.z += (pInputMouse->GetMouseMove().x * cosf(-D3DX_PI * MOVE_LR + m_rot.y) * MOVE) +
-				(pInputMouse->GetMouseMove().y * sinf(-D3DX_PI * MOVE_LR + m_rot.y) * MOVE);
-			//#endif
+		m_move.z += (pInputMouse->GetMouseMove().x * cosf(-D3DX_PI * MOVE_LR + m_rot.y) * MOVE) +
+			(pInputMouse->GetMouseMove().y * sinf(-D3DX_PI * MOVE_LR + m_rot.y) * MOVE);
 
-					// 移動量補正
-			MoveCameraVR();
+		// 移動量補正
+		MoveCameraVR();
 
-			// 角度の正規化
-			UtilFunc::Transformation::RotNormalize(m_rot.y);
-			UtilFunc::Transformation::RotNormalize(m_rot.z);
+		// 角度の正規化
+		UtilFunc::Transformation::RotNormalize(m_rot.y);
+		UtilFunc::Transformation::RotNormalize(m_rot.z);
 
-			// 注視点設定
-			SetCameraR();
-		}
-		else if (
-			pInputKeyboard->GetPress(DIK_LALT) &&
-			pInputMouse->GetPress(CInputMouse::BUTTON_LEFT))
-		{// 左クリックしてるとき,視点回転
-
-			m_rot.y += pInputMouse->GetMouseMove().x * ROT_MOVE_MOUSE;
-
-			//#if _DEBUG
-
-			m_rot.z += pInputMouse->GetMouseMove().y * ROT_MOVE_MOUSE;
-			//#endif
-
-					// 角度の正規化
-			UtilFunc::Transformation::RotNormalize(m_rot.y);
-			UtilFunc::Transformation::RotNormalize(m_rot.z);
-
-			// 値の正規化
-			UtilFunc::Transformation::ValueNormalize(m_rot.z, MAX_ROT, MIN_ROT);
-
-			// 視点の代入処理
-			SetCameraV();
-
-		}
-		else if (pInputMouse->GetPress(CInputMouse::BUTTON_RIGHT))
-		{// 右クリックしてるとき,注視点回転
-
-			m_rot.y += pInputMouse->GetMouseMove().x * ROT_MOVE_MOUSE;
-
-			//#if _DEBUG
-			m_rot.z += pInputMouse->GetMouseMove().y * ROT_MOVE_MOUSE;
-			//#endif
-
-					// 角度の正規化
-			UtilFunc::Transformation::RotNormalize(m_rot.y);
-			UtilFunc::Transformation::RotNormalize(m_rot.z);
-
-			// 値の正規化
-			UtilFunc::Transformation::ValueNormalize(m_rot.z, MAX_ROT, MIN_ROT);
-
-			// 注視点の位置更新
-			SetCameraR();
-		}
-
-		// マウスホイールで距離調整
-		m_fDistance += pInputMouse->GetMouseMove().z * (MOVE * 0.3f);
-		m_fDestDistance += pInputMouse->GetMouseMove().z * (MOVE * 0.3f);
-		m_fOriginDistance += pInputMouse->GetMouseMove().z * (MOVE * 0.3f);
+		// 注視点設定
+		SetCameraR();
 	}
+	else if (
+		pInputMouse->GetPress(CInputMouse::BUTTON_LEFT) &&
+		!pInputKeyboard->GetPress(DIK_LALT))
+	{// 左クリック移動
+
+		if (pInputKeyboard->GetPress(DIK_W))
+		{
+			if (pInputKeyboard->GetPress(DIK_A))
+			{
+				m_move.x += sinf(D3DX_PI * -0.25f + m_rot.y) * MOVE_WASD;
+				m_move.z += cosf(D3DX_PI * -0.25f + m_rot.y) * MOVE_WASD;
+			}
+			else if (pInputKeyboard->GetPress(DIK_D))
+			{
+				m_move.x += sinf(D3DX_PI * 0.25f + m_rot.y) * MOVE_WASD;
+				m_move.z += cosf(D3DX_PI * 0.25f + m_rot.y) * MOVE_WASD;
+			}
+			else
+			{
+				m_move.x += sinf(D3DX_PI * 0.0f + m_rot.y) * MOVE_WASD;
+				m_move.z += cosf(D3DX_PI * 0.0f + m_rot.y) * MOVE_WASD;
+			}
+		}
+		else if (pInputKeyboard->GetPress(DIK_S))
+		{
+			if (pInputKeyboard->GetPress(DIK_A))
+			{
+				m_move.x += sinf(D3DX_PI * -0.75f + m_rot.y) * MOVE_WASD;
+				m_move.z += cosf(D3DX_PI * -0.75f + m_rot.y) * MOVE_WASD;
+			}
+			else if (pInputKeyboard->GetPress(DIK_D))
+			{
+				m_move.x += sinf(D3DX_PI * 0.75f + m_rot.y) * MOVE_WASD;
+				m_move.z += cosf(D3DX_PI * 0.75f + m_rot.y) * MOVE_WASD;
+			}
+			else
+			{
+				m_move.x += sinf(D3DX_PI * 1.0f + m_rot.y) * MOVE_WASD;
+				m_move.z += cosf(D3DX_PI * 1.0f + m_rot.y) * MOVE_WASD;
+			}
+		}
+		else if (pInputKeyboard->GetPress(DIK_A))
+		{
+			m_move.x += sinf(D3DX_PI * -0.5f + m_rot.y) * MOVE_WASD;
+			m_move.z += cosf(D3DX_PI * -0.5f + m_rot.y) * MOVE_WASD;
+		}
+		else if (pInputKeyboard->GetPress(DIK_D))
+		{
+			m_move.x += sinf(D3DX_PI * 0.5f + m_rot.y) * MOVE_WASD;
+			m_move.z += cosf(D3DX_PI * 0.5f + m_rot.y) * MOVE_WASD;
+		}
+
+		// 移動量補正
+		MoveCameraVR();
+
+		// 角度の正規化
+		UtilFunc::Transformation::RotNormalize(m_rot.y);
+		UtilFunc::Transformation::RotNormalize(m_rot.z);
+
+		// 注視点設定
+		SetCameraR();
+	}
+	else if (
+		pInputKeyboard->GetPress(DIK_LALT) &&
+		pInputMouse->GetPress(CInputMouse::BUTTON_LEFT))
+	{// 左クリックしてるとき,視点回転
+
+		m_rot.y += pInputMouse->GetMouseMove().x * ROT_MOVE_MOUSE;
+		m_rot.z += pInputMouse->GetMouseMove().y * ROT_MOVE_MOUSE;
+
+		// 角度の正規化
+		UtilFunc::Transformation::RotNormalize(m_rot);
+
+		// 値の正規化
+		UtilFunc::Transformation::ValueNormalize(m_rot.z, MAX_ROT, MIN_ROT);
+
+		// 視点の代入処理
+		SetCameraV();
+
+	}
+	else if (pInputMouse->GetPress(CInputMouse::BUTTON_RIGHT))
+	{// 右クリックしてるとき,注視点回転
+
+		m_rot.y += pInputMouse->GetMouseMove().x * ROT_MOVE_MOUSE;
+		m_rot.z += pInputMouse->GetMouseMove().y * ROT_MOVE_MOUSE;
+
+		// 角度の正規化
+		UtilFunc::Transformation::RotNormalize(m_rot);
+
+		// 値の正規化
+		UtilFunc::Transformation::ValueNormalize(m_rot.z, MAX_ROT, MIN_ROT);
+
+		// 注視点の位置更新
+		SetCameraR();
+	}
+
+	// マウスホイールで距離調整
+	m_fDistance += pInputMouse->GetMouseMove().z * (MOVE * 0.3f);
+	m_fDestDistance += pInputMouse->GetMouseMove().z * (MOVE * 0.3f);
+	m_fOriginDistance += pInputMouse->GetMouseMove().z * (MOVE * 0.3f);
 #endif
 
 	// 視点の代入処理
