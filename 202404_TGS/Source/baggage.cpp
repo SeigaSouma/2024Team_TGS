@@ -410,14 +410,14 @@ void CBaggage::StateAppearance_Wait()
 void CBaggage::StateAppearance()
 {
 	// КgСе
-	/*float scale = UtilFunc::Correction::EasingLinear(0.0f, 1.0f, 0.0f, StateTime::APPEARANCE, m_fStateTimer);
-	SetScale(scale);*/
+	float scale = UtilFunc::Correction::EasingLinear(0.0f, 1.0f, 0.0f, StateTime::APPEARANCE, m_fStateTimer);
+	SetScale(scale);
 
 	if (StateTime::APPEARANCE <= m_fStateTimer)
 	{
 		m_fStateTimer = 0.0f;
 		m_state = STATE::STATE_APPEARANCE_WAIT;
-		//SetScale(1.0f);
+		SetScale(1.0f);
 	}
 }
 

@@ -201,7 +201,7 @@ void CPeopleManager::SetByRank()
 	// 後出しリストリセット
 	m_lateSpawnPeople.clear();
 
-	MyLib::Vector3 pos = MyLib::Vector3(0.0f, 300.0f, 2000.0f);
+	MyLib::Vector3 pos = MyLib::Vector3(0.0f, 300.0f, 2500.0f);
 	MyLib::Vector3 spawnpos = pos;
 	MyLib::Vector3 rot = MyLib::Vector3(0.0f, D3DX_PI * 0.5f, 0.0f);
 	int type = 0, patternNum = static_cast<int>(m_PatternByRank[m_Rank].size());
