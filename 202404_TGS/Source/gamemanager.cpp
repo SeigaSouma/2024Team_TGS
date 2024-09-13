@@ -831,8 +831,6 @@ void CSpawn_Leaf::Update(float deltaTime)
 	// ˆÚ“®‘¬“xŠ„‡
 	float ratio = playerMove.x / (fVelocity);
 
-	ImGui::Text("ratio[%.2f]", ratio);
-
 	// ˆÚ“®‘¬“x‚É‰‚¶‚Ä¶¬ŠÔŠu’Z‚­‚·‚é
 	m_fSpawnTimer += deltaTime * ratio;
 	

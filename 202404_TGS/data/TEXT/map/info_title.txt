@@ -11,7 +11,7 @@ TEXTURE_FILENAME = data\TEXTURE\sky\sky_02.jpg		# [0]
 #------------------------------------------------------------------------------
 # モデル数
 #------------------------------------------------------------------------------
-NUM_MODEL = 72
+NUM_MODEL = 74
 
 #------------------------------------------------------------------------------
 # モデルファイル名
@@ -88,6 +88,8 @@ MODEL_FILENAME = data\MODEL\river_object\crab.x		# [68]
 MODEL_FILENAME = data\MODEL\river_object\hat.x		# [69]
 MODEL_FILENAME = data\MODEL\river_object\rockman.x		# [70]
 MODEL_FILENAME = data\MODEL\river_object\ryohukaruma.x		# [71]
+MODEL_FILENAME = data\MODEL\river_object\frog.x		# [72]
+MODEL_FILENAME = data\MODEL\map_object\sun.x		# [73]
 
 #==============================================================================
 # 空情報

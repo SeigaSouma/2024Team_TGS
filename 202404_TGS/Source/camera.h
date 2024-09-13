@@ -223,6 +223,7 @@ private:
 	MyLib::Vector3 m_posRDest;			// 目標の注視点
 	MyLib::Vector3 m_vecU;				// 上方向ベクトル
 	MyLib::Vector3 m_move;				// 移動量
+	MyLib::Vector3 m_moveWASD;			// WASDの移動量
 	MyLib::Vector3 m_rot;				// 向き
 	MyLib::Vector3 m_rotOrigin;			// 元の向き
 	MyLib::Vector3 m_rotDest;			// 目標の向き

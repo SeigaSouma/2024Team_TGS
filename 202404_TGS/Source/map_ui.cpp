@@ -77,7 +77,7 @@ CMapUI::~CMapUI()
 //=============================================================================
 HRESULT CMapUI::Init()
 {
-	SetType(CObject::TYPE::TYPE_OBJECTX);
+	SetType(CObject::TYPE::TYPE_UI);
 
 	// ゲーム画面が存在しているか、コースがあるか確認
 	if (CGame::GetInstance() == nullptr) { return E_FAIL; }
@@ -89,7 +89,7 @@ HRESULT CMapUI::Init()
 		m_apObj[i] = CObject2D::Create(1);
 		int texidx = CTexture::GetInstance()->Regist(TEXTURELIST[i]);
 		m_apObj[i]->BindTexture(texidx);
-		m_apObj[i]->SetType(CObject::TYPE_OBJECT2D);
+		m_apObj[i]->SetType(CObject::TYPE_UI);
 		m_apObj[i]->SetPosition(DEF_POS);
 		m_apObj[i]->SetRotation(0.0f);
 		D3DXVECTOR2 texture = CTexture::GetInstance()->GetImageSize(m_apObj[i]->GetIdxTexture());

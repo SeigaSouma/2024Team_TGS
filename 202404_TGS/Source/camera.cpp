@@ -75,7 +75,7 @@ namespace
 	const MyLib::Vector3 GOAL_ROT = MyLib::Vector3(0.0f, D3DX_PI * 0.3f, 0.06f);	// 祈り時の向き
 	const float GOAL_MULTI = (0.03f);
 	const float GOAL_LEN = (500.0f);
-	const float MOVE_WASD = 20.0f;
+	const float MOVE_WASD = 10.0f;
 }
 
 //==========================================================================
@@ -435,51 +435,61 @@ void CCamera::MoveCameraMouse()
 		{
 			if (pInputKeyboard->GetPress(DIK_A))
 			{
-				m_move.x += sinf(D3DX_PI * -0.25f + m_rot.y) * MOVE_WASD;
-				m_move.z += cosf(D3DX_PI * -0.25f + m_rot.y) * MOVE_WASD;
+				m_moveWASD.x += sinf(D3DX_PI * -0.25f + m_rot.y) * MOVE_WASD;
+				m_moveWASD.z += cosf(D3DX_PI * -0.25f + m_rot.y) * MOVE_WASD;
 			}
 			else if (pInputKeyboard->GetPress(DIK_D))
 			{
-				m_move.x += sinf(D3DX_PI * 0.25f + m_rot.y) * MOVE_WASD;
-				m_move.z += cosf(D3DX_PI * 0.25f + m_rot.y) * MOVE_WASD;
+				m_moveWASD.x += sinf(D3DX_PI * 0.25f + m_rot.y) * MOVE_WASD;
+				m_moveWASD.z += cosf(D3DX_PI * 0.25f + m_rot.y) * MOVE_WASD;
 			}
 			else
 			{
-				m_move.x += sinf(D3DX_PI * 0.0f + m_rot.y) * MOVE_WASD;
-				m_move.z += cosf(D3DX_PI * 0.0f + m_rot.y) * MOVE_WASD;
+				m_moveWASD.x += sinf(D3DX_PI * 0.0f + m_rot.y) * MOVE_WASD;
+				m_moveWASD.z += cosf(D3DX_PI * 0.0f + m_rot.y) * MOVE_WASD;
 			}
 		}
 		else if (pInputKeyboard->GetPress(DIK_S))
 		{
 			if (pInputKeyboard->GetPress(DIK_A))
 			{
-				m_move.x += sinf(D3DX_PI * -0.75f + m_rot.y) * MOVE_WASD;
-				m_move.z += cosf(D3DX_PI * -0.75f + m_rot.y) * MOVE_WASD;
+				m_moveWASD.x += sinf(D3DX_PI * -0.75f + m_rot.y) * MOVE_WASD;
+				m_moveWASD.z += cosf(D3DX_PI * -0.75f + m_rot.y) * MOVE_WASD;
 			}
 			else if (pInputKeyboard->GetPress(DIK_D))
 			{
-				m_move.x += sinf(D3DX_PI * 0.75f + m_rot.y) * MOVE_WASD;
-				m_move.z += cosf(D3DX_PI * 0.75f + m_rot.y) * MOVE_WASD;
+				m_moveWASD.x += sinf(D3DX_PI * 0.75f + m_rot.y) * MOVE_WASD;
+				m_moveWASD.z += cosf(D3DX_PI * 0.75f + m_rot.y) * MOVE_WASD;
 			}
 			else
 			{
-				m_move.x += sinf(D3DX_PI * 1.0f + m_rot.y) * MOVE_WASD;
-				m_move.z += cosf(D3DX_PI * 1.0f + m_rot.y) * MOVE_WASD;
+				m_moveWASD.x += sinf(D3DX_PI * 1.0f + m_rot.y) * MOVE_WASD;
+				m_moveWASD.z += cosf(D3DX_PI * 1.0f + m_rot.y) * MOVE_WASD;
 			}
 		}
 		else if (pInputKeyboard->GetPress(DIK_A))
 		{
-			m_move.x += sinf(D3DX_PI * -0.5f + m_rot.y) * MOVE_WASD;
-			m_move.z += cosf(D3DX_PI * -0.5f + m_rot.y) * MOVE_WASD;
+			m_moveWASD.x += sinf(D3DX_PI * -0.5f + m_rot.y) * MOVE_WASD;
+			m_moveWASD.z += cosf(D3DX_PI * -0.5f + m_rot.y) * MOVE_WASD;
 		}
 		else if (pInputKeyboard->GetPress(DIK_D))
 		{
-			m_move.x += sinf(D3DX_PI * 0.5f + m_rot.y) * MOVE_WASD;
-			m_move.z += cosf(D3DX_PI * 0.5f + m_rot.y) * MOVE_WASD;
+			m_moveWASD.x += sinf(D3DX_PI * 0.5f + m_rot.y) * MOVE_WASD;
+			m_moveWASD.z += cosf(D3DX_PI * 0.5f + m_rot.y) * MOVE_WASD;
 		}
 
-		// 移動量補正
-		MoveCameraVR();
+		// 移動量分を加算
+		m_posV.x += m_moveWASD.x;
+		m_posV.z += m_moveWASD.z;
+
+		// 移動量をリセット
+		m_moveWASD.x += (0.0f - m_moveWASD.x) * 0.15f;
+		m_moveWASD.z += (0.0f - m_moveWASD.z) * 0.15f;
+
+		// 注視点の位置更新
+		SetCameraR();
+
+
 
 		// 角度の正規化
 		UtilFunc::Transformation::RotNormalize(m_rot.y);

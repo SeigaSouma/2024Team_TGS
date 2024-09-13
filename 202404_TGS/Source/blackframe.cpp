@@ -169,6 +169,17 @@ void CBlackFrame::Uninit()
 //==========================================================================
 void CBlackFrame::Update()
 {
+	CManager* pMgr = CManager::GetInstance();
+	if (m_state == STATE::STATE_OUT ||
+		m_state == STATE::STATE_OUTCOMPLETION)
+	{
+		pMgr->SerEnableDisp_UI(true);
+	}
+	else
+	{
+		pMgr->SerEnableDisp_UI(false);
+	}
+
 	for (int nCntSelect = 0; nCntSelect < VTX_MAX; nCntSelect++)
 	{
 		if (m_pObj2D[nCntSelect] == nullptr)

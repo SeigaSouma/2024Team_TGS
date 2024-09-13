@@ -119,6 +119,7 @@ HRESULT CTimer::Init()
 		bgpos.x -= 10.0f;
 		m_pBg = CObject2D::Create(6);
 		m_pBg->SetPosition(bgpos);
+		m_pBg->SetType(CObject::TYPE::TYPE_UI);
 
 		// テクスチャ設定
 		m_pBg->BindTexture(CTexture::GetInstance()->Regist(BGTEXTURE));
@@ -157,14 +158,21 @@ HRESULT CTimer::Init()
 
 		// 値の設定
 		pNumber->SetValue(time[i]);
-		pNumber->SetType(CObject::TYPE::TYPE_NUMBER);
+		pNumber->SetType(CObject::TYPE::TYPE_UI);
+
+		for (int i = 0; i < pNumber->GetDigit(); i++)
+		{
+			CNumber* pThisNum = pNumber->GetNumber(i);
+			pThisNum->SetType(CObject::TYPE::TYPE_UI);
+		}
+
 	}
 
 	// 描画用カメラの生成と設定
-	//m_pMyCamera = DEBUG_NEW CCamera;
-	//m_pMyCamera->Init();
-	//m_pMyCamera->SetRotation(MyLib::Vector3(0.0f, ROTY, 0.0f));
-	//m_pMyCamera->SetDistance(DISTANCE);
+	m_pMyCamera = DEBUG_NEW CCamera;
+	m_pMyCamera->Init();
+	m_pMyCamera->SetRotation(MyLib::Vector3(0.0f, ROTY, 0.0f));
+	m_pMyCamera->SetDistance(DISTANCE);
 
 	return S_OK;
 }
