@@ -201,6 +201,9 @@ void CPeopleManager::SetByRank()
 	// 後出しリストリセット
 	m_lateSpawnPeople.clear();
 
+	// 最低ランク以外
+	if (m_Rank == CJudge::JUDGE::JUDGE_MAX) return;
+
 	MyLib::Vector3 pos = MyLib::Vector3(0.0f, 300.0f, 2500.0f);
 	MyLib::Vector3 spawnpos = pos;
 	MyLib::Vector3 rot = MyLib::Vector3(0.0f, D3DX_PI * 0.5f, 0.0f);
@@ -304,6 +307,9 @@ void CPeopleManager::LateSpawn()
 //==========================================================================
 void CPeopleManager::SetPeople(const MyLib::Vector3& pos, const MyLib::Vector3& rot, int nPattern)
 {
+	// 最低ランク以外
+	if (m_Rank == CJudge::JUDGE::JUDGE_MAX) return;
+
 	const SPattern& NowPattern = m_PatternByRank[m_Rank][nPattern];
 	int nNumSpawn = NowPattern.nNum;	// スポーンする数
 	CPeople* pPeople = nullptr;
