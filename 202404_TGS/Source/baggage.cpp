@@ -96,6 +96,7 @@ CBaggage::CBaggage(int nPriority) : CObjectQuaternion(nPriority)
 	m_bEnd = false;		// 終了処理
 	m_bfall = false;
 	m_p3D = nullptr;
+	m_pEffekseerObj = nullptr;		// エフェクトシアオブジェクト
 	m_velorot = MyLib::Vector3(0.0f, 0.0f, 0.0f);
 	m_baggageInfo = {};
 	m_fDeviation = 0.0f;
@@ -534,6 +535,19 @@ void CBaggage::StateReturn()
 
 	pos = UtilFunc::Correction::EasingEaseIn(m_posAwayStart, posDest, 0.0f, StateTime::DEAD, m_fStateTimer);
 
+	if (m_pEffekseerObj == nullptr)
+	{
+		// オーラ
+		m_pEffekseerObj = CEffekseerObj::Create(
+			CMyEffekseer::EFKLABEL::EFKLABEL_AURA,
+			GetPosition(), MyLib::Vector3(0.0f, 0.0f, 0.0f), 0.0f, 35.0f, true);
+	}
+	if (m_pEffekseerObj != nullptr)
+	{
+		// オーラ追従
+		m_pEffekseerObj->SetPosition(GetPosition());
+	}
+
 	if (m_fStateTimer >= StateTime::DEAD)
 	{
 		pos = posDest;
@@ -544,12 +558,15 @@ void CBaggage::StateReturn()
 			//	MULTITARGET::START_ALPHA,
 			//	MULTITARGET::START_MULTI,
 			//	MULTITARGET::START_TIMER);
-
 			// SE再生
 			CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_CRACK_GRASS);
 
 			CGlassclush::Create();
+
+			// 削除トリガー
+			m_pEffekseerObj->SetTrigger(1);
 		}
+
 		m_bEnd = true;
 	}
 

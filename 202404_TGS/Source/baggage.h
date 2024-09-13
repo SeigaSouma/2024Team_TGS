@@ -12,6 +12,7 @@
 #include "listmanager.h"
 
 class CObject3D;
+class CEffekseerObj;
 
 //==========================================================================
 // クラス定義
@@ -162,6 +163,7 @@ private:
 	float m_fDeviation;
 	static CListManager<CBaggage> m_List;	// リスト
 	CObject3D* m_p3D;
+	CEffekseerObj* m_pEffekseerObj;		// エフェクトシアオブジェクト
 };
 
 
