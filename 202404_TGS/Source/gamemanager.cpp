@@ -198,6 +198,20 @@ void CGameManager::Uninit()
 		delete m_pSpawn_Air;
 		m_pSpawn_Air = nullptr;
 	}
+
+	// 流れる葉生成クラス
+	if (m_pSpawn_LeafFlow != nullptr)
+	{
+		delete m_pSpawn_LeafFlow;
+		m_pSpawn_LeafFlow = nullptr;
+	}
+
+	// 降る葉生成クラス
+	if (m_pSpawn_Leaf != nullptr)
+	{
+		delete m_pSpawn_Leaf;
+		m_pSpawn_Leaf = nullptr;
+	}
 }
 
 //==========================================================================

@@ -645,6 +645,54 @@ void CBaggage::Draw()
 {
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
 
+	// タイマー用の荷物を描画
+	CTimer* pTimer = CTimer::GetInstance();
+	if (pTimer != nullptr &&
+		pTimer->GetCamera() != nullptr)
+	{
+
+		D3DXMATRIX mtxView, mtxProjection;
+		D3DVIEWPORT9 viewportDef;
+
+		// 現在のビューポートの取得
+		pDevice->GetViewport(&viewportDef);
+
+		// 現在のビューマトリックスの取得
+		pDevice->GetTransform(D3DTS_VIEW, &mtxView);
+
+		// 現在のプロジェクションマトリックスの取得
+		pDevice->GetTransform(D3DTS_PROJECTION, &mtxProjection);
+
+		// 別のカメラを設定して描画する
+		if (pTimer->GetCamera() != nullptr)
+		{
+			pTimer->GetCamera()->SetCamera();
+
+			MyLib::Vector3 pos = GetPosition();
+			MyLib::Vector3 oldpos = pos;
+			pos = 0.0f;
+			SetPosition(pos);
+
+			// 描画処理
+			CObjectQuaternion::Draw();
+
+			SetPosition(oldpos);
+		}
+
+		m_p3D->SetEnableDisp(true);
+		m_p3D->Draw();
+		m_p3D->SetEnableDisp(false);
+
+		// 現在のビューポートの取得
+		pDevice->SetViewport(&viewportDef);
+
+		// 現在のビューマトリックスの取得
+		pDevice->SetTransform(D3DTS_VIEW, &mtxView);
+
+		// 現在のプロジェクションマトリックスの取得
+		pDevice->SetTransform(D3DTS_PROJECTION, &mtxProjection);
+	}
+
 	// ステンシルバッファ有効
 	pDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);
 
@@ -670,53 +718,6 @@ void CBaggage::Draw()
 
 	// 普通の描画
 	CObjectQuaternion::Draw();
-
-	// タイマー用の荷物を描画
-	CTimer* pTimer = CTimer::GetInstance();
-	if (pTimer == nullptr) { return; }
-
-	if (pTimer->GetCamera() == nullptr) { return; }
-
-	D3DXMATRIX mtxView, mtxProjection;
-	D3DVIEWPORT9 viewportDef;
-
-	// 現在のビューポートの取得
-	pDevice->GetViewport(&viewportDef);
-
-	// 現在のビューマトリックスの取得
-	pDevice->GetTransform(D3DTS_VIEW, &mtxView);
-
-	// 現在のプロジェクションマトリックスの取得
-	pDevice->GetTransform(D3DTS_PROJECTION, &mtxProjection);
-
-	// 別のカメラを設定して描画する
-	if (pTimer->GetCamera() != nullptr)
-	{
-		pTimer->GetCamera()->SetCamera();
-
-		MyLib::Vector3 pos = GetPosition();
-		MyLib::Vector3 oldpos = pos;
-		pos = 0.0f;
-		SetPosition(pos);
-
-		// 描画処理
-		CObjectQuaternion::Draw();
-
-		SetPosition(oldpos);
-	}
-
-	m_p3D->SetEnableDisp(true);
-	m_p3D->Draw();
-	m_p3D->SetEnableDisp(false);
-
-	// 現在のビューポートの取得
-	pDevice->SetViewport(&viewportDef);
-
-	// 現在のビューマトリックスの取得
-	pDevice->SetTransform(D3DTS_VIEW, &mtxView);
-
-	// 現在のプロジェクションマトリックスの取得
-	pDevice->SetTransform(D3DTS_PROJECTION, &mtxProjection);
 }
 
 //==========================================================================
@@ -776,7 +777,7 @@ void CBaggage::UIDraw()
 bool CBaggage::Hit()
 {
 #ifndef DEBUG
-	return false;
+	//return false;
 #endif // DEBUG
 
 	
@@ -828,8 +829,6 @@ bool CBaggage::Hit()
 
 				if (bDead)
 				{
-					ImGui::Text("dead");
-
 					// 死亡状態
 					m_state = STATE::STATE_DEAD;
 
@@ -844,8 +843,6 @@ bool CBaggage::Hit()
 				}
 				else
 				{
-					ImGui::Text("no dead");
-
 					move.y *= -1.0f;
 
 					// ダメージ
