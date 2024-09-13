@@ -233,8 +233,16 @@ void CObject2D::Draw()
 	}
 #endif
 
+	// マネージャのインスタンス取得
+	CManager* pMgr = CManager::GetInstance();
+
+	if (GetType() == CObject::TYPE::TYPE_UI && !pMgr->IsDisp_UI())
+	{
+		return;
+	}
+
 	// デバイスの取得
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = pMgr->GetRenderer()->GetDevice();
 
 	// 頂点バッファをデータストリームに設定
 	pDevice->SetStreamSource(0, m_pVtxBuff, 0, sizeof(VERTEX_2D));

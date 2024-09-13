@@ -49,6 +49,7 @@ public:
 		TYPE_MESHDONUTS,		// メッシュドーナツ
 		TYPE_MESHSPHERE,		// メッシュスフィア
 		TYPE_NUMBER,			// 数字
+		TYPE_UI,				// UI
 		TYPE_MAX
 	};
 

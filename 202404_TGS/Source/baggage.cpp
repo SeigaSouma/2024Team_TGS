@@ -161,15 +161,21 @@ HRESULT CBaggage::Init()
 	SetScale(0.0f);
 	m_state = STATE::STATE_APPEARANCE_WAIT;
 
+	// ”wŒi
 	{
+		// ¶¬
 		m_p3D = CObject3D::Create(3);
-		m_p3D->SetType(CObject::TYPE_OBJECT3D);
+		m_p3D->SetType(CObject::TYPE::TYPE_UI);
 		m_p3D->BindTexture(CTexture::GetInstance()->Regist("data\\TEXTURE\\timer\\circle.png"));
+		
+		// ˆÊ’uÝ’è
 		MyLib::Vector3 bgpos = 0.0f;
 		bgpos.x += 40.0f;
 		bgpos.y += 80.0f;
 		bgpos.z += 60.0f;
 		m_p3D->SetPosition(bgpos);
+
+		// ƒTƒCƒYÝ’è
 		D3DXVECTOR2 texture = CTexture::GetInstance()->GetImageSize(CTexture::GetInstance()->Regist("data\\TEXTURE\\timer\\circle.png"));
 		MyLib::Vector3 vec = 0.0f;
 		D3DXVECTOR2 size = UtilFunc::Transformation::AdjustSizeByHeight(texture, 110.0f);

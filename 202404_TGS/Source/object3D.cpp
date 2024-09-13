@@ -162,8 +162,15 @@ void CObject3D::Update()
 //==========================================================================
 void CObject3D::Draw()
 {
+	// マネージャのインスタンス取得
+	CManager* pMgr = CManager::GetInstance();
+	if (GetType() == CObject::TYPE::TYPE_UI && !pMgr->IsDisp_UI())
+	{
+		return;
+	}
+
 	// デバイスの取得
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = pMgr->GetRenderer()->GetDevice();
 
 	// 情報取得
 	MyLib::Vector3 pos = GetPosition();
