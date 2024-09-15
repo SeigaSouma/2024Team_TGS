@@ -48,8 +48,6 @@ CTitle::SCENE_FUNC CTitle::m_SceneFunc[] =
 	&CTitle::SceneNone,			// なにもなし
 	&CTitle::SceneFadeInLogo,	// ロゴフェードイン
 	&CTitle::SceneFadeOutLoGo,	// ロゴフェードアウト
-	&CTitle::SceneFadeShouldTutorial,	// チュートリアル確認
-	&CTitle::SceneFadeKeyConfigSetting,	// キーコンフィグ設定
 };
 
 //==========================================================================
@@ -209,26 +207,6 @@ void CTitle::SceneFadeOutLoGo()
 		m_pPressEnter->Uninit();
 		m_pPressEnter = nullptr;
 		return;
-	}
-}
-
-//==========================================================================
-// チュートリアル確認
-//==========================================================================
-void CTitle::SceneFadeShouldTutorial()
-{
-
-}
-
-
-//==========================================================================
-// キーコンフィグ確認
-//==========================================================================
-void CTitle::SceneFadeKeyConfigSetting()
-{
-	if (m_pConfigSetting == nullptr)
-	{
-		m_pConfigSetting = CKeyConfigSetting::Create();
 	}
 }
 

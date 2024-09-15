@@ -142,8 +142,6 @@ HRESULT COptionMenu_Sound::Init()
 //==========================================================================
 void COptionMenu_Sound::CreateText()
 {
-	CObject2D* m_pText[Select::SELECT_MAX];	// テキスト
-
 	// 設定位置
 	MyLib::Vector3 setpos = BASEPOINT;
 	setpos.x -= 400.0f;

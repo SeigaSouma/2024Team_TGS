@@ -779,6 +779,9 @@
     <ClCompile Include="Source\suffocation.cpp">
       <Filter>direction</Filter>
     </ClCompile>
+    <ClCompile Include="Source\optionmenu_keyconfig.cpp">
+      <Filter>mode\title\option</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ballast.h">
@@ -1410,6 +1413,9 @@
     </ClInclude>
     <ClInclude Include="Source\suffocation.h">
       <Filter>direction</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\optionmenu_keyconfig.h">
+      <Filter>mode\title\option</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -30,7 +30,7 @@ namespace
 
 namespace StateTime	// 状態別時間
 {
-	const float FADE = 0.3f;	// フェード
+	const float FADE = 0.2f;	// フェード
 }
 
 
@@ -143,6 +143,10 @@ void CTitle_OptionSelect::CreateSelect()
 		size = UtilFunc::Transformation::AdjustSizeByHeight(size, SIZE_Y);
 		pObj2D->SetSize(size);
 		pObj2D->SetSizeOrigin(size);
+
+		// 不透明度設定
+		pObj2D->SetAlpha(0.0f);
+
 
 		// 位置設定
 		pObj2D->SetPosition(pos + MyLib::Vector3(0.0f, (SIZE_Y * 2.0f) * i, 0.0f));
