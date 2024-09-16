@@ -39,7 +39,7 @@ namespace
 	const float TIME_LOAD = 2.0f;	// ÉçÅ[Éhéûä‘
 
 #if _DEBUG
-	const CScene::MODE STARTMODE = CScene::MODE::MODE_GAME;
+	const CScene::MODE STARTMODE = CScene::MODE::MODE_TITLE;
 #else
 	const CScene::MODE STARTMODE = CScene::MODE::MODE_TITLE;
 #endif

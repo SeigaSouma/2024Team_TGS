@@ -126,6 +126,7 @@ void CPlayerControlMove::Move(CPlayer* player)
 		move.x += sinf(D3DX_PI * 0.5f + Camerarot.y) * (fMove * 0.5f);
 		move.z += cosf(D3DX_PI * 0.5f + Camerarot.y) * (fMove * 0.5f);
 
+#if _DEBUG
 		if (pInputKeyboard->GetPress(DIK_A))
 		{// ¶ˆÚ“®
 
@@ -219,6 +220,7 @@ void CPlayerControlMove::Move(CPlayer* player)
 		{
 			motionFrag.bMove = false;
 		}
+#endif
 
 		// ˆÚ“®’†‚É‚·‚é
 		motionFrag.bMove = true;

@@ -34,8 +34,6 @@ public:
 		SCENETYPE_NONE = 0,			// なにもなし
 		SCENETYPE_FADEIN,			// フェードイン
 		SCENETYPE_FADEOUT_LOGO,		// ロゴフェードアウト
-		SCENETYPE_SHOULDTUTORIAL,	// チュートリアル確認
-		SCENETYPE_KEYCONFIGSETTING,	// キーコンフィグ設定
 		SCENETYPE_SOUNDSETTING,		// サウンド設定
 		SCENETYPE_OTHERSETTING,		// その他設定
 		SCENETYPE_MAX
@@ -77,8 +75,6 @@ private:
 	void SceneNone();			// なにもなし
 	void SceneFadeInLogo();		// ロゴフェードイン
 	void SceneFadeOutLoGo();		// ロゴフェードアウト
-	void SceneFadeShouldTutorial();		// チュートリアル確認
-	void SceneFadeKeyConfigSetting();	// キーコンフィグ設定
 
 	//=============================
 	// メンバ変数

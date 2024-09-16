@@ -13,6 +13,7 @@
 
 // îhê∂êÊ
 #include "optionmenu_sound.h"
+#include "optionmenu_keyconfig.h"
 
 //==========================================================================
 // íËêîíËã`
@@ -68,7 +69,7 @@ COptionMenu* COptionMenu::Create(CTitle_OptionSelect::Select selectType)
 	switch (selectType)
 	{
 	case CTitle_OptionSelect::SELECT_KEYKONFIG:
-		pObj = DEBUG_NEW COptionMenu;
+		pObj = DEBUG_NEW COptionMenu_Keyconfig;
 		break;
 
 	case CTitle_OptionSelect::SELECT_SOUND:

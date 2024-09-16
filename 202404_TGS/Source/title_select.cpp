@@ -303,9 +303,6 @@ void CTitle_Select::StateNone()
 
 			// 状態遷移
 			SetState(STATE::STATE_FADEOUT);
-
-			// キーコンフィグ設定
-			CTitle::GetInstance()->SetSceneType(CTitle::SCENETYPE::SCENETYPE_KEYCONFIGSETTING);
 			break;
 		}
 	}
@@ -334,9 +331,6 @@ void CTitle_Select::DecideOptionSetting()
 {
 	// 状態遷移
 	SetState(STATE::STATE_FADEOUT);
-
-	// キーコンフィグ設定
-	CTitle::GetInstance()->SetSceneType(CTitle::SCENETYPE::SCENETYPE_KEYCONFIGSETTING);
 
 	// オプション選択肢の状態設定
 	if (m_pOptionSelect != nullptr)
