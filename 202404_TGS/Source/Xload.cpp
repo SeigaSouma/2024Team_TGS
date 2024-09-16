@@ -113,12 +113,15 @@ void CXLoad::SearchAllXModel(const std::wstring& folderPath)
 		do {
 
 			if (!(findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
-			{
+			{// パス
 				std::string fileName = UtilFunc::Transformation::WideToMultiByte((currentFolder + L"\\" + findFileData.cFileName).c_str());
-				m_FolderFilePath.push_back(fileName);
+				if (fileName.find(".x") != std::string::npos)
+				{
+					m_FolderFilePath.push_back(fileName);
+				}
 			}
 			else if (lstrcmpW(findFileData.cFileName, L".") != 0 && lstrcmpW(findFileData.cFileName, L"..") != 0)
-			{
+			{// フォルダ
 				std::wstring subFolderPath = currentFolder + L"\\" + findFileData.cFileName;
 				folderStack.push(subFolderPath);
 			}
