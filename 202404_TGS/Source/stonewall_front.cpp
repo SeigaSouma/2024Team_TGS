@@ -55,6 +55,33 @@ CStoneWall_Front* CStoneWall_Front::Create()
 	return pObjMeshField;
 }
 
+
+//==========================================================================
+// 点表示
+//==========================================================================
+void CStoneWall_Front::DispPoint()
+{
+#if _DEBUG
+
+	// 描画消す
+	SetEnableDisp(false);
+
+	MyLib::Vector3* pVtxPos = GetVtxPos();
+
+	for (int y = 0; y < static_cast<int>(m_vecVtxPosition.size()); y++)
+	{
+		int idx = (WIDTH_BLOCK * y);
+		int nextidx = (WIDTH_BLOCK * y) + 1;
+
+		CEffect3D::Create(
+			pVtxPos[nextidx],
+			0.0f,
+			D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f),
+			40.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+	}
+#endif
+}
+
 //==========================================================================
 // 頂点座標
 //==========================================================================

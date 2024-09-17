@@ -25,6 +25,9 @@ public:
 	// オーバーライドされた関数
 	virtual void BindVtxPosition() override;	// 頂点座標割り当て
 
+	// メンバ関数
+	virtual void DispPoint() override;	// 点表示
+
 	static CStoneWall_Front *Create();	// 生成
 
 private:

@@ -10,6 +10,7 @@
 
 #include "listmanager.h"
 class CMapBlock;
+class CStoneWall;
 
 //==========================================================================
 // クラス定義
@@ -48,6 +49,9 @@ public:
 	void SubSegmentPos();	// 基点削除
 	void SubSegmentPos(int idx);	// 基点削除
 
+	CStoneWall* GetStoneWall() { return m_pStoneWall; };			// 石垣(奥)
+	CStoneWall* GetStoneWall_Front() { return m_pStoneWall_Front; }	// 石垣(手前)
+
 	//=============================
 	// 静的関数
 	//=============================
@@ -60,6 +64,8 @@ private:
 	// メンバ変数
 	//=============================
 	std::vector<std::vector<MyLib::Vector3>> m_vecAllSegmentPos;	// 全ての起点の位置
+	CStoneWall* m_pStoneWall = nullptr;			// 石垣(奥)
+	CStoneWall* m_pStoneWall_Front = nullptr;	// 石垣(手前)
 	static CCourseManager* m_ThisPtr;		// 自身のポインタ
 	static const float m_fBlockLength;	// ブロックの長さ
 };

@@ -19,6 +19,7 @@
 #include "edit_mapblock.h"
 #include "edit_map.h"
 #include "frontobj_manager.h"
+#include "stonewall_front.h"
 
 //==========================================================================
 // ’è”’è‹`
@@ -352,7 +353,13 @@ void CEdit_Course::TransCheckPoint()
 
 				len += 400.0f;
 			}
-			
+
+
+
+			// ÎŠ_‚Ì“_•\Ž¦
+			pCourceManager->GetStoneWall()->DispPoint();
+			pCourceManager->GetStoneWall()->DispPoint();
+
 		}
 
 		ImGui::TreePop();
