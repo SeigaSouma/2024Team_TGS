@@ -59,10 +59,6 @@ COptionMenu_Keyconfig::COptionMenu_Keyconfig(int nPriority) : COptionMenu(nPrior
 		m_aKeyConfig[i] = KEYINFO();
 	}
 
-	m_checkconfig.s_p2D = nullptr;
-	m_checkconfig.s_pKeyDispOK = nullptr;
-	m_checkconfig.s_pKeyDispNO = nullptr;
-
 	// クリア
 	m_checkconfig = CHENGEINFO();
 
@@ -181,10 +177,14 @@ HRESULT COptionMenu_Keyconfig::Init()
 		// キーコンフィグを生成
 		float size = KEY_SIZE * 0.75f;
 		pos.x += (size * 3);
+
+		// OK
 		m_checkconfig.s_pKeyDispOK = CControlKeyDisp::Create(pos, 0.0f, size, size,
 			pConfigPad->GetKey(INGAME::ACT_OK));
 		pos.x += (size * 3);
 		m_checkconfig.s_pKeyDispOK->SetColor(col);
+
+		// NO
 		m_checkconfig.s_pKeyDispNO = CControlKeyDisp::Create(pos, 0.0f, size, size,
 			pConfigPad->GetKey(INGAME::ACT_BACK));
 		m_checkconfig.s_pKeyDispNO->SetColor(col);
@@ -440,24 +440,11 @@ void COptionMenu_Keyconfig::StateEdit()
 		m_aKeyConfig[i].pSelect->SetColor(col);
 	}
 #endif
-
 	
 
 	// 決定戻るの不透明度設定
 	float alpha = (m_SelectKey == INGAME::ACTION::ACT_MAX) ? 1.0f : 0.0f;
 	m_checkconfig.pSelect->SetAlpha(alpha);
-
-	//// 切り替えの色変更
-	//{
-	//	D3DXCOLOR col = FRONT_COL;
-
-	//	if (m_SelectKey == INGAME::ACT_MAX)
-	//	{
-	//		col.a = m_Alpha;
-	//	}
-
-	//	m_checkconfig.pSelect->SetColor(col);
-	//}
 }
 
 
@@ -552,11 +539,6 @@ void COptionMenu_Keyconfig::SetAlpha()
 		col = m_aKeyConfig[i].s_pKeyDisp->GetColor();
 		col.a = m_Alpha;
 		m_aKeyConfig[i].s_pKeyDisp->SetColor(col);
-
-		// 炭
-		/*col = m_aKeyConfig[i].s_p2DFront->GetColor();
-		col.a = m_Alpha;
-		m_aKeyConfig[i].s_p2DFront->SetColor(col);*/
 	}
 
 	// 文字の生成
@@ -571,9 +553,4 @@ void COptionMenu_Keyconfig::SetAlpha()
 	col = m_checkconfig.s_pKeyDispNO->GetColor();
 	col.a = m_Alpha;
 	m_checkconfig.s_pKeyDispNO->SetColor(col);
-
-	// 暗くする用のポリゴン生成
-	/*col = m_checkconfig.s_p2DFront->GetColor();
-	col.a = m_Alpha;
-	m_checkconfig.s_p2DFront->SetColor(col);*/
 }

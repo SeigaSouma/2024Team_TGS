@@ -37,7 +37,7 @@ private:
 		CSelectDraw* pSelect;			// 選択肢筆
 
 		// コンストラクタ
-		KEYINFO() : drawtime(0.0f), pSelect(nullptr) { s_p2D = nullptr; s_pKeyDisp = nullptr; /*s_p2DFront = nullptr;*/ }
+		KEYINFO() : drawtime(0.0f), pSelect(nullptr), s_p2D(nullptr) { s_pKeyDisp = nullptr; }
 	};
 
 	// 切り替え情報
@@ -49,7 +49,7 @@ private:
 		CSelectDraw* pSelect;			// 選択肢筆
 
 		// コンストラクタ
-		CHENGEINFO() : pSelect(nullptr){ s_p2D = nullptr; s_pKeyDispOK = nullptr; s_pKeyDispNO = nullptr; /*s_p2DFront = nullptr; */}
+		CHENGEINFO() : pSelect(nullptr){ s_p2D = nullptr; s_pKeyDispOK = nullptr; s_pKeyDispNO = nullptr; }
 	};
 
 public:
