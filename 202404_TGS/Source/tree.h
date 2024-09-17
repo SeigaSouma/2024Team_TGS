@@ -27,7 +27,7 @@ public:
 		STATE_MAX
 	};
 
-	CTree(int nPriority = 7);
+	CTree(int nPriority = 7, const LAYER layer = LAYER::LAYER_MAP);
 	~CTree();
 
 	//=============================

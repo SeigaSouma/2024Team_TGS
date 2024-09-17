@@ -56,14 +56,20 @@ public:
 		STATE_MAX
 	};
 
+	enum Type
+	{
+		TYPE_GAME = 0,
+		TYPE_RESULT,
+		TYPE_MAX
+	};
+
 	CPeopleManager();
 	~CPeopleManager();
 
-	HRESULT Init();
-	void Uninit();
-	void Update();
+	virtual HRESULT Init();
+	virtual void Uninit();
+	virtual void Update();
 
-	static CPeopleManager *Create();
 	HRESULT ReadText(const std::string& filename);	// 外部ファイル読み込み処理
 	void SetPeople(const MyLib::Vector3& pos, const MyLib::Vector3& rot, int nPattern);	// 敵配置
 	void SetByRank();	// ランクごとのセット処理
@@ -73,9 +79,10 @@ public:
 	void ResetLateSpawn() { m_lateSpawnPeople.clear(); }
 
 	static CPeopleManager* GetInstance() { return m_ThisPtr; }				// 自身のポインタ
+	static CPeopleManager* Create(Type type);
 
 
-private:
+protected:
 
 	//=============================
 	// メンバ関数
@@ -96,6 +103,19 @@ private:
 	static CPeopleManager* m_ThisPtr;				// 自身のポインタ
 };
 
+class CPeopleManager_Result : public CPeopleManager
+{
+public:
+
+	CPeopleManager_Result() : CPeopleManager() {}
+	~CPeopleManager_Result() {}
+
+	HRESULT Init() override;
+	void Update() override;
+
+private:
+
+};
 
 
 #endif

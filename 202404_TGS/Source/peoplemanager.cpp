@@ -52,12 +52,24 @@ CPeopleManager::~CPeopleManager()
 //==========================================================================
 // 生成処理
 //==========================================================================
-CPeopleManager* CPeopleManager::Create()
+CPeopleManager* CPeopleManager::Create(Type type)
 {
 	if (m_ThisPtr != nullptr) return m_ThisPtr;
 
 	// メモリ確保
-	m_ThisPtr = DEBUG_NEW CPeopleManager;
+	switch (type)
+	{
+	case CPeopleManager::TYPE_GAME:
+		m_ThisPtr = DEBUG_NEW CPeopleManager;
+		break;
+
+	case CPeopleManager::TYPE_RESULT:
+		m_ThisPtr = DEBUG_NEW CPeopleManager_Result;
+		break;
+
+	default:
+		break;
+	}
 
 	if (m_ThisPtr != nullptr)
 	{
@@ -189,7 +201,10 @@ void CPeopleManager::SetByRank()
 	// 後出しリストリセット
 	m_lateSpawnPeople.clear();
 
-	MyLib::Vector3 pos = MyLib::Vector3(0.0f, 300.0f, 2000.0f);
+	// 最低ランク以外
+	if (m_Rank == CJudge::JUDGE::JUDGE_MAX) return;
+
+	MyLib::Vector3 pos = MyLib::Vector3(0.0f, 300.0f, 2500.0f);
 	MyLib::Vector3 spawnpos = pos;
 	MyLib::Vector3 rot = MyLib::Vector3(0.0f, D3DX_PI * 0.5f, 0.0f);
 	int type = 0, patternNum = static_cast<int>(m_PatternByRank[m_Rank].size());
@@ -292,6 +307,9 @@ void CPeopleManager::LateSpawn()
 //==========================================================================
 void CPeopleManager::SetPeople(const MyLib::Vector3& pos, const MyLib::Vector3& rot, int nPattern)
 {
+	// 最低ランク以外
+	if (m_Rank == CJudge::JUDGE::JUDGE_MAX) return;
+
 	const SPattern& NowPattern = m_PatternByRank[m_Rank][nPattern];
 	int nNumSpawn = NowPattern.nNum;	// スポーンする数
 	CPeople* pPeople = nullptr;
@@ -325,7 +343,7 @@ void CPeopleManager::SetPeople(const MyLib::Vector3& pos, const MyLib::Vector3& 
 		spawnPos += data.pos;
 
 		// 生成
-		pPeople = CKite::Create(
+		pPeople = CPeople::Create(
 			m_vecMotionFileName[random],	// ファイル名
 			spawnPos,						// 位置
 			static_cast<CPeople::TYPE>(random)
@@ -481,4 +499,51 @@ HRESULT CPeopleManager::ReadText(const std::string& filename)
 
 
 	return S_OK;
+}
+
+
+//==========================================================================
+// 初期化処理
+//==========================================================================
+HRESULT CPeopleManager_Result::Init()
+{
+
+	// 現在のランク
+	m_Rank = CJudge::JUDGE::JUDGE_AAA;
+
+	// 初期化処理
+	HRESULT hr = CPeopleManager::Init();
+
+
+	MyLib::Vector3 pos = MyLib::Vector3(0.0f, 300.0f, 5000.0f);
+	MyLib::Vector3 spawnpos = pos;
+	MyLib::Vector3 rot = MyLib::Vector3(0.0f, D3DX_PI * 0.5f, 0.0f);
+	int type = 0, patternNum = static_cast<int>(m_PatternByRank[m_Rank].size());
+
+	float fDefLen = CManager::GetInstance()->GetCamera()->GetPositionV().x;
+
+	// 人生成
+	for (float len = fDefLen + SPAWN_MIN_LENGTH; len <= fDefLen + 4000.0f; len += SPAWN_DISTANCE)
+	{
+		type = rand() % patternNum;
+
+		// 位置リセット
+		spawnpos = pos;
+		spawnpos.x += len;
+		spawnpos.z += UtilFunc::Transformation::Random(-50, 50) * 10.0f;
+		spawnpos.z += UtilFunc::Transformation::Random(-50, 50);
+
+		SetPeople(spawnpos, rot, type);
+	}
+
+
+	return hr;
+}
+
+//==========================================================================
+// 更新処理
+//==========================================================================
+void CPeopleManager_Result::Update()
+{
+
 }

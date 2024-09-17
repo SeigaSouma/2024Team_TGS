@@ -96,6 +96,9 @@ public:
 	bool IsHitStop() { return m_bHitStop; }			// ワイヤーフレーム
 	CScene::MODE GetOldMode() { return m_OldMode; }	// 前回のモード取得
 	bool IsLoadComplete() { return m_bLoadComplete; }
+	bool Is2DDisp() { return m_bDisp_2D; }			// 2D表示の判定
+	void SerEnableDisp_UI(bool bDisp) { m_bDisp_UI = bDisp; }			// UI表示の判定
+	bool IsDisp_UI() { return m_bDisp_UI; }			// UI表示の判定
 
 	static bool IsDisp_ImGui() { return m_bDisp_ImGui; }				// ImGuiの描画判定
 	static bool IsDisp_BoxColliders() { return m_bDisp_BoxColliders; }	// 当たり判定ボックスの描画判定
@@ -136,6 +139,8 @@ private:
 	bool m_bLoadFadeSet;				// ロードのフェード設定フラグ
 	bool m_bNowLoading;				// ロード完了のフラグ
 	bool m_bFirstLoad;				// 初回ロード
+	bool m_bDisp_2D;					// 2Dの表示
+	bool m_bDisp_UI;					// UIの表示
 
 	static CManager *m_pManager;	// マネージャ
 

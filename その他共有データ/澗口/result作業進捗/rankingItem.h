@@ -23,6 +23,8 @@ public:
 	{
 		ITEM_NUM_RANK = 0,
 		ITEM_ALLRANK,
+		ITEM_SCORE,
+		ITEM_ALLRANK_DATA,
 		ITEM_MAX
 	};
 
@@ -36,7 +38,7 @@ public:
 	void Draw() override;
 
 	void Kill();	// 削除
-	static CRankingItem* Create();	// 生成処理
+	static CRankingItem* Create(int nNumRank,int nScore,int nAllRank);	// 生成処理
 
 private:
 
@@ -46,7 +48,12 @@ private:
 	// メンバ変数
 	//=============================
 	float m_fStateTime;
-	CObject2D* m_pItem[ITEM_MAX];
+	CObject2D* m_pItem[ITEM_MAX];	//項目数
+	CObject2D* m_pScoreItem[8];		//スコアの桁毎obj
+	int m_nNumRank;					//順位
+	int m_nScore;					//スコア値
+	int m_nAllRank;					//総評の値
+	static int m_nObjNum;			//当オブジェクトの生成数
 };
 
 

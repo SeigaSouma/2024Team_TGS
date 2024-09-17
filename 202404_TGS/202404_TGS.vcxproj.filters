@@ -150,8 +150,11 @@
     <Filter Include="direction\leaf">
       <UniqueIdentifier>{d5d3f913-e097-4560-acf1-c1b9337af4b6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="keyconfig\setting">
-      <UniqueIdentifier>{8a526bd1-560c-4c06-b5d1-edc65f9acf15}</UniqueIdentifier>
+    <Filter Include="mode\title\option">
+      <UniqueIdentifier>{071c6caf-4a75-4dc3-ba28-3d5004e3a149}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="direction\selectdraw">
+      <UniqueIdentifier>{39678907-4341-4d1a-9e0e-73a4bd4b8b2c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -707,9 +710,6 @@
     <ClCompile Include="Source\kite.cpp">
       <Filter>people</Filter>
     </ClCompile>
-    <ClCompile Include="Source\tree.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Source\serifeffect.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -734,9 +734,6 @@
     <ClCompile Include="Source\edit_mapblock.cpp">
       <Filter>edit</Filter>
     </ClCompile>
-    <ClCompile Include="Source\suffocation.cpp">
-      <Filter>ui</Filter>
-    </ClCompile>
     <ClCompile Include="Source\frontobj_manager.cpp">
       <Filter>map\frontobj</Filter>
     </ClCompile>
@@ -752,8 +749,38 @@
     <ClCompile Include="Source\leaf_flow.cpp">
       <Filter>direction\leaf</Filter>
     </ClCompile>
+    <ClCompile Include="Source\tree.cpp">
+      <Filter>map</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\title_select.cpp">
+      <Filter>mode\title</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\result_people.cpp">
+      <Filter>people</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\cameratrigger_result.cpp">
+      <Filter>camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\title_optionselect.cpp">
+      <Filter>mode\title</Filter>
+    </ClCompile>
     <ClCompile Include="Source\keyconfig_setting.cpp">
-      <Filter>keyconfig\setting</Filter>
+      <Filter>mode\title\option</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\optionmenu.cpp">
+      <Filter>mode\title\option</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\optionmenu_sound.cpp">
+      <Filter>mode\title\option</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\selectdraw.cpp">
+      <Filter>direction\selectdraw</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\suffocation.cpp">
+      <Filter>direction</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\optionmenu_keyconfig.cpp">
+      <Filter>mode\title\option</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1318,9 +1345,6 @@
     <ClInclude Include="Source\kite.h">
       <Filter>people</Filter>
     </ClInclude>
-    <ClInclude Include="Source\tree.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Source\serifeffect.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -1345,9 +1369,6 @@
     <ClInclude Include="Source\edit_mapblock.h">
       <Filter>edit</Filter>
     </ClInclude>
-    <ClInclude Include="Source\suffocation.h">
-      <Filter>ui</Filter>
-    </ClInclude>
     <ClInclude Include="Source\frontobj_manager.h">
       <Filter>map\frontobj</Filter>
     </ClInclude>
@@ -1363,8 +1384,38 @@
     <ClInclude Include="Source\leaf_flow.h">
       <Filter>direction\leaf</Filter>
     </ClInclude>
+    <ClInclude Include="Source\tree.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\title_select.h">
+      <Filter>mode\title</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\result_people.h">
+      <Filter>people</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\cameratrigger_result.h">
+      <Filter>camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\title_optionselect.h">
+      <Filter>mode\title</Filter>
+    </ClInclude>
     <ClInclude Include="Source\keyconfig_setting.h">
-      <Filter>keyconfig\setting</Filter>
+      <Filter>mode\title\option</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\optionmenu.h">
+      <Filter>mode\title\option</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\optionmenu_sound.h">
+      <Filter>mode\title\option</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\selectdraw.h">
+      <Filter>direction\selectdraw</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\suffocation.h">
+      <Filter>direction</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\optionmenu_keyconfig.h">
+      <Filter>mode\title\option</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

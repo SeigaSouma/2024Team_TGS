@@ -48,8 +48,6 @@ CTitle::SCENE_FUNC CTitle::m_SceneFunc[] =
 	&CTitle::SceneNone,			// なにもなし
 	&CTitle::SceneFadeInLogo,	// ロゴフェードイン
 	&CTitle::SceneFadeOutLoGo,	// ロゴフェードアウト
-	&CTitle::SceneFadeShouldTutorial,	// チュートリアル確認
-	&CTitle::SceneFadeKeyConfigSetting,	// キーコンフィグ設定
 };
 
 //==========================================================================
@@ -168,23 +166,7 @@ void CTitle::Update()
 //==========================================================================
 void CTitle::SceneNone()
 {
-	// シーンカウンター
-	m_fSceneTime = TIME_FADELOGO;
-
-	// 入力情報取得
-	CInputGamepad* pInputGamepad = CInputGamepad::GetInstance();
-
-	// 入力があればキーコンフィグ設定を行う
-	if (pInputGamepad->GetTrigger(CInputGamepad::BUTTON::BUTTON_BACK, 0))
-	{
-		m_SceneType = SCENETYPE::SCENETYPE_KEYCONFIGSETTING;
-		m_pPressEnter->SetState(CTitle_PressEnter::STATE::STATE_NOACTIVE);
-
-		if(m_pConfigSetting == nullptr)
-		{
-			m_pConfigSetting = CKeyConfigSetting::Create();
-		}
-	}
+	
 }
 
 //==========================================================================
@@ -225,47 +207,6 @@ void CTitle::SceneFadeOutLoGo()
 		m_pPressEnter->Uninit();
 		m_pPressEnter = nullptr;
 		return;
-	}
-}
-
-//==========================================================================
-// チュートリアル確認
-//==========================================================================
-void CTitle::SceneFadeShouldTutorial()
-{
-
-}
-
-//==========================================================================
-// キーコンフィグ確認
-//==========================================================================
-void CTitle::SceneFadeKeyConfigSetting()
-{
-	// 入力情報取得
-	CInputGamepad* pInputGamepad = CInputGamepad::GetInstance();
-
-	// 入力中か確認
-	if (m_pConfigSetting != nullptr)
-	{
-		m_pConfigSetting->Update();
-
-		if (m_pConfigSetting->IsChange())
-		{
-			return;
-		}
-	}
-
-	// 入力があればキーコンフィグ設定を行う
-	if (pInputGamepad->GetTrigger(CInputGamepad::BUTTON::BUTTON_BACK, 0))
-	{
-		m_SceneType = SCENETYPE::SCENETYPE_NONE;
-		m_pPressEnter->SetState(CTitle_PressEnter::STATE_NONE);
-
-		if (m_pConfigSetting != nullptr)
-		{
-			m_pConfigSetting->Uninit();
-			m_pConfigSetting = nullptr;
-		}
 	}
 }
 

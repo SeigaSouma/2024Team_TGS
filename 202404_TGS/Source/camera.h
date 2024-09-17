@@ -91,6 +91,7 @@ public:
 	void SetTargetPositionDest(const MyLib::Vector3& pos) { m_TargetPosDest = pos; }	// 追従目標の目標位置設定
 	MyLib::Vector3 GetTargetPositionDest() { return m_TargetPosDest; }					// 追従目標の目標位置取得
 	void SetTargetRotation(const MyLib::Vector3 rot);	// ロックオンの向き設定
+	void SetPositionV();
 
 	// 移動量系
 	MyLib::Vector3 GetMoveRot() { return m_Moverot; }	// 向きの移動量取得
@@ -222,6 +223,7 @@ private:
 	MyLib::Vector3 m_posRDest;			// 目標の注視点
 	MyLib::Vector3 m_vecU;				// 上方向ベクトル
 	MyLib::Vector3 m_move;				// 移動量
+	MyLib::Vector3 m_moveWASD;			// WASDの移動量
 	MyLib::Vector3 m_rot;				// 向き
 	MyLib::Vector3 m_rotOrigin;			// 元の向き
 	MyLib::Vector3 m_rotDest;			// 目標の向き

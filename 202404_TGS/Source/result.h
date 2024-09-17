@@ -15,6 +15,7 @@
 // 前方宣言
 //==========================================================================
 class CResultScore;
+class CPeopleManager;
 
 //==========================================================================
 // クラス定義
@@ -39,6 +40,7 @@ private:
 
 	// メンバ変数
 	bool m_clear; // クリア判定
+	CPeopleManager* m_pPeopleManager;			// 人マネージャ
 	static CResultScore *m_pResultScore;
 };
 

@@ -5,38 +5,45 @@
 //
 //=============================================================================
 #include "map_ui.h"
-#include "objectX.h"
+#include "object2D.h"
 #include "game.h"
 #include "course.h"
 #include "renderer.h"
 #include "manager.h"
 #include "camera.h"
 #include "player.h"
+#include "texture.h"
+#include "goalflag.h"
 
 //=============================================================================
 // 定数定義
 //=============================================================================
 namespace
 {
-	const float DISTANCE = 600.0f;	// 距離
-	const MyLib::Vector3 POS = MyLib::Vector3(-1000.0f, 100.0f, 100.0f);
-	const MyLib::Vector3 PLAYERPOS = MyLib::Vector3(-78.0f, 33.0f, 1.7f);
-	const MyLib::Vector3 CAMPOS = MyLib::Vector3(-87.0f, 108.0f, 320.0f);
-	const float MODEL_ROTY = D3DX_PI * 1.0f;
-	const float MODEL_ROTZ = -D3DX_PI * 0.2f;
-	const float MODEL_ROTMAXMOVEZ = -D3DX_PI * 1.4f;
-	const float ROTY = D3DX_PI * 0.35f;	// Y軸角度
+	const MyLib::Vector3 DEF_POS = MyLib::Vector3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.95f, 0.0f);
+	const std::string TEXTURELIST[CMapUI::TYPE::TYPE_MAX] = {	// テクスチャリスト
+		"data\\TEXTURE\\map_ui\\map.png",
+		"data\\TEXTURE\\map_ui\\player.png",
+		"data\\TEXTURE\\map_ui\\water.png",
+	};
+
+	const float HEIGHTLIST[CMapUI::TYPE::TYPE_MAX] = {	// 高さリスト
+		100.0f,
+		50.0f,
+		100.0f,
+	};
+
+	const float STARTX = SCREEN_WIDTH * 0.09f;
+	const float GOALX = SCREEN_WIDTH * 0.9f;
+	const float ADD_TIME = (1.0f / 25.0f);
+	const float WATER_MOVE = (1.0f / 1800.0f);
+	const float UPDOWN_HEIGHT = (6.0f);
 }
 
 //=============================================================================
 // 静的メンバ変数宣言
 //=============================================================================
 // ファイル名
-std::string CMapUI::m_aModelList[TYPE::TYPE_MAX] =
-{
-	"data\\MODEL\\map_ui\\map.x",
-	"data\\MODEL\\map_ui\\player.x",
-};
 
 // インスタンス
 CMapUI* CMapUI::m_pInstance = nullptr;
@@ -54,6 +61,7 @@ CMapUI::CMapUI() : CObject(7)
 
 	m_pMyCamera = nullptr;
 	m_pMyPlayer = nullptr;
+	m_fSin = 0.0f;
 }
 
 //=============================================================================
@@ -69,7 +77,7 @@ CMapUI::~CMapUI()
 //=============================================================================
 HRESULT CMapUI::Init()
 {
-	SetType(CObject::TYPE::TYPE_OBJECTX);
+	SetType(CObject::TYPE::TYPE_UI);
 
 	// ゲーム画面が存在しているか、コースがあるか確認
 	if (CGame::GetInstance() == nullptr) { return E_FAIL; }
@@ -78,18 +86,15 @@ HRESULT CMapUI::Init()
 	// オブジェクトの生成と設定
 	for (int i = 0; i < TYPE::TYPE_MAX; i++)
 	{
-		m_apObj[i] = CObjectX::Create(m_aModelList[i]);
-		m_apObj[i]->SetEnableDisp(false);
-		m_apObj[i]->SetPosition(POS + i * PLAYERPOS);
-		m_apObj[i]->SetRotation(MyLib::Vector3(0.0f, MODEL_ROTY, MODEL_ROTZ));
+		m_apObj[i] = CObject2D::Create(1);
+		int texidx = CTexture::GetInstance()->Regist(TEXTURELIST[i]);
+		m_apObj[i]->BindTexture(texidx);
+		m_apObj[i]->SetType(CObject::TYPE_UI);
+		m_apObj[i]->SetPosition(DEF_POS);
+		m_apObj[i]->SetRotation(0.0f);
+		D3DXVECTOR2 texture = CTexture::GetInstance()->GetImageSize(m_apObj[i]->GetIdxTexture());
+		m_apObj[i]->SetSize(UtilFunc::Transformation::AdjustSizeByHeight(texture, HEIGHTLIST[i]));
 	}
-
-	// 描画用カメラの生成と設定
-	m_pMyCamera = DEBUG_NEW CCamera;
-	m_pMyCamera->Init();
-	m_pMyCamera->SetRotation(MyLib::Vector3(0.0f, ROTY, 0.0f));
-	m_pMyCamera->SetDistance(DISTANCE);
-	m_pMyCamera->WarpCamera(POS + CAMPOS);
 
 	return S_OK;
 }
@@ -128,41 +133,9 @@ void CMapUI::Uninit()
 void CMapUI::Update()
 {
 	// マップの回転処理
-	SetMapRotation();
+	SetMapPosition();
 
-	//float windowWidth = 100.0f;
-	//const float  POS_MOVE = 0.1f;
-	////=============================
-	//// 位置設定
-	////=============================
-	//ImGui::Text("pos");
-	//ImGui::SameLine();
-	//// X
-	//ImGui::PushID(0); // ウィジェットごとに異なるIDを割り当てる
-	//{
-	//	ImGui::SetNextItemWidth(windowWidth);
-	//	ImGui::DragFloat("x", &PLAYERPOS.x, POS_MOVE, 0.0f, 0.0f, "%.2f");
-	//	ImGui::SameLine();
-	//}
-	//ImGui::PopID();
-	//// Y
-	//ImGui::PushID(0); // ウィジェットごとに異なるIDを割り当てる
-	//{
-	//	ImGui::SetNextItemWidth(windowWidth);
-	//	ImGui::DragFloat("y", &PLAYERPOS.y, POS_MOVE, 0.0f, 0.0f, "%.2f");
-	//	ImGui::SameLine();
-	//}
-	//ImGui::PopID();
-	//// Z
-	//ImGui::PushID(0); // ウィジェットごとに異なるIDを割り当てる
-	//{
-	//	ImGui::SetNextItemWidth(windowWidth);
-	//	ImGui::DragFloat("z", &PLAYERPOS.z, POS_MOVE, 0.0f, 0.0f, "%.2f");
-	//}
-	//ImGui::PopID();
-	//m_pMyCamera->WarpCamera(POS + CAMPOS);
-
-	//m_apObj[TYPE::TYPE_PLAYER]->SetPosition(POS + PLAYERPOS);
+	m_fSin += ADD_TIME;
 }
 
 //=============================================================================
@@ -170,46 +143,7 @@ void CMapUI::Update()
 //=============================================================================
 void CMapUI::Draw()
 {
-	if (CManager::IsDisp_ImGui()) return;
-
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();	//デバイスへのポインタを取得
-	D3DXMATRIX mtxView, mtxProjection;
-	D3DVIEWPORT9 viewportDef;
-
-	// 現在のビューポートの取得
-	pDevice->GetViewport(&viewportDef);
-
-	// 現在のビューマトリックスの取得
-	pDevice->GetTransform(D3DTS_VIEW, &mtxView);
-
-	// 現在のプロジェクションマトリックスの取得
-	pDevice->GetTransform(D3DTS_PROJECTION, &mtxProjection);
-
-	// 別のカメラを設定して描画する
-	if (m_pMyCamera != nullptr)
-	{
-		m_pMyCamera->SetCamera();
-
-		// 描画処理
-		for (int i = 0; i < TYPE::TYPE_MAX; i++)
-		{
-			if (m_apObj[i] != nullptr)
-			{
-				m_apObj[i]->SetEnableDisp(true);
-				m_apObj[i]->Draw();
-				m_apObj[i]->SetEnableDisp(false);
-			}
-		}
-	}
-
-	// 現在のビューポートの取得
-	pDevice->SetViewport(&viewportDef);
-
-	// 現在のビューマトリックスの取得
-	pDevice->SetTransform(D3DTS_VIEW, &mtxView);
-
-	// 現在のプロジェクションマトリックスの取得
-	pDevice->SetTransform(D3DTS_PROJECTION, &mtxProjection);
+	
 }
 
 //=============================================================================
@@ -241,9 +175,9 @@ void CMapUI::Release()
 }
 
 //=============================================================================
-// 回転処理
+// 移動処理
 //=============================================================================
-void CMapUI::SetMapRotation()
+void CMapUI::SetMapPosition()
 {
 	CGame* pgame = CGame::GetInstance();
 
@@ -253,15 +187,20 @@ void CMapUI::SetMapRotation()
 	// プレイヤーがいるか確認
 	if (m_pMyPlayer == nullptr) { return; }
 
-	// マップオブジェクトの回転取得
-	MyLib::Vector3 rot = m_apObj[TYPE::TYPE_MAP]->GetRotation();
-
-	// プレイヤーの進行の割合を求めて回転
-	float courselen = pgame->GetCourse()->GetCourceLength();
-	float playerlen = m_pMyPlayer->GetMoveLength();
+	// プレイヤーの進行の割合を求めて移動
+	float courselen = CGoalflagX::GetListObj().GetData(0)->GetPosition().x;
+	float playerlen = m_pMyPlayer->GetPosition().x;
 	m_fRatio = playerlen / courselen;
-	rot.z = MODEL_ROTZ + (MODEL_ROTMAXMOVEZ * m_fRatio);
 
-	// 設定
-	m_apObj[TYPE::TYPE_MAP]->SetRotation(rot);
+	float x = UtilFunc::Correction::EasingLinear(STARTX, GOALX, 0.0f, 1.0f, m_fRatio);
+
+	MyLib::Vector3 pos = m_apObj[TYPE::TYPE_PLAYER]->GetPosition();
+	pos.x = x;
+	pos.y = (DEF_POS.y + UPDOWN_HEIGHT) + sinf(m_fSin) * UPDOWN_HEIGHT;
+	m_apObj[TYPE::TYPE_PLAYER]->SetPosition(pos);
+	D3DXVECTOR2* ptex = m_apObj[TYPE::TYPE_WATER]->GetTex();
+	for (int i = 0; i < 4; i++)
+	{
+		ptex[i].x -= WATER_MOVE;
+	}
 }

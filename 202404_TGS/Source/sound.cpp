@@ -52,6 +52,7 @@ CSound::SOUNDINFO CSound::m_aSoundInfo[LABEL_MAX] =
 	{ TYPE_SE,"data/SE/inthewater1.wav", 0 },
 	{ TYPE_SE,"data/SE/inthewater2.wav", 0 },
 	{ TYPE_SE,"data/SE/writing.wav", 0 },
+	{ TYPE_SE,"data/SE/writeFinish.wav", 0 },
 	{ TYPE_SE,"data/SE/cluckbubbles.wav", 0 },
 	{ TYPE_SE,"data/SE/open.wav", 0 },
 	{ TYPE_SE,"data/SE/dive.wav", 0 },
@@ -548,7 +549,7 @@ void CSound::VolumeChange(LABEL label, float volume)
 //==========================================================================
 void CSound::VolumeChange(float fVolume)
 {
-	m_fMasterVolume += fVolume;
+	m_fMasterVolume = fVolume;
 	UtilFunc::Transformation::ValueNormalize(m_fMasterVolume, 2.0f, 0.0f);
 
 	//音量をセットする
@@ -560,7 +561,7 @@ void CSound::VolumeChange(float fVolume)
 //==========================================================================
 void CSound::VolumeChange(TYPE type, float fVolume)
 {
-	m_aVolume[type] += fVolume;
+	m_aVolume[type] = fVolume;
 	UtilFunc::Transformation::ValueNormalize(m_aVolume[type], 2.0f, 0.0f);
 
 	//音量をセットする
@@ -576,7 +577,7 @@ void CSound::VolumeChange(TYPE type, float fVolume)
 //==========================================================================
 // 音量取得(3桁表示, マスターボリューム)
 //==========================================================================
-int CSound::GetVolume()
+int CSound::GetVolumeNum()
 {
 	return (int)((m_fMasterVolume + 0.009) * 100);
 }
@@ -584,7 +585,7 @@ int CSound::GetVolume()
 //==========================================================================
 // 音量取得(3桁表示, 種類別ボリューム)
 //==========================================================================
-int CSound::GetVolume(TYPE type)
+int CSound::GetVolumeNum(TYPE type)
 {
 	return (int)((m_aVolume[type] + 0.009) * 100);
 }

@@ -21,7 +21,7 @@ namespace
 //==========================================================================
 // コンストラクタ
 //==========================================================================
-CTree::CTree(int nPriority) : CObject3D(nPriority)
+CTree::CTree(int nPriority, const LAYER layer) : CObject3D(nPriority, layer)
 {
 	// 値のクリア
 }

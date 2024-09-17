@@ -39,7 +39,7 @@ namespace
 	const float TIME_LOAD = 2.0f;	// ロード時間
 
 #if _DEBUG
-	const CScene::MODE STARTMODE = CScene::MODE::MODE_RESULT;
+	const CScene::MODE STARTMODE = CScene::MODE::MODE_TITLE;
 #else
 	const CScene::MODE STARTMODE = CScene::MODE::MODE_TITLE;
 #endif
@@ -85,6 +85,8 @@ CManager::CManager()
 	m_fLoadTimer = 0.0f;			// ロードのタイマー
 	m_bLoadComplete = false;		// ロード完了のフラグ
 	m_bFirstLoad = false;			// 初回ロード
+	m_bDisp_2D = false;				// 2Dの表示
+	m_bDisp_UI = true;				// UIの表示
 
 	// ロードフラグリセット
 	m_bLoadComplete = false;
@@ -845,6 +847,7 @@ void CManager::Update()
 		}
 		ImGui::Checkbox("Disp BoxColliders", &m_bDisp_BoxColliders);
 		ImGui::Checkbox("Disp CheckPoint", &m_bDisp_CheckPoint);
+		ImGui::Checkbox("Disp 2D", &m_bDisp_2D);
 
 		if (pInputKeyboard->GetTrigger(DIK_F2))
 		{// F2でワイヤーフレーム切り替え

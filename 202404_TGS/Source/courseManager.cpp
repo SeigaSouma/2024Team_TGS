@@ -23,7 +23,7 @@
 namespace
 {
 	const std::string FILENAME = "data\\TEXT\\map\\chunkdata.bin";
-	const int NUM_CHUNK = 1;	// チャンクの数
+	const int NUM_CHUNK = 5;	// チャンクの数
 	const int DECIDE_LEVEL[] =	// レベル
 	{
 		0,
@@ -350,7 +350,12 @@ void CCourseManager::Load()
 		}
 		else
 		{
-			segmentpos.push_back(segmentpos.back() + MyLib::Vector3(DISTANCE_TO_CHUNCK, 0.0f, 0.0f));
+			float distance = DISTANCE_TO_CHUNCK / 8.0f;
+			
+			for (int push = 0; push < 8; push++)
+			{
+				segmentpos.push_back(segmentpos.back() + MyLib::Vector3(distance, 0.0f, 0.0f));
+			}
 			start = segmentpos.back() + MyLib::Vector3(DISTANCE_TO_CHUNCK, 0.0f, 0.0f);
 		}
 		vecstart.push_back(start);

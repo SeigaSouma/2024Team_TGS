@@ -157,6 +157,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\cameratrigger_result.cpp" />
     <ClCompile Include="Source\frontobj_manager.cpp" />
     <ClCompile Include="Libraries\Imgui\imgui.cpp" />
     <ClCompile Include="Libraries\Imgui\imgui_demo.cpp" />
@@ -292,6 +293,9 @@
     <ClCompile Include="Source\objectQuaternion.cpp" />
     <ClCompile Include="Source\objectX.cpp" />
     <ClCompile Include="Source\object_circlegauge2D.cpp" />
+    <ClCompile Include="Source\optionmenu.cpp" />
+    <ClCompile Include="Source\optionmenu_keyconfig.cpp" />
+    <ClCompile Include="Source\optionmenu_sound.cpp" />
     <ClCompile Include="Source\particle.cpp" />
     <ClCompile Include="Source\pause.cpp" />
     <ClCompile Include="Source\pause_game.cpp" />
@@ -316,6 +320,7 @@
     <ClCompile Include="Source\result.cpp" />
     <ClCompile Include="Source\resultmanager.cpp" />
     <ClCompile Include="Source\resultscore.cpp" />
+    <ClCompile Include="Source\result_people.cpp" />
     <ClCompile Include="Source\retryui.cpp" />
     <ClCompile Include="Source\rockon_marker.cpp" />
     <ClCompile Include="Source\sample_character.cpp" />
@@ -325,6 +330,7 @@
     <ClCompile Include="Source\scene.cpp" />
     <ClCompile Include="Source\score.cpp" />
     <ClCompile Include="Source\scroll.cpp" />
+    <ClCompile Include="Source\selectdraw.cpp" />
     <ClCompile Include="Source\serifeffect.cpp" />
     <ClCompile Include="Source\shadow.cpp" />
     <ClCompile Include="Source\skip_ui.cpp" />
@@ -347,6 +353,7 @@
     <ClCompile Include="Source\timer_result.cpp" />
     <ClCompile Include="Source\title.cpp" />
     <ClCompile Include="Source\titlelogo.cpp" />
+    <ClCompile Include="Source\title_optionselect.cpp" />
     <ClCompile Include="Source\title_pressenter.cpp" />
     <ClCompile Include="Source\toatalrank.cpp" />
     <ClCompile Include="Source\townfield_fixedplane.cpp" />
@@ -362,8 +369,10 @@
     <ClCompile Include="Source\waterstone.cpp" />
     <ClCompile Include="Source\waterstoneManager.cpp" />
     <ClCompile Include="Source\Xload.cpp" />
+    <ClCompile Include="Source\title_select.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\cameratrigger_result.h" />
     <ClInclude Include="Source\frontobj_manager.h" />
     <ClInclude Include="Libraries\Imgui\imconfig.h" />
     <ClInclude Include="Libraries\Imgui\imgui.h" />
@@ -502,6 +511,9 @@
     <ClInclude Include="Source\objectQuaternion.h" />
     <ClInclude Include="Source\objectX.h" />
     <ClInclude Include="Source\object_circlegauge2D.h" />
+    <ClInclude Include="Source\optionmenu.h" />
+    <ClInclude Include="Source\optionmenu_keyconfig.h" />
+    <ClInclude Include="Source\optionmenu_sound.h" />
     <ClInclude Include="Source\particle.h" />
     <ClInclude Include="Source\pause.h" />
     <ClInclude Include="Source\pause_game.h" />
@@ -521,6 +533,7 @@
     <ClInclude Include="Source\result.h" />
     <ClInclude Include="Source\resultmanager.h" />
     <ClInclude Include="Source\resultscore.h" />
+    <ClInclude Include="Source\result_people.h" />
     <ClInclude Include="Source\retryui.h" />
     <ClInclude Include="Source\rockon_marker.h" />
     <ClInclude Include="Source\sample_character.h" />
@@ -530,6 +543,7 @@
     <ClInclude Include="Source\scene.h" />
     <ClInclude Include="Source\score.h" />
     <ClInclude Include="Source\scroll.h" />
+    <ClInclude Include="Source\selectdraw.h" />
     <ClInclude Include="Source\serifeffect.h" />
     <ClInclude Include="Source\shadow.h" />
     <ClInclude Include="Source\skip_ui.h" />
@@ -552,6 +566,7 @@
     <ClInclude Include="Source\timer_result.h" />
     <ClInclude Include="Source\title.h" />
     <ClInclude Include="Source\titlelogo.h" />
+    <ClInclude Include="Source\title_optionselect.h" />
     <ClInclude Include="Source\title_pressenter.h" />
     <ClInclude Include="Source\toatalrank.h" />
     <ClInclude Include="Source\townfield_fixedplane.h" />
@@ -567,6 +582,7 @@
     <ClInclude Include="Source\waterstone.h" />
     <ClInclude Include="Source\waterstoneManager.h" />
     <ClInclude Include="Source\Xload.h" />
+    <ClInclude Include="Source\title_select.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -135,6 +135,7 @@ void CEdit_Course::Update()
 
 	// 水中岩エディット
 	WaterStoneEdit();
+
 }
 
 //==========================================================================
@@ -321,19 +322,37 @@ void CEdit_Course::TransCheckPoint()
 			ImGui::DragFloat("Length", &vecCheckpoint[m_nCheckPointEditIdx], 1.0f, 0.0f, 0.0f, "%.2f");
 		}
 
+		std::vector<MyLib::Vector3> vecpos = CGame::GetInstance()->GetCourse()->GetVecPosition();
+		MyLib::Vector3 pos = MySpline::GetSplinePosition_NonLoop(vecpos, vecCheckpoint[m_nCheckPointEditIdx]);
+		pos.y += 100.0f;
+		CEffect3D::Create(
+			pos,
+			0.0f,
+			D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f),
+			40.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+
 		// チェックポイントのリスト設定
 		CMapBlock::GetInfoList().GetData(m_nCourseEditIdx)->SetCheckpointInfo(vecCheckpoint);
 
 		for (const auto& len : vecCheckpoint)
 		{
-			MyLib::Vector3 pos = MySpline::GetSplinePosition_NonLoop(CGame::GetInstance()->GetCourse()->GetVecPosition(), len);
-			pos += UP;
+			std::vector<float> vecLen;
+			vecLen.resize(CGame::GetInstance()->GetCourse()->GetVecPosition().size());
 
-			CEffect3D::Create(
-				pos,
-				0.0f,
-				D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f),
-				80.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+			float toatallen = MySpline::CalSegmentLength(vecpos, &vecLen);
+
+			for (float len = 0.0f; len <= toatallen;)
+			{
+				MyLib::Vector3 pos = MySpline::GetSplinePosition_NonLoop(vecpos, len);
+				CEffect3D::Create(
+					pos,
+					0.0f,
+					D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f),
+					40.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+
+				len += 400.0f;
+			}
+			
 		}
 
 		ImGui::TreePop();

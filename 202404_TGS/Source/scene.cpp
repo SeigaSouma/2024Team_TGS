@@ -30,7 +30,17 @@
 //==========================================================================
 namespace
 {
-	const char* MAP_TEXT = "data\\TEXT\\map\\info.txt";
+	const char* MAP_TEXT[] =
+	{
+		"data\\TEXT\\map\\info.txt",	// なし
+		"data\\TEXT\\map\\info.txt",	// タイトル
+		"data\\TEXT\\map\\info.txt",	// チュートリアル
+		"data\\TEXT\\map\\info.txt",	// ゲーム
+		"data\\TEXT\\map\\info.txt",	// ゲーム
+		"data\\TEXT\\map\\map_result.txt",	// リザルト
+		"data\\TEXT\\map\\info.txt",	// ランキング
+	};
+	
 	const char* ELEVATION_TEXT = "data\\TEXT\\elevation\\field_mountain.txt";
 }
 
@@ -51,6 +61,7 @@ CScene::CScene()
 	// 変数のクリア
 	m_mode = MODE_TITLE;
 	m_pEditMap = nullptr;
+	m_pEdit = nullptr;	// エディター
 }
 
 //==========================================================================
@@ -132,7 +143,7 @@ HRESULT CScene::Init()
 	// マップの生成
 	//**********************************
 #ifdef LOADMAP
-	if (FAILED(MyMap::Create(MAP_TEXT)))
+	if (FAILED(MyMap::Create(MAP_TEXT[m_mode])))
 	{// 失敗した場合
 		return E_FAIL;
 	}
@@ -142,7 +153,7 @@ HRESULT CScene::Init()
 	// マップの生成
 	//**********************************
 #ifdef LOADMAP
-	m_pEditMap = CEdit_Map_Release::Create(MAP_TEXT, CManager::BuildMode::MODE_RELEASE);
+	m_pEditMap = CEdit_Map_Release::Create(MAP_TEXT[m_mode], CManager::BuildMode::MODE_RELEASE);
 #endif
 
 	//**********************************
@@ -182,7 +193,18 @@ void CScene::Uninit()
 //==========================================================================
 void CScene::Update()
 {
-	
+	// 生成
+	if (m_pEdit == nullptr)
+	{
+		m_pEdit = CEdit::Create(CGame::EditType::EDITTYPE_MAP);
+	}
+
+	if (m_pEdit != nullptr)
+	{
+		m_pEdit->Update();
+	}
+
+
 }
 
 //==========================================================================
@@ -227,12 +249,12 @@ void CScene::ResetScene()
 	// 生成フェーズ
 	//**********************************
 	// マップ
-	if (FAILED(MyMap::Create(MAP_TEXT)))
+	if (FAILED(MyMap::Create(MAP_TEXT[m_mode])))
 	{// 失敗した場合
 		return;
 	}
 #ifdef LOADMAP
-	m_pEditMap = CEdit_Map_Release::Create(MAP_TEXT, CManager::BuildMode::MODE_RELEASE);
+	m_pEditMap = CEdit_Map_Release::Create(MAP_TEXT[m_mode], CManager::BuildMode::MODE_RELEASE);
 #endif
 
 	// ボスステージの起伏生成

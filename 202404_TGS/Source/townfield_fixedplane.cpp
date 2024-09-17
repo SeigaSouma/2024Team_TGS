@@ -1,7 +1,7 @@
 //=============================================================================
 // 
 //  街フィールド(固定平面) [townfield_fixedplane.cpp]
-//  Author : 石原颯馬
+//  Author : 相馬 靜雅
 // 
 //=============================================================================
 #include "townfield_fixedplane.h"
@@ -22,7 +22,7 @@ namespace
 	const std::string TEXTURE = "data\\TEXTURE\\FIELD\\soil.jpg";
 	const int WIDTH_BLOCK = 2;
 	const float FIELD_WORLDLINE_Z = 3000.0f;		// 絶対座標のライン
-	const float INTERVAL_TEXU = 900.0f;	// U座標の間隔
+	const float INTERVAL_TEXU = 600.0f;	// U座標の間隔
 }
 
 //==========================================================================
@@ -55,7 +55,6 @@ HRESULT CTownField_FixedPlane::Init()
 		MyLib::Vector3(-30000.0f, 300.0f, 3000.0f),
 		MyLib::Vector3(100000.0f, 300.0f, 3000.0f)
 	};
-
 	SetVecPosition(m_vecVtxPosition);
 
 	// 各種変数初期化
@@ -149,4 +148,40 @@ void CTownField_FixedPlane::SetVtxTexUV()
 
 	pTex[2] = D3DXVECTOR2(0.0f, 0.0f);
 	pTex[3] = D3DXVECTOR2(posU, 0.0f);
+}
+
+
+//==========================================================================
+// リザルトのコンストラクタ
+//==========================================================================
+CTownField_FixedPlane_Result::CTownField_FixedPlane_Result() : CTownField_FixedPlane()
+{
+
+}
+
+//==========================================================================
+// リザルトのコンストラクタ
+//==========================================================================
+HRESULT CTownField_FixedPlane_Result::Init()
+{
+	// 初期化
+	CTownField_FixedPlane::Init();
+
+	m_vecVtxPosition =
+	{
+		MyLib::Vector3(-30000.0f, 300.0f, 33000.0f),
+		MyLib::Vector3(100000.0f, 300.0f, 33000.0f),
+		MyLib::Vector3(-30000.0f, 300.0f, -33000.0f),
+		MyLib::Vector3(100000.0f, 300.0f, -33000.0f)
+	};
+	SetVecPosition(m_vecVtxPosition);
+
+	// マップメッシュの初期化処理
+	HRESULT hr = CMapMesh::Init();
+
+	// テクスチャの割り当て
+	int texIdx = CTexture::GetInstance()->Regist(TEXTURE);
+	BindTexture(texIdx);
+
+	return hr;
 }

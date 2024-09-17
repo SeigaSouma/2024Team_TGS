@@ -10,6 +10,8 @@
 #include "camera.h"
 #include "MyEffekseer.h"
 #include "fog.h"
+#include "baggage.h"
+#include "game.h"
 
 //==========================================================================
 // Ã“Iƒƒ“ƒo•Ï”éŒ¾

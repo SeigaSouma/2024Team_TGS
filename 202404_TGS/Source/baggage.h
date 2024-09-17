@@ -11,6 +11,9 @@
 #include "objectQuaternion.h"
 #include "listmanager.h"
 
+class CObject3D;
+class CEffekseerObj;
+
 //==========================================================================
 // クラス定義
 //==========================================================================
@@ -76,6 +79,7 @@ public:
 	// メンバ関数
 	//=============================
 	void Kill();		// 削除
+	void UIDraw();
 	void SetForce(const MyLib::Vector3& power) { m_force = power; }				// 力設定
 	void AddForce(const MyLib::Vector3& power, const MyLib::Vector3& ActPos);	// 力追加
 	void SetModelPass(const std::string path) { m_baggageInfo.path = path; }
@@ -158,6 +162,8 @@ private:
 	bool m_bfall;				// 落下判定
 	float m_fDeviation;
 	static CListManager<CBaggage> m_List;	// リスト
+	CObject3D* m_p3D;
+	CEffekseerObj* m_pEffekseerObj;		// エフェクトシアオブジェクト
 };
 
 

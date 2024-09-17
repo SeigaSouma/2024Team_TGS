@@ -92,6 +92,7 @@ private:
 	float m_fMoveTextLen;	// テキストの移動距離
 	float m_fMoveRankLen;	// ランクの移動距離
 	bool m_bFinish;			// 終了
+	bool m_bSoundFinish;	// サウンド終了
 
 };
 

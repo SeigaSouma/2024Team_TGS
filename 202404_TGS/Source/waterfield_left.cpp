@@ -80,6 +80,7 @@ void CWaterField_Left::Update()
 
 	CWaterField::Update();
 
+#if _DEBUG
 	// カラーエディット
 	static ImVec4 myColor = ImVec4(1.0f, 1.0f, 1.0f, 0.21f); // RGBA
 
@@ -90,4 +91,5 @@ void CWaterField_Left::Update()
 		// 全ての要素を書き換え
 		std::fill(pVtxCol, pVtxCol + GetNumVertex(), D3DXCOLOR(myColor.x, myColor.y, myColor.z, myColor.w));
 	}
+#endif
 }

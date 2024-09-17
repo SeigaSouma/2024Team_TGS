@@ -15,7 +15,11 @@
 #include "sound.h"
 #include "game.h"
 
-
+#include "result_people.h"
+#include "mapmesh.h"
+#include "peoplemanager.h"
+#include "blackframe.h"
+#include "camera.h"
 
 //=============================================================================
 // 定数定義
@@ -69,9 +73,25 @@ HRESULT CResult::Init()
 	// BGM再生
 	CSound::GetInstance()->PlaySound(CSound::LABEL_BGM_RESULT);
 
-	// リザルト画面
-	CResultManager* pResultManager = CResultManager::GetInstance();
-	pResultManager->CreateResultScreen();
+	//=============================
+	// 固定平面街フィールド
+	//=============================
+	CMapMesh::Create(CMapMesh::MeshType::TYPE_TOWNFIELD_FIXEDPLANE_RESULT);
+
+	//=============================
+	// 人マネージャ
+	//=============================
+	m_pPeopleManager = CPeopleManager::Create(CPeopleManager::Type::TYPE_RESULT);
+
+
+	// 黒フレームイン
+	CBlackFrame::GetInstance()->SetState(CBlackFrame::STATE::STATE_INCOMPLETION);
+
+	// カメラモーション再生
+	CManager::GetInstance()->GetCamera()->GetCameraMotion()->SetMotion(CCameraMotion::MOTION::MOTION_RESULT, CCameraMotion::EASING::Linear);
+
+	// リザルトの人生成
+	CResultPeople::Create(MyLib::Vector3(76325.0f, 300.0f, 3060.0f));
 
 	// 成功
 	return S_OK;
@@ -97,7 +117,8 @@ void CResult::Uninit()
 //==========================================================================
 void CResult::Update()
 {
-	
+	// シーンの更新処理
+	CScene::Update();
 
 	// キーボード情報取得
 	CInputKeyboard *pInputKeyboard = CInputKeyboard::GetInstance();

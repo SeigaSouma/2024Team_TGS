@@ -518,6 +518,11 @@ void CReceiverPeople::StateGet()
 	{
 		// モーション設定
 		pMotion->Set(MOTION::MOTION_GET);
+
+		// 潰れるエフェクト
+		CEffekseerObj::Create(
+			CMyEffekseer::EFKLABEL::EFKLABEL_SMASH,
+			GetPosition(), MyLib::Vector3(0.0f, 0.0f, 0.0f), 0.0f, 20.0f, true);
 	}
 	nType = pMotion->GetType();
 
@@ -561,7 +566,6 @@ void CReceiverPeople::StateReturn()
 		// モーション設定
 		pMotion->Set(MOTION::MOTION_RETURN);
 
-		CSound::GetInstance()->PlaySound(CSound::LABEL_SE_SMASHATTACK);
 	}
 
 	// 攻撃情報取得
@@ -586,6 +590,11 @@ void CReceiverPeople::StateReturn()
 		// 手の位置まで線形補間
 		bagpos = UtilFunc::Correction::EasingLinear(m_StartPos, weponpos, 0.0f, STATE_TIME::CATCH, m_fMoveTimer);
 		pBaggage->SetPosition(bagpos);
+
+		// レシーブエフェクト
+		CEffekseerObj::Create(
+			CMyEffekseer::EFKLABEL::EFKLABEL_HIT,
+			weponpos, MyLib::Vector3(0.0f,D3DX_PI * 0.5f, 0.0f), 0.0f, 20.0f, true);
 	}
 
 	// 終了確認
@@ -623,11 +632,13 @@ void CReceiverPeople::StateYabai()
 		pMotion->Set(MOTION::MOTION_YABAI);
 	}
 
+	// ダイブ設定
 	if (type == MOTION::MOTION_YABAI &&
 		pMotion->IsFinish())
 	{
 		m_state = STATE::STATE_DIVE;
 		m_fStateTime = 0.0f;
+		CSound::GetInstance()->PlaySound(CSound::LABEL_SE_DIVE);
 	}
 }
 
@@ -648,7 +659,6 @@ void CReceiverPeople::StateDive()
 		// モーション設定
 		pMotion->Set(MOTION::MOTION_DIVE);
 
-		CSound::GetInstance()->PlaySound(CSound::LABEL_SE_DIVE);
 	}
 
 	// 移動時間加算
@@ -898,6 +908,7 @@ void CReceiverPeople::AttackAction(CMotion::AttackInfo ATKInfo, int nCntATK)
 		CCamera* pCamera = CManager::GetInstance()->GetCamera();
 		pCamera->SetPositionRDest(pCamera->GetPositionR());
 		pCamera->SetPositionVDest(pCamera->GetPositionV());
+		CSound::GetInstance()->PlaySound(CSound::LABEL_SE_SMASHATTACK);
 	}
 	break;
 

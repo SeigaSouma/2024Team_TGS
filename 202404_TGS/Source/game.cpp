@@ -280,7 +280,7 @@ HRESULT CGame::Init()
 	//=============================
 	// 人マネージャ
 	//=============================
-	m_pPeopleManager = CPeopleManager::Create();
+	m_pPeopleManager = CPeopleManager::Create(CPeopleManager::Type::TYPE_GAME);
 
 	// BGM再生
 	CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_BGM_GAME);
@@ -480,18 +480,6 @@ void CGame::Update()
 		m_pScore->Update();
 	}
 
-
-	if (pInputKeyboard->GetTrigger(DIK_4))
-	{
-		/*CSubTitle* pSubTitle = CSubTitle::Create(MyLib::Vector3(640.0f, 670.0f, 0.0f), 2.0f);
-		pSubTitle->BindSubtitle("data\\TEXTURE\\subtitle\\sample.png");
-		pSubTitle->SetSizeByHeight(40.0f);*/
-
-		CSplashwater_Manager::Create();
-		//CAscensionCylinder::Create(MyLib::Vector3(), 100.0f, 1500.0f);
-
-	}
-
 #if _DEBUG
 
 	if (ImGui::TreeNode("Water Ripple"))
@@ -634,19 +622,6 @@ void CGame::Update()
 	}
 
 #endif
-
-
-	if (pInputKeyboard->GetTrigger(DIK_K))
-	{
-		CEffekseerObj::Create(
-			CMyEffekseer::EFKLABEL::EFKLABEL_AIR,
-			CManager::GetInstance()->GetCamera()->GetPositionR() + MyLib::Vector3(0.0f, 300.0f, 0.0f), MyLib::Vector3(0.0f, 0.0f, 0.0f), 0.0f, 20.0f, true);
-	}
-
-	/*if (pInputKeyboard->GetTrigger(DIK_K))
-	{
-		CScroll::Create(MyLib::Vector3(640.0f, 360.0f, 0.0f), 1.0f, 250.0f, 900.0f, true);
-	}*/
 
 	// シーンの更新
 	CScene::Update();

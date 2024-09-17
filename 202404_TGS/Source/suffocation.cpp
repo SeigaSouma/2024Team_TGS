@@ -17,7 +17,7 @@ namespace
 	const std::string TEXTURE_SAMPLE = "data\\TEXTURE\\subtitle\\suffocation.png";	// テクスチャのファイル
 	static int RANDOM_MOVEX = 250;
 	static int RANDOM_MOVEINTERVAL = 2;
-	static float VELOCITY_UP = 0.13f;
+	static float VELOCITY_UP = 0.08f;
 }
 
 namespace StateTime	// 状態別時間
@@ -84,21 +84,8 @@ HRESULT CSuffocation::Init()
 	int texID = CTexture::GetInstance()->Regist(TEXTURE_SAMPLE);
 	BindTexture(texID);
 
-	// サイズ設定
-	D3DXVECTOR2 size = CTexture::GetInstance()->GetImageSize(texID);
-
-#if 0	// 横幅を元にサイズ設定
-	size = UtilFunc::Transformation::AdjustSizeByWidth(size, 240.0f);
-
-#else	// 縦幅を元にサイズ設定
-	size = UtilFunc::Transformation::AdjustSizeByWidth(size, 240.0f);
-#endif
-	SetSize(size);
-	SetSizeOrigin(size);
-	SetPosition(MyLib::Vector3(SCREEN_WIDTH * 0.5f, 720.0f + size.y, 0.0f));
-
-
-	// 位置、向き設定は必要があれば追加
+	// リセット
+	Reset();
 
 	// 種類の設定
 	SetType(CObject::TYPE::TYPE_OBJECT2D);
@@ -201,8 +188,31 @@ void CSuffocation::StateBurst()
 
 	if (m_fStateTime >= StateTime::BURST)
 	{
-		Uninit();
+		// リセット
+		Reset();
 	}
+}
+
+//==========================================================================
+// リセット処理
+//==========================================================================
+void CSuffocation::Reset()
+{
+	// サイズ設定
+	D3DXVECTOR2 size = CTexture::GetInstance()->GetImageSize(GetIdxTexture());
+
+	// 縦幅を元にサイズ設定
+	size = UtilFunc::Transformation::AdjustSizeByWidth(size, 240.0f);
+	SetSize(size);
+	SetSizeOrigin(size);
+
+	SetPosition(MyLib::Vector3(SCREEN_WIDTH * 0.5f, 720.0f + size.y, 0.0f));
+	SetOriginPosition(GetPosition());
+
+	m_fStateTime = 0.0f;		// 状態カウンター
+	m_state = State::STATE_SURFACING;			// 状態
+
+	SetAlpha(1.0f);
 }
 
 //==========================================================================

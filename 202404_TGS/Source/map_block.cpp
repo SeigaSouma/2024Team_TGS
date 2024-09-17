@@ -11,6 +11,7 @@
 #include "waterstone.h"
 #include "objectX.h"
 #include "frontobj_manager.h"
+#include "edit_map.h"
 
 //==========================================================================
 // 定数定義
@@ -171,7 +172,6 @@ void CMapBlock::Kill()
 void CMapBlock::Update()
 {
 
-
 }
 
 //==========================================================================
@@ -184,8 +184,6 @@ void CMapBlock::SaveBin_CheckPoint()
 	if (!File.is_open()) {
 		return;
 	}
-
-
 
 	// 先頭を保存
 	std::list<CMapBlockInfo*>::iterator itr = m_InfoList.GetEnd();
@@ -701,7 +699,7 @@ void CMapBlock::Set(const int Idx, const MyLib::Vector3& startpos, float startle
 			// ブロックの障害物情報
 			CMapBlockInfo::SObsacleInfo blockinfo = mapInfo[i];
 
-			CObjectX* pObj = CObjectX::Create(blockinfo.nType, blockinfo.pos + startpos);
+			CObjectX* pObj = CObjectX::Create(CEdit_Map::GetModelFileName()[blockinfo.nType], blockinfo.pos + startpos);
 			pObj->SetRotation(blockinfo.rot);
 			pObj->SetScale(blockinfo.scale);
 			pObj->CalWorldMtx();

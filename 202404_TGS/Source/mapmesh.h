@@ -27,6 +27,7 @@ public:
 		TYPE_TOWNFIELD_SINUOUS,		// 街フィールド(うねり)
 		TYPE_TOWNFIELD_SINUOUS_FRONT,		// 街フィールド(うねり)(手前)
 		TYPE_TOWNFIELD_FIXEDPLANE,	// 街フィールド(固定平面)
+		TYPE_TOWNFIELD_FIXEDPLANE_RESULT,	// 街フィールド(固定平面/リザルト)
 		TYPE_MAX
 	};
 

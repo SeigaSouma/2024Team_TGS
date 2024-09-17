@@ -153,11 +153,11 @@ void CObstacle_BirdCircle::Kill()
 //==========================================================================
 void CObstacle_BirdCircle::Update()
 {
-//#if _DEBUG
-//	// マトリックス設定
-//	CalWorldMtx();
-//	CMap_Obstacle::Update();
-//#endif // _DEBUG
+#if _DEBUG
+	// マトリックス設定
+	CalWorldMtx();
+	CMap_Obstacle::Update();
+#endif // _DEBUG
 	// 荷物取得
 	CBaggage* pBaggage = CBaggage::GetListObj().GetData(0);
 	if (pBaggage == nullptr) return;
@@ -177,6 +177,25 @@ void CObstacle_BirdCircle::Update()
 	{
 		m_fIntervalWing = 0.0f;
 		CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_HABATAKI);
+		
+		for (auto& it : m_BirdList)
+		{
+			if (it.pBird == nullptr) continue;	// 存在していない
+
+			MyLib::Vector3 rot = it.pBird->GetRotation();
+
+			// 位置の設定
+			{
+				MyLib::Matrix mtxRot, mtxTrans, mtxScale, mtxBird;	// 計算用マトリックス宣言
+				MyLib::Matrix mtxParent = m_mtxWorld;	// 親のマトリックス
+				MyLib::Vector3 BirdPos = it.offset;
+
+				// 羽ばたきエフェクト生成
+				CEffekseerObj::Create(
+					CMyEffekseer::EFKLABEL::EFKLABEL_WING,
+					it.pBird->GetPosition(), MyLib::Vector3(0.0f, m_rot.y, 0.0f), 0.0f, 10.0f, true);
+			}
+		}
 	}
 
 	// メイン操作

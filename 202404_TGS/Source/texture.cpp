@@ -125,17 +125,20 @@ void CTexture::SearchAllImages(const std::wstring& folderPath)
 		do {
 
 			if (!(findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) 
-			{
+			{// ファイルパス格納
 				std::string fileName = UtilFunc::Transformation::WideToMultiByte((currentFolder + L"\\" + findFileData.cFileName).c_str());
-				m_FolderFilePath.push_back(fileName);
+				if (fileName.find(".png") != std::string::npos || fileName.find(".jpg") != std::string::npos || fileName.find(".tga") != std::string::npos)
+				{
+					m_FolderFilePath.push_back(fileName);
+				}
 			}
 			else if (lstrcmpW(findFileData.cFileName, L".") != 0 && lstrcmpW(findFileData.cFileName, L"..") != 0) 
-			{
+			{// 階層確認
 				std::wstring subFolderPath = currentFolder + L"\\" + findFileData.cFileName;
 				folderStack.push(subFolderPath);
 			}
 
-		} while (FindNextFileW(hFind, &findFileData) != 0);
+		} while (FindNextFileW(hFind, &findFileData) != 0);	// 終端のフォルダまで確認
 
 		FindClose(hFind);
 	}
