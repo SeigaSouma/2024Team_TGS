@@ -131,7 +131,10 @@ void CJudgeStateFunc_AAA::StateFadeOut()
 		pObj->Uninit();
 
 		// í“¬ŠJŽn‚É‘JˆÚ
-		CGame::GetInstance()->GetGameManager()->SetType(CGameManager::SceneType::SCENE_MAIN);
+		if (CGame::GetInstance()->GetGameManager()->GetType() != CGameManager::SceneType::SCENE_GOAL)
+		{
+			CGame::GetInstance()->GetGameManager()->SetType(CGameManager::SceneType::SCENE_MAIN);
+		}
 		return;
 	}
 
@@ -197,7 +200,10 @@ void CJudgeStateFunc_BBB::StateFadeOut()
 		pObj->Uninit();
 
 		// í“¬ŠJŽn‚É‘JˆÚ
-		CGame::GetInstance()->GetGameManager()->SetType(CGameManager::SceneType::SCENE_MAIN);
+		if (CGame::GetInstance()->GetGameManager()->GetType() != CGameManager::SceneType::SCENE_GOAL)
+		{
+			CGame::GetInstance()->GetGameManager()->SetType(CGameManager::SceneType::SCENE_MAIN);
+		}
 		return;
 	}
 
@@ -268,7 +274,10 @@ void CJudgeStateFunc_CCC::StateFadeOut()
 		pObj->Uninit();
 
 		// í“¬ŠJŽn‚É‘JˆÚ
-		CGame::GetInstance()->GetGameManager()->SetType(CGameManager::SceneType::SCENE_MAIN);
+		if (CGame::GetInstance()->GetGameManager()->GetType() != CGameManager::SceneType::SCENE_GOAL)
+		{
+			CGame::GetInstance()->GetGameManager()->SetType(CGameManager::SceneType::SCENE_MAIN);
+		}
 		return;
 	}
 
@@ -340,7 +349,10 @@ void CJudgeStateFunc_DDD::StateFadeOut()
 		pObj->Uninit();
 
 		// í“¬ŠJŽn‚É‘JˆÚ
-		CGame::GetInstance()->GetGameManager()->SetType(CGameManager::SceneType::SCENE_MAIN);
+		if (CGame::GetInstance()->GetGameManager()->GetType() != CGameManager::SceneType::SCENE_GOAL)
+		{
+			CGame::GetInstance()->GetGameManager()->SetType(CGameManager::SceneType::SCENE_MAIN);
+		}
 		return;
 	}
 
