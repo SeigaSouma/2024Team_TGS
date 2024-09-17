@@ -427,6 +427,7 @@ void CCamera::MoveCameraMouse()
 		SetCameraR();
 	}
 	else if (
+		!m_pCameraMotion->IsEdit() &&
 		pInputMouse->GetPress(CInputMouse::BUTTON_LEFT) &&
 		!pInputKeyboard->GetPress(DIK_LALT))
 	{// ¶ƒNƒŠƒbƒNˆÚ“®

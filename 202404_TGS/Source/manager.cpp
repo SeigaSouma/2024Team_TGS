@@ -36,10 +36,10 @@
 //==========================================================================
 namespace
 {
-	const float TIME_LOAD = 2.0f;	// ロード時間
+	const float TIME_LOAD = 200.0f;	// 必須ロード時間
 
 #if _DEBUG
-	const CScene::MODE STARTMODE = CScene::MODE::MODE_TITLE;
+	const CScene::MODE STARTMODE = CScene::MODE::MODE_RANKING;
 #else
 	const CScene::MODE STARTMODE = CScene::MODE::MODE_TITLE;
 #endif

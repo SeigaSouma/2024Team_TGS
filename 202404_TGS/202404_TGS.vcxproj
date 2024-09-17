@@ -312,6 +312,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Source\ranking.cpp" />
+    <ClCompile Include="Source\rankingItem .cpp" />
+    <ClCompile Include="Source\rankingItem_top3.cpp" />
     <ClCompile Include="Source\rankingmanager.cpp" />
     <ClCompile Include="Source\rankingscore.cpp" />
     <ClCompile Include="Source\receiver_people.cpp" />
@@ -525,6 +527,8 @@
     <ClInclude Include="Source\playercontrol.h" />
     <ClInclude Include="Source\precompile.h" />
     <ClInclude Include="Source\ranking.h" />
+    <ClInclude Include="Source\rankingItem.h" />
+    <ClInclude Include="Source\rankingItem_top3.h" />
     <ClInclude Include="Source\rankingmanager.h" />
     <ClInclude Include="Source\rankingscore.h" />
     <ClInclude Include="Source\receiver_people.h" />

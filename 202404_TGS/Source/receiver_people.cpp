@@ -435,8 +435,21 @@ void CReceiverPeople::StateWait()
 		// ‹——£‚ğİ’è
 		if (distance <= NEAR_RANGE)
 		{// ‹ß‚¢
-			m_Distance = DISTANCE::DISTANCE_NEAR;
-			SetState(STATE::STATE_WALK);
+
+			if (bagpos.y <= 0.0f)
+			{
+				m_Distance = DISTANCE::DISTANCE_NEAR;
+				SetState(STATE::STATE_YABAI);
+
+				// ‰×•¨‚ÌŒ»İˆÊ’u‚ğ”äŠr‚·‚é
+				CBaggage* pBaggage = CBaggage::GetListObj().GetData(0);
+
+				// ó‘Ôİ’è
+				pBaggage->SetState(CBaggage::STATE::STATE_RECEIVE);
+				pBaggage->SetState(CBaggage::STATE::STATE_FALL);
+				pBaggage->SetIsFall(true);
+				pBaggage->SetMove(0.0f);
+			}
 		}
 		else
 		{// ‰“‚¢
@@ -823,7 +836,16 @@ void CReceiverPeople::StateWalk()
 	{
 	case DISTANCE::DISTANCE_NEAR:
 	{
-		SetState(STATE::STATE_BYEBYE);
+		SetState(STATE::STATE_YABAI);
+
+		// ‰×•¨‚ÌŒ»İˆÊ’u‚ğ”äŠr‚·‚é
+		CBaggage* pBaggage = CBaggage::GetListObj().GetData(0);
+
+		// ó‘Ôİ’è
+		pBaggage->SetState(CBaggage::STATE::STATE_RECEIVE);
+		pBaggage->SetState(CBaggage::STATE::STATE_FALL);
+		pBaggage->SetIsFall(true);
+		pBaggage->SetMove(0.0f);
 	}
 		break;
 

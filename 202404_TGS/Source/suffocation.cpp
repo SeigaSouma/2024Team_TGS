@@ -14,10 +14,19 @@
 //==========================================================================
 namespace
 {
-	const std::string TEXTURE_SAMPLE = "data\\TEXTURE\\subtitle\\suffocation.png";	// テクスチャのファイル
+	// テクスチャのファイル
+	const std::string TEXTURE_SAMPLE[] = 
+	{ "data\\TEXTURE\\subtitle\\suffocation.png",
+		"data\\TEXTURE\\subtitle\\suffocation_001.png",
+		"data\\TEXTURE\\subtitle\\suffocation_002.png",
+		"data\\TEXTURE\\subtitle\\suffocation_003.png",
+		"data\\TEXTURE\\subtitle\\suffocation_004.png",
+	};
+
 	static int RANDOM_MOVEX = 250;
 	static int RANDOM_MOVEINTERVAL = 2;
 	static float VELOCITY_UP = 0.08f;
+
 }
 
 namespace StateTime	// 状態別時間
@@ -80,9 +89,17 @@ HRESULT CSuffocation::Init()
 	// オブジェクト2Dの初期化
 	CObject2D::Init();
 
-	// テクスチャ設定
-	int texID = CTexture::GetInstance()->Regist(TEXTURE_SAMPLE);
-	BindTexture(texID);
+	int texID[5];
+
+	for (int nCnt = 0; nCnt < 5; nCnt++)
+	{
+		// テクスチャ設定
+		texID[nCnt] = CTexture::GetInstance()->Regist(TEXTURE_SAMPLE[nCnt]);
+	}
+
+	int r = rand() % 5;
+
+	BindTexture(texID[r]);
 
 	// リセット
 	Reset();

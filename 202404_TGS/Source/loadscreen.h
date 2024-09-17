@@ -34,13 +34,23 @@ public:
 	void Draw();
 	void Kill();
 
-	CObject2D_Anim*GetMyObject();
 	static CLoadScreen *Create();
 
 private:
 
-	CObject2D_Anim* m_aObject2D;		// オブジェクト2Dのオブジェクト
-	CObject2D* m_apObj2D[10];	// 
+	//=============================
+	// メンバ変数
+	//=============================
+	void CreateCylinder();	// 筒生成
+	void MoveCylinder();	// 筒の動き
+	void CollisionText();	// 文字との判定
+
+	//=============================
+	// メンバ変数
+	//=============================
+	CObject2D* m_apObj2D[10];	// 文字列
+	CObject2D* m_pCylinder;		// 筒
+	float m_fBobbingTime;		// ぷかぷかタイマー
 };
 
 #endif
