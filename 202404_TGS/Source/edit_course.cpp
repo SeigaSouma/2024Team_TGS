@@ -229,6 +229,60 @@ void CEdit_Course::ChangeEditCourse()
 		pCourse->SetVecPosition(vecpos);
 		pCourse->ReCreateVtx();
 
+
+		// 石垣再生成
+		{
+			CStoneWall* pStoneWall = pCourceManager->GetStoneWall();
+
+			// 基点地点設定
+			pStoneWall->SetVecPosition(pCourse->GetVecPosition());
+			pStoneWall->Reset();
+
+			std::vector<CCourse::VtxInfo> vtxInfo = pCourse->GetVecVtxinfo();
+			std::vector<MyLib::Vector3> vecpos;
+
+			MyLib::Vector3 setpos;
+			for (const auto& info : vtxInfo)
+			{
+				setpos.x = info.pos.x + sinf(D3DX_PI + info.rot.y) * -600.0f;
+				setpos.y = info.pos.y;
+				setpos.z = info.pos.z + cosf(D3DX_PI + info.rot.y) * -600.0f;
+				vecpos.push_back(setpos);
+			}
+
+			// 各頂点座標
+			pStoneWall->SetVecVtxPosition(vecpos);
+			pStoneWall->BindVtxPosition();
+		}
+
+
+		// 石垣再生成
+		{
+			CStoneWall* pStoneWall = pCourceManager->GetStoneWall_Front();
+
+			// 基点地点設定
+			pStoneWall->SetVecPosition(pCourse->GetVecPosition());
+			pStoneWall->Reset();
+
+			std::vector<CCourse::VtxInfo> vtxInfo = pCourse->GetVecVtxinfo();
+			vecpos.clear();
+
+			MyLib::Vector3 setpos;
+			for (const auto& info : vtxInfo)
+			{
+				setpos.x = info.pos.x + sinf(D3DX_PI + info.rot.y) * 800.0f;
+				setpos.y = info.pos.y;
+				setpos.z = info.pos.z + cosf(D3DX_PI + info.rot.y) * 800.0f;
+				vecpos.push_back(setpos);
+			}
+
+			// 各頂点座標
+			pStoneWall->SetVecVtxPosition(vecpos);
+			pStoneWall->BindVtxPosition();
+		}
+
+
+
 		m_nCheckPointEditIdx = 0;	// チェックポイントのインデックスリセット
 	}
 
@@ -353,12 +407,6 @@ void CEdit_Course::TransCheckPoint()
 
 				len += 400.0f;
 			}
-
-
-
-			// 石垣の点表示
-			pCourceManager->GetStoneWall()->DispPoint();
-			pCourceManager->GetStoneWall()->DispPoint();
 
 		}
 
