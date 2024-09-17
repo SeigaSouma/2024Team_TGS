@@ -15,9 +15,6 @@
 //==========================================================================
 namespace
 {
-	const char* TEXTURE = "data\\TEXTURE\\load\\loadscreen.jpg";
-	const MyLib::Vector3 STR_DEFPOS = MyLib::Vector3(100.0f, 300.0f, 0.0f);
-	const float MOVE_X = 100.0f;
 	const int NUM_STRING = 10;	// NOWLOADINGの文字数
 	const std::string TEXPATH[NUM_STRING] =
 	{
@@ -32,8 +29,8 @@ namespace
 		"data\\TEXTURE\\load\\mini_n.png",
 		"data\\TEXTURE\\load\\g.png",
 	};
-
-	const float STR_HEIGHT = 100.0f;
+	const MyLib::Vector3 STR_DEFPOS = MyLib::Vector3(100.0f, 300.0f, 0.0f);	// 基点の位置
+	const float STR_HEIGHT = 100.0f;	// 文字列の高さ
 }
 
 
@@ -47,8 +44,6 @@ namespace
 CLoadScreen::CLoadScreen()
 {
 	// 値のクリア
-	m_aObject2D = nullptr;					// オブジェクト2Dのオブジェクト
-
 	for (int i = 0; i < NUM_STRING; i++)
 	{
 		m_apObj2D[i] = nullptr;
@@ -98,31 +93,30 @@ CLoadScreen *CLoadScreen::Create()
 //==========================================================================
 HRESULT CLoadScreen::Init()
 {
-	// 生成処理
-	m_aObject2D = CObject2D_Anim::Create(0.0f, 5, 9, 2, false);
-	if (m_aObject2D == nullptr)
-	{// 失敗していたら
-		return E_FAIL;
-	}
-
+	
 	MyLib::Vector3 pos = STR_DEFPOS;
+	CTexture* pTex = CTexture::GetInstance();
 
 	// 文字生成
 	for (int i = 0; i < NUM_STRING; i++)
 	{
-		CTexture* pTex = CTexture::GetInstance();
-		int nIdx = pTex->Regist(TEXPATH[i]);
-		D3DXVECTOR2 size = UtilFunc::Transformation::AdjustSizeByHeight(pTex->GetImageSize(nIdx), STR_HEIGHT);
-		pos.x += size.x;
 		m_apObj2D[i] = CObject2D::Create();
 		m_apObj2D[i]->SetType(CObject::TYPE::TYPE_NONE);
 		m_apObj2D[i]->SetPosition(pos);
+
+		// テクスチャ割り当て
+		int nIdx = pTex->Regist(TEXPATH[i]);
 		m_apObj2D[i]->BindTexture(nIdx);
+
+		// サイズ変更
+		D3DXVECTOR2 size = UtilFunc::Transformation::AdjustSizeByHeight(pTex->GetImageSize(nIdx), STR_HEIGHT);
 		m_apObj2D[i]->SetSize(size);
-		pos.x += size.x;
+
+		// 生成位置ずらす
+		pos.x += size.x * 2.0f;
 
 		if (i == 2)
-		{
+		{// NOWとLoadingの間
 			pos.x += size.x * 2;
 		}
 	}
@@ -188,12 +182,4 @@ void CLoadScreen::Draw()
 			m_apObj2D[i]->Draw();
 		}
 	}
-}
-
-//==========================================================================
-// オブジェクト2Dオブジェクトの取得
-//==========================================================================
-CObject2D_Anim*CLoadScreen::GetMyObject()
-{
-	return m_aObject2D;
 }

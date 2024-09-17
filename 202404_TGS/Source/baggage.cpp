@@ -794,7 +794,7 @@ void CBaggage::UIDraw()
 bool CBaggage::Hit()
 {
 #ifndef DEBUG
-	//return false;
+	return false;
 #endif // DEBUG
 
 	
