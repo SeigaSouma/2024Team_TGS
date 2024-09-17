@@ -938,7 +938,12 @@ void CPlayerControlBaggage::GoalAction(CPlayer* player, CBaggage* pBaggage)
 		switch (m_state)
 		{
 		case STATE::STATE_NONE:
-			m_state = STATE::STATE_WAIT;
+
+			// 荷物がおちてカメラモーションも終わり
+			if (pBaggage->GetMove().y == 0.0f && pCamMotion->IsPause())
+			{
+				m_state = STATE::STATE_WAIT;
+			}
 			m_nGoalTimer = GOAL_AIRTIMER;
 			break;
 
@@ -1167,7 +1172,7 @@ void CPlayerControlBaggage::Reset(CPlayer* player, CBaggage* pBaggage)
 	MyLib::Vector3 pos = player->GetPosition();
 	MyLib::Vector3 posBaggageOrigin = pBaggage->GetOriginPosition();
 	pBaggage->SetPosition(MyLib::Vector3(pos.x, posBaggageOrigin.y, pos.z));
-	m_state = STATE::STATE_WAIT;
+	m_state = STATE::STATE_NONE;
 
 	if (m_pSuffocation != nullptr)
 	{
