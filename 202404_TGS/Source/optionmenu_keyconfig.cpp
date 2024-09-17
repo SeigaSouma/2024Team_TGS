@@ -63,6 +63,7 @@ COptionMenu_Keyconfig::COptionMenu_Keyconfig(int nPriority) : COptionMenu(nPrior
 	m_checkconfig = CHENGEINFO();
 
 	m_pTitle2D = nullptr;
+	m_pSelect = nullptr;
 	m_bNowChange = false;
 	m_SelectKey = 0;
 	m_Alpha = 0.0f;
@@ -105,6 +106,8 @@ HRESULT COptionMenu_Keyconfig::Init()
 	// ポリゴンを生成する
 	for (int i = 0; i < INGAME::ACTION::ACT_MAX; i++)
 	{
+		if (i <= INGAME::ACT_BACK) { continue; }
+
 		// キーを生成
 		MyLib::Vector3 pos = DEFAULT_POS;
 		pos.y += i * DOWN_POSY;
@@ -132,16 +135,6 @@ HRESULT COptionMenu_Keyconfig::Init()
 #if 1
 		// 筆のアドレス渡し
 		KEYINFO* pNowInfo = &m_aKeyConfig[i];
-		CSelectDraw** pSelectDraw = &pNowInfo->pSelect;
-
-		// 筆ポリゴン生成
-		*pSelectDraw = CSelectDraw::Create(pos - MyLib::Vector3(KEY_SIZE * 0, 0.0f, 0.0f));
-		(*pSelectDraw)->SetSizeOrigin(D3DXVECTOR2(KEY_SIZE * 3, KEY_SIZE));
-		(*pSelectDraw)->SetSize((*pSelectDraw)->GetSizeOrigin());
-
-		// 初期状態設定
-		(*pSelectDraw)->SetState(CSelectDraw::State::STATE_NONE);
-		(*pSelectDraw)->SetAlpha(0.0f);
 #else
 		m_aKeyConfig[i].s_p2DFront = CObject2D::Create(10);
 		m_aKeyConfig[i].s_p2DFront->SetSize(D3DXVECTOR2(0.0f, KEY_SIZE));
@@ -152,12 +145,19 @@ HRESULT COptionMenu_Keyconfig::Init()
 		m_aKeyConfig[i].s_p2DFront->SetAnchorType(CObject2D::AnchorPoint::LEFT);
 		m_aKeyConfig[i].s_p2DFront->SetPosition(pos - MyLib::Vector3(KEY_SIZE * 6.0f, 0.0f, 0.0f));
 #endif
-		if (i <= INGAME::ACT_BACK)
-		{
-			m_aKeyConfig[i].s_pKeyDisp->SetEnableDisp(false);
-			m_aKeyConfig[i].s_p2D->SetEnableDisp(false);
-		}
+	}
 
+	{
+		MyLib::Vector3 pos = DEFAULT_POS;
+		pos.y += DOWN_POSY * (INGAME::ACT_BACK + 1);
+		// 筆ポリゴン生成
+		m_pSelect = CSelectDraw::Create(pos);
+		m_pSelect->SetSizeOrigin(D3DXVECTOR2(KEY_SIZE * 3, KEY_SIZE));
+		m_pSelect->SetSize(m_pSelect->GetSizeOrigin());
+
+		// 初期状態設定
+		m_pSelect->SetState(CSelectDraw::State::STATE_NONE);
+		m_pSelect->SetAlpha(0.0f);
 	}
 
 	// 決定戻る変更用ポリゴン生成
@@ -217,10 +217,7 @@ HRESULT COptionMenu_Keyconfig::Init()
 
 
 	// 初期選択肢の筆状態設定
-	m_aKeyConfig[m_SelectKey].pSelect->SetState(CSelectDraw::State::STATE_FADEIN);
-
-	// タイマーリセット
-	m_aKeyConfig[m_SelectKey].drawtime = 1.5f;
+	m_pSelect->SetState(CSelectDraw::State::STATE_FADEIN);
 
 	// 不透明度初期値1.0f
 	m_Alpha = 1.0f;
@@ -258,11 +255,7 @@ void COptionMenu_Keyconfig::Kill()
 			m_aKeyConfig[i].s_p2DFront = nullptr;
 		}
 #else
-		if (m_aKeyConfig[i].pSelect != nullptr)
-		{
-			m_aKeyConfig[i].pSelect->Uninit();
-			m_aKeyConfig[i].pSelect = nullptr;
-		}
+		
 #endif
 
 		// キーコンフィグ表示の終了
@@ -308,6 +301,12 @@ void COptionMenu_Keyconfig::Kill()
 	{
 		m_pTitle2D->Uninit();
 		m_pTitle2D = nullptr;
+	}
+
+	if (m_pSelect != nullptr)
+	{
+		m_pSelect->Uninit();
+		m_pSelect = nullptr;
 	}
 
 	// 削除処理
@@ -372,24 +371,19 @@ void COptionMenu_Keyconfig::StateEdit()
 		}
 	}
 
+	int oldkey = m_SelectKey;
+
 	// 選択場所変更
 	if ((pPad->GetLStickTrigger(CInputGamepad::STICK::STICK_Y) && pPad->GetStickMoveL(0).y > 0) ||
 		pPad->GetTrigger(CInputGamepad::BUTTON::BUTTON_UP, 0) ||
 		pKey->GetTrigger(DIK_W))
 	{
 		// 上に移動
-		m_SelectKey = (m_SelectKey + INGAME::ACTION::ACT_MAX - 1) % INGAME::ACTION::ACT_MAX;
+		m_SelectKey = (m_SelectKey + INGAME::ACTION::ACT_MAX) % (INGAME::ACTION::ACT_MAX + 1);
 
 		if (m_SelectKey < 2)
 		{
 			m_SelectKey = INGAME::ACTION::ACT_MAX;
-			m_checkconfig.pSelect->SetState(CSelectDraw::State::STATE_DRAWING);
-		}
-		else
-		{
-			// タイマーリセット
-			m_aKeyConfig[m_SelectKey].drawtime = 0.0f;
-			m_aKeyConfig[m_SelectKey].pSelect->SetState(CSelectDraw::State::STATE_DRAWING);
 		}
 	}
 	else if ((pPad->GetLStickTrigger(CInputGamepad::STICK::STICK_Y) && pPad->GetStickMoveL(0).y < 0) ||
@@ -398,53 +392,27 @@ void COptionMenu_Keyconfig::StateEdit()
 	{
 		// 下に移動
 		m_SelectKey = (m_SelectKey + 1) % (INGAME::ACTION::ACT_MAX + 1);
-		m_SelectKey = UtilFunc::Transformation::Clamp(m_SelectKey, 2, static_cast<int>(INGAME::ACTION::ACT_MAX));
+		m_SelectKey = UtilFunc::Transformation::Clamp(m_SelectKey, 2, static_cast<int>(INGAME::ACTION::ACT_MAX) + 1);
+	}
 
-		if (m_SelectKey < 2)
-		{
-			m_SelectKey = INGAME::ACTION::ACT_MAX;
-			m_checkconfig.pSelect->SetState(CSelectDraw::State::STATE_DRAWING);
+	// 変更していた
+	if (oldkey != m_SelectKey)
+	{
+		if (m_SelectKey < INGAME::ACT_MAX)
+		{// 選択肢
+			m_pSelect->SetState(CSelectDraw::State::STATE_DRAWING);
+			MyLib::Vector3 pos = m_aKeyConfig[m_SelectKey].s_pKeyDisp->GetPosition();
+			m_pSelect->SetPosition(pos);
+			m_pSelect->SetAlpha(1.0f);
+			m_checkconfig.pSelect->SetAlpha(0.0f);
 		}
 		else
-		{
-			// タイマーリセット
-			m_aKeyConfig[m_SelectKey].drawtime = 0.0f;
-			m_aKeyConfig[m_SelectKey].pSelect->SetState(CSelectDraw::State::STATE_DRAWING);
+		{// 決定戻る切り替え
+			m_checkconfig.pSelect->SetState(CSelectDraw::State::STATE_DRAWING);
+			m_checkconfig.pSelect->SetAlpha(1.0f);
+			m_pSelect->SetAlpha(0.0f);
 		}
 	}
-
-	// デルタタイム
-	float deltaTime = CManager::GetInstance()->GetDeltaTime();
-
-	// ポリゴンを生成する
-#if 1
-	for (int i = 0; i < INGAME::ACTION::ACT_MAX; i++)
-	{
-		// 使用されている場合
-		if (m_aKeyConfig[i].pSelect == nullptr) { continue; }
-
-		D3DXCOLOR col = FRONT_COL;
-
-		if (i != INGAME::ACT_OK && i != INGAME::ACT_BACK)
-		{
-			if (m_SelectKey == i)
-			{
-				col.a = m_Alpha;
-			}
-		}
-
-		// タイマー加算
-		m_aKeyConfig[i].drawtime += deltaTime;
-
-		// 色設定
-		m_aKeyConfig[i].pSelect->SetColor(col);
-	}
-#endif
-	
-
-	// 決定戻るの不透明度設定
-	float alpha = (m_SelectKey == INGAME::ACTION::ACT_MAX) ? 1.0f : 0.0f;
-	m_checkconfig.pSelect->SetAlpha(alpha);
 }
 
 
