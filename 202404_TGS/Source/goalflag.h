@@ -65,6 +65,7 @@ private:
 	//=============================
 	// メンバ変数
 	//=============================
+	bool m_bClear;					// クリア
 	float m_fStateTime;				// 状態カウンター
 	Sample m_state;					// 状態
 	static CListManager<CGoalflagX> m_List;	// リスト

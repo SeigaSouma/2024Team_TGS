@@ -32,8 +32,8 @@ namespace
 
 	const int USE_CONFIG[CRetry_Ui::BUTTON_MAX] =	// 使用するキーコンフィグ
 	{
-		INGAME::ACT_BACK,
 		INGAME::ACT_RETRY,
+		INGAME::ACT_CHECKPOINT,
 		INGAME::ACT_PAUSE,
 	};
 
@@ -180,6 +180,7 @@ void CRetry_Ui::Update()
 	// インプット情報取得
 	CKeyConfigManager* pKeyConfig = CKeyConfigManager::GetInstance();
 	CKeyConfig* pPad = pKeyConfig->GetConfig(CKeyConfigManager::Control::CONTROL_INPAD);
+	CKeyConfig* pKey = pKeyConfig->GetConfig(CKeyConfigManager::Control::CONTROL_INKEY);
 
 	// フェード情報取得
 	CInstantFade* pFade = CManager::GetInstance()->GetInstantFade();
@@ -191,11 +192,11 @@ void CRetry_Ui::Update()
 	playerList.ListLoop(&pPlayer);
 
 	Moveui();
-	if (pPad->GetPress(INGAME::ACT_CHECKPOINT))
+	if (pPad->GetTrigger(INGAME::ACT_CHECKPOINT) || pKey->GetTrigger(INGAME::ACT_CHECKPOINT))
 	{// Yを入力している
 		pPlayer->SetState(CPlayer::STATE::STATE_RETURN);
 	}
-	else if (pPad->GetPress(INGAME::ACT_RETRY))
+	else if (pPad->GetPress(INGAME::ACT_RETRY) || pKey->GetTrigger(INGAME::ACT_RETRY))
 	{// Xを入力している
 		
 		pPlayer->SetState(CPlayer::STATE::STATE_RESTART);
