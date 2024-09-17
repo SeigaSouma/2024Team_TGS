@@ -295,6 +295,7 @@
     <ClCompile Include="Source\object_circlegauge2D.cpp" />
     <ClCompile Include="Source\optionmenu.cpp" />
     <ClCompile Include="Source\optionmenu_keyconfig.cpp" />
+    <ClCompile Include="Source\optionmenu_other.cpp" />
     <ClCompile Include="Source\optionmenu_sound.cpp" />
     <ClCompile Include="Source\particle.cpp" />
     <ClCompile Include="Source\pause.cpp" />
@@ -513,6 +514,7 @@
     <ClInclude Include="Source\object_circlegauge2D.h" />
     <ClInclude Include="Source\optionmenu.h" />
     <ClInclude Include="Source\optionmenu_keyconfig.h" />
+    <ClInclude Include="Source\optionmenu_other.h" />
     <ClInclude Include="Source\optionmenu_sound.h" />
     <ClInclude Include="Source\particle.h" />
     <ClInclude Include="Source\pause.h" />

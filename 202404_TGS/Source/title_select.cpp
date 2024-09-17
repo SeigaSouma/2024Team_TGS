@@ -215,7 +215,6 @@ void CTitle_Select::Update()
 	// 選択肢を書く
 	DrawSelect();
 
-
 	// 状態別更新処理
 	(this->*(m_StateFunc[m_state]))();
 }
@@ -236,7 +235,6 @@ void CTitle_Select::DrawSelect()
 	// UV座標設定
 	D3DXVECTOR2* pTex = m_pSelect->GetTex();
 	pTex[1].x = pTex[3].x = UtilFunc::Transformation::Clamp(size.x / sizeOrigin.x, 0.0f, 1.0f);
-	int n = 0;
 }
 
 
@@ -245,11 +243,6 @@ void CTitle_Select::DrawSelect()
 //==========================================================================
 void CTitle_Select::StateNone()
 {
-	/*if (CTitle::GetInstance()->GetSetting() != nullptr)
-	{
-		return;
-	}*/
-
 	// 入力情報取得
 	CInputKeyboard* pInputKeyboard = CInputKeyboard::GetInstance();
 	CInputGamepad* pInputGamepad = CInputGamepad::GetInstance();

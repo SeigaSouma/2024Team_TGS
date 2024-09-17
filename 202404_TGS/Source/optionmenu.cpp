@@ -14,6 +14,7 @@
 // îhê∂êÊ
 #include "optionmenu_sound.h"
 #include "optionmenu_keyconfig.h"
+#include "optionmenu_other.h"
 
 //==========================================================================
 // íËêîíËã`
@@ -77,7 +78,7 @@ COptionMenu* COptionMenu::Create(CTitle_OptionSelect::Select selectType)
 		break;
 
 	case CTitle_OptionSelect::SELECT_OTHER:
-		pObj = DEBUG_NEW COptionMenu;
+		pObj = DEBUG_NEW COptionMenu_Other;
 		break;
 
 	default:

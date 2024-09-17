@@ -57,7 +57,8 @@ CTitle_OptionSelect::CTitle_OptionSelect(int nPriority) : CObject(nPriority)
 	m_state = STATE::STATE_NONE;			// 状態
 	m_fStateTimer = 0.0f;					// 状態タイマー
 	m_select = Select::SELECT_KEYKONFIG;	// 選択肢
-	
+	m_Oldselect = Select::SELECT_KEYKONFIG;	// 前回の選択肢
+
 	memset(m_pSelect, 0, sizeof(m_pSelect));	// 選択肢のオブジェクト
 	m_pScroll = nullptr;					// 巻き物
 	m_pOptionMenu = nullptr;				// オプションメニュー
@@ -223,6 +224,9 @@ void CTitle_OptionSelect::StateScrollWait()
 	// スクロール終了
 	if (m_pScroll->GetState() == CScroll::STATE::STATE_WAIT)
 	{
+		// オプションメニュー切り替え
+		ChangeOptionMenu();
+
 		SetState(STATE::STATE_FADEIN);
 	}
 }
@@ -270,6 +274,7 @@ void CTitle_OptionSelect::StateSelect()
 		pKey->GetTrigger(DIK_W))
 	{
 		// パターンNo.を更新
+		m_Oldselect = m_select;
 		m_select = static_cast<Select>((m_select + (Select::SELECT_MAX - 1)) % Select::SELECT_MAX);
 
 		// オプションメニュー切り替え
@@ -282,6 +287,7 @@ void CTitle_OptionSelect::StateSelect()
 		pKey->GetTrigger(DIK_S))
 	{
 		// パターンNo.を更新
+		m_Oldselect = m_select;
 		m_select = static_cast<Select>(((int)m_select + 1) % Select::SELECT_MAX);
 
 		// オプションメニュー切り替え
@@ -294,6 +300,7 @@ void CTitle_OptionSelect::StateSelect()
 		pPad->GetTrigger(CInputGamepad::BUTTON::BUTTON_RIGHT, 0) ||
 		pKey->GetTrigger(DIK_D))
 	{
+		m_Oldselect = m_select;
 		m_select = Select::SELECT_MAX;
 
 		// 編集状態

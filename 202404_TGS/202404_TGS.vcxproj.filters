@@ -782,6 +782,9 @@
     <ClCompile Include="Source\optionmenu_keyconfig.cpp">
       <Filter>mode\title\option</Filter>
     </ClCompile>
+    <ClCompile Include="Source\optionmenu_other.cpp">
+      <Filter>mode\title\option</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ballast.h">
@@ -1415,6 +1418,9 @@
       <Filter>direction</Filter>
     </ClInclude>
     <ClInclude Include="Source\optionmenu_keyconfig.h">
+      <Filter>mode\title\option</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\optionmenu_other.h">
       <Filter>mode\title\option</Filter>
     </ClInclude>
   </ItemGroup>
