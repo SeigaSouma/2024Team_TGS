@@ -304,12 +304,14 @@ void COptionMenu_Other::StateEdit()
 			pKey->GetTrigger(DIK_D))
 		{// 切り替え
 			m_switchInfo[m_selectType].active = m_switchInfo[m_selectType].active ? Active::ON : Active::OFF;
+			CSound::GetInstance()->PlaySound(CSound::LABEL_SE_SELECT);
 		}
 		else if ((pPad->GetLStickTrigger(CInputGamepad::STICK::STICK_X) && pPad->GetStickMoveL(0).x < 0) ||
 			pPad->GetTrigger(CInputGamepad::BUTTON::BUTTON_LEFT, 0) ||
 			pKey->GetTrigger(DIK_A))
 		{// 切り替え
 			m_switchInfo[m_selectType].active = m_switchInfo[m_selectType].active ? Active::ON : Active::OFF;
+			CSound::GetInstance()->PlaySound(CSound::LABEL_SE_SELECT);
 		}
 
 		// アクティブ状態別テクスチャ

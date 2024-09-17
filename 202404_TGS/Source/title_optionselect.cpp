@@ -250,6 +250,8 @@ void CTitle_OptionSelect::StateScrollWait_Close()
 		m_pScroll = nullptr;
 	}
 
+	// 前回の選択肢へ戻す
+	m_select = m_Oldselect;
 
 	// タイトル取得
 	CTitle* pTitle = CTitle::GetInstance();
@@ -491,7 +493,8 @@ void CTitle_OptionSelect::ChangeOptionMenu()
 
 	// 選択中のオプションを生成
 	m_pOptionMenu = COptionMenu::Create(m_select);
-
+	// サウンド再生
+	CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_SELECT);
 }
 
 //==========================================================================

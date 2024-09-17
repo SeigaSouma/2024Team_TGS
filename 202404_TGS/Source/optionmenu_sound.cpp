@@ -385,6 +385,7 @@ void COptionMenu_Sound::StateEdit()
 		{// ‘—Ê
 
 			fVolume += 0.1f;
+			pSound->PlaySound(CSound::LABEL_SE_SELECT);
 		}
 		else if ((pPad->GetLStickTrigger(CInputGamepad::STICK::STICK_X) && pPad->GetStickMoveL(0).x < 0) ||
 			pPad->GetTrigger(CInputGamepad::BUTTON::BUTTON_LEFT, 0) ||
@@ -392,6 +393,7 @@ void COptionMenu_Sound::StateEdit()
 		{// Œ¸­
 
 			fVolume -= 0.1f;
+			pSound->PlaySound(CSound::LABEL_SE_SELECT);
 		}
 
 		// ‘I‘ğˆ•Ê‰¹—Êİ’è
