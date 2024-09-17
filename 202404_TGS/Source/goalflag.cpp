@@ -47,6 +47,7 @@ CGoalflagX::CGoalflagX(int nPriority) : CObjectX(nPriority)
 	// 値のクリア
 	m_fStateTime = 0.0f;	// 状態カウンター
 	m_state = SAMPLE_WAO;	// 状態
+	m_bClear = false;
 }
 
 //==========================================================================
@@ -148,6 +149,8 @@ void CGoalflagX::Update()
 		Playerpos = pObj->GetPosition();
 	}
 
+	if (m_bClear) { return; }
+
 	CInputKeyboard* pKey = CInputKeyboard::GetInstance();
 
 	if (CGame::GetInstance()->GetGameManager()->GetType() != CGameManager::SceneType::SCENE_GOAL &&
@@ -166,6 +169,7 @@ void CGoalflagX::Update()
 		pCamera->GetMotion()->SetPosition(Playerpos);
 		pCamera->GetMotion()->SetMotion(CCameraMotion::MOTION::MOTION_GOAL, CCameraMotion::EASING::Linear);
 		CStageClearText::Create(MyLib::Vector3(640.0f, 400.0f, 0.0f));
+		m_bClear = true;
 	}
 }
 

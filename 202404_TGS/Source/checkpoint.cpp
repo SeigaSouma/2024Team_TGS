@@ -38,11 +38,11 @@ int CCheckpoint::m_nSaveID = 0;
 CCheckpoint::CCheckpoint(int nPriority) : CObjectX(nPriority)
 {
 	// 値のクリア
-	m_fStateTime = 0.0f;	// 状態カウンター
 	m_fLength = 0.0f;
-	m_fPassedTime = 0.0f;
 	m_bIsPassed = false;
 	m_fRotateTime = 0.0f;
+	m_fStateTime = 0.0f;	// 状態カウンター
+	m_fPassedTime = 0.0f;
 	m_pEffect = nullptr;		// エフェクトのポインタ
 	m_pEffekseerObj = nullptr;	// エフェクシアのオブジェクト
 }
@@ -358,4 +358,27 @@ void CCheckpoint::Load(const std::string filename)
 
 	// ファイルを閉じる
 	File.close();
+}
+
+//==========================================================================
+// チェックポイント通過情報リセット
+//==========================================================================
+void CCheckpoint::ResetSaveID()
+{
+	m_nSaveID = -1;
+
+	// リストループ
+	std::list<CCheckpoint*>::iterator itr = m_List.GetEnd();
+	CCheckpoint* pObj = nullptr;
+
+	while (m_List.ListLoop(itr))
+	{
+		pObj = (*itr);
+		pObj->m_bIsPassed = false;
+		pObj->m_fRotateTime = 0.0f;
+		pObj->m_fStateTime = 0.0f;	// 状態カウンター
+		pObj->m_fPassedTime = 0.0f;
+		pObj->SetRotation(0.0f);
+		// pObjか(*itr)を使って処理
+	}
 }
