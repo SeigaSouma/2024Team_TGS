@@ -71,6 +71,7 @@ private:
 	virtual void StateEdit() override;		// 編集
 	void Chenge();
 	void SetAlpha();
+	void ResetSelect();		// 選択肢リセット
 
 	//=============================
 	// メンバ変数
@@ -78,7 +79,6 @@ private:
 	float m_Alpha;
 	float m_fTime;
 	int m_SelectKey;	// 選択中
-	bool m_bNowChange;	// 変更中か否か
 	bool m_bDeath;		// 死亡フラグ
 	KEYINFO m_aKeyConfig[INGAME::ACT_MAX];	// キーコンフィグ用
 	CHENGEINFO m_checkconfig;	// 決定戻る変更用

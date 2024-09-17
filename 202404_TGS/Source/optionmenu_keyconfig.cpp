@@ -221,6 +221,10 @@ HRESULT COptionMenu_Keyconfig::Init()
 
 	// 不透明度初期値1.0f
 	m_Alpha = 1.0f;
+
+
+	// 選択肢リセット
+	ResetSelect();
 	return S_OK;
 }
 
@@ -334,6 +338,22 @@ void COptionMenu_Keyconfig::StateEdit()
 	// 不透明度設定
 	//SetAlpha();
 
+
+	// 元のサイズに戻す
+	for (const auto& key : m_aKeyConfig)
+	{
+		if (key.s_pKeyDisp == nullptr) continue;
+		key.s_pKeyDisp->SetSize(key.s_pKeyDisp->GetSizeOrigin());
+	}
+
+	// 選択中のものを少し拡大
+	if (m_bNowChange &&
+		m_SelectKey < INGAME::ACTION::ACT_MAX &&
+		m_aKeyConfig[m_SelectKey].s_pKeyDisp != nullptr)
+	{
+		m_aKeyConfig[m_SelectKey].s_pKeyDisp->SetSize(m_aKeyConfig[m_SelectKey].s_pKeyDisp->GetSizeOrigin() * 1.15f);
+	}
+
 	if (m_bNowChange) { return; }
 
 	// 入力待ち状態にする
@@ -350,8 +370,6 @@ void COptionMenu_Keyconfig::StateEdit()
 			pKeyConfig->Join(INGAME::ACT_BACK, oktype);
 
 			// テクスチャ種類を設定
-			m_aKeyConfig[INGAME::ACT_OK].s_pKeyDisp->SetType(backtype);
-			m_aKeyConfig[INGAME::ACT_BACK].s_pKeyDisp->SetType(oktype);
 			m_checkconfig.s_pKeyDispOK->SetType(backtype);
 			m_checkconfig.s_pKeyDispNO->SetType(oktype);
 
@@ -385,6 +403,9 @@ void COptionMenu_Keyconfig::StateEdit()
 		{
 			m_SelectKey = INGAME::ACTION::ACT_MAX;
 		}
+
+		// サウンド再生
+		CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_WRITING_FINISH);
 	}
 	else if ((pPad->GetLStickTrigger(CInputGamepad::STICK::STICK_Y) && pPad->GetStickMoveL(0).y < 0) ||
 		pPad->GetTrigger(CInputGamepad::BUTTON::BUTTON_DOWN, 0) ||
@@ -393,6 +414,9 @@ void COptionMenu_Keyconfig::StateEdit()
 		// 下に移動
 		m_SelectKey = (m_SelectKey + 1) % (INGAME::ACTION::ACT_MAX + 1);
 		m_SelectKey = UtilFunc::Transformation::Clamp(m_SelectKey, 2, static_cast<int>(INGAME::ACTION::ACT_MAX) + 1);
+
+		// サウンド再生
+		CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_WRITING_FINISH);
 	}
 
 	// 変更していた
@@ -413,6 +437,10 @@ void COptionMenu_Keyconfig::StateEdit()
 			m_pSelect->SetAlpha(0.0f);
 		}
 	}
+
+
+	// 選択肢リセット
+	ResetSelect();
 }
 
 
@@ -436,6 +464,9 @@ void COptionMenu_Keyconfig::Chenge()
 
 	// 変更
 	pKeyConfig->Setting(m_SelectKey);
+
+	// 元のサイズに戻す
+	m_aKeyConfig[m_SelectKey].s_pKeyDisp->SetSize(m_aKeyConfig[m_SelectKey].s_pKeyDisp->GetSizeOrigin());
 
 	if (m_aKeyConfig[m_SelectKey].s_pKeyDisp != nullptr)
 	{
@@ -462,7 +493,10 @@ void COptionMenu_Keyconfig::Chenge()
 		{
 			// 変更前のと入れ替える
 			pKeyConfig->Join(i, oldkey);
-			m_aKeyConfig[i].s_pKeyDisp->SetType(pKeyConfig->GetKey(i));
+			if (m_aKeyConfig[i].s_pKeyDisp != nullptr)
+			{
+				m_aKeyConfig[i].s_pKeyDisp->SetType(pKeyConfig->GetKey(i));
+			}
 		}
 	}
 
@@ -521,4 +555,38 @@ void COptionMenu_Keyconfig::SetAlpha()
 	col = m_checkconfig.s_pKeyDispNO->GetColor();
 	col.a = m_Alpha;
 	m_checkconfig.s_pKeyDispNO->SetColor(col);
+}
+
+
+//==========================================================================
+// 選択肢リセット
+//==========================================================================
+void COptionMenu_Keyconfig::ResetSelect()
+{
+	// 選択状況に応じた色変更
+	for (int i = 0; i < INGAME::ACT_MAX; i++)
+	{
+		if (m_aKeyConfig[i].s_p2D == nullptr) continue;
+		if (m_aKeyConfig[i].s_pKeyDisp == nullptr) continue;
+
+		// 選択外は暗く
+		D3DXCOLOR setcol = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+		if (i != m_SelectKey)
+		{
+			setcol = D3DXCOLOR(0.4f, 0.4f, 0.4f, 1.0f);
+		}
+		m_aKeyConfig[i].s_p2D->SetColor(setcol);
+		m_aKeyConfig[i].s_pKeyDisp->SetColor(setcol);
+	}
+
+	// 決定戻る変更中
+	D3DXCOLOR setcol = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+	if (m_SelectKey != INGAME::ACT_MAX)
+	{
+		setcol = D3DXCOLOR(0.4f, 0.4f, 0.4f, 1.0f);
+	}
+	m_checkconfig.s_p2D->SetColor(setcol);
+	m_checkconfig.s_pKeyDispNO->SetColor(setcol);
+	m_checkconfig.s_pKeyDispOK->SetColor(setcol);
+
 }

@@ -764,9 +764,6 @@
     <ClCompile Include="Source\title_optionselect.cpp">
       <Filter>mode\title</Filter>
     </ClCompile>
-    <ClCompile Include="Source\keyconfig_setting.cpp">
-      <Filter>mode\title\option</Filter>
-    </ClCompile>
     <ClCompile Include="Source\optionmenu.cpp">
       <Filter>mode\title\option</Filter>
     </ClCompile>
@@ -1401,9 +1398,6 @@
     </ClInclude>
     <ClInclude Include="Source\title_optionselect.h">
       <Filter>mode\title</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\keyconfig_setting.h">
-      <Filter>mode\title\option</Filter>
     </ClInclude>
     <ClInclude Include="Source\optionmenu.h">
       <Filter>mode\title\option</Filter>

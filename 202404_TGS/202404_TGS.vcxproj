@@ -184,7 +184,6 @@
     <ClCompile Include="Source\guide.cpp" />
     <ClCompile Include="Source\keyconfig_keyboard.cpp" />
     <ClCompile Include="Source\controlkeydisp.cpp" />
-    <ClCompile Include="Source\keyconfig_setting.cpp" />
     <ClCompile Include="Source\kite.cpp" />
     <ClCompile Include="Source\leaf.cpp" />
     <ClCompile Include="Source\leaf_flow.cpp" />
@@ -401,7 +400,6 @@
     <ClInclude Include="Source\guide.h" />
     <ClInclude Include="Source\keyconfig_keyboard.h" />
     <ClInclude Include="Source\controlkeydisp.h" />
-    <ClInclude Include="Source\keyconfig_setting.h" />
     <ClInclude Include="Source\kite.h" />
     <ClInclude Include="Source\leaf.h" />
     <ClInclude Include="Source\leaf_flow.h" />

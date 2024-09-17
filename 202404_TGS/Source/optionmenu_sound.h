@@ -50,12 +50,12 @@ private:
 	//=============================
 	virtual void StateEdit() override;		// 編集
 	void CreateText();	// テキスト生成
+	void ResetSelect();	// 選択肢リセット
 
 	//=============================
 	// メンバ変数
 	//=============================
 	Select m_selectType;					// 選択中の種類
-	bool m_bChange;							// 変更のフラグ
 	CMultiNumber* m_pNumber_Master;			// マスターボリュームの数字
 	CMultiNumber* m_pNumber_SE;				// SEの数字
 	CMultiNumber* m_pNumber_BGM;			// BGMの数字

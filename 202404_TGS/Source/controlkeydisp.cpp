@@ -46,6 +46,7 @@ CControlKeyDisp* CControlKeyDisp::Create(MyLib::Vector3 pos, MyLib::Vector3 rot,
 		pObject->SetOriginPosition(pos);
 		pObject->SetRotation(rot);
 		pObject->SetSize(D3DXVECTOR2(width, height));
+		pObject->SetSizeOrigin(pObject->GetSize());
 
 		// ‰Šú‰»ˆ—
 		pObject->Init();

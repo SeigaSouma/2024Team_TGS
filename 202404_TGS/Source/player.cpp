@@ -1270,7 +1270,6 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 		{ 
 			pPad->SetVibMulti(0.0f); 
 		}
-		pPad->SetEnableVibration();
 		pPad->SetVibMulti(pPad->GetVibMulti() + 0.02f);
 		pPad->SetVibration(CInputGamepad::VIBRATION_STATE::VIBRATION_STATE_DMG, 0);
 	}
@@ -1296,7 +1295,6 @@ MyLib::HitResult_Character CPlayer::Hit(const int nValue)
 			MULTITARGET::DEATH_TIMER);
 
 		// コントローラー振動停止
-		pPad->SetEnableVibration();
 		pPad->SetVibMulti(0.0f);
 
 		// タイマーを停止

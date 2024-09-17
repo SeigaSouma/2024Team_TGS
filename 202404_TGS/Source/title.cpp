@@ -16,7 +16,6 @@
 #include "titlelogo.h"
 #include "title_pressenter.h"
 #include "camera.h"
-#include "keyconfig_setting.h"
 
 //==========================================================================
 // ’è”’è‹`

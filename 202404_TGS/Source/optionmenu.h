@@ -43,8 +43,9 @@ public:
 	virtual void Draw() override;
 
 	virtual void Kill();						// 削除
-	void SetState(const STATE& state);		// 状態設定
-	STATE GetState() { return m_state; }	// 状態取得
+	void SetState(const STATE& state);			// 状態設定
+	STATE GetState() { return m_state; }		// 状態取得
+	bool IsNowChange() { return m_bNowChange; }	// 変更中か否か
 
 	//=============================
 	// 静的関数
@@ -76,6 +77,7 @@ protected:
 	// 状態系
 	STATE m_state;			// 状態
 	float m_fStateTimer;	// 状態タイマー
+	bool m_bNowChange;		// 変更中か否か
 };
 
 

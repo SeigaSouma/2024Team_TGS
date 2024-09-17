@@ -636,7 +636,6 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 					MULTITARGET::OFF_TIMER * multi);
 
 				// ƒRƒ“ƒgƒ[ƒ‰[U“®’âŽ~
-				pInputGamepad->SetEnableVibration();
 				pInputGamepad->SetVibMulti(0.0f);
 			}
 
@@ -765,7 +764,6 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 		ratio = UtilFunc::Transformation::Clamp(ratio, MIN_RATIO_HEIGHT_BRESS, 1.0f);
 
 		// U“®
-		pInputGamepad->SetEnableVibration();
 		pInputGamepad->SetVibMulti(1.0f * ratio);
 		pInputGamepad->SetVibration(CInputGamepad::VIBRATION_STATE::VIBRATION_STATE_AIR, 0);
 

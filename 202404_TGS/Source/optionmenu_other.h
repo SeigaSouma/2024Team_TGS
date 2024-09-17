@@ -69,12 +69,12 @@ private:
 	void CreateText();					// テキスト生成
 	void CreateSwitch();				// 切り替え生成
 	void ActiveByTexture(Select _select, Active _active);	// アクティブ状態別テクスチャ
+	void ResetSelect();				// 選択肢リセット
 
 	//=============================
 	// メンバ変数
 	//=============================
 	Select m_selectType;					// 選択中の種類
-	bool m_bChange;							// 変更のフラグ
 	CObject2D* m_pText[Select::SELECT_MAX];	// テキスト
 	SwitchInfo m_switchInfo[Select::SELECT_MAX];	// 切り替え情報
 	CSelectDraw* m_pDrawing;				// 選択肢筆

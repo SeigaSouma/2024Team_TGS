@@ -180,7 +180,7 @@ void COptionMenu::StateFadeIn()
 	// ŽžŠÔŒo‰ß
 	if (m_fStateTimer >= StateTime::FADE)
 	{
-		SetState(STATE::STATE_EDIT);
+		SetState(STATE::STATE_NONE);
 	}
 }
 

@@ -378,51 +378,32 @@ void CInputGamepad::UpdateVibration(int nCntPlayer)
 //==========================================================================
 void CInputGamepad::SetVibration(VIBRATION_STATE VibState, int nCntPlayer)
 {
-	if (m_bVibrationUse)
+	if (!m_bVibrationUse) return;
+
+	// 状態を代入
+	m_VibrationState[nCntPlayer] = VibState;
+
+	switch (VibState)
 	{
+	case VIBRATION_STATE_DMG:
 
-		// 状態を代入
-		m_VibrationState[nCntPlayer] = VibState;
+		m_nCntVibration[nCntPlayer] = 15;
+		m_nMaxCntVibration[nCntPlayer] = m_nCntVibration[nCntPlayer];
+		m_aUpdateVib[nCntPlayer].wLeftMotorSpeed = (USHRT_MAX * 0.8f);
+		m_aUpdateVib[nCntPlayer].wRightMotorSpeed = (USHRT_MAX * 0.8f);
+		break;
 
-		switch (VibState)
-		{
-		case VIBRATION_STATE_DMG:
+	case VIBRATION_STATE_AIR:
 
-			m_nCntVibration[nCntPlayer] = 15;
-			m_nMaxCntVibration[nCntPlayer] = m_nCntVibration[nCntPlayer];
-			m_aUpdateVib[nCntPlayer].wLeftMotorSpeed = (USHRT_MAX * 0.8f);
-			m_aUpdateVib[nCntPlayer].wRightMotorSpeed = (USHRT_MAX * 0.8f);
-			break;
-
-		case VIBRATION_STATE_AIR:
-
-			m_nCntVibration[nCntPlayer] = 10;
-			m_nMaxCntVibration[nCntPlayer] = m_nCntVibration[nCntPlayer];
-			m_aGamepadStateVib[nCntPlayer].wLeftMotorSpeed =  (USHRT_MAX * 0.3f);
-			m_aGamepadStateVib[nCntPlayer].wRightMotorSpeed = (USHRT_MAX * 0.3f);
-			break;
-		}
-
-		// コントローラーにバイブの情報をXINPUTに送る
-		XInputSetState(nCntPlayer, &m_aGamepadStateVib[nCntPlayer]);
+		m_nCntVibration[nCntPlayer] = 10;
+		m_nMaxCntVibration[nCntPlayer] = m_nCntVibration[nCntPlayer];
+		m_aGamepadStateVib[nCntPlayer].wLeftMotorSpeed = (USHRT_MAX * 0.3f);
+		m_aGamepadStateVib[nCntPlayer].wRightMotorSpeed = (USHRT_MAX * 0.3f);
+		break;
 	}
-}
 
-//==========================================================================
-// ゲームパッドのバイブ設定処理
-//==========================================================================
-void CInputGamepad::SetEnableVibration()
-{
-	//切り替え
-	m_bVibrationUse ^= true;
-}
-
-//==========================================================================
-// ゲームパッドのバイブ設定処理
-//==========================================================================
-bool CInputGamepad::GetEnableVibration()
-{
-	return m_bVibrationUse;
+	// コントローラーにバイブの情報をXINPUTに送る
+	XInputSetState(nCntPlayer, &m_aGamepadStateVib[nCntPlayer]);
 }
 
 //==========================================================================

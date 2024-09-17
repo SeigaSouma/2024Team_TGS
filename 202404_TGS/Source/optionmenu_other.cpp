@@ -47,7 +47,7 @@ namespace
 COptionMenu_Other::COptionMenu_Other(int nPriority) : COptionMenu(nPriority)
 {
 	m_selectType = Select::SELECT_WINDOW;	// 選択中の種類
-	m_bChange = false;						// 変更のフラグ
+	m_bNowChange = false;						// 変更のフラグ
 	m_pDrawing = nullptr;					// 選択肢筆
 
 	memset(m_pText, 0, sizeof(m_pText));	// テキスト
@@ -89,9 +89,17 @@ HRESULT COptionMenu_Other::Init()
 	m_pDrawing->SetPosition(setpos);
 
 
+	// バイブ状況に応じて状況設定
+	CInputGamepad* pPad = CInputGamepad::GetInstance();
+	m_switchInfo[m_selectType].active = pPad->IsEnableVibration() ? Active::ON : Active::OFF;
+
 	// アクティブ状態別テクスチャ
 	ActiveByTexture(Select::SELECT_WINDOW, m_switchInfo[m_selectType].active);
 	ActiveByTexture(Select::SELECT_VIB, m_switchInfo[m_selectType].active);
+
+
+	// 選択肢リセット
+	ResetSelect();
 
 	return S_OK;
 }
@@ -231,7 +239,7 @@ void COptionMenu_Other::StateEdit()
 	CInputKeyboard* pKey = CInputKeyboard::GetInstance();
 	CInputGamepad* pPad = CInputGamepad::GetInstance();
 
-	if (!m_bChange)
+	if (!m_bNowChange)
 	{// 変更時以外選択肢切り替え
 
 		// 切り替え判定
@@ -246,6 +254,9 @@ void COptionMenu_Other::StateEdit()
 			m_selectType = static_cast<Select>((m_selectType + (Select::SELECT_MAX - 1)) % Select::SELECT_MAX);
 			m_pDrawing->SetState(CSelectDraw::State::STATE_DRAWING);
 			bSwitch = true;
+
+			// サウンド再生
+			CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_WRITING_FINISH);
 		}
 
 		// 下
@@ -257,6 +268,9 @@ void COptionMenu_Other::StateEdit()
 			m_selectType = static_cast<Select>(((int)m_selectType + 1) % Select::SELECT_MAX);
 			m_pDrawing->SetState(CSelectDraw::State::STATE_DRAWING);
 			bSwitch = true;
+
+			// サウンド再生
+			CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_WRITING_FINISH);
 		}
 
 		if (bSwitch)
@@ -274,17 +288,16 @@ void COptionMenu_Other::StateEdit()
 		pKeyConfigKey->GetTrigger(INGAME::ACT_OK))
 	{
 		// 変更のフラグ切り替え
-		m_bChange = m_bChange ? false : true;
+		m_bNowChange = m_bNowChange ? false : true;
 	}
 	else if (pKeyConfigPad->GetTrigger(INGAME::ACT_BACK) ||
 		pKeyConfigKey->GetTrigger(INGAME::ACT_BACK))
 	{
-		m_bChange = false;
+		m_bNowChange = false;
 	}
 
-
 	// 変更中のみ切り替え
-	if (m_bChange)
+	if (m_bNowChange)
 	{
 		if ((pPad->GetLStickTrigger(CInputGamepad::STICK::STICK_X) && pPad->GetStickMoveL(0).x > 0) ||
 			pPad->GetTrigger(CInputGamepad::BUTTON::BUTTON_RIGHT, 0) ||
@@ -303,6 +316,43 @@ void COptionMenu_Other::StateEdit()
 		ActiveByTexture(m_selectType, m_switchInfo[m_selectType].active);
 	}
 
+	// バイブの時
+	if (m_selectType == Select::SELECT_VIB)
+	{
+		bool bUse = (m_switchInfo[m_selectType].active == Active::ON) ? true : false;
+		pPad->SetEnableVibration(bUse);
+	}
+
+	// 選択肢リセット
+	ResetSelect();
+}
+
+//==========================================================================
+// 選択肢リセット
+//==========================================================================
+void COptionMenu_Other::ResetSelect()
+{
+	// 選択状況に応じたサイズ変更
+	for (int i = 0; i < Select::SELECT_MAX; i++)
+	{
+		D3DXVECTOR2 setsize = m_switchInfo[i].pSwitch->GetSizeOrigin();
+		D3DXCOLOR setcol = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+
+		if (m_bNowChange &&
+			i == m_selectType)
+		{// 選択中は拡大
+			setsize *= 1.15f;
+		}
+
+		if (i != m_selectType)
+		{// 選択外は暗く
+			setcol = D3DXCOLOR(0.4f, 0.4f, 0.4f, 1.0f);
+		}
+
+		m_switchInfo[i].pSwitch->SetSize(setsize);
+		m_switchInfo[i].pSwitch->SetColor(setcol);
+		m_pText[i]->SetColor(setcol);	// テキスト
+	}
 }
 
 //==========================================================================
