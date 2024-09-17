@@ -1,0 +1,331 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="IS_Base">
+      <UniqueIdentifier>{30892e97-582b-456f-9ffd-499229b79f4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ISMD_IO">
+      <UniqueIdentifier>{a0cf4a20-5314-48c4-aa81-478cec48beb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ISMD_IO\objloader">
+      <UniqueIdentifier>{a3c45e79-8806-492c-9985-c31e137102a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Core">
+      <UniqueIdentifier>{47e45d9a-2320-4653-8d4c-fd824817be57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Expansion">
+      <UniqueIdentifier>{a509cf82-7b74-4331-a863-cec9f186546b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Expansion\bg">
+      <UniqueIdentifier>{37ab6066-713a-4db3-8100-f03441a05b37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Expansion\button_2d">
+      <UniqueIdentifier>{701386ef-dd6c-4603-b5c3-81b36365dd8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Expansion\button_3d">
+      <UniqueIdentifier>{4abcc395-57a7-4b92-b922-eaac5146c950}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Expansion\effect_2d">
+      <UniqueIdentifier>{9c658cd9-1590-452a-b994-27fe06a4d49e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Expansion\effect_billboard">
+      <UniqueIdentifier>{db9e3faa-90e8-4f53-8b6a-aee531134a9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Expansion\fade">
+      <UniqueIdentifier>{4345de3f-ba0b-44a9-99b6-baef8ce11626}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Expansion\meshfield">
+      <UniqueIdentifier>{71906fa2-f46a-43cc-96fe-78655a03f6c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Expansion\meshsky">
+      <UniqueIdentifier>{21317441-269f-40c4-8cf8-e80e211f9dd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Expansion\particle_2d">
+      <UniqueIdentifier>{83ad888e-6810-41b6-8795-8eadf47aae2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Expansion\particle_billboard">
+      <UniqueIdentifier>{e310450b-4751-4700-93fa-de581cef2aca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Expansion\number">
+      <UniqueIdentifier>{1eff2507-cc30-48e0-a8a8-ca9a8fb80fce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Expansion\score">
+      <UniqueIdentifier>{a3ab450a-9bde-446d-9d05-39d29620332a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Expansion\shadow">
+      <UniqueIdentifier>{8c66a496-5682-49b8-9b89-65b0ca115bc0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Expansion\timer">
+      <UniqueIdentifier>{5c2a2d44-4985-407f-a27b-4d70434cb1a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Core\_object">
+      <UniqueIdentifier>{8c3b3774-86ce-4444-9592-f7c120736c2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Core\_scene">
+      <UniqueIdentifier>{bc2ddeb1-55a7-4a6e-bce3-237ccd0acc06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Core\_object\object_2d">
+      <UniqueIdentifier>{00d63302-1ae9-4a45-98c2-03adb424baaa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Core\_object\object_3d">
+      <UniqueIdentifier>{8bf60fca-9f5c-4c39-9195-c1b95afe4354}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Core\_object\object_billboard">
+      <UniqueIdentifier>{b73b7bd1-8289-49db-b7a2-b7fa9756f099}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Core\_object\object_empty">
+      <UniqueIdentifier>{0d5c72c7-e55e-4f1d-b5c3-01f6391bbfdd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Core\_object\object_x">
+      <UniqueIdentifier>{d10998a2-33bb-4195-8121-44fcab802391}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Core\_scene\game">
+      <UniqueIdentifier>{214aaf3c-3841-40b6-a39d-a4c95a29b730}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Core\_scene\pause">
+      <UniqueIdentifier>{3633b874-4f6d-4c00-9f9d-294c5d2a5522}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Core\_scene\ranking">
+      <UniqueIdentifier>{6a31160c-a621-4ee1-8af2-3ad18380e758}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Core\_scene\result">
+      <UniqueIdentifier>{2df0bf8c-ac6a-480d-bf22-2e23bc031102}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Core\_scene\title">
+      <UniqueIdentifier>{4ce6753f-122e-4cb2-a0e7-fdf9d4429579}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Core\_scene\tutorial">
+      <UniqueIdentifier>{1c78f284-37e8-45ba-85ca-a0d6b7a20231}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Core\camera">
+      <UniqueIdentifier>{ba4be85d-2914-422e-98df-8dd5c6b5290b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Core\charmodel">
+      <UniqueIdentifier>{fdc69e37-a78b-4946-906b-fe8bfb247fdb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Core\charmotion">
+      <UniqueIdentifier>{04475f8c-e87b-49da-a4e9-343341055a88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Core\collision">
+      <UniqueIdentifier>{85de993f-f38a-4d4e-9a43-2cb2cbc438ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Core\culc">
+      <UniqueIdentifier>{a802d650-f604-48c6-8724-cfca2bbd3e32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Core\debugproc">
+      <UniqueIdentifier>{35aad33c-4100-44b6-af7b-c9178163dda9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Core\file%28legacy%29">
+      <UniqueIdentifier>{3b08cae2-5f6b-42fe-a8f9-88a793b254ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Core\input">
+      <UniqueIdentifier>{597c6884-4ca3-45f1-8e1d-08e9e69b0d33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Core\light">
+      <UniqueIdentifier>{f9a8109c-c2a7-49ca-ba29-8b5cbb26ca2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Core\manager">
+      <UniqueIdentifier>{b3db6e25-cd27-4a73-b56f-b0755034d98d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Core\renderer">
+      <UniqueIdentifier>{08a157db-e5a1-4aa7-b1fd-08b183a05ff7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Core\sound">
+      <UniqueIdentifier>{8ac34b6e-30b1-407e-8a6b-89a9a31d3326}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Core\texture">
+      <UniqueIdentifier>{d9513669-e6b4-4458-b833-4dee12f16f79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Core\utility">
+      <UniqueIdentifier>{7a687d8d-d834-4ab0-a3d2-94fd916a3f0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IS_Base\_Core\xmodel">
+      <UniqueIdentifier>{3302ba57-cd87-4643-b367-64a061acf966}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="code\main.cpp" />
+    <ClCompile Include="code\IS_Bace\_Core\_object\object_2d\object2D.cpp">
+      <Filter>IS_Base\_Core\_object\object_2d</Filter>
+    </ClCompile>
+    <ClCompile Include="code\IS_Bace\_Core\_object\object_3d\object3D.cpp">
+      <Filter>IS_Base\_Core\_object\object_3d</Filter>
+    </ClCompile>
+    <ClCompile Include="code\IS_Bace\_Core\_object\object_billboard\objectBillboard.cpp">
+      <Filter>IS_Base\_Core\_object\object_billboard</Filter>
+    </ClCompile>
+    <ClCompile Include="code\IS_Bace\_Core\_object\object_empty\object.cpp">
+      <Filter>IS_Base\_Core\_object\object_empty</Filter>
+    </ClCompile>
+    <ClCompile Include="code\IS_Bace\_Core\_object\object_x\objectX.cpp">
+      <Filter>IS_Base\_Core\_object\object_x</Filter>
+    </ClCompile>
+    <ClCompile Include="code\IS_Bace\_Core\_scene\game\game.cpp">
+      <Filter>IS_Base\_Core\_scene\game</Filter>
+    </ClCompile>
+    <ClCompile Include="code\IS_Bace\_Core\_scene\pause\pause.cpp">
+      <Filter>IS_Base\_Core\_scene\pause</Filter>
+    </ClCompile>
+    <ClCompile Include="code\IS_Bace\_Core\_scene\ranking\ranking.cpp">
+      <Filter>IS_Base\_Core\_scene\ranking</Filter>
+    </ClCompile>
+    <ClCompile Include="code\IS_Bace\_Core\_scene\result\result.cpp">
+      <Filter>IS_Base\_Core\_scene\result</Filter>
+    </ClCompile>
+    <ClCompile Include="code\IS_Bace\_Core\_scene\title\title.cpp">
+      <Filter>IS_Base\_Core\_scene\title</Filter>
+    </ClCompile>
+    <ClCompile Include="code\IS_Bace\_Core\_scene\tutorial\tutorial.cpp">
+      <Filter>IS_Base\_Core\_scene\tutorial</Filter>
+    </ClCompile>
+    <ClCompile Include="code\IS_Bace\_Core\chara\charaparts\charaparts.cpp">
+      <Filter>IS_Base\_Core\charmodel</Filter>
+    </ClCompile>
+    <ClCompile Include="code\IS_Bace\_Core\chara\charamotion\motion.cpp">
+      <Filter>IS_Base\_Core\charmotion</Filter>
+    </ClCompile>
+    <ClCompile Include="code\IS_Bace\_Core\collision\collision.cpp">
+      <Filter>IS_Base\_Core\collision</Filter>
+    </ClCompile>
+    <ClCompile Include="code\IS_Bace\_Core\debugproc\debugproc.cpp">
+      <Filter>IS_Base\_Core\debugproc</Filter>
+    </ClCompile>
+    <ClCompile Include="code\IS_Bace\_Core\file(legacy)\file.cpp">
+      <Filter>IS_Base\_Core\file%28legacy%29</Filter>
+    </ClCompile>
+    <ClCompile Include="code\IS_Bace\_Core\input\input.cpp">
+      <Filter>IS_Base\_Core\input</Filter>
+    </ClCompile>
+    <ClCompile Include="code\IS_Bace\_Core\light\light.cpp">
+      <Filter>IS_Base\_Core\light</Filter>
+    </ClCompile>
+    <ClCompile Include="code\IS_Bace\_Core\manager\manager.cpp">
+      <Filter>IS_Base\_Core\manager</Filter>
+    </ClCompile>
+    <ClCompile Include="code\IS_Bace\_Core\renderer\renderer.cpp">
+      <Filter>IS_Base\_Core\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="code\IS_Bace\_Core\sound\sound.cpp">
+      <Filter>IS_Base\_Core\sound</Filter>
+    </ClCompile>
+    <ClCompile Include="code\IS_Bace\_Core\texture\texture.cpp">
+      <Filter>IS_Base\_Core\texture</Filter>
+    </ClCompile>
+    <ClCompile Include="code\IS_Bace\_Core\utility\Utility.cpp">
+      <Filter>IS_Base\_Core\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="code\IS_Bace\_Core\xmodel\xmodel.cpp">
+      <Filter>IS_Base\_Core\xmodel</Filter>
+    </ClCompile>
+    <ClCompile Include="code\IS_Bace\_Core\precompile.cpp">
+      <Filter>IS_Base\_Core</Filter>
+    </ClCompile>
+    <ClCompile Include="code\IS_Bace\_Core\camera\camera.cpp">
+      <Filter>IS_Base\_Core\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="code\IS_Bace\_Core\chara\character.cpp" />
+    <ClCompile Include="code\IS_Bace\_Core\chara\characterconfig.cpp" />
+    <ClCompile Include="code\IS_Bace\_Core\utility\Utility_Vector.cpp" />
+    <ClCompile Include="code\IS_Bace\_Core\_object\object_2d_instancing\object2D_instancing.cpp" />
+    <ClCompile Include="code\IS_Bace\_Core\_object\object_3d_instancing\object3D_instancing.cpp" />
+    <ClCompile Include="code\IS_Bace\_Core\lostrssmanager\lostrssmanager.cpp" />
+    <ClCompile Include="code\IS_Bace\_Expansion\fade\fade.cpp" />
+    <ClCompile Include="code\IS_Bace\_Expansion\bg\bg.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="code\main.h" />
+    <ClInclude Include="code\IS_Bace\_Core\_object\object_2d\object2D.h">
+      <Filter>IS_Base\_Core\_object\object_2d</Filter>
+    </ClInclude>
+    <ClInclude Include="code\IS_Bace\_Core\_object\object_3d\object3D.h">
+      <Filter>IS_Base\_Core\_object\object_3d</Filter>
+    </ClInclude>
+    <ClInclude Include="code\IS_Bace\_Core\_object\object_billboard\objectBillboard.h">
+      <Filter>IS_Base\_Core\_object\object_billboard</Filter>
+    </ClInclude>
+    <ClInclude Include="code\IS_Bace\_Core\_object\object_empty\object.h">
+      <Filter>IS_Base\_Core\_object\object_empty</Filter>
+    </ClInclude>
+    <ClInclude Include="code\IS_Bace\_Core\_object\object_x\objectX.h">
+      <Filter>IS_Base\_Core\_object\object_x</Filter>
+    </ClInclude>
+    <ClInclude Include="code\IS_Bace\_Core\_scene\game\game.h">
+      <Filter>IS_Base\_Core\_scene\game</Filter>
+    </ClInclude>
+    <ClInclude Include="code\IS_Bace\_Core\_scene\pause\pause.h">
+      <Filter>IS_Base\_Core\_scene\pause</Filter>
+    </ClInclude>
+    <ClInclude Include="code\IS_Bace\_Core\_scene\ranking\ranking.h">
+      <Filter>IS_Base\_Core\_scene\ranking</Filter>
+    </ClInclude>
+    <ClInclude Include="code\IS_Bace\_Core\_scene\result\result.h">
+      <Filter>IS_Base\_Core\_scene\result</Filter>
+    </ClInclude>
+    <ClInclude Include="code\IS_Bace\_Core\_scene\title\title.h">
+      <Filter>IS_Base\_Core\_scene\title</Filter>
+    </ClInclude>
+    <ClInclude Include="code\IS_Bace\_Core\_scene\tutorial\tutorial.h">
+      <Filter>IS_Base\_Core\_scene\tutorial</Filter>
+    </ClInclude>
+    <ClInclude Include="code\IS_Bace\_Core\chara\charaparts\charaparts.h">
+      <Filter>IS_Base\_Core\charmodel</Filter>
+    </ClInclude>
+    <ClInclude Include="code\IS_Bace\_Core\chara\charamotion\motion.h">
+      <Filter>IS_Base\_Core\charmotion</Filter>
+    </ClInclude>
+    <ClInclude Include="code\IS_Bace\_Core\collision\collision.h">
+      <Filter>IS_Base\_Core\collision</Filter>
+    </ClInclude>
+    <ClInclude Include="code\IS_Bace\_Core\debugproc\debugproc.h">
+      <Filter>IS_Base\_Core\debugproc</Filter>
+    </ClInclude>
+    <ClInclude Include="code\IS_Bace\_Core\file(legacy)\file.h">
+      <Filter>IS_Base\_Core\file%28legacy%29</Filter>
+    </ClInclude>
+    <ClInclude Include="code\IS_Bace\_Core\input\input.h">
+      <Filter>IS_Base\_Core\input</Filter>
+    </ClInclude>
+    <ClInclude Include="code\IS_Bace\_Core\light\light.h">
+      <Filter>IS_Base\_Core\light</Filter>
+    </ClInclude>
+    <ClInclude Include="code\IS_Bace\_Core\manager\manager.h">
+      <Filter>IS_Base\_Core\manager</Filter>
+    </ClInclude>
+    <ClInclude Include="code\IS_Bace\_Core\renderer\renderer.h">
+      <Filter>IS_Base\_Core\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="code\IS_Bace\_Core\sound\sound.h">
+      <Filter>IS_Base\_Core\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="code\IS_Bace\_Core\texture\texture.h">
+      <Filter>IS_Base\_Core\texture</Filter>
+    </ClInclude>
+    <ClInclude Include="code\IS_Bace\_Core\utility\Utility.h">
+      <Filter>IS_Base\_Core\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="code\IS_Bace\_Core\xmodel\xmodel.h">
+      <Filter>IS_Base\_Core\xmodel</Filter>
+    </ClInclude>
+    <ClInclude Include="code\IS_Bace\_Core\precompile.h">
+      <Filter>IS_Base\_Core</Filter>
+    </ClInclude>
+    <ClInclude Include="code\IS_Bace\_Core\interface.h">
+      <Filter>IS_Base\_Core</Filter>
+    </ClInclude>
+    <ClInclude Include="code\IS_Bace\_Core\camera\camera.h">
+      <Filter>IS_Base\_Core\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="code\IS_Bace\_Core\chara\character.h" />
+    <ClInclude Include="code\IS_Bace\_Core\chara\characterconfig.h" />
+    <ClInclude Include="code\IS_Bace\_Core\utility\Utility_Vector.h" />
+    <ClInclude Include="code\IS_Bace\_Core\_object\object_2d_instancing\object2D_instancing.h" />
+    <ClInclude Include="code\IS_Bace\_Core\_object\object_3d_instancing\object3D_instancing.h" />
+    <ClInclude Include="code\IS_Bace\_Core\lostrssmanager\lostrssmanager.h" />
+    <ClInclude Include="code\IS_Bace\_Expansion\fade\fade.h" />
+    <ClInclude Include="code\IS_Bace\_Expansion\bg\bg.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="code\IS_Bace\_Core\_object\object_2d_instancing\instancing.fx" />
+    <FxCompile Include="code\IS_Bace\_Core\_object\object_3d_instancing\instancing.fx" />
+  </ItemGroup>
+</Project>
