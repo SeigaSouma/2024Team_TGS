@@ -782,6 +782,12 @@
     <ClCompile Include="Source\optionmenu_other.cpp">
       <Filter>mode\title\option</Filter>
     </ClCompile>
+    <ClCompile Include="Source\rankingItem .cpp">
+      <Filter>mode\ranking</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\rankingItem_top3.cpp">
+      <Filter>mode\ranking</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ballast.h">
@@ -1416,6 +1422,12 @@
     </ClInclude>
     <ClInclude Include="Source\optionmenu_other.h">
       <Filter>mode\title\option</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\rankingItem_top3.h">
+      <Filter>mode\ranking</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\rankingItem.h">
+      <Filter>mode\ranking</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
