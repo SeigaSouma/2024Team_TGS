@@ -743,6 +743,11 @@ void CGameManager::SetType(SceneType type)
 {
 	m_OldSceneType = m_SceneType;
 	m_SceneType = type;
+
+	if (m_OldSceneType == SceneType::SCENE_GOAL && m_SceneType != SceneType::SCENE_GOAL)
+	{
+		int s = 0;
+	}
 }
 
 //==========================================================================
