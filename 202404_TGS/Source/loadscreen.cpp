@@ -16,6 +16,24 @@
 namespace
 {
 	const char* TEXTURE = "data\\TEXTURE\\load\\loadscreen.jpg";
+	const MyLib::Vector3 STR_DEFPOS = MyLib::Vector3(100.0f, 300.0f, 0.0f);
+	const float MOVE_X = 100.0f;
+	const int NUM_STRING = 10;	// NOWLOADINGの文字数
+	const std::string TEXPATH[NUM_STRING] =
+	{
+		"data\\TEXTURE\\load\\n.png",
+		"data\\TEXTURE\\load\\o.png",
+		"data\\TEXTURE\\load\\w.png",
+		"data\\TEXTURE\\load\\l.png",
+		"data\\TEXTURE\\load\\o.png",
+		"data\\TEXTURE\\load\\a.png",
+		"data\\TEXTURE\\load\\d.png",
+		"data\\TEXTURE\\load\\i.png",
+		"data\\TEXTURE\\load\\mini_n.png",
+		"data\\TEXTURE\\load\\g.png",
+	};
+
+	const float STR_HEIGHT = 100.0f;
 }
 
 
@@ -30,6 +48,11 @@ CLoadScreen::CLoadScreen()
 {
 	// 値のクリア
 	m_aObject2D = nullptr;					// オブジェクト2Dのオブジェクト
+
+	for (int i = 0; i < NUM_STRING; i++)
+	{
+		m_apObj2D[i] = nullptr;
+	}
 }
 
 //==========================================================================
@@ -81,17 +104,28 @@ HRESULT CLoadScreen::Init()
 	{// 失敗していたら
 		return E_FAIL;
 	}
-	m_aObject2D->SetType(CObject::TYPE::TYPE_NONE);
 
-	m_aObject2D->SetSize(D3DXVECTOR2(640.0f, 360.0f));	// サイズ
-	m_aObject2D->SetPosition(D3DXVECTOR3(640.0f, 360.0f, 0.0f));	// 位置
-	m_aObject2D->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));	// 色設定
+	MyLib::Vector3 pos = STR_DEFPOS;
 
-	// テクスチャの割り当て
-	int nIdx = CTexture::GetInstance()->Regist(TEXTURE);
+	// 文字生成
+	for (int i = 0; i < NUM_STRING; i++)
+	{
+		CTexture* pTex = CTexture::GetInstance();
+		int nIdx = pTex->Regist(TEXPATH[i]);
+		D3DXVECTOR2 size = UtilFunc::Transformation::AdjustSizeByHeight(pTex->GetImageSize(nIdx), STR_HEIGHT);
+		pos.x += size.x;
+		m_apObj2D[i] = CObject2D::Create();
+		m_apObj2D[i]->SetType(CObject::TYPE::TYPE_NONE);
+		m_apObj2D[i]->SetPosition(pos);
+		m_apObj2D[i]->BindTexture(nIdx);
+		m_apObj2D[i]->SetSize(size);
+		pos.x += size.x;
 
-	// テクスチャの割り当て
-	m_aObject2D->BindTexture(nIdx);
+		if (i == 2)
+		{
+			pos.x += size.x * 2;
+		}
+	}
 
 	return S_OK;
 }
@@ -101,23 +135,27 @@ HRESULT CLoadScreen::Init()
 //==========================================================================
 void CLoadScreen::Uninit()
 {
-	if (m_aObject2D != nullptr)
-	{// nullptrじゃなかったら
 
-		// 終了処理
-		m_aObject2D->Uninit();
-		m_aObject2D = nullptr;
+	for (int i = 0; i < NUM_STRING; i++)
+	{
+		if (m_apObj2D[i] == nullptr)
+		{
+			m_apObj2D[i]->Uninit();
+			m_apObj2D[i] = nullptr;
+		}
 	}
 }
 
 void CLoadScreen::Kill()
 {
-	if (m_aObject2D != nullptr)
+	for (int i = 0; i < NUM_STRING; i++)
 	{
-		// 終了処理
-		m_aObject2D->Uninit();
-		delete m_aObject2D;
-		m_aObject2D = nullptr;
+		if (m_apObj2D[i] != nullptr)
+		{
+			m_apObj2D[i]->Uninit();
+			delete m_apObj2D[i];
+			m_apObj2D[i] = nullptr;
+		}
 	}
 }
 
@@ -126,18 +164,14 @@ void CLoadScreen::Kill()
 //==========================================================================
 void CLoadScreen::Update()
 {
-	if (m_aObject2D == nullptr)
+	// 文字生成
+	for (int i = 0; i < NUM_STRING; i++)
 	{
-		return;
+		if (m_apObj2D[i] != nullptr)
+		{
+			m_apObj2D[i]->Update();
+		}
 	}
-
-	// 色取得
-	D3DXCOLOR col = m_aObject2D->GetColor();
-
-	// 更新処理
-	m_aObject2D->Update();
-
-	m_aObject2D->SetVtx();
 
 }
 
@@ -146,8 +180,14 @@ void CLoadScreen::Update()
 //==========================================================================
 void CLoadScreen::Draw()
 {
-	// 描画処理
-	m_aObject2D->Draw();
+	// 文字生成
+	for (int i = 0; i < NUM_STRING; i++)
+	{
+		if (m_apObj2D[i] != nullptr)
+		{
+			m_apObj2D[i]->Draw();
+		}
+	}
 }
 
 //==========================================================================

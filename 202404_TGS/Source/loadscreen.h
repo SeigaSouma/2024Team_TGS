@@ -40,6 +40,7 @@ public:
 private:
 
 	CObject2D_Anim* m_aObject2D;		// オブジェクト2Dのオブジェクト
+	CObject2D* m_apObj2D[10];	// 
 };
 
 #endif
