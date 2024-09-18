@@ -30,9 +30,9 @@ namespace
 		"data\\TEXTURE\\load\\g.png",
 	};
 	const std::string TEXTURE_CYLINDER = "data\\TEXTURE\\load\\cylinder.png";
-	const MyLib::Vector3 STR_DEFPOS = MyLib::Vector3(100.0f, 300.0f, 0.0f);	// 基点の位置
+	const MyLib::Vector3 STR_DEFPOS = MyLib::Vector3(150.0f, 300.0f, 0.0f);	// 基点の位置
 	const MyLib::Vector3 DEFAULTPOS_CYLINDER = MyLib::Vector3(-300.0f, 600.0f, 0.0f);	// 基点の位置
-	const float STR_HEIGHT = 100.0f;	// 文字列の高さ
+	const float STR_HEIGHT = 100.0f;		// 文字列の高さ
 	const float CYLINDER_HEIGHT = 100.0f;	// 筒の高さ
 }
 
@@ -101,6 +101,7 @@ HRESULT CLoadScreen::Init()
 		m_apObj2D[i] = CObject2D::Create();
 		m_apObj2D[i]->SetType(CObject::TYPE::TYPE_NONE);
 		m_apObj2D[i]->SetPosition(pos);
+		m_apObj2D[i]->SetOriginPosition(pos);
 
 		// テクスチャ割り当て
 		int nIdx = pTex->Regist(TEXPATH[i]);
@@ -199,10 +200,33 @@ void CLoadScreen::Update()
 	// 文字生成
 	for (int i = 0; i < NUM_STRING; i++)
 	{
-		if (m_apObj2D[i] != nullptr)
-		{
-			m_apObj2D[i]->Update();
+		if (m_apObj2D[i] == nullptr) continue;
+
+		// アドレス渡し
+		CObject2D* pObj2D = m_apObj2D[i];
+
+		// 情報取得
+		MyLib::Vector3 pos = pObj2D->GetPosition(), move = pObj2D->GetMove(), rot = pObj2D->GetRotation();
+		MyLib::Vector3 posOrigin = pObj2D->GetOriginPosition();
+		pos.y += move.y;
+		move.y += 0.15f;
+
+		// 回転
+		rot.z = UtilFunc::Correction::EasingEaseIn(0.0f, D3DX_PI * -0.5f, posOrigin.y, posOrigin.y - 200.0f, pos.y);
+
+		if (posOrigin.y <= pos.y)
+		{// 着地
+			move.y = 0.0f;
+			pos.y = posOrigin.y;
 		}
+
+		// 情報設定
+		pObj2D->SetPosition(pos);
+		pObj2D->SetMove(move);
+		pObj2D->SetRotation(rot);
+
+		// 更新処理
+		pObj2D->Update();
 	}
 
 	// 筒の動き
@@ -211,6 +235,9 @@ void CLoadScreen::Update()
 	{
 		m_pCylinder->Update();
 	}
+
+	// 文字との判定
+	CollisionText();
 }
 
 //==========================================================================
@@ -222,6 +249,26 @@ void CLoadScreen::CollisionText()
 
 	// 位置取得
 	MyLib::Vector3 pos = m_pCylinder->GetPosition();
+
+	MyLib::Vector3 textpos;
+	D3DXVECTOR2 textsize;
+	for (const auto& text : m_apObj2D)
+	{
+		// 情報取得
+		textpos = text->GetPosition();
+		textsize = text->GetSize();
+
+		if (pos.x >= textpos.x - textsize.x &&
+			pos.x <= textpos.x + textsize.x &&
+			textpos.IsNearlyTargetY(text->GetOriginPosition().y, 0.1f))
+		{// 判定 && 着地
+
+			// 吹上げ
+			text->SetMove(MyLib::Vector3(0.0f, -5.0f, 0.0f));
+
+		}
+	}
+
 }
 
 //==========================================================================

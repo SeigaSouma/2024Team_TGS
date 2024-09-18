@@ -261,6 +261,71 @@ namespace MyLib
 
 		/**
 		@brief	指定された許容誤差範囲内にあるか判定
+		@param	target	[in]	目標値
+		@param	range	[in]	許容範囲
+		@return	判定結果
+		*/
+		inline bool IsNearlyTargetX(float target, float range) const
+		{
+			if (abs(x) <= target + range &&
+				abs(x) >= target - range)
+			{
+				return true;
+			}
+			return false;
+		}
+
+		/**
+		@brief	指定された許容誤差範囲内にあるか判定
+		@param	target	[in]	目標値
+		@param	range	[in]	許容範囲
+		@return	判定結果
+		*/
+		inline bool IsNearlyTargetY(float target, float range) const
+		{
+			if (abs(y) <= target + range &&
+				abs(y) >= target - range)
+			{
+				return true;
+			}
+			return false;
+		}
+
+		/**
+		@brief	指定された許容誤差範囲内にあるか判定
+		@param	target	[in]	目標値
+		@param	range	[in]	許容範囲
+		@return	判定結果
+		*/
+		inline bool IsNearlyTargetZ(float target, float range) const
+		{
+			if (abs(z) <= target + range &&
+				abs(z) >= target - range)
+			{
+				return true;
+			}
+			return false;
+		}
+
+		/**
+		@brief	指定された許容誤差範囲内にあるか判定
+		@param	target	[in]	目標値
+		@param	range	[in]	許容範囲
+		@return	判定結果
+		*/
+		inline bool IsNearlyTarget(float target, float range) const
+		{
+			if (IsNearlyTargetX(target, range) &&
+				IsNearlyTargetY(target, range) &&
+				IsNearlyTargetZ(target, range))
+			{
+				return true;
+			}
+			return false;
+		}
+
+		/**
+		@brief	指定された許容誤差範囲内にあるか判定
 		@param	range	[in]	許容範囲
 		@return	判定結果
 		*/
