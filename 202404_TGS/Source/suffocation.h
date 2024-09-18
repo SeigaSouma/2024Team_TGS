@@ -70,6 +70,7 @@ private:
 	// 状態系
 	float m_fStateTime;		// 状態カウンター
 	State m_state;			// 状態
+	int m_nTexID[5];		// ID
 
 	// その他変数
 	float m_fDestWidth;	// 目標の幅
