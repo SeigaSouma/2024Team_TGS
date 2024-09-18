@@ -352,6 +352,7 @@ void CGame::Uninit()
 	if (m_pTimer != nullptr)
 	{
 		// I—¹ˆ—
+		CResultManager::SetClearTime(m_pTimer->GetTime());
 		m_pTimer->Uninit();
 		m_pTimer = nullptr;
 	}

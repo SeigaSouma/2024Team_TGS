@@ -46,8 +46,8 @@ public:
 
 	void SetJudgeRank(CJudge::JUDGE rank) { m_JudgeRank = rank; }	// 最終評価設定
 	CJudge::JUDGE GetJudgeRank() { return m_JudgeRank; }			// 最終評価取得
-	void SetClearTime(float time) { m_fClearTime = time; }			// クリア時間設定
-	float GetClearTime() { return m_fClearTime; }					// クリア時間取得
+	static void SetClearTime(float time) { m_fClearTime = time; }			// クリア時間設定
+	static float GetClearTime() { return m_fClearTime; }					// クリア時間取得
 
 	void CreateResultScreen();	// リザルト画面生成
 
@@ -64,7 +64,7 @@ private:
 	//=============================
 	State m_state;				// 状態
 	CJudge::JUDGE m_JudgeRank;	// 最終評価
-	float m_fClearTime;			// クリア時間
+	static float m_fClearTime;			// クリア時間
 	static CResultManager* m_pThisPtr;	// 自身のポインタ
 
 	CScroll* m_pScroll;			// 巻き物のオブジェクト

@@ -18,6 +18,7 @@
 // 静的メンバ変数宣言
 //==========================================================================
 CResultManager* CResultManager::m_pThisPtr = nullptr;	// 自身のポインタ
+float CResultManager::m_fClearTime = 0.0f;	// 自身のポインタ
 
 //==========================================================================
 // コンストラクタ
@@ -27,8 +28,6 @@ CResultManager::CResultManager()
 	// 値のクリア
 	m_state = State::STATE_SCORE;				// 状態
 	m_JudgeRank = CJudge::JUDGE::JUDGE_DDD;	// 最終評価
-	m_fClearTime = 0.0f;			// クリア時間
-
 	m_pScroll = nullptr;		// 巻き物のオブジェクト
 	m_pTimer = nullptr;			// タイマーのオブジェクト
 	m_pClearRank = nullptr;		// クリア時のランク
@@ -114,6 +113,8 @@ void CResultManager::Uninit()
 
 	delete m_pThisPtr;
 	m_pThisPtr = nullptr;
+
+	m_fClearTime = 0.0f;
 }
 
 //==========================================================================
