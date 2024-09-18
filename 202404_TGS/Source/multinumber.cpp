@@ -336,6 +336,22 @@ void CMultiNumber::SetValue(int nValue)
 {
 	m_nNum = nValue;
 
+	for (int nCntNum = 0; nCntNum < m_nNumNumber; nCntNum++)
+	{
+		if (m_ppMultiNumber[nCntNum] == nullptr)
+		{
+			continue;
+		}
+
+		int aTexU = m_nNum % (int)std::pow(10, m_nNumNumber + 1 - nCntNum) / ((int)std::pow(10, m_nNumNumber - nCntNum) / 10);
+
+		if (aTexU < 0)
+		{
+			aTexU = 0;
+		}
+		m_ppMultiNumber[nCntNum]->SetNum(aTexU);
+	}
+
 	// ’l‚Ìİ’èˆ—
 	SetValue();
 }
