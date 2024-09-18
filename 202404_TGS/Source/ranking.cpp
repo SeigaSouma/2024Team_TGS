@@ -11,6 +11,7 @@
 #include "calculation.h"
 #include "debugproc.h"
 #include "rankingscore.h"
+#include "keyconfig.h"
 
 #include "rankingItem.h"
 #include "rankingItem_top3.h"
@@ -35,7 +36,6 @@ bool CRanking::m_bAllArrival = false;		// 全て到着した判定
 CRanking::CRanking()
 {
 	m_pRankingScore = nullptr;	// ランキングスコアのオブジェクト
-	m_nCntSwitch = 0;		// 切り替えのカウンター
 	m_bAllArrival = false;	// 全て到着した判定
 	
 	for (int nCnt = 0; nCnt < 10; nCnt++)
@@ -116,16 +116,12 @@ void CRanking::Update()
 	// ゲームパッド情報取得
 	CInputGamepad *pInputGamepad = CInputGamepad::GetInstance();
 
-	// 切り替えのカウンター加算
-	m_nCntSwitch++;
+	// キーコンフィグ
+	CKeyConfigManager* pConfigMgr = CKeyConfigManager::GetInstance();
+	CKeyConfig* pPad = pConfigMgr->GetConfig(CKeyConfigManager::CONTROL_INPAD);
+	CKeyConfig* pKey = pConfigMgr->GetConfig(CKeyConfigManager::CONTROL_INKEY);
 
-	if (m_nCntSwitch >= 60 * 20)
-	{
-		// モード設定
-		CManager::GetInstance()->GetFade()->SetFade(CScene::MODE_TITLE);
-	}
-
-	if (pInputKeyboard->GetTrigger(DIK_SPACE) || pInputGamepad->GetTrigger(CInputGamepad::BUTTON_B, 0))
+	if (pKey->GetTrigger(OUTGAME::ACT_OK, 0) || pPad->GetTrigger(OUTGAME::ACT_OK, 0))
 	{
 		//スクロール開始処理
 		for (int nCnt = 0; nCnt < 10; nCnt++)
@@ -143,25 +139,19 @@ void CRanking::Update()
 			m_pRanking[nCnt]->SetMove(MyLib::Vector3(0.0f, 0.0f, 0.0f));
 		}
 	}
+	else
+	{
+		if (pKey->GetTrigger(OUTGAME::ACT_OK, 0) || pPad->GetTrigger(OUTGAME::ACT_OK, 0))
+		{
+			// モード設定
+			CManager::GetInstance()->GetFade()->SetFade(CScene::MODE_TITLE);
+		}
+	}
+
 	//スクロール更新処理
 	for (int nCnt = 0; nCnt < 10; nCnt++)
 	{
 		m_pRanking[nCnt]->Update();
-	}
-
-	if (pInputKeyboard->GetTrigger(DIK_RETURN) || pInputGamepad->GetTrigger(CInputGamepad::BUTTON_A, 0))
-	{
-		//if (m_bAllArrival)
-		//{
-		//	// モード設定
-		//	CManager::GetInstance()->GetFade()->SetFade(CScene::MODE_TITLE);
-		//}
-		//else
-		//{
-		//	// 全ての到着処理
-		//	m_pRankingScore->SetAllArrival();
-		//	m_bAllArrival = true;
-		//}
 	}
 }
 

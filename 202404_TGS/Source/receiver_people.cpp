@@ -447,8 +447,6 @@ void CReceiverPeople::StateWait()
 				// ó‘ÔÝ’è
 				pBaggage->SetState(CBaggage::STATE::STATE_RECEIVE);
 				pBaggage->SetState(CBaggage::STATE::STATE_FALL);
-				pBaggage->SetIsFall(true);
-				pBaggage->SetMove(0.0f);
 			}
 		}
 		else

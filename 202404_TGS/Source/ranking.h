@@ -35,7 +35,7 @@ public:
 
 	static void SetEnableArrival();
 private:
-	int m_nCntSwitch;		// 切り替えのカウンター
+
 	static bool m_bAllArrival;		// 全て到着した判定
 	static CRankingScore *m_pRankingScore;	// ランキングスコアのオブジェクト
 	CRankingItem* m_pRanking[10];
