@@ -186,7 +186,6 @@ void CTitle::SceneFadeOutLoGo()
 
 	// 不透明度更新
 	float alpha = m_fSceneTime / TIME_FADELOGO;
-	m_pLogo->SetAlpha(alpha);
 
 	// エンターの色
 	m_pPressEnter->SetAlpha(alpha);
@@ -197,7 +196,6 @@ void CTitle::SceneFadeOutLoGo()
 		m_SceneType = SCENETYPE_NONE;
 
 		// 不透明度更新
-		m_pLogo->SetAlpha(1.0f);
 		m_pLogo->Uninit();
 		m_pLogo = nullptr;
 
