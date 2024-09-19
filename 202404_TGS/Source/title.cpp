@@ -16,6 +16,11 @@
 #include "titlelogo.h"
 #include "title_pressenter.h"
 #include "camera.h"
+#include "waterfield.h"
+#include "course.h"
+#include "mapmesh.h"
+#include "stonewall.h"
+#include "peoplemanager.h"
 
 //==========================================================================
 // 定数定義
@@ -121,11 +126,58 @@ HRESULT CTitle::Init()
 	{
 		CCamera* pCamera = CManager::GetInstance()->GetCamera();
 		pCamera->SetStateCameraV(new CStateCameraV);
-		pCamera->SetRotation(STARTCAMERA::ROT);
-		pCamera->SetPositionR(STARTCAMERA::POSR);
-		pCamera->SetDistance(STARTCAMERA::LENGTH);
-		pCamera->GetCameraMotion()->SetFinish(true);
 	}
+
+
+	//=============================
+	// コース
+	//=============================
+	CCourse::Create("", CScene::MODE::MODE_TITLE);
+
+	//=============================
+	// 固定平面街フィールド
+	//=============================
+	CMapMesh::Create(CMapMesh::MeshType::TYPE_TOWNFIELD_FIXEDPLANE);
+
+	//=============================
+	// 石垣(奥)
+	//=============================
+	{
+		CStoneWall* pStoneWall = CStoneWall::Create();
+
+		// 基点地点設定
+		std::vector<MyLib::Vector3> vecpos =
+		{
+			MyLib::Vector3(-1500.0f, 0.0f, 3000.0f),
+			MyLib::Vector3(0.0f, 0.0f, 3000.0f),
+			MyLib::Vector3(500.0f, 0.0f, 3000.0f),
+			MyLib::Vector3(2500.0f, 0.0f, 3000.0f),
+		};
+		pStoneWall->SetVecPosition(vecpos);
+		pStoneWall->Reset();
+
+		// 各頂点座標
+		std::vector<MyLib::Vector3> vecVtxpos =
+		{
+			MyLib::Vector3(20000.0f, 0.0f, 2000.0f),
+			MyLib::Vector3(20010.0f, 0.0f, 2000.0f),
+			MyLib::Vector3(90000.0f, 0.0f, 2000.0f),
+			MyLib::Vector3(90010.0f, 0.0f, 2000.0f),
+		};
+		pStoneWall->SetVecVtxPosition(vecVtxpos);
+		pStoneWall->BindVtxPosition();
+	}
+
+	//=============================
+	// 水フィールド
+	//=============================
+	CWaterField::Create(CWaterField::TYPE::TYPE_RIGHT);
+	CWaterField::Create(CWaterField::TYPE::TYPE_LEFT);
+
+	//=============================
+	// 人マネージャ
+	//=============================
+	CPeopleManager::Create(CPeopleManager::Type::TYPE_TITLE);
 
 	// 成功
 	return S_OK;

@@ -788,6 +788,9 @@
     <ClCompile Include="Source\rankingItem_top3.cpp">
       <Filter>mode\ranking</Filter>
     </ClCompile>
+    <ClCompile Include="Source\course_title.cpp">
+      <Filter>map\course</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ballast.h">
@@ -1428,6 +1431,9 @@
     </ClInclude>
     <ClInclude Include="Source\rankingItem.h">
       <Filter>mode\ranking</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\course_title.h">
+      <Filter>map\course</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

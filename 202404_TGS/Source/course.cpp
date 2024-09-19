@@ -5,6 +5,7 @@
 // 
 //=============================================================================
 #include "course.h"
+#include "course_title.h"
 #include "manager.h"
 #include "calculation.h"
 #include "debugproc.h"
@@ -43,6 +44,7 @@ CCourse::CCourse(int nPriority, const LAYER layer) : CObject3DMesh(nPriority, la
 	m_fTexU = 0.0f;	// Uスクロール用
 	m_fTexV = 0.0f;	// Vスクロール用
 	m_fSinCurve = 0.0f;	// サインカーブの移動量
+	m_fWaveHeight = HEIGHT_SINCURVE;	// サインカーブの高さ
 	m_bEnableWave = true;	// 波の有効判定
 }
 
@@ -57,10 +59,25 @@ CCourse::~CCourse()
 //==========================================================================
 // 生成処理
 //==========================================================================
-CCourse* CCourse::Create(const std::string& file)
+CCourse* CCourse::Create(const std::string& file, CScene::MODE mode)
 {
 	// メモリの確保
-	CCourse* pObjMeshField = DEBUG_NEW CCourse;
+	CCourse* pObjMeshField = nullptr;
+
+	switch (mode)
+	{
+	case CScene::MODE_TITLE:
+		pObjMeshField = DEBUG_NEW CCourse_Title;
+		break;
+
+	case CScene::MODE_GAME:
+		pObjMeshField = DEBUG_NEW CCourse;
+		break;
+	
+	default:
+		return pObjMeshField;
+		break;
+	}
 
 	if (pObjMeshField != nullptr)
 	{
@@ -107,7 +124,7 @@ HRESULT CCourse::Init()
 	// 頂点座標計算
 	SetVtxPosition();
 
-	SetPosition(MyLib::Vector3(0.0f, HEIGHT_SINCURVE, 0.0f));
+	SetPosition(MyLib::Vector3(0.0f, m_fWaveHeight, 0.0f));
 
 	return S_OK;
 }
@@ -268,7 +285,7 @@ void CCourse::Reset()
 
 	// 頂点座標計算
 	SetVtxPosition();
-	SetPosition(MyLib::Vector3(0.0f, HEIGHT_SINCURVE, 0.0f));
+	SetPosition(MyLib::Vector3(0.0f, m_fWaveHeight, 0.0f));
 }
 
 //==========================================================================
@@ -334,7 +351,7 @@ void CCourse::ReCreateVtx()
 	// 頂点座標計算
 	SetVtxPosition();
 
-	SetPosition(MyLib::Vector3(0.0f, HEIGHT_SINCURVE, 0.0f));
+	SetPosition(MyLib::Vector3(0.0f, m_fWaveHeight, 0.0f));
 }
 
 //==========================================================================
@@ -618,7 +635,7 @@ void CCourse::Update()
 		ImGui::DragFloat("velocity", &velocity, 0.1f, 0.0f, 0.0f, "%.2f");
 		/*ImGui::DragFloat("intervalWave", &INTERVAL_SINCURVE, 10.0f, 0.0f, 0.0f, "%.2f");
 		ImGui::DragFloat("waveHeight", &HEIGHT_SINCURVE, 0.1f, 0.0f, 0.0f, "%.2f");*/
-		SetPosition(MyLib::Vector3(0.0f, HEIGHT_SINCURVE, 0.0f));
+		SetPosition(MyLib::Vector3(0.0f, m_fWaveHeight, 0.0f));
 
 		ImGui::TreePop();
 	}
@@ -1046,7 +1063,7 @@ void CCourse::SetVtx()
 				{
 					// 前回との距離
 					sincurveDistance += m_vecVtxInfo[nCntHeight].pos.DistanceXZ(m_vecVtxInfo[nCntHeight - 1].pos);
-					pVtxPos[idx].y = sinf(D3DX_PI * ((sincurveDistance + m_fSinCurve) / INTERVAL_SINCURVE)) * HEIGHT_SINCURVE;
+					pVtxPos[idx].y = sinf(D3DX_PI * ((sincurveDistance + m_fSinCurve) / INTERVAL_SINCURVE)) * m_fWaveHeight;
 				}
 			}
 			else

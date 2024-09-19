@@ -26,9 +26,11 @@ public:
 	enum State
 	{
 		STATE_NONE = 0,			// なにもなし
+		STATE_WAIT,				// 待機
 		STATE_FADEIN_WATER,		// 水フェードイン
-		STATE_FADEIN_PLAYER_and_NAME,	// プレイヤーと名前フェードイン
+		STATE_FADEIN_PLAYER,	// プレイヤーフェードイン
 		STATE_BRESS,			// 息
+		STATE_WAIT_AFTER,		// 待機(後)
 		STATE_AFTERMOVEMENT,	// 後の動き
 		STATE_MAX
 	};
@@ -68,9 +70,11 @@ private:
 	// 状態
 	void UpdateState();	// 状態更新
 	void StateNone();			// なにもなし
+	void StateWait();			// 待機
 	void StateFadeIn_Water();	// 水フェードイン
-	void StateFadeIn_PlayerAndName();	// プレイヤーと名前フェードイン
+	void StateFadeIn_Player();	// プレイヤーフェードイン
 	void StateBress();			// 息
+	void StateWait_After();		// 後の待機
 	void StateAfterMovement();	// 後の動き
 
 	// その他
@@ -79,6 +83,7 @@ private:
 	void CreateBress();		// 息生成
 	void CreateLOVE();		// LOVE生成
 	void CreateSUITON();	// SUITON生成
+	void DrawingLOVEDistance();	// LOVEの間隔ランダム選定
 
 	//=============================
 	// メンバ変数
@@ -91,7 +96,7 @@ private:
 	CObject2D* m_pBress;	// 息
 	CObject2D* m_pLOVE[LOGO_LOVE::MAX];	// LOVE
 	CObject2D* m_pSUITON;	// SUITON
-
+	float m_fDistance_LOVE[LOGO_LOVE::MAX];	// LOVEの距離
 	const float m_fFadeOutTime;	// フェードにかかる時間
 
 };

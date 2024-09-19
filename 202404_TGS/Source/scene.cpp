@@ -41,7 +41,7 @@ namespace
 		"data\\TEXT\\map\\info.txt",	// ƒ‰ƒ“ƒLƒ“ƒO
 	};
 	
-	const char* ELEVATION_TEXT = "data\\TEXT\\elevation\\field_mountain.txt";
+	const char* ELEVATION_TEXT = "data\\TEXT\\elevation\\field_ingame.txt";
 }
 
 #if 1

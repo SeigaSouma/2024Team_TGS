@@ -499,6 +499,29 @@ namespace UtilFunc	// 便利関数
 		}
 
 		/**
+		@brief	easeInExpo関数
+		@details https://easings.net/ja#easeInExpo
+		@param	start		[in]	初期値
+		@param	end			[in]	目標値
+		@param	startTime	[in]	開始時間
+		@param	endTime		[in]	終了時間
+		@param	currentTime	[in]	現在の時間
+		@return	補正されたfloat値
+		*/
+		inline MyLib::Vector3 EaseInExpo(const MyLib::Vector3& start, const MyLib::Vector3& end, float startTime, float endTime, float currentTime)
+		{
+			// 割合
+			float ratio = (currentTime - startTime) / (endTime - startTime);
+			UtilFunc::Transformation::ValueNormalize(ratio, 1.0f, 0.0f);
+
+			// イージング計算
+			float eased = (ratio == 0) ? 0 : pow(2, 10 * (ratio - 1));
+
+			// 線形補間（Lerp）を使用して結果をstartからendの範囲に変換
+			return start + (end - start) * eased;
+		}
+
+		/**
 		@brief	easeOutExpo関数
 		@details https://easings.net/ja#easeOutExpo
 		@param	start		[in]	初期値
@@ -509,6 +532,29 @@ namespace UtilFunc	// 便利関数
 		@return	補正されたfloat値
 		*/
 		inline float EaseOutExpo(float start, float end, float startTime, float endTime, float currentTime)
+		{
+			// 割合
+			float ratio = (currentTime - startTime) / (endTime - startTime);
+			UtilFunc::Transformation::ValueNormalize(ratio, 1.0f, 0.0f);
+
+			// イージング計算
+			float eased = (ratio == 1) ? 1 : (1 - pow(2, -10 * ratio));
+
+			// 線形補間（Lerp）を使用して結果をstartからendの範囲に変換
+			return start + (end - start) * eased;
+		}
+
+		/**
+		@brief	easeOutExpo関数
+		@details https://easings.net/ja#easeOutExpo
+		@param	start		[in]	初期値
+		@param	end			[in]	目標値
+		@param	startTime	[in]	開始時間
+		@param	endTime		[in]	終了時間
+		@param	currentTime	[in]	現在の時間
+		@return	補正されたfloat値
+		*/
+		inline MyLib::Vector3 EaseOutExpo(const MyLib::Vector3& start, const MyLib::Vector3& end, float startTime, float endTime, float currentTime)
 		{
 			// 割合
 			float ratio = (currentTime - startTime) / (endTime - startTime);
