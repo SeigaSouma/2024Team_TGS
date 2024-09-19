@@ -253,6 +253,7 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		{// 初期化処理が失敗した場合
 			return E_FAIL;
 		}
+		m_pCamera->Reset(STARTMODE);
 
 		// カメラのマトリックス設定
 		CInputMouse::GetInstance()->SetCameraMtx(m_pCamera->GetMtxViewPtr(), m_pCamera->GetMtxProjectionPtr());

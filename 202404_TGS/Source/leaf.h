@@ -74,6 +74,7 @@ private:
 
 	// その他関数
 	void CalDestRotation();	// 目標の向き計算
+	void CheckLand();		// 着地確認
 
 	//=============================
 	// メンバ変数

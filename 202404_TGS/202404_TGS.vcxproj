@@ -158,6 +158,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\cameratrigger_result.cpp" />
+    <ClCompile Include="Source\course_title.cpp" />
+    <ClCompile Include="Source\environment.cpp" />
     <ClCompile Include="Source\frontobj_manager.cpp" />
     <ClCompile Include="Libraries\Imgui\imgui.cpp" />
     <ClCompile Include="Libraries\Imgui\imgui_demo.cpp" />
@@ -375,6 +377,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\cameratrigger_result.h" />
+    <ClInclude Include="Source\course_title.h" />
+    <ClInclude Include="Source\environment.h" />
     <ClInclude Include="Source\frontobj_manager.h" />
     <ClInclude Include="Libraries\Imgui\imconfig.h" />
     <ClInclude Include="Libraries\Imgui\imgui.h" />

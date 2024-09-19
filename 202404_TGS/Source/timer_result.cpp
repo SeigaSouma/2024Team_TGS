@@ -189,7 +189,7 @@ void CTimer_Result::ApplyTimer()
 
 		// ˆÊ’uÝ’è
 		MyLib::Vector3 pos = m_pos;
-		pos.x += (m_pClearTime[0]->GetNumber()[0]->GetSize().x * DSTANCE_MULTIPLAY) * i;
+		pos.x += (m_pClearTime[0]->GetNumber()[0]->GetSize().x * DSTANCE_MULTIPLAY) * (2 - i);
 		m_pClearTime[i]->SetPosition(pos);
 
 	}

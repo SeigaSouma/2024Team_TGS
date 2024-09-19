@@ -10,6 +10,7 @@
 
 #include "object3DMesh.h"
 #include "collisionLine_Box.h"
+#include "scene.h"
 
 //==========================================================================
 // クラス定義
@@ -87,9 +88,9 @@ public:
 	void Save();	// セーブ
 	HRESULT Load(const std::string& file);	// ロード
 
-	static CCourse *Create(const std::string& file);	// 生成
+	static CCourse *Create(const std::string& file, CScene::MODE mode = CScene::MODE::MODE_GAME);	// 生成
 
-private:
+protected:
 
 	//=============================
 	// メンバ関数
@@ -109,6 +110,7 @@ private:
 	float m_fTexU;		// Uスクロール用
 	float m_fTexV;		// Vスクロール用
 	float m_fSinCurve;	// サインカーブの移動量
+	float m_fWaveHeight;	// サインカーブの高さ
 	bool m_bEnableWave;	// 波の有効判定
 	static const float m_fCreateDistance;	// 生成間隔
 };
