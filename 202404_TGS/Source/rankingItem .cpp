@@ -27,10 +27,12 @@ namespace
 	const std::string TEXTURE_ITEM[CRankingItem::ITEM_MAX] = { "data\\TEXTURE\\result\\ranking_num00.png",
 										"data\\TEXTURE\\result\\toatalrank.png",
 										"data\\TEXTURE\\result\\num00.png",
-										"data\\TEXTURE\\result\\rank00.png"};
+										"data\\TEXTURE\\result\\rank00.png",
+										"data\\TEXTURE\\result\\new_records.png"};
 
+	const std::string TEXTURE_COLON = "data\\TEXTURE\\result\\num00_colon.png";
 	const D3DXVECTOR2 SPRITE_SIZE = D3DXVECTOR2(50.0f, 50.0f);
-	const int MAX_SCORE_DEGIT = 6;
+	const int MAX_SCORE_DEGIT = 8;
 
 	const float TIME_SET = 0.2f;
 }
@@ -78,7 +80,7 @@ CRankingItem::~CRankingItem()
 //==========================================================================
 // 生成処理
 //==========================================================================
-CRankingItem* CRankingItem::Create(int nNumRank,int nTime, int nAllRank,MyLib::Vector3 posAll,float fSize, bool bNewRecord)
+CRankingItem* CRankingItem::Create(int nNumRank, int nMin_Time, int nSec_Time, int nMilliSec_Time, int nAllRank,MyLib::Vector3 posAll,float fSize, bool bNewRecord)
 {
 	// メモリの確保
 	CRankingItem *pMarker =  new CRankingItem;
@@ -89,7 +91,9 @@ CRankingItem* CRankingItem::Create(int nNumRank,int nTime, int nAllRank,MyLib::V
 		pMarker->m_nNumRank = nNumRank;
 
 		//タイムを取得
-		pMarker->m_nTime = nTime;
+		pMarker->m_nTime.nMinutes = nMin_Time;
+		pMarker->m_nTime.nSeconds = nSec_Time;
+		pMarker->m_nTime.nMilliSeconds = nMilliSec_Time;
 
 		//総評を取得
 		pMarker->m_nAllRank = nAllRank;
@@ -160,9 +164,8 @@ HRESULT CRankingItem::Init()
 		}
 		else if (nCntItem == ITEM_TIME)
 		{//スコアの初期化
-			difItemPos = MyLib::Vector3(150.0f * m_fSize,0.0f, 0.0f);
-			int nDegitNum[MAX_SCORE_DEGIT+1];
-			int nTime = m_nTime;
+			difItemPos = MyLib::Vector3(150.0f * m_fSize, 0.0f, 0.0f);
+			int nDegitNum[MAX_SCORE_DEGIT + 1];
 
 			m_posItem[nCntItem] = m_posAll + difItemPos;
 
@@ -170,34 +173,62 @@ HRESULT CRankingItem::Init()
 			m_pItem[nCntItem] = nullptr;
 
 			//スコアを桁ごとに分解
-			for (int nDegitCnt = MAX_SCORE_DEGIT; nDegitCnt > 0; nDegitCnt--)
+			int nMinutes = m_nTime.nMinutes;
+			for (int nCnt = 0, nDegitCnt = 8; nDegitCnt > 6; nDegitCnt--, nCnt++)
 			{
-				nDegitNum[nDegitCnt] = nTime /pow(10,nDegitCnt-1);
-				nTime = nTime - pow(10, nDegitCnt - 1) * nDegitNum[nDegitCnt];
+				nDegitNum[nDegitCnt] = nMinutes / pow(10, 2 - nCnt - 1);
+				nMinutes = nMinutes - pow(10, 2 - nCnt - 1) * nDegitNum[nDegitCnt];
 			}
-			
+
+			nDegitNum[6] = 11;
+
+			int nSeconds = m_nTime.nSeconds;
+			for (int nCnt = 0, nDegitCnt = 5; nDegitCnt > 3; nDegitCnt--, nCnt++)
+			{
+				nDegitNum[nDegitCnt] = nSeconds / pow(10, 2 - nCnt - 1);
+				nSeconds = nSeconds - pow(10, 2 - nCnt - 1) * nDegitNum[nDegitCnt];
+			}
+
+			nDegitNum[3] = 11;
+
+			int nMilliSeconds = m_nTime.nMilliSeconds;
+			for (int nCnt = 0, nDegitCnt = 2; nDegitCnt > 0; nDegitCnt--, nCnt++)
+			{
+				nDegitNum[nDegitCnt] = nMilliSeconds / pow(10, 2 - nCnt - 1);
+				nMilliSeconds = nMilliSeconds - pow(10, 2 - nCnt - 1) * nDegitNum[nDegitCnt];
+			}
+
 			//各桁の初期化
-			for (int nCnt=0, nDegitCnt = MAX_SCORE_DEGIT; nDegitCnt > 0; nDegitCnt--,nCnt++)
+			for (int nCnt = 0, nDegitCnt = MAX_SCORE_DEGIT; nDegitCnt > 0; nDegitCnt--, nCnt++)
 			{
 				MyLib::Vector3 difDegitPos = MyLib::Vector3(50.0f * nCnt * m_fSize, 0.0f, 0.0f);
 				m_pScoreItem[nDegitCnt] = CObject2D::Create(GetPriority());
 
 				m_pScoreItem[nDegitCnt]->SetPosition(m_posItem[nCntItem] + difDegitPos);
 
-				int nIdxTex = CTexture::GetInstance()->Regist(TEXTURE_ITEM[nCntItem]);
-				m_pScoreItem[nDegitCnt]->BindTexture(nIdxTex);
+				if (nDegitNum[nDegitCnt] == 11)
+				{
+					int nIdxTex = CTexture::GetInstance()->Regist(TEXTURE_COLON);
+					m_pScoreItem[nDegitCnt]->BindTexture(nIdxTex);
+				}
+				else
+				{
+					int nIdxTex = CTexture::GetInstance()->Regist(TEXTURE_ITEM[nCntItem]);
+					m_pScoreItem[nDegitCnt]->BindTexture(nIdxTex);
+				}
 
-				D3DXVECTOR2 size = SPRITE_SIZE*m_fSize;
+				D3DXVECTOR2 size = SPRITE_SIZE * m_fSize;
 
 				m_pScoreItem[nDegitCnt]->SetSize(size);
 				m_pScoreItem[nDegitCnt]->SetSizeOrigin(size);
 
 				CObject::SetType(CObject::TYPE::TYPE_OBJECT2D);
 
-				
-				D3DXVECTOR2 uvpos[4] = { D3DXVECTOR2(nDegitNum[nDegitCnt] * 0.1f,0.0f), D3DXVECTOR2(nDegitNum[nDegitCnt] * 0.1f + 0.1f,0.0f),  D3DXVECTOR2(nDegitNum[nDegitCnt] * 0.1f ,1.0f),  D3DXVECTOR2(nDegitNum[nDegitCnt] * 0.1f + 0.1f,1.0f) };
-				m_pScoreItem[nDegitCnt]->SetTex(uvpos);
-				
+				if (nDegitNum[nDegitCnt] != 11)
+				{
+					D3DXVECTOR2 uvpos[4] = { D3DXVECTOR2(nDegitNum[nDegitCnt] * 0.1f,0.0f), D3DXVECTOR2(nDegitNum[nDegitCnt] * 0.1f + 0.1f,0.0f),  D3DXVECTOR2(nDegitNum[nDegitCnt] * 0.1f ,1.0f),  D3DXVECTOR2(nDegitNum[nDegitCnt] * 0.1f + 0.1f,1.0f) };
+					m_pScoreItem[nDegitCnt]->SetTex(uvpos);
+				}
 			}
 		}
 
@@ -230,7 +261,7 @@ HRESULT CRankingItem::Init()
 			{
 				m_pItem[nCntItem] = CObject2D::Create(GetPriority());
 
-				difItemPos = MyLib::Vector3(900.0f * m_fSize, 0.0f, 0.0f);
+				difItemPos = MyLib::Vector3(600.0f * m_fSize, 55.0f*m_fSize, 0.0f);
 
 				m_posItem[nCntItem] = m_posAll + difItemPos;
 
@@ -240,6 +271,9 @@ HRESULT CRankingItem::Init()
 				m_pItem[nCntItem]->BindTexture(nIdxTex);
 
 				D3DXVECTOR2 size = ITEM_SIZE * m_fSize;
+
+				size.x = size.x * 1.8f;
+				size.y = size.y * 0.6f;
 
 				m_pItem[nCntItem]->SetSize(size);
 				m_pItem[nCntItem]->SetSizeOrigin(size);
@@ -331,6 +365,7 @@ void CRankingItem::Update()
 				m_pScoreItem[nDegitCnt]->Update();
 			}
 		}
+		
 	}
 	m_posAll += m_moveAll;
 }

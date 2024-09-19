@@ -42,10 +42,16 @@ public:
 	void Kill();	// 削除
 	MyLib::Vector3 GetPos() override;
 	void SetMove(MyLib::Vector3 move) override;	//ランキングアイテムの移動値セット
-	static CRankingItem_top3* Create(int nNumRank,int nTime,int nAllRank,int nDate[3], MyLib::Vector3 posAll,float fSize, bool bNewRecord);	// 生成処理
+	static CRankingItem_top3* Create(int nNumRank, int nMin_Time, int nSec_Time, int nMilliSec_Time,int nAllRank,int nDate[3], MyLib::Vector3 posAll,float fSize, bool bNewRecord);	// 生成処理
 
 private:
-
+	//構造体
+	typedef struct Time
+	{
+		int nMinutes;
+		int nSeconds;
+		int nMilliSeconds;
+	};
 	
 	/*void SetScoreData()*/
 	//=============================
@@ -56,7 +62,7 @@ private:
 	CObject2D* m_pScoreItem[6];		//スコアの桁毎obj
 	CObject2D* m_pDateItem[10];		//日付データobj
 	int m_nNumRank;					//順位
-	int m_nTime;					//タイム
+	Time m_nTime;					//タイム
 
 	int m_nDate[3];					//日付データ
 	
