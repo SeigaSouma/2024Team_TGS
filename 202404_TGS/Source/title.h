@@ -17,6 +17,7 @@ class CKeyConfigSetting;
 //==========================================================================
 // 前方宣言
 //==========================================================================
+class CSpawnEnvironment;
 
 //==========================================================================
 // クラス定義
@@ -84,6 +85,8 @@ private:
 	CTitleLogo* m_pLogo;		// ロゴのポインタ
 	CKeyConfigSetting* m_pConfigSetting;
 	CTitle_PressEnter* m_pPressEnter;	// プレスエンター
+	CSpawnEnvironment* m_pSpawn_Leaf;	// 降る葉生成
+
 	static CTitle* m_pThisPtr;	// 自身のポインタ
 };
 

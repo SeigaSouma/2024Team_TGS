@@ -246,8 +246,34 @@ void CLeaf::StateFall()
 	SetPosition(pos);
 
 	// 着地判定
+	CheckLand();
+}
+
+//==========================================================================
+// 着地確認
+//==========================================================================
+void CLeaf::CheckLand()
+{
 	bool IsLand = false;
-	float height = CGame::GetInstance()->GetCourse()->GetHeight(pos, &IsLand);
+
+
+	// 位置取得
+	MyLib::Vector3 pos = GetPosition();
+
+	// ゲーム取得
+	CGame* pGame = CGame::GetInstance();
+
+	float height = 0.0f;
+	if (pGame != nullptr)
+	{
+		// コース取得
+		CCourse* pCourse = pGame->GetCourse();
+		if (pCourse == nullptr) return;
+
+		// 高さ取得
+		height = pCourse->GetHeight(pos, &IsLand);
+	}
+
 	if (pos.y <= 0.0f)
 	{
 		// 情報設定

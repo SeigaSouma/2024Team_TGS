@@ -156,6 +156,9 @@
     <Filter Include="direction\selectdraw">
       <UniqueIdentifier>{39678907-4341-4d1a-9e0e-73a4bd4b8b2c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="direction\environment">
+      <UniqueIdentifier>{36289781-538c-4851-b055-f7d843794c23}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\ballast.cpp">
@@ -790,6 +793,9 @@
     </ClCompile>
     <ClCompile Include="Source\course_title.cpp">
       <Filter>map\course</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\environment.cpp">
+      <Filter>direction\environment</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1434,6 +1440,9 @@
     </ClInclude>
     <ClInclude Include="Source\course_title.h">
       <Filter>map\course</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\environment.h">
+      <Filter>direction\environment</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -21,6 +21,7 @@
 #include "mapmesh.h"
 #include "stonewall.h"
 #include "peoplemanager.h"
+#include "environment.h"
 
 //==========================================================================
 // 定数定義
@@ -65,6 +66,7 @@ CTitle::CTitle()
 	m_pLogo = nullptr;		// ロゴのポインタ
 	m_pPressEnter = nullptr;	// プレスエンター
 	m_pConfigSetting = nullptr;
+	m_pSpawn_Leaf = nullptr;		// 降る葉生成
 }
 
 //==========================================================================
@@ -179,6 +181,10 @@ HRESULT CTitle::Init()
 	//=============================
 	CPeopleManager::Create(CPeopleManager::Type::TYPE_TITLE);
 
+
+	// 降る葉生成クラス生成
+	m_pSpawn_Leaf = DEBUG_NEW CSpawn_Leaf_Title(0.0f, 0.6f);
+
 	// 成功
 	return S_OK;
 }
@@ -190,6 +196,13 @@ void CTitle::Uninit()
 {
 	m_pThisPtr = nullptr;
 
+	// 降る葉生成クラス
+	if (m_pSpawn_Leaf != nullptr)
+	{
+		delete m_pSpawn_Leaf;
+		m_pSpawn_Leaf = nullptr;
+	}
+
 	// 終了処理
 	CScene::Uninit();
 }
@@ -199,9 +212,14 @@ void CTitle::Uninit()
 //==========================================================================
 void CTitle::Update()
 {
-	CManager::GetInstance()->GetDebugProc()->Print(
-		"現在のモード：【タイトル】\n"
-		"切り替え：【 F 】\n\n");
+	// デルタタイム取得
+	float deltaTime = CManager::GetInstance()->GetDeltaTime();
+
+	// 降る葉生成の更新
+	if (m_pSpawn_Leaf != nullptr)
+	{
+		m_pSpawn_Leaf->Update(deltaTime);
+	}
 
 	if (CManager::GetInstance()->GetFade()->GetState() != CFade::STATE_NONE)
 	{// フェード中は抜ける
