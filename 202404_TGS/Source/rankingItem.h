@@ -28,6 +28,7 @@ public:
 		ITEM_YOU,
 		ITEM_MAX
 	};
+	
 
 	CRankingItem(int nPriority = 11);
 	~CRankingItem();
@@ -41,11 +42,17 @@ public:
 	virtual MyLib::Vector3 GetPos();
 	virtual void SetMove(MyLib::Vector3 move);	//ランキングアイテムの移動値セット
 	void Kill();	// 削除
-	static CRankingItem* Create(int nNumRank,int nTime,int nAllRank, MyLib::Vector3 posAll,float fSize,bool bNewRecord);	// 生成処理
+	static CRankingItem* Create(int nNumRank,int nMin_Time,int nSec_Time,int nMilliSec_Time,int nAllRank, MyLib::Vector3 posAll,float fSize,bool bNewRecord);	// 生成処理
 
 private:
 
-	
+	//構造体
+	typedef struct Time
+	{
+		int nMinutes;
+		int nSeconds;
+		int nMilliSeconds;
+	};
 	/*void SetScoreData()*/
 	//=============================
 	// メンバ変数
@@ -54,7 +61,7 @@ private:
 	CObject2D* m_pItem[ITEM_MAX];	//項目数
 	CObject2D* m_pScoreItem[6];		//スコアの桁毎obj
 	int m_nNumRank;					//順位
-	int m_nTime;					//スコア値
+	Time m_nTime;					//スコア値
 	int m_nAllRank;					//総評の値
 	static int m_nObjNum;			//当オブジェクトの生成数
 

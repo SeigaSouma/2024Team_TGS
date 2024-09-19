@@ -71,19 +71,19 @@ HRESULT CRanking::Init()
 	int nDate[3] = { 2030,1,1 };
 
 	//TOP3のアイテム生成（順位、時間、総評、日付、基準位置、拡大率、ランキング更新）
-	m_pRanking[0] = CRankingItem_top3::Create(1, 785421, 2, nDate, MyLib::Vector3(250.0f, 250.0f, 0.0f), 0.9f, true);
-	m_pRanking[1] = CRankingItem_top3::Create(2, 5678, 2, nDate, MyLib::Vector3(250.0f, 390.0f, 0.0f), 0.9f, false);
-	m_pRanking[2] = CRankingItem_top3::Create(3, 9, 3, nDate, MyLib::Vector3(250.0f, 530.0f, 0.0f), 0.9f, false);
+	m_pRanking[0] = CRankingItem_top3::Create(1, 0,1,99, 2, nDate, MyLib::Vector3(250.0f, 250.0f, 0.0f), 0.9f, true);
+	m_pRanking[1] = CRankingItem_top3::Create(2, 1,12,33, 2, nDate, MyLib::Vector3(250.0f, 390.0f, 0.0f), 0.9f, false);
+	m_pRanking[2] = CRankingItem_top3::Create(3, 2,22,22, 3, nDate, MyLib::Vector3(250.0f, 530.0f, 0.0f), 0.9f, false);
 
 	//下位のアイテム生成（順位、時間、総評、基準位置、拡大率、ランキング更新）
-	m_pRanking[3] = CRankingItem::Create(4, 4000, 3, MyLib::Vector3(250.0f, 700.0f, 0.0f), 0.85f, false);
-	m_pRanking[4] = CRankingItem::Create(5, 5000, 3, MyLib::Vector3(250.0f, 800.0f, 0.0f), 0.85f, false);
-	m_pRanking[5] = CRankingItem::Create(6, 6000, 3, MyLib::Vector3(250.0f, 900.0f, 0.0f), 0.85f, false);
-	m_pRanking[6] = CRankingItem::Create(7, 7000, 3, MyLib::Vector3(250.0f, 1000.0f, 0.0f), 0.85f, false);
-	m_pRanking[7] = CRankingItem::Create(8, 8000, 3, MyLib::Vector3(250.0f, 1100.0f, 0.0f), 0.85f, false);
-	m_pRanking[8] = CRankingItem::Create(9, 9000, 3, MyLib::Vector3(250.0f, 1200.0f, 0.0f), 0.85f, false);
-	m_pRanking[9] = CRankingItem::Create(10, 10000, 3, MyLib::Vector3(250.0f, 1300.0f, 0.0f), 0.85f, false);
-
+	m_pRanking[3] = CRankingItem::Create(4, 4,44,44, 3, MyLib::Vector3(250.0f, 700.0f, 0.0f), 0.85f, true);
+	m_pRanking[4] = CRankingItem::Create(5, 55,55,55, 3, MyLib::Vector3(250.0f, 800.0f, 0.0f), 0.85f, false);
+	m_pRanking[5] = CRankingItem::Create(6, 66,66,66, 3, MyLib::Vector3(250.0f, 900.0f, 0.0f), 0.85f, false);
+	m_pRanking[6] = CRankingItem::Create(7, 77,77,77, 3, MyLib::Vector3(250.0f, 1000.0f, 0.0f), 0.85f, false);
+	m_pRanking[7] = CRankingItem::Create(8, 88,88,88, 3, MyLib::Vector3(250.0f, 1100.0f, 0.0f), 0.85f, false);
+	m_pRanking[8] = CRankingItem::Create(9, 99,99,99, 3, MyLib::Vector3(250.0f, 1200.0f, 0.0f), 0.85f, false);
+	m_pRanking[9] = CRankingItem::Create(10, 10,10,10, 3, MyLib::Vector3(250.0f, 1300.0f, 0.0f), 0.85f, false);
+	
 
 	// 成功
 	return S_OK;
