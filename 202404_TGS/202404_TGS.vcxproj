@@ -183,6 +183,7 @@
     <ClCompile Include="Source\discovery.cpp" />
     <ClCompile Include="Source\edit_mapblock.cpp" />
     <ClCompile Include="Source\EffekseerObj.cpp" />
+    <ClCompile Include="Source\goalgametext.cpp" />
     <ClCompile Include="Source\guide.cpp" />
     <ClCompile Include="Source\keyconfig_keyboard.cpp" />
     <ClCompile Include="Source\controlkeydisp.cpp" />
@@ -403,6 +404,7 @@
     <ClInclude Include="Source\discovery.h" />
     <ClInclude Include="Source\edit_mapblock.h" />
     <ClInclude Include="Source\EffekseerObj.h" />
+    <ClInclude Include="Source\goalgametext.h" />
     <ClInclude Include="Source\guide.h" />
     <ClInclude Include="Source\keyconfig_keyboard.h" />
     <ClInclude Include="Source\controlkeydisp.h" />

@@ -63,7 +63,7 @@ public:
 	};
 
 	// コンストラクタ
-	CPlayerControlBaggage()
+	CPlayerControlBaggage() : m_pGuide(nullptr)
 	{
 		m_pEffekseerObj = nullptr;
 		m_bFall = true;
@@ -103,12 +103,14 @@ private:
 	float m_fHeightVelocity = 10.0f;	// 息の加算量
 	float m_fBressTimer = 0.0f;			// 息のタイマー
 	float m_fIntervalBress = 0.0f;		// 息のタイマー
+	float m_fGoalWaitTimer = 0.0f;		// ゴール時の待ち時間
 	bool m_bLandOld;					// 前回の着地情報
 	bool m_bFall;						// 落下しているかどうか
 	int m_nGoalTimer;					// タイマー
 	STATE m_state;
 	MyLib::Vector3 m_GoalMove;			// ゴール時の移動量
 	CSuffocation* m_pSuffocation;
+	CGuide* m_pGuide;					// ガイド
 };
 
 //=============================

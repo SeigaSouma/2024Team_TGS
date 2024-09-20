@@ -159,6 +159,9 @@
     <Filter Include="direction\environment">
       <UniqueIdentifier>{36289781-538c-4851-b055-f7d843794c23}</UniqueIdentifier>
     </Filter>
+    <Filter Include="direction\goalgame">
+      <UniqueIdentifier>{b57d6cd1-5d88-4e66-847f-31821740f1e4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\ballast.cpp">
@@ -796,6 +799,9 @@
     </ClCompile>
     <ClCompile Include="Source\environment.cpp">
       <Filter>direction\environment</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\goalgametext.cpp">
+      <Filter>direction\goalgame</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1443,6 +1449,9 @@
     </ClInclude>
     <ClInclude Include="Source\environment.h">
       <Filter>direction\environment</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\goalgametext.h">
+      <Filter>direction\goalgame</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

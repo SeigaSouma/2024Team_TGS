@@ -65,6 +65,7 @@
 
 #if _DEBUG
 #include "stagecleartext.h"
+#include "goalgametext.h"
 #endif
 namespace
 {
@@ -625,6 +626,11 @@ void CGame::Update()
 		if (ImGui::Button("CStageClearText"))
 		{
 			CStageClearText::Create(MyLib::Vector3(640.0f, 400.0f, 0.0f));
+		}
+
+		if (ImGui::Button("CGoalGameText"))
+		{
+			CGoalGameText::Create();
 		}
 
 		ImGui::TreePop();
