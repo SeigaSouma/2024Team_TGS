@@ -84,6 +84,7 @@ HRESULT CRanking::Init()
 	m_pRanking[8] = CRankingItem::Create(9, 99,99,99, 3, MyLib::Vector3(250.0f, 1200.0f, 0.0f), 0.85f, false);
 	m_pRanking[9] = CRankingItem::Create(10, 10,10,10, 3, MyLib::Vector3(250.0f, 1300.0f, 0.0f), 0.85f, false);
 	
+	CSound::GetInstance()->PlaySound(CSound::LABEL_BGM_RANKING);
 
 	// ¬Œ÷
 	return S_OK;

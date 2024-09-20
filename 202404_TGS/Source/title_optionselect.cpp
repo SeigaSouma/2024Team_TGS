@@ -317,6 +317,9 @@ void CTitle_OptionSelect::StateSelect()
 		{
 			m_pOptionMenu->SetState(COptionMenu::STATE::STATE_EDIT);
 		}
+
+		// SEÄ¶
+		CSound::GetInstance()->PlaySound(CSound::LABEL_SE_DICTION);
 	}
 
 	// ‘I‘ðŽˆ‚É–ß‚éÝ’è
@@ -362,6 +365,9 @@ void CTitle_OptionSelect::StateEdit()
 		{
 			m_pOptionMenu->SetState(COptionMenu::STATE::STATE_NONE);
 		}
+
+		// SEÄ¶
+		CSound::GetInstance()->PlaySound(CSound::LABEL_SE_DICTION);
 	}
 }
 

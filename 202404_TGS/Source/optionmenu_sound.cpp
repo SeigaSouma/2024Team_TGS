@@ -334,11 +334,17 @@ void COptionMenu_Sound::StateEdit()
 	{
 		// •ÏX‚Ìƒtƒ‰ƒOØ‚è‘Ö‚¦
 		m_bNowChange = m_bNowChange ? false : true;
+
+		// SEÄ¶
+		CSound::GetInstance()->PlaySound(CSound::LABEL_SE_DICTION);
 	}
 	else if (pKeyConfigPad->GetTrigger(INGAME::ACT_BACK) ||
 		pKeyConfigKey->GetTrigger(INGAME::ACT_BACK))
 	{
 		m_bNowChange = false;
+
+		// SEÄ¶
+		CSound::GetInstance()->PlaySound(CSound::LABEL_SE_DICTION);
 	}
 
 

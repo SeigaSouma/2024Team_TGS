@@ -381,6 +381,9 @@ void COptionMenu_Keyconfig::StateEdit()
 			// 変更状態に
 			m_bNowChange = true;
 
+			// SE再生
+			CSound::GetInstance()->PlaySound(CSound::LABEL_SE_DICTION);
+
 			// マルチスレッドで入力受付
 			std::thread th(&COptionMenu_Keyconfig::Chenge, this);
 			th.detach();
