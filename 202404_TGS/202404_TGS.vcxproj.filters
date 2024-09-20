@@ -785,7 +785,7 @@
     <ClCompile Include="Source\optionmenu_other.cpp">
       <Filter>mode\title\option</Filter>
     </ClCompile>
-    <ClCompile Include="Source\rankingItem .cpp">
+    <ClCompile Include="Source\rankingItem.cpp">
       <Filter>mode\ranking</Filter>
     </ClCompile>
     <ClCompile Include="Source\rankingItem_top3.cpp">
