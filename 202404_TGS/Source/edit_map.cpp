@@ -154,7 +154,7 @@ void CEdit_Map::Uninit()
 
 	//m_List.Uninit();
 
-	m_nModelIdx.clear();	// モデルインデックス
+	std::vector<int>().swap(m_nModelIdx); // モデルインデックス削除（vectorの問題でこうしないとメモリリークを起こすみたい）
 	m_pObjX.clear();		// オブジェクトXのポインタ
 
 	// 終了処理
