@@ -109,11 +109,11 @@ void CJudgeZone::Check()
 		// ¶¬
 		if (m_aJudgeInfo[border].type == CJudge::CONDITIONTYPE::TYPE_NONE)
 		{
-			m_pJudge = CJudge::Create(new CJudgeConditional_None(m_aJudgeInfo[border].judgeParam));
+			m_pJudge = CJudge::Create(DEBUG_NEW CJudgeConditional_None(m_aJudgeInfo[border].judgeParam));
 		}
 		else if (m_aJudgeInfo[border].type == CJudge::CONDITIONTYPE::TYPE_HITNUM)
 		{
-			m_pJudge = CJudge::Create(new CJudgeConditional_HitNum(m_aJudgeInfo[border].judgeParam));
+			m_pJudge = CJudge::Create(DEBUG_NEW CJudgeConditional_HitNum(m_aJudgeInfo[border].judgeParam));
 		}
 		
 		m_pJudge->Check();

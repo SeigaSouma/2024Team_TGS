@@ -382,7 +382,7 @@ void CCourseManager::Load()
 	// ‹——£‚É‚ ‚í‚¹‚½”z’u‚ğs‚¤
 	for (int i = 0; i < NUM_CHUNK; i++)
 	{
-		CMapBlock* pBlock = new CMapBlock;
+		CMapBlock* pBlock = DEBUG_NEW CMapBlock;
 
 		if (pBlock != nullptr)
 		{

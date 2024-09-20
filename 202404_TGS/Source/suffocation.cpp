@@ -56,7 +56,7 @@ CSuffocation::CSuffocation(int nPriority) : CObject2D(nPriority)
 	m_state = State::STATE_SURFACING;			// 状態
 	m_fDestWidth = 0.0f;	// 目標の幅
 
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 6; i++)
 	{
 		m_nTexID[i] = 0;
 	}
@@ -96,7 +96,7 @@ HRESULT CSuffocation::Init()
 	// オブジェクト2Dの初期化
 	CObject2D::Init();
 
-	for (int nCnt = 0; nCnt < 5; nCnt++)
+	for (int nCnt = 0; nCnt < 6; nCnt++)
 	{
 		// テクスチャ設定
 		m_nTexID[nCnt] = CTexture::GetInstance()->Regist(TEXTURE_SAMPLE[nCnt]);

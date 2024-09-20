@@ -83,7 +83,7 @@ CRankingItem::~CRankingItem()
 CRankingItem* CRankingItem::Create(int nNumRank, int nMin_Time, int nSec_Time, int nMilliSec_Time, int nAllRank,MyLib::Vector3 posAll,float fSize, bool bNewRecord)
 {
 	// ƒƒ‚ƒŠ‚ÌŠm•Û
-	CRankingItem *pMarker =  new CRankingItem;
+	CRankingItem *pMarker = DEBUG_NEW CRankingItem;
 
 	if (pMarker != nullptr)
 	{

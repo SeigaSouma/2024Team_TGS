@@ -721,6 +721,12 @@ void CGame::ChangeEdit()
 					m_EditType = static_cast<EditType>(selectedItem);
 
 					// ¶¬
+					if (m_pEdit != nullptr)
+					{
+						m_pEdit->Uninit();
+						m_pEdit = nullptr;
+					}
+
 					m_pEdit = CEdit::Create(m_EditType);
 				}
 			}

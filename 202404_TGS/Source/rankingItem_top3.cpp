@@ -85,7 +85,7 @@ CRankingItem_top3::~CRankingItem_top3()
 CRankingItem_top3* CRankingItem_top3::Create(int nNumRank, int nMin_Time, int nSec_Time, int nMilliSec_Time, int nAllRank, int nDate[3], MyLib::Vector3 posAll, float fSize, bool bNewRecord)
 {
 	// ÉÅÉÇÉäÇÃämï€
-	CRankingItem_top3 *pMarker =  new CRankingItem_top3;
+	CRankingItem_top3 *pMarker = DEBUG_NEW CRankingItem_top3;
 
 	if (pMarker != nullptr)
 	{

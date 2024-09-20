@@ -59,6 +59,7 @@ CCheckpoint::CCheckpoint(int nPriority) : CObjectX(nPriority)
 	m_fPassedTime = 0.0f;
 	m_pEffect = nullptr;		// エフェクトのポインタ
 	m_pEffekseerObj = nullptr;	// エフェクシアのオブジェクト
+	m_MyIndex = 0;
 }
 
 //==========================================================================
@@ -127,7 +128,10 @@ HRESULT CCheckpoint::Init()
 void CCheckpoint::CreateEffect()
 {
 	// エフェクト生成
-	m_pEffect = CObjectBillboard::Create(GetPosition(), 0.0f);
+	if (m_pEffect == nullptr)
+	{
+		m_pEffect = CObjectBillboard::Create(GetPosition(), 0.0f);
+	}
 	m_pEffect->SetType(CObject::TYPE::TYPE_OBJECTBILLBOARD);
 
 	// テクスチャ設定
@@ -295,6 +299,12 @@ void CCheckpoint::StateRotate()
 		m_DestRot.x = UtilFunc::Transformation::Random(-110, 110) * 0.001f;
 		m_DestRot.y = UtilFunc::Transformation::Random(-110, 110) * 0.001f;
 		m_DestRot.z = UtilFunc::Transformation::Random(40, 80) * 0.001f;
+
+		if (m_pEffect != nullptr)
+		{
+			m_pEffect->Uninit();
+			m_pEffect = nullptr;
+		}
 	}
 }
 

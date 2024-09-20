@@ -127,7 +127,7 @@ HRESULT CTitle::Init()
 	// ƒJƒƒ‰‚Ì‰Šú’lÝ’è
 	{
 		CCamera* pCamera = CManager::GetInstance()->GetCamera();
-		pCamera->SetStateCameraV(new CStateCameraV);
+		pCamera->SetStateCameraV(DEBUG_NEW CStateCameraV);
 	}
 
 

@@ -28,7 +28,8 @@ public:
 	enum State
 	{
 		SWING = 0,
-		ROTATE
+		ROTATE,
+		MAX
 	};
 
 	CCheckpoint(int nPriority = 6);

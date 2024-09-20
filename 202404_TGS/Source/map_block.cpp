@@ -87,7 +87,7 @@ CListManager<CMapBlockInfo>* CMapBlock::Load()
 		{// MODELSETで配置情報読み込み
 
 			// 生成してリストの管理下に
-			CMapBlockInfo* pBlock = new CMapBlockInfo;
+			CMapBlockInfo* pBlock = DEBUG_NEW CMapBlockInfo;
 			pBlock->Init();
 			pBlock->Load(&File);
 			m_InfoList.Regist(pBlock);
@@ -129,8 +129,6 @@ void CMapBlock::Uninit()
 
 	// 障害物の終了
 	m_ObstacleList.Uninit();
-
-	delete this;
 }
 
 //==========================================================================
@@ -144,11 +142,16 @@ void CMapBlock::Kill()
 	{
 		CMapBlock* pBlock = m_List.GetData(i);
 		vecDeleteBlock.push_back(pBlock);
-		pBlock->Uninit();
 	}
-	for (const auto& block : vecDeleteBlock)
+
+	for (int i = 0; i < vecDeleteBlock.size(); i++)
 	{
-		m_List.Delete(block);
+
+		vecDeleteBlock[i]->Uninit();
+		m_List.Delete(vecDeleteBlock[i]);
+
+		delete vecDeleteBlock[i];
+		vecDeleteBlock[i] = nullptr;
 	}
 
 	// ブロック配置情報の終了
@@ -157,11 +160,15 @@ void CMapBlock::Kill()
 	{
 		CMapBlockInfo* pBlockInfo = m_InfoList.GetData(i);
 		vecDeleteBlockInfo.push_back(pBlockInfo);
-		pBlockInfo->Uninit();
 	}
-	for (const auto& blockInfo : vecDeleteBlockInfo)
+
+	for (int i = 0; i < vecDeleteBlockInfo.size(); i++)
 	{
-		m_InfoList.Delete(blockInfo);
+		vecDeleteBlockInfo[i]->Uninit();
+		m_InfoList.Delete(vecDeleteBlockInfo[i]);
+
+		delete vecDeleteBlockInfo[i];
+		vecDeleteBlockInfo[i] = nullptr;
 	}
 
 }
@@ -820,7 +827,6 @@ void CMapBlockInfo::Uninit()
 	m_ObstacleList.clear();
 	m_WaterStoneList.clear();
 
-	delete this;
 }
 
 //==========================================================================

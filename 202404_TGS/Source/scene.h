@@ -15,7 +15,6 @@
 //==========================================================================
 class CCamera;
 class CEdit_Map;
-class CEdit;
 
 //==========================================================================
 // クラス定義
@@ -58,7 +57,6 @@ private:
 	MODE m_mode;				// 現在のモード
 	static CElevation *m_pObject3DMesh;				// オブジェクト3Dメッシュのオブジェクト
 	CEdit_Map* m_pEditMap;
-	CEdit* m_pEdit;				// エディター
 };
 
 

@@ -182,6 +182,12 @@ HRESULT CTimer::Init()
 //==========================================================================
 void CTimer::Uninit()
 {
+	if (m_pMyCamera != nullptr)
+	{
+		m_pMyCamera->Uninit();
+		delete m_pMyCamera;
+		m_pMyCamera = nullptr;
+	}
 
 	delete m_pTimer;
 	m_pTimer = nullptr;
