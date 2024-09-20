@@ -59,7 +59,7 @@ HRESULT CEdit_WaterStone::Init()
 void CEdit_WaterStone::Uninit()
 {
 	// èIóπèàóù
-	CEdit::Uninit();
+	delete this;
 }
 
 //==========================================================================

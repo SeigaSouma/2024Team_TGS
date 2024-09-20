@@ -23,7 +23,7 @@ public:
 	
 	// ƒˆ‰¼‘zŠÖ”
 	virtual HRESULT Init() = 0;
-	virtual void Uninit();
+	virtual void Uninit() = 0;
 	virtual void Update() = 0;
 
 	static CEdit* Create(CGame::EditType type);	// ¶¬ˆ—

@@ -83,7 +83,7 @@ void CEdit_Course::Uninit()
 {
 	m_pEditMap->Uninit();
 	// I—¹ˆ—
-	CEdit::Uninit();
+	delete this;
 }
 
 //==========================================================================

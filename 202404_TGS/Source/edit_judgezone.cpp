@@ -59,7 +59,7 @@ HRESULT CEdit_JudgeZone::Init()
 void CEdit_JudgeZone::Uninit()
 {
 	// èIóπèàóù
-	CEdit::Uninit();
+	delete this;
 }
 
 //==========================================================================

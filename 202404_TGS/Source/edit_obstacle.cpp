@@ -53,7 +53,7 @@ HRESULT CEdit_Obstacle::Init()
 void CEdit_Obstacle::Uninit()
 {
 	// èIóπèàóù
-	CEdit::Uninit();
+	delete this;
 }
 
 //==========================================================================
