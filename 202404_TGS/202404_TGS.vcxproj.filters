@@ -156,6 +156,9 @@
     <Filter Include="direction\selectdraw">
       <UniqueIdentifier>{39678907-4341-4d1a-9e0e-73a4bd4b8b2c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="lostrssmanager">
+      <UniqueIdentifier>{28071454-2189-45fa-94c3-5874bdcb4372}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\ballast.cpp">
@@ -781,6 +784,9 @@
     </ClCompile>
     <ClCompile Include="Source\optionmenu_keyconfig.cpp">
       <Filter>mode\title\option</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\lostrssmanager.cpp">
+      <Filter>lostrssmanager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1416,6 +1422,9 @@
     </ClInclude>
     <ClInclude Include="Source\optionmenu_keyconfig.h">
       <Filter>mode\title\option</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\lostrssmanager.h">
+      <Filter>lostrssmanager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

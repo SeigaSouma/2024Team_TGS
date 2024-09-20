@@ -18,11 +18,17 @@ ImVec2 imageSize;
 int textureWidth;
 int textureHeight;
 
+HWND backupHWnd;
+LPDIRECT3DDEVICE9 device;
+
 //==========================================================================
 // 初期化処理
 //==========================================================================
 void ImguiMgr::Init(HWND hwnd, LPDIRECT3DDEVICE9 pd3dDevice)
 {
+	backupHWnd = hwnd;
+	device = pd3dDevice;
+
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImPlot::CreateContext();
@@ -414,3 +420,18 @@ void ImguiMgr::Draw()
 	}
 }
 
+//========================
+//バックアップ
+//========================
+void ImguiMgr::Backup()
+{
+	ImGui_ImplDX9_InvalidateDeviceObjects();
+}
+
+//========================
+//復元
+//========================
+void ImguiMgr::Restore()
+{
+	ImGui_ImplDX9_CreateDeviceObjects();
+}

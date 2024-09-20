@@ -188,6 +188,7 @@
     <ClCompile Include="Source\kite.cpp" />
     <ClCompile Include="Source\leaf.cpp" />
     <ClCompile Include="Source\leaf_flow.cpp" />
+    <ClCompile Include="Source\lostrssmanager.cpp" />
     <ClCompile Include="Source\map_obstacle_motion.cpp" />
     <ClCompile Include="Source\map_obstacle_obj.cpp" />
     <ClCompile Include="Source\movie.cpp" />
@@ -404,6 +405,7 @@
     <ClInclude Include="Source\kite.h" />
     <ClInclude Include="Source\leaf.h" />
     <ClInclude Include="Source\leaf_flow.h" />
+    <ClInclude Include="Source\lostrssmanager.h" />
     <ClInclude Include="Source\map_obstacle_motion.h" />
     <ClInclude Include="Source\map_obstacle_obj.h" />
     <ClInclude Include="Source\movie.h" />

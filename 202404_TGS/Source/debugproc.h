@@ -9,6 +9,7 @@
 #define _DEBUGPROC_H_	// 二重インクルード防止
 
 #include "main.h"
+#include "lostrssmanager.h"
 
 //==========================================================================
 // マクロ定義
@@ -18,7 +19,7 @@
 //==========================================================================
 // クラス定義
 //==========================================================================
-class CDebugProc
+class CDebugProc : public ILostResource
 {
 public:
 
@@ -32,6 +33,9 @@ public:
 	void Print(const char *fmt, ...);
 	static void SetText();		// 設定処理
 
+	// デバイスロスト時処理
+	void Backup();
+	void Restore();
 private:
 
 	char m_aStr[MAX_DEBUGSTRING];	// デバッグ表示用

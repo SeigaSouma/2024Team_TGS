@@ -19,6 +19,7 @@
 #include "fog.h"
 #include "calculation.h"
 #include "map_ui.h"
+#include "lostrssmanager.h"
 
 namespace
 {
@@ -26,6 +27,7 @@ namespace
 	const D3DXCOLOR NONE_ALPHACOLOR = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 	const D3DXVECTOR2 NORMALSIZE = D3DXVECTOR2(640.0f, 360.0f);
 	const D3DXVECTOR2 MINISIZE = D3DXVECTOR2(640.0f, 360.0f) * 1.0f;
+	const float FULLSCREEN_MINISIZE_RATIO = 1.0f;
 }
 
 //==========================================================================
@@ -34,7 +36,8 @@ namespace
 CRenderer::CRenderer()
 {
 	m_pD3D = nullptr;			// Direct3Dオブジェクトへのポインタ
-	m_pD3DDevice = nullptr;	// Direct3Dデバイスへのポインタ
+	m_pD3DDevice = nullptr;		// Direct3Dデバイスへのポインタ
+	m_bResetWait = false;		// リセット待ち状態解除
 }
 
 //==========================================================================
@@ -66,20 +69,60 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindow)
 		return E_FAIL;
 	}
 
-	// デバイスのプレゼンテーションパラメータの設定
-	ZeroMemory(&m_d3dpp, sizeof(m_d3dpp));							// パラメータのゼロクリア
+	// デバイスのプレゼンテーションパラメータの設定（ウィンドウ）
+	ZeroMemory(&m_d3dppWindow, sizeof(m_d3dppWindow));							// パラメータのゼロクリア
+	m_d3dppWindow.BackBufferWidth = SCREEN_WIDTH;						// ゲーム画面サイズ(幅)
+	m_d3dppWindow.BackBufferHeight = SCREEN_HEIGHT;						// ゲーム画面サイズ(高さ)
+	m_d3dppWindow.BackBufferFormat = d3ddm.Format;						// バックバッファの形式
+	m_d3dppWindow.BackBufferCount = 1;									// バックバッファの数
+	m_d3dppWindow.SwapEffect = D3DSWAPEFFECT_DISCARD;					// ダブルバッファの切り替え(映像信号に同期)
+	m_d3dppWindow.EnableAutoDepthStencil = TRUE;						// デプスバッファとステンシルバッファを作成
+	m_d3dppWindow.AutoDepthStencilFormat = D3DFMT_D24S8;					// デバイスバッファとして16bitを使う
+	m_d3dppWindow.Windowed = bWindow;									// ウィンドウモード
+	m_d3dppWindow.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;	// リフレッシュレート
+	m_d3dppWindow.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;	// インターバル
+	m_d3dppWindow.hDeviceWindow = hWnd;
 
-	m_d3dpp.BackBufferWidth = SCREEN_WIDTH;						// ゲーム画面サイズ(幅)
-	m_d3dpp.BackBufferHeight = SCREEN_HEIGHT;						// ゲーム画面サイズ(高さ)
-	m_d3dpp.BackBufferFormat = d3ddm.Format;						// バックバッファの形式
-	m_d3dpp.BackBufferCount = 1;									// バックバッファの数
-	m_d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;					// ダブルバッファの切り替え(映像信号に同期)
-	m_d3dpp.EnableAutoDepthStencil = TRUE;						// デプスバッファとステンシルバッファを作成
-	m_d3dpp.AutoDepthStencilFormat = D3DFMT_D24S8;					// デバイスバッファとして16bitを使う
-	m_d3dpp.Windowed = bWindow;									// ウィンドウモード
-	m_d3dpp.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;	// リフレッシュレート
-	m_d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;	// インターバル
+	// デバイスのプレゼンテーションパラメータの設定（フルスク）
+	ZeroMemory(&m_d3dppFull, sizeof(m_d3dppFull));
+	//<画面サイズは後で設定>
+	m_d3dppFull.BackBufferFormat = d3ddm.Format;		//バックバッファの形式
+	m_d3dppFull.BackBufferCount = 1;					//バックバッファの数
+	m_d3dppFull.SwapEffect = D3DSWAPEFFECT_DISCARD;		//ダブルバッファの切り替え（同期）
+	m_d3dppFull.EnableAutoDepthStencil = TRUE;			//デプスバッファとステンシルバッファを作成
+	m_d3dppFull.AutoDepthStencilFormat = D3DFMT_D24S8;	//デプスバッファとして24ビット、ステンシルバッファとして8ビット使用
+	m_d3dppFull.Windowed = TRUE;						//ウィンドウモード
+	m_d3dppFull.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;	//リフレッシュレート
+	m_d3dppFull.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;		//インターバル
+	m_d3dppFull.hDeviceWindow = hWnd;
 
+	// ディスプレイサイズ取得
+	RECT desktop;
+	GetWindowRect(GetDesktopWindow(), &desktop);
+	int displayWidth = desktop.right;
+	int displayHeight = desktop.bottom;
+
+	// ディスプレイとゲームのアスペクト比計算
+	float displayAspect = (float)displayWidth / (float)displayHeight;
+	float gameAspect = (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT;
+
+	if (displayAspect > gameAspect)
+	{//横長
+		m_d3dppFull.BackBufferWidth = displayWidth * ((float)SCREEN_HEIGHT / (float)displayHeight);			//画面サイズ（幅）
+		m_d3dppFull.BackBufferHeight = SCREEN_HEIGHT;		//画面サイズ（高さ）
+	}
+	else
+	{//縦長・変わらない
+		m_d3dppFull.BackBufferWidth = SCREEN_WIDTH;			//画面サイズ（幅）
+		m_d3dppFull.BackBufferHeight = displayHeight * ((float)SCREEN_WIDTH / (float)displayWidth);		//画面サイズ（高さ）
+	}
+
+	//ディスプレイモード設定
+	m_dispMode = (bWindow == TRUE) ? CRenderer::DISPLAYMODE::MODE_WINDOW : CRenderer::DISPLAYMODE::MODE_FULLSCREEN;
+
+	// ディスプレイモード設定
+	SetDisplayMode(m_dispMode);
+	m_bResetWait = false;
 
 	// Direct3Dデバイスの生成
 	if (FAILED(m_pD3D->CreateDevice(D3DADAPTER_DEFAULT,
@@ -111,9 +154,10 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindow)
 	// レンダラーステート設定
 	ResetRendererState();
 
-
 	// マルチターゲットレンダラーの初期化
 	InitMTRender();
+
+	CLostResourceManager::GetInstance()->Regist(this);
 
 	return S_OK;
 }
@@ -150,10 +194,14 @@ void CRenderer::InitMTRender()
 	// 保存用バッファ
 	LPDIRECT3DSURFACE9 pRenderDef, pZBuffDef;
 
+	// 現在の画面幅取得
+	float screen_width = m_d3dpp.BackBufferWidth;
+	float screen_height = m_d3dpp.BackBufferHeight;
+	
 	// レンダリングターゲット用テクスチャの生成
 	for (int i = 0; i < 2; i++)
 	{
-		m_pD3DDevice->CreateTexture(SCREEN_WIDTH, SCREEN_HEIGHT,
+		m_pD3DDevice->CreateTexture(screen_width, screen_height,
 			1,
 			D3DUSAGE_RENDERTARGET,
 			D3DFMT_X8R8G8B8,
@@ -168,7 +216,7 @@ void CRenderer::InitMTRender()
 
 	// テクスチャレンダリング用Zバッファの生成
 	m_pD3DDevice->CreateDepthStencilSurface(
-		SCREEN_WIDTH, SCREEN_HEIGHT,
+		screen_width, screen_height,
 		D3DFMT_D24S8,
 		D3DMULTISAMPLE_NONE,
 		0,
@@ -203,11 +251,23 @@ void CRenderer::InitMTRender()
 	// Zバッファを元に戻す
 	m_pD3DDevice->SetDepthStencilSurface(pZBuffDef);
 
+	// 仮置きレンダリングターゲット・Zバッファの開放（これをしないとメモリリークが起きる）
+	if (pRenderDef != nullptr)
+	{
+		pRenderDef->Release();
+		pRenderDef = nullptr;
+	}
+	if (pZBuffDef != nullptr)
+	{
+		pZBuffDef->Release();
+		pZBuffDef = nullptr;
+	}
+
 	// テクスチャ用ビューポートの設定
 	m_Multitarget.viewportMT.X = 0;						// 描画する画面の左上X座標
 	m_Multitarget.viewportMT.Y = 0;						// 描画する画面の左上Y座標
-	m_Multitarget.viewportMT.Width = SCREEN_WIDTH;		// 描画する画面の幅
-	m_Multitarget.viewportMT.Height = SCREEN_HEIGHT;	// 描画する画面の高さ
+	m_Multitarget.viewportMT.Width = screen_width;		// 描画する画面の幅
+	m_Multitarget.viewportMT.Height = screen_height;	// 描画する画面の高さ
 	m_Multitarget.viewportMT.MinZ = 0.0f;
 	m_Multitarget.viewportMT.MaxZ = 1.0f;
 
@@ -228,23 +288,37 @@ void CRenderer::InitMTRender()
 	// 頂点バッファをロックし、頂点情報へのポインタを取得
 	m_Multitarget.pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
-	D3DXVECTOR2 size = NORMALSIZE;
+	// スクリーン表示状態に応じて通常のサイズ変更
+	D3DXVECTOR2 size;
+	if (m_dispMode == CRenderer::DISPLAYMODE::MODE_WINDOW)
+	{
+		size = NORMALSIZE;
+	}
+	else if (m_dispMode == CRenderer::DISPLAYMODE::MODE_FULLSCREEN)
+	{
+		// 現在の画面幅取得
+		float screen_width = m_d3dpp.BackBufferWidth;
+		float screen_height = m_d3dpp.BackBufferHeight;
+
+		size = D3DXVECTOR2(screen_width * 0.5f, screen_height * 0.5f);
+	}
+	
 
 	// 頂点座標の設定
-	pVtx[0].pos.x = 640.0f - size.x;
-	pVtx[0].pos.y = 360.0f - size.y;
+	pVtx[0].pos.x = (screen_width * 0.5f) - size.x;
+	pVtx[0].pos.y = (screen_height * 0.5f) - size.y;
 	pVtx[0].pos.z = 0.0f;
 
-	pVtx[1].pos.x = 640.0f + size.x;
-	pVtx[1].pos.y = 360.0f - size.y;
+	pVtx[1].pos.x = (screen_width * 0.5f) + size.x;
+	pVtx[1].pos.y = (screen_height * 0.5f) - size.y;
 	pVtx[1].pos.z = 0.0f;
 
-	pVtx[2].pos.x = 640.0f - size.x;
-	pVtx[2].pos.y = 360.0f + size.y;
+	pVtx[2].pos.x = (screen_width * 0.5f) - size.x;
+	pVtx[2].pos.y = (screen_height * 0.5f) + size.y;
 	pVtx[2].pos.z = 0.0f;
 
-	pVtx[3].pos.x = 640.0f + size.x;
-	pVtx[3].pos.y = 360.0f + size.y;
+	pVtx[3].pos.x = (screen_width * 0.5f) + size.x;
+	pVtx[3].pos.y = (screen_height * 0.5f) + size.y;
 	pVtx[3].pos.z = 0.0f;
 
 	// rhwの設定
@@ -275,6 +349,32 @@ void CRenderer::InitMTRender()
 //==========================================================================
 void CRenderer::Uninit()
 {
+	for (int cnt = 0; cnt < 2; cnt++)
+	{
+		if (m_Multitarget.pTextureMT[cnt] != nullptr)
+		{
+			m_Multitarget.pTextureMT[cnt]->Release();
+			m_Multitarget.pTextureMT[cnt] = nullptr;
+		}
+		if (m_Multitarget.pRenderMT[cnt] != nullptr)
+		{
+			m_Multitarget.pRenderMT[cnt]->Release();
+			m_Multitarget.pRenderMT[cnt] = nullptr;
+		}
+	}
+
+	if (m_Multitarget.pZBuffMT != nullptr)
+	{
+		m_Multitarget.pZBuffMT->Release();
+		m_Multitarget.pZBuffMT = nullptr;
+	}
+
+	if (m_Multitarget.pVtxBuff != nullptr)
+	{
+		m_Multitarget.pVtxBuff->Release();
+		m_Multitarget.pVtxBuff = nullptr;
+	}
+
 	// Direct3Dデバイスの破棄
 	if (m_pD3DDevice != nullptr)
 	{
@@ -288,6 +388,8 @@ void CRenderer::Uninit()
 		m_pD3D->Release();
 		m_pD3D = nullptr;
 	}
+
+	CLostResourceManager::GetInstance()->Remove(this);
 }
 
 //==========================================================================
@@ -375,14 +477,39 @@ void CRenderer::Draw()
 			// フィードバックエフェクトにテクスチャ[1]を貼り付けて描画
 			float multi = UtilFunc::Correction::EasingLinear(m_MultitargetInfo.fMulti, m_MultitargetInfo.fStartMulti, m_MultitargetInfo.fTimer);
 			float alpha = UtilFunc::Correction::EasingLinear(m_MultitargetInfo.fStartColAlpha, m_MultitargetInfo.fColAlpha, m_MultitargetInfo.fTimer);
-			DrawMultiTargetScreen(1, D3DXCOLOR(ALPHACOLOR.r, ALPHACOLOR.g, ALPHACOLOR.b, alpha), MINISIZE * multi);
+			// スクリーン表示状態に応じて通常のサイズ変更
+			if (m_dispMode == CRenderer::DISPLAYMODE::MODE_WINDOW)
+			{
+				DrawMultiTargetScreen(1, D3DXCOLOR(ALPHACOLOR.r, ALPHACOLOR.g, ALPHACOLOR.b, alpha), MINISIZE * multi);
+			}
+			else if (m_dispMode == CRenderer::DISPLAYMODE::MODE_FULLSCREEN)
+			{
+				// 現在の画面幅取得
+				float screen_width = m_d3dpp.BackBufferWidth;
+				float screen_height = m_d3dpp.BackBufferHeight;
+				D3DXVECTOR2 screen_size = D3DXVECTOR2(screen_width * 0.5f, screen_height * 0.5f) * FULLSCREEN_MINISIZE_RATIO;
+
+				DrawMultiTargetScreen(1, D3DXCOLOR(ALPHACOLOR.r, ALPHACOLOR.g, ALPHACOLOR.b, alpha), screen_size * multi);
+			}
 
 			// カメラの設定
 			CManager::GetInstance()->GetCamera()->SetCamera();
 			// レンダーターゲットをもとに戻す
 			CManager::GetInstance()->GetRenderer()->ChangeRendertarget(pRenderDef, pZBuffDef, mtxView, mtxProjection);
 
-			DrawMultiTargetScreen(0, NONE_ALPHACOLOR, NORMALSIZE);
+			// スクリーン表示状態に応じて通常のサイズ変更
+			if (m_dispMode == CRenderer::DISPLAYMODE::MODE_WINDOW)
+			{
+				DrawMultiTargetScreen(0, NONE_ALPHACOLOR, NORMALSIZE);
+			}
+			else if (m_dispMode == CRenderer::DISPLAYMODE::MODE_FULLSCREEN)
+			{
+				// 現在の画面幅取得
+				float screen_width = m_d3dpp.BackBufferWidth;
+				float screen_height = m_d3dpp.BackBufferHeight;
+
+				DrawMultiTargetScreen(0, NONE_ALPHACOLOR, D3DXVECTOR2(screen_width * 0.5f, screen_height * 0.5f));
+			}
 
 			// テクスチャ0と1の切替
 			pTextureWk = m_Multitarget.pTextureMT[0];
@@ -393,6 +520,17 @@ void CRenderer::Draw()
 			m_Multitarget.pRenderMT[0] = m_Multitarget.pRenderMT[1];
 			m_Multitarget.pRenderMT[1] = pRenderWk;
 
+			// 仮置きレンダリングターゲット・Zバッファの開放（これをしないとメモリリークが起きる）
+			if (pRenderDef != nullptr)
+			{
+				pRenderDef->Release();
+				pRenderDef = nullptr;
+			}
+			if (pZBuffDef != nullptr)
+			{
+				pZBuffDef->Release();
+				pZBuffDef = nullptr;
+			}
 
 			// デバッグ表示の描画処理
 			CManager::GetInstance()->GetDebugProc()->Draw();
@@ -441,8 +579,12 @@ void CRenderer::Draw()
 	// Imguiの描画
 	ImguiMgr::Draw();
 
-	// バックバッファとフロントバッファの入れ替え
-	m_pD3DDevice->Present(nullptr, nullptr, nullptr, nullptr);
+	//バックバッファとフロントバッファの入れ替え（同時にデバイスロスト検知）
+	HRESULT hr = m_pD3DDevice->Present(nullptr, nullptr, nullptr, nullptr);
+	if (hr == D3DERR_DEVICELOST || m_bResetWait)
+	{
+		ResetDevice();
+	}
 
 	// マルチターゲット調整
 	if (m_MultitargetInfo.bActive) {
@@ -455,6 +597,10 @@ void CRenderer::Draw()
 //==========================================================================
 void CRenderer::DrawMultiTargetScreen(int texIdx, const D3DXCOLOR& col, const D3DXVECTOR2& size)
 {
+	// 現在の画面幅取得
+	float screen_width = m_d3dpp.BackBufferWidth;
+	float screen_height = m_d3dpp.BackBufferHeight;
+
 	// 頂点情報へのポインタ
 	VERTEX_2D* pVtx;
 
@@ -462,20 +608,20 @@ void CRenderer::DrawMultiTargetScreen(int texIdx, const D3DXCOLOR& col, const D3
 	m_Multitarget.pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
 	// 頂点座標の設定
-	pVtx[0].pos.x = 640.0f - size.x;
-	pVtx[0].pos.y = 360.0f - size.y;
+	pVtx[0].pos.x = (screen_width * 0.5f) - size.x;
+	pVtx[0].pos.y = (screen_height * 0.5f) - size.y;
 	pVtx[0].pos.z = 0.0f;
 
-	pVtx[1].pos.x = 640.0f + size.x;
-	pVtx[1].pos.y = 360.0f - size.y;
+	pVtx[1].pos.x = (screen_width * 0.5f) + size.x;
+	pVtx[1].pos.y = (screen_height * 0.5f) - size.y;
 	pVtx[1].pos.z = 0.0f;
 
-	pVtx[2].pos.x = 640.0f - size.x;
-	pVtx[2].pos.y = 360.0f + size.y;
+	pVtx[2].pos.x = (screen_width * 0.5f) - size.x;
+	pVtx[2].pos.y = (screen_height * 0.5f) + size.y;
 	pVtx[2].pos.z = 0.0f;
 
-	pVtx[3].pos.x = 640.0f + size.x;
-	pVtx[3].pos.y = 360.0f + size.y;
+	pVtx[3].pos.x = (screen_width * 0.5f) + size.x;
+	pVtx[3].pos.y = (screen_height * 0.5f) + size.y;
 	pVtx[3].pos.z = 0.0f;
 
 	// 頂点カラーの設定
@@ -632,6 +778,10 @@ void CRenderer::ChangeTarget(MyLib::Vector3 posV, MyLib::Vector3 posR, MyLib::Ve
 {
 	D3DXMATRIX mtxview, mtxProjection;
 
+	// 現在の画面幅取得
+	float screen_width = m_d3dpp.BackBufferWidth;
+	float screen_height = m_d3dpp.BackBufferHeight;
+
 	// レンダリングターゲットを生成したテクスチャに設定
 	m_pD3DDevice->SetRenderTarget(0, m_Multitarget.pRenderMT[0]);
 
@@ -649,7 +799,7 @@ void CRenderer::ChangeTarget(MyLib::Vector3 posV, MyLib::Vector3 posR, MyLib::Ve
 	D3DXMatrixPerspectiveFovLH(
 		&mtxProjection,
 		D3DXToRadian(45.0f),	// 視野角
-		(float)SCREEN_WIDTH / (float)SCREEN_HEIGHT,	// アスペクト比
+		(float)screen_width / (float)screen_height,	// アスペクト比
 		10.0f,		// 手前の制限
 		100000.0f);	// 奥行きの制限
 
@@ -698,4 +848,122 @@ void CRenderer::SetMultiTarget()
 	if (m_MultitargetInfo.fTimer >= 1.0f) { 
 		m_MultitargetInfo.bActive = false; 
 	}
+}
+
+//=================================
+// ディスプレイモード設定
+//=================================
+void CRenderer::SetDisplayMode(DISPLAYMODE mode)
+{
+	// モード設定
+	D3DDISPLAYMODE d3ddm;
+	ZeroMemory(&m_d3dpp, sizeof(m_d3dpp));
+
+	// 現在のスクリーンモードを取得
+	m_pD3D->GetAdapterDisplayMode(D3DADAPTER_DEFAULT, &d3ddm);
+
+	//画面サイズ取得
+	RECT desktop;
+	GetWindowRect(GetDesktopWindow(), &desktop);
+
+	// モードに応じてプレゼンテーションパラメータの設定
+	if (mode == CRenderer::DISPLAYMODE::MODE_WINDOW)
+	{// ウィンドウモード
+		m_d3dpp = m_d3dppWindow;
+
+		// ウィンドウスタイル・位置サイズ変更
+		SetWindowLong(GetWnd(), GWL_STYLE, WS_OVERLAPPEDWINDOW);
+		SetWindowPos(GetWnd(), HWND_TOP, 100, 100, SCREEN_WIDTH, SCREEN_HEIGHT, SWP_NOZORDER | SWP_FRAMECHANGED);
+
+		// 再描画の強制
+		ShowWindow(GetWnd(), SW_SHOWNORMAL);
+		UpdateWindow(GetWnd());
+	}
+	else if (mode == CRenderer::DISPLAYMODE::MODE_FULLSCREEN)
+	{// フルスクリーンモード
+		m_d3dpp = m_d3dppFull;
+
+		//画面サイズ取得
+		RECT desktop;
+		GetWindowRect(GetDesktopWindow(), &desktop);
+
+		// ウィンドウスタイル・位置サイズ変更
+		SetWindowLong(GetWnd(), GWL_STYLE, WS_POPUP | WS_VISIBLE);
+		SetWindowPos(GetWnd(), HWND_TOP, 0, 0, desktop.right, desktop.bottom, SWP_NOZORDER | SWP_FRAMECHANGED);
+	}
+
+	m_bResetWait = true;
+	m_dispMode = mode;
+}
+
+//=================================
+// デバイスリセット
+//=================================
+void CRenderer::ResetDevice()
+{
+	// リソースいったん解放
+	CLostResourceManager::GetInstance()->Backup();
+
+	// デバイスリセット
+	HRESULT hr = m_pD3DDevice->TestCooperativeLevel();
+	if (hr == S_OK || hr == D3DERR_DEVICENOTRESET)
+	{
+		hr = m_pD3DDevice->Reset(&m_d3dpp);
+		if (FAILED(hr))
+		{
+			if (hr == D3DERR_INVALIDCALL)
+			{
+				assert(false);
+			}
+
+			return;
+		}
+
+		// レンダラーステート設定
+		ResetRendererState();
+
+		// リソース再生成
+		CLostResourceManager::GetInstance()->Restore();
+		m_bResetWait = false;
+	}
+}
+
+//========================
+// バックアップ
+//========================
+void CRenderer::Backup()
+{
+	for (int cnt = 0; cnt < 2; cnt++)
+	{
+		if (m_Multitarget.pTextureMT[cnt] != nullptr)
+		{
+			m_Multitarget.pTextureMT[cnt]->Release();
+			m_Multitarget.pTextureMT[cnt] = nullptr;
+		}
+		if (m_Multitarget.pRenderMT[cnt] != nullptr)
+		{
+			m_Multitarget.pRenderMT[cnt]->Release();
+			m_Multitarget.pRenderMT[cnt] = nullptr;
+		}
+	}
+
+	if (m_Multitarget.pZBuffMT != nullptr)
+	{
+		m_Multitarget.pZBuffMT->Release();
+		m_Multitarget.pZBuffMT = nullptr;
+	}
+
+	if (m_Multitarget.pVtxBuff != nullptr)
+	{
+		m_Multitarget.pVtxBuff->Release();
+		m_Multitarget.pVtxBuff = nullptr;
+	}
+}
+
+//========================
+// 復元
+//========================
+void CRenderer::Restore()
+{
+	InitMTRender();
 }

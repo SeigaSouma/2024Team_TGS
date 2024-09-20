@@ -18,6 +18,8 @@ namespace ImguiMgr
 	void Draw();	// •`‰æˆ—
 	void Uninit();	// I—¹ˆ—
 
+	void Backup();
+	void Restore();
 }
 
 
