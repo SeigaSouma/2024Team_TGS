@@ -40,7 +40,7 @@ namespace
 	const float TIME_LOAD = 2.0f;	// 必須ロード時間
 
 #if _DEBUG
-	const CScene::MODE STARTMODE = CScene::MODE::MODE_GAME;
+	const CScene::MODE STARTMODE = CScene::MODE::MODE_TITLE;
 #else
 	const CScene::MODE STARTMODE = CScene::MODE::MODE_TITLE;
 #endif
@@ -814,16 +814,9 @@ void CManager::Update()
 
 		if (pInputKeyboard->GetTrigger(DIK_F8))
 		{
-			m_bWindowed = !m_bWindowed;
-
-			if (m_bWindowed == true)
-			{
-				m_pRenderer->SetDisplayMode(CRenderer::DISPLAYMODE::MODE_WINDOW);
-			}
-			else
-			{
-				m_pRenderer->SetDisplayMode(CRenderer::DISPLAYMODE::MODE_FULLSCREEN);
-			}
+			// モード切替
+			bool bWindowed = !IsWindowed();
+			ChangeDisplayMode(bWindowed);
 		}
 
 		if ((pInputKeyboard->GetTrigger(DIK_P) || pInputGamepad->GetTrigger(CInputGamepad::BUTTON_START, 0)) &&
@@ -941,6 +934,23 @@ void CManager::Update()
 	}
 
 
+}
+
+//==========================================================================
+// ディスプレイモード変更
+//==========================================================================
+void CManager::ChangeDisplayMode(bool bWindow)
+{
+	m_bWindowed = bWindow;
+
+	if (m_bWindowed)
+	{// ウィンドウモード
+		m_pRenderer->SetDisplayMode(CRenderer::DISPLAYMODE::MODE_WINDOW);
+	}
+	else
+	{// ウィンドウレスモード
+		m_pRenderer->SetDisplayMode(CRenderer::DISPLAYMODE::MODE_FULLSCREEN);
+	}
 }
 
 //==========================================================================

@@ -67,6 +67,7 @@ CTitle::CTitle()
 	m_pPressEnter = nullptr;	// プレスエンター
 	m_pConfigSetting = nullptr;
 	m_pSpawn_Leaf = nullptr;		// 降る葉生成
+	m_pPeopleManager = nullptr;	// 人マネージャ
 }
 
 //==========================================================================
@@ -179,7 +180,7 @@ HRESULT CTitle::Init()
 	//=============================
 	// 人マネージャ
 	//=============================
-	CPeopleManager::Create(CPeopleManager::Type::TYPE_TITLE);
+	m_pPeopleManager = CPeopleManager::Create(CPeopleManager::Type::TYPE_TITLE);
 
 
 	// 降る葉生成クラス生成
@@ -201,6 +202,13 @@ void CTitle::Uninit()
 	{
 		delete m_pSpawn_Leaf;
 		m_pSpawn_Leaf = nullptr;
+	}
+
+	// 人マネージャ
+	if (m_pPeopleManager != nullptr)
+	{
+		m_pPeopleManager->Uninit();
+		m_pPeopleManager = nullptr;
 	}
 
 	// 終了処理

@@ -13,6 +13,7 @@
 class CTitleLogo;
 class CTitle_PressEnter;
 class CKeyConfigSetting;
+class CPeopleManager;
 
 //==========================================================================
 // 前方宣言
@@ -86,6 +87,7 @@ private:
 	CKeyConfigSetting* m_pConfigSetting;
 	CTitle_PressEnter* m_pPressEnter;	// プレスエンター
 	CSpawnEnvironment* m_pSpawn_Leaf;	// 降る葉生成
+	CPeopleManager* m_pPeopleManager;	// 人マネージャ
 
 	static CTitle* m_pThisPtr;	// 自身のポインタ
 };

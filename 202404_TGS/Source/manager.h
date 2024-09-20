@@ -100,6 +100,9 @@ public:
 	void SerEnableDisp_UI(bool bDisp) { m_bDisp_UI = bDisp; }			// UI表示の判定
 	bool IsDisp_UI() { return m_bDisp_UI; }			// UI表示の判定
 
+	bool IsWindowed() { return m_bWindowed; }	// ウィンドウモードか
+	void ChangeDisplayMode(bool bWindow);	// ディスプレイモード変更
+
 	static bool IsDisp_ImGui() { return m_bDisp_ImGui; }				// ImGuiの描画判定
 	static bool IsDisp_BoxColliders() { return m_bDisp_BoxColliders; }	// 当たり判定ボックスの描画判定
 	static bool IsDisp_CheckPoint() { return m_bDisp_CheckPoint; }		// チェックポイントの描画判定

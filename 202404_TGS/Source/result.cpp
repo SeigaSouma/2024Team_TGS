@@ -104,6 +104,13 @@ void CResult::Uninit()
 {
 	m_pResultScore = nullptr;
 
+	// 人マネージャ
+	if (m_pPeopleManager != nullptr)
+	{
+		m_pPeopleManager->Uninit();
+		m_pPeopleManager = nullptr;
+	}
+
 	// リザルトマネージャのリセット
 	CResultManager* pResultManager = CResultManager::GetInstance();
 	pResultManager->Reset();

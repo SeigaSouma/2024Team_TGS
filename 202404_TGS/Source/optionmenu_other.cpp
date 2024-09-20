@@ -313,6 +313,13 @@ void COptionMenu_Other::StateEdit()
 			
 			// SE再生
 			CSound::GetInstance()->PlaySound(CSound::LABEL_SE_SELECT);
+
+			// ウィンドウモード切替
+			if (m_selectType == Select::SELECT_WINDOW)
+			{
+				bool bUse = (m_switchInfo[m_selectType].active == Active::ON) ? true : false;
+				CManager::GetInstance()->ChangeDisplayMode(bUse);
+			}
 		}
 		else if ((pPad->GetLStickTrigger(CInputGamepad::STICK::STICK_X) && pPad->GetStickMoveL(0).x < 0) ||
 			pPad->GetTrigger(CInputGamepad::BUTTON::BUTTON_LEFT, 0) ||
@@ -320,6 +327,13 @@ void COptionMenu_Other::StateEdit()
 		{// 切り替え
 			m_switchInfo[m_selectType].active = m_switchInfo[m_selectType].active ? Active::ON : Active::OFF;
 			CSound::GetInstance()->PlaySound(CSound::LABEL_SE_SELECT);
+
+			// ウィンドウモード切替
+			if (m_selectType == Select::SELECT_WINDOW)
+			{
+				bool bUse = (m_switchInfo[m_selectType].active == Active::ON) ? true : false;
+				CManager::GetInstance()->ChangeDisplayMode(bUse);
+			}
 		}
 
 		// アクティブ状態別テクスチャ

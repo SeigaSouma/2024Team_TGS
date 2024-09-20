@@ -34,7 +34,7 @@ public:
 	//=============================
 	void Kill();	// çÌèú
 	std::vector<CObjectX*> GetInfo() { return m_BaggageInfo; }
-	void Regist(CObjectX* pObj) { m_BaggageInfo.push_back(pObj); }
+	void Regist(CObjectX* pObj);
 	void Reset() { m_BaggageInfo.clear();}
 	void Erase(CObjectX* pObj) 
 	{ 
