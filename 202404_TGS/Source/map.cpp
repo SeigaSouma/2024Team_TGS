@@ -59,8 +59,8 @@ HRESULT MyMap::Create(const char *pTextFile)
 	mapdate::nNumObjXAll = 0;
 	mapdate::nNumObj3DMeshAll = 0;
 
-	memset(&mapdate::pObjX[0], 0, sizeof(mapdate::pObjX));
-	memset(&mapdate::pObj3DMesh[0], 0, sizeof(mapdate::pObj3DMesh));	// オブジェクト3Dメッシュ
+	memset(mapdate::pObjX, 0, sizeof(mapdate::pObjX));
+	memset(mapdate::pObj3DMesh, 0, sizeof(mapdate::pObj3DMesh));	// オブジェクト3Dメッシュ
 	ModelIdx.clear();
 	ModelFile.clear();		// モデルファイル名
 

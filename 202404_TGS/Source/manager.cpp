@@ -471,12 +471,16 @@ void CManager::Reset(CScene::MODE mode)
 	{
 		// 終了処理
 		m_pScene->Uninit();
+		m_pScene->Kill();
 		delete m_pScene;
 		m_pScene = nullptr;
 	}
 
 	// 全てのオブジェクト破棄
 	CObject::ReleaseAll();
+
+	// マップ
+	//MyMap::Release();
 
 	// ポーズ状況入れ替え
 	if (m_pPause != nullptr)
@@ -517,6 +521,13 @@ CScene::MODE CManager::GetMode()
 //==========================================================================
 void CManager::Uninit()
 {
+	if (m_pScene != nullptr)
+	{// メモリの確保が出来ていたら
+
+		// 終了処理
+		m_pScene->Kill();
+	}
+
 	// 全てのオブジェクト破棄
 	CObject::ReleaseAll();
 

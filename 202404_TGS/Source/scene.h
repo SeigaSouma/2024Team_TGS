@@ -45,6 +45,8 @@ public:
 	virtual void Update();
 	virtual void Draw();
 
+	virtual void Kill();
+
 	void ResetScene();	// シーンのリセット
 	static CScene *Create(MODE mode);
 	static CElevation *GetElevation();	// オブジェクト3Dの取得
