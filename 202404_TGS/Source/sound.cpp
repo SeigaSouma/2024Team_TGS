@@ -65,6 +65,7 @@ CSound::SOUNDINFO CSound::m_aSoundInfo[LABEL_MAX] =
 	{ TYPE_SE,"data/SE/awesome.wav", 0 },
 	{ TYPE_SE,"data/BGM/goal.wav", -1 },
 	{ TYPE_SE,"data/SE/select.wav", 0 },
+	{ TYPE_SE,"data/SE/diction.wav", 0 },
 
 
 };	// ƒTƒEƒ“ƒh‚Ìî•ñ

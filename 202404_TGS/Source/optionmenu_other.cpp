@@ -289,11 +289,17 @@ void COptionMenu_Other::StateEdit()
 	{
 		// 変更のフラグ切り替え
 		m_bNowChange = m_bNowChange ? false : true;
+
+		// SE再生
+		CSound::GetInstance()->PlaySound(CSound::LABEL_SE_DICTION);
 	}
 	else if (pKeyConfigPad->GetTrigger(INGAME::ACT_BACK) ||
 		pKeyConfigKey->GetTrigger(INGAME::ACT_BACK))
 	{
 		m_bNowChange = false;
+
+		// SE再生
+		CSound::GetInstance()->PlaySound(CSound::LABEL_SE_DICTION);
 	}
 
 	// 変更中のみ切り替え
@@ -304,6 +310,8 @@ void COptionMenu_Other::StateEdit()
 			pKey->GetTrigger(DIK_D))
 		{// 切り替え
 			m_switchInfo[m_selectType].active = m_switchInfo[m_selectType].active ? Active::ON : Active::OFF;
+			
+			// SE再生
 			CSound::GetInstance()->PlaySound(CSound::LABEL_SE_SELECT);
 		}
 		else if ((pPad->GetLStickTrigger(CInputGamepad::STICK::STICK_X) && pPad->GetStickMoveL(0).x < 0) ||
