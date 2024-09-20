@@ -42,7 +42,7 @@ namespace
 		"data\\TEXT\\map\\info.txt",	// ランキング
 	};
 	
-	const char* ELEVATION_TEXT = "data\\TEXT\\elevation\\field_mountain.txt";
+	const char* ELEVATION_TEXT = "data\\TEXT\\elevation\\field_ingame.txt";
 }
 
 #if 1
@@ -62,7 +62,6 @@ CScene::CScene()
 	// 変数のクリア
 	m_mode = MODE_TITLE;
 	m_pEditMap = nullptr;
-	m_pEdit = nullptr;	// エディター
 }
 
 //==========================================================================
@@ -194,18 +193,7 @@ void CScene::Uninit()
 //==========================================================================
 void CScene::Update()
 {
-	// 生成
-	if (m_pEdit == nullptr)
-	{
-		m_pEdit = CEdit::Create(CGame::EditType::EDITTYPE_MAP);
-	}
-
-	if (m_pEdit != nullptr)
-	{
-		m_pEdit->Update();
-	}
-
-
+	
 }
 
 //==========================================================================
@@ -235,6 +223,7 @@ void CScene::ResetScene()
 	if (m_pEditMap != nullptr)
 	{
 		m_pEditMap->Uninit();
+		delete m_pEditMap;
 		m_pEditMap = nullptr;
 	}
 

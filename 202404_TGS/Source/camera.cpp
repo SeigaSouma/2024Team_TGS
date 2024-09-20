@@ -39,7 +39,6 @@
 #define MIN_ROT			(-D3DX_PI * 0.49f)	// カメラ固定用
 #define MAX_ROT			(D3DX_PI * 0.49f)	// カメラ固定用
 #define BACKFOLLOW_TIME	(20)				// 背面補正までの時間
-#define TITLE_POSR_DEST	(MyLib::Vector3(321.91f, 160.74f, -296.28f))
 #define TITLESTATE_CHANGE	(60 * 14)
 #define TITLESTATE_CHASE	(60 * 20)
 #define RESULT_LEN	(500.0f)
@@ -54,11 +53,12 @@
 
 namespace
 {
+	const MyLib::Vector3 TITLE_POSR_DEST = MyLib::Vector3(45271.0f, -34.0f, 591.0f);
 	//const MyLib::Vector3 DEFAULT_GAMEROT = MyLib::Vector3(0.0f, 0.0f, -0.10f);	// ゲームのデフォルト向き
-	const MyLib::Vector3 DEFAULT_TITLEROT = MyLib::Vector3(0.0f, 0.0f, -0.15f);	// タイトルのデフォルト向き
+	const MyLib::Vector3 DEFAULT_TITLEROT = MyLib::Vector3(0.0f, 0.67f, -0.08f);	// タイトルのデフォルト向き
 	const MyLib::Vector3 DEFAULT_RESULTROT = MyLib::Vector3(0.0f, 0.0f, -0.15f);	// タイトルのデフォルト向き
 	const MyLib::Vector3 DEFAULT_GAMEROT = MyLib::Vector3(0.0f, 0.38f, -0.05f);	// ゲームのデフォルト向き
-	const float DEFAULT_TITLELEN = 680.0f;	// タイトルのデフォルト長さ
+	const float DEFAULT_TITLELEN = 1265.0f;	// タイトルのデフォルト長さ
 	const float MULTIPLY_POSV_CORRECTION = 2.1f;	// (ゲーム時)視点の補正係数倍率
 	const float MULTIPLY_POSR_CORRECTION = 2.1f;	// (ゲーム時)注視点の補正係数倍率
 	const float DISATNCE_POSR_PLAYER = 0.0f;		// (ゲーム時)プレイヤーとの注視点距離
@@ -427,6 +427,7 @@ void CCamera::MoveCameraMouse()
 		SetCameraR();
 	}
 	else if (
+		!m_pCameraMotion->IsEdit() &&
 		pInputMouse->GetPress(CInputMouse::BUTTON_LEFT) &&
 		!pInputKeyboard->GetPress(DIK_LALT))
 	{// 左クリック移動
@@ -1558,7 +1559,7 @@ void CCamera::ResetTitle()
 	m_fDistanceCorrection = 0;							// 距離の慣性補正係数
 	m_fDistanceDecrementValue = 0.0f;					// 距離の減少係数
 	m_fHeightMaxDest = 0.0f;							// カメラの最大高さの目標
-	m_bFollow = true;									// 追従フラグ
+	m_bFollow = false;									// 追従フラグ
 }
 
 //==========================================================================

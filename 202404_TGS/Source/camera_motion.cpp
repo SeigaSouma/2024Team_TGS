@@ -298,6 +298,9 @@ void CCameraMotion::Uninit()
 		m_pCameraMotion_Trigger[i] = nullptr;
 	}
 
+	m_vecMotionInfo.clear();
+	m_MotionFileName.clear();
+
 	delete this;
 }
 

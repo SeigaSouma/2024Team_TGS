@@ -794,7 +794,7 @@ void CBaggage::UIDraw()
 bool CBaggage::Hit()
 {
 #ifndef DEBUG
-	//return false;
+	return false;
 #endif // DEBUG
 
 	
@@ -893,6 +893,7 @@ void CBaggage::Reset()
 	m_bHit = false;
 	m_bEnd = false;
 	m_bLand = false;
+	m_bfall = false;
 	m_velorot = MyLib::Vector3(0.0f, 0.0f, 0.0f);
 	m_fDeviation = 0.0f;
 	m_fStateTimer = 0.0f;

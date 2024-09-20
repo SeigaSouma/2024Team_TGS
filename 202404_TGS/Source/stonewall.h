@@ -28,6 +28,7 @@ public:
 	virtual void BindVtxPosition() override;	// 頂点座標割り当て
 
 	std::vector<MyLib::Vector3> GetVecTopPosition() { return m_vecTopPosition; }	// 頂上の位置取得
+	virtual void DispPoint();	// 点表示
 
 	static CStoneWall *Create();	// 生成
 

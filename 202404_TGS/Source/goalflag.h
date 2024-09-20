@@ -62,11 +62,17 @@ private:
 	void SampleWho();	// フー
 	void SampleWao();	// ワオ
 
+	// その他
+	void Swing();	// 揺れ
+
 	//=============================
 	// メンバ変数
 	//=============================
+	bool m_bClear;					// クリア
 	float m_fStateTime;				// 状態カウンター
 	Sample m_state;					// 状態
+	MyLib::Vector3 m_DestRot_Old;	// 目標の向き
+	MyLib::Vector3 m_DestRot;		// 目標の向き
 	static CListManager<CGoalflagX> m_List;	// リスト
 
 };

@@ -63,6 +63,10 @@
 #include "leaf_flow.h"
 #include "controlkeydisp.h"
 
+#if _DEBUG
+#include "stagecleartext.h"
+#include "goalgametext.h"
+#endif
 namespace
 {
 	const float RATIO_SETGOAL = 0.825f;	// ƒS[ƒ‹Ý’u‚ÌŠ„‡
@@ -352,6 +356,7 @@ void CGame::Uninit()
 	if (m_pTimer != nullptr)
 	{
 		// I—¹ˆ—
+		CResultManager::SetClearTime(m_pTimer->GetTime());
 		m_pTimer->Uninit();
 		m_pTimer = nullptr;
 	}
@@ -618,6 +623,16 @@ void CGame::Update()
 			CLeaf::Create(MyLib::Vector3(-500.0f, 10.0f, UtilFunc::Transformation::Random(-300, 300)), CLeaf::Type::TYPE_FLOW);
 		}
 
+		if (ImGui::Button("CStageClearText"))
+		{
+			CStageClearText::Create(MyLib::Vector3(640.0f, 400.0f, 0.0f));
+		}
+
+		if (ImGui::Button("CGoalGameText"))
+		{
+			CGoalGameText::Create();
+		}
+
 		ImGui::TreePop();
 	}
 
@@ -706,6 +721,12 @@ void CGame::ChangeEdit()
 					m_EditType = static_cast<EditType>(selectedItem);
 
 					// ¶¬
+					if (m_pEdit != nullptr)
+					{
+						m_pEdit->Uninit();
+						m_pEdit = nullptr;
+					}
+
 					m_pEdit = CEdit::Create(m_EditType);
 				}
 			}

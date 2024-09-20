@@ -156,6 +156,12 @@
     <Filter Include="direction\selectdraw">
       <UniqueIdentifier>{39678907-4341-4d1a-9e0e-73a4bd4b8b2c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="direction\environment">
+      <UniqueIdentifier>{36289781-538c-4851-b055-f7d843794c23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="direction\goalgame">
+      <UniqueIdentifier>{b57d6cd1-5d88-4e66-847f-31821740f1e4}</UniqueIdentifier>
+    </Filter>
     <Filter Include="lostrssmanager">
       <UniqueIdentifier>{28071454-2189-45fa-94c3-5874bdcb4372}</UniqueIdentifier>
     </Filter>
@@ -767,9 +773,6 @@
     <ClCompile Include="Source\title_optionselect.cpp">
       <Filter>mode\title</Filter>
     </ClCompile>
-    <ClCompile Include="Source\keyconfig_setting.cpp">
-      <Filter>mode\title\option</Filter>
-    </ClCompile>
     <ClCompile Include="Source\optionmenu.cpp">
       <Filter>mode\title\option</Filter>
     </ClCompile>
@@ -784,6 +787,24 @@
     </ClCompile>
     <ClCompile Include="Source\optionmenu_keyconfig.cpp">
       <Filter>mode\title\option</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\optionmenu_other.cpp">
+      <Filter>mode\title\option</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\rankingItem.cpp">
+      <Filter>mode\ranking</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\rankingItem_top3.cpp">
+      <Filter>mode\ranking</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\course_title.cpp">
+      <Filter>map\course</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\environment.cpp">
+      <Filter>direction\environment</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\goalgametext.cpp">
+      <Filter>direction\goalgame</Filter>
     </ClCompile>
     <ClCompile Include="Source\lostrssmanager.cpp">
       <Filter>lostrssmanager</Filter>
@@ -1405,9 +1426,6 @@
     <ClInclude Include="Source\title_optionselect.h">
       <Filter>mode\title</Filter>
     </ClInclude>
-    <ClInclude Include="Source\keyconfig_setting.h">
-      <Filter>mode\title\option</Filter>
-    </ClInclude>
     <ClInclude Include="Source\optionmenu.h">
       <Filter>mode\title\option</Filter>
     </ClInclude>
@@ -1422,6 +1440,24 @@
     </ClInclude>
     <ClInclude Include="Source\optionmenu_keyconfig.h">
       <Filter>mode\title\option</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\optionmenu_other.h">
+      <Filter>mode\title\option</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\rankingItem_top3.h">
+      <Filter>mode\ranking</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\rankingItem.h">
+      <Filter>mode\ranking</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\course_title.h">
+      <Filter>map\course</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\environment.h">
+      <Filter>direction\environment</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\goalgametext.h">
+      <Filter>direction\goalgame</Filter>
     </ClInclude>
     <ClInclude Include="Source\lostrssmanager.h">
       <Filter>lostrssmanager</Filter>

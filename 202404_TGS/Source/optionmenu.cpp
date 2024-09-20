@@ -14,6 +14,7 @@
 // ”h¶æ
 #include "optionmenu_sound.h"
 #include "optionmenu_keyconfig.h"
+#include "optionmenu_other.h"
 
 //==========================================================================
 // ’è”’è‹`
@@ -77,7 +78,7 @@ COptionMenu* COptionMenu::Create(CTitle_OptionSelect::Select selectType)
 		break;
 
 	case CTitle_OptionSelect::SELECT_OTHER:
-		pObj = DEBUG_NEW COptionMenu;
+		pObj = DEBUG_NEW COptionMenu_Other;
 		break;
 
 	default:
@@ -179,7 +180,7 @@ void COptionMenu::StateFadeIn()
 	// ŽžŠÔŒo‰ß
 	if (m_fStateTimer >= StateTime::FADE)
 	{
-		SetState(STATE::STATE_EDIT);
+		SetState(STATE::STATE_NONE);
 	}
 }
 

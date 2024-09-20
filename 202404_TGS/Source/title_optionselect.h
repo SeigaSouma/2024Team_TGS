@@ -94,6 +94,7 @@ private:
 	// その他
 	void CreateSelect();		// 選択肢生成
 	void ChangeOptionMenu();	// オプションメニュー切り替え
+	void ResetSelect();			// 選択肢リセット
 
 	//=============================
 	// メンバ変数

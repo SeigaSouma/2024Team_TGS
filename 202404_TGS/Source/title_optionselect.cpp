@@ -14,7 +14,6 @@
 #include "sound.h"
 #include "object2D.h"
 #include "scroll.h"
-#include "keyconfig_setting.h"
 #include "optionmenu.h"
 
 //==========================================================================
@@ -22,10 +21,14 @@
 //==========================================================================
 namespace
 {
-	const std::string TEXTURE_ROLL = "data\\TEXTURE\\scroll\\scroll_roll.png";		// ロール部分のテクスチャ
-	const std::string TEXTURE_PAPER = "data\\TEXTURE\\scroll\\scroll_paper.png";	// 紙部分のテクスチャ
-	const std::string TEXTURE_EDGE = "data\\TEXTURE\\scroll\\scroll_edge.png";		// 端部分のテクスチャ
-	const float SIZE_Y = 80.0f;	// 基準サイズY
+	const std::string TEXTURE[] =	// 紙部分のテクスチャ
+	{
+		"data\\TEXTURE\\option\\selection_01.png",
+		"data\\TEXTURE\\option\\selection_02.png",
+		"data\\TEXTURE\\option\\selection_03.png",
+	};
+	const float SIZE_X = 100.0f;	// 基準サイズX
+	const float DISTANCE_Y = 150.0f;	// Yの間隔
 }
 
 namespace StateTime	// 状態別時間
@@ -57,7 +60,8 @@ CTitle_OptionSelect::CTitle_OptionSelect(int nPriority) : CObject(nPriority)
 	m_state = STATE::STATE_NONE;			// 状態
 	m_fStateTimer = 0.0f;					// 状態タイマー
 	m_select = Select::SELECT_KEYKONFIG;	// 選択肢
-	
+	m_Oldselect = Select::SELECT_KEYKONFIG;	// 前回の選択肢
+
 	memset(m_pSelect, 0, sizeof(m_pSelect));	// 選択肢のオブジェクト
 	m_pScroll = nullptr;					// 巻き物
 	m_pOptionMenu = nullptr;				// オプションメニュー
@@ -133,14 +137,14 @@ void CTitle_OptionSelect::CreateSelect()
 		pObj2D->SetType(CObject::TYPE::TYPE_OBJECT2D);
 
 		// テクスチャ設定
-		int texID = pTexture->Regist(TEXTURE_ROLL);
+		int texID = pTexture->Regist(TEXTURE[i]);
 		pObj2D->BindTexture(texID);
 
 		// サイズ設定
 		D3DXVECTOR2 size = pTexture->GetImageSize(texID);
 
 		// 縦幅を元にサイズ設定
-		size = UtilFunc::Transformation::AdjustSizeByHeight(size, SIZE_Y);
+		size = UtilFunc::Transformation::AdjustSizeByWidth(size, SIZE_X);
 		pObj2D->SetSize(size);
 		pObj2D->SetSizeOrigin(size);
 
@@ -149,7 +153,8 @@ void CTitle_OptionSelect::CreateSelect()
 
 
 		// 位置設定
-		pObj2D->SetPosition(pos + MyLib::Vector3(0.0f, (SIZE_Y * 2.0f) * i, 0.0f));
+		pObj2D->SetPosition(pos + MyLib::Vector3(0.0f, DISTANCE_Y * i, 0.0f));
+		pObj2D->SetOriginPosition(pObj2D->GetPosition());
 	}
 }
 
@@ -223,6 +228,9 @@ void CTitle_OptionSelect::StateScrollWait()
 	// スクロール終了
 	if (m_pScroll->GetState() == CScroll::STATE::STATE_WAIT)
 	{
+		// オプションメニュー切り替え
+		ChangeOptionMenu();
+
 		SetState(STATE::STATE_FADEIN);
 	}
 }
@@ -242,6 +250,8 @@ void CTitle_OptionSelect::StateScrollWait_Close()
 		m_pScroll = nullptr;
 	}
 
+	// 前回の選択肢へ戻す
+	m_select = m_Oldselect;
 
 	// タイトル取得
 	CTitle* pTitle = CTitle::GetInstance();
@@ -270,6 +280,7 @@ void CTitle_OptionSelect::StateSelect()
 		pKey->GetTrigger(DIK_W))
 	{
 		// パターンNo.を更新
+		m_Oldselect = m_select;
 		m_select = static_cast<Select>((m_select + (Select::SELECT_MAX - 1)) % Select::SELECT_MAX);
 
 		// オプションメニュー切り替え
@@ -282,6 +293,7 @@ void CTitle_OptionSelect::StateSelect()
 		pKey->GetTrigger(DIK_S))
 	{
 		// パターンNo.を更新
+		m_Oldselect = m_select;
 		m_select = static_cast<Select>(((int)m_select + 1) % Select::SELECT_MAX);
 
 		// オプションメニュー切り替え
@@ -294,6 +306,7 @@ void CTitle_OptionSelect::StateSelect()
 		pPad->GetTrigger(CInputGamepad::BUTTON::BUTTON_RIGHT, 0) ||
 		pKey->GetTrigger(DIK_D))
 	{
+		m_Oldselect = m_select;
 		m_select = Select::SELECT_MAX;
 
 		// 編集状態
@@ -304,10 +317,17 @@ void CTitle_OptionSelect::StateSelect()
 		{
 			m_pOptionMenu->SetState(COptionMenu::STATE::STATE_EDIT);
 		}
+
+		// SE再生
+		CSound::GetInstance()->PlaySound(CSound::LABEL_SE_DICTION);
 	}
 
 	// 選択肢に戻る設定
 	SetBackSelect();
+
+	// 選択肢リセット
+	ResetSelect();
+
 }
 
 //==========================================================================
@@ -318,6 +338,16 @@ void CTitle_OptionSelect::StateEdit()
 	// 入力情報取得
 	CInputKeyboard* pKey = CInputKeyboard::GetInstance();
 	CInputGamepad* pPad = CInputGamepad::GetInstance();
+
+	if (m_pOptionMenu != nullptr &&
+		m_pOptionMenu->IsNowChange())
+	{// 変更中
+		return;
+	}
+
+
+	// 選択肢に戻る設定
+	SetBackSelect();
 
 	// 選択肢へ
 	if ((pPad->GetLStickTrigger(CInputGamepad::STICK::STICK_X) && pPad->GetStickMoveL(0).x < 0) ||
@@ -335,6 +365,9 @@ void CTitle_OptionSelect::StateEdit()
 		{
 			m_pOptionMenu->SetState(COptionMenu::STATE::STATE_NONE);
 		}
+
+		// SE再生
+		CSound::GetInstance()->PlaySound(CSound::LABEL_SE_DICTION);
 	}
 }
 
@@ -379,6 +412,32 @@ void CTitle_OptionSelect::StateFadeOut()
 }
 
 //==========================================================================
+// 選択肢リセット
+//==========================================================================
+void CTitle_OptionSelect::ResetSelect()
+{
+	for (int i = 0; i < Select::SELECT_MAX; i++)
+	{
+		CObject2D* pObj2D = m_pSelect[i];
+
+		D3DXCOLOR setcol = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+		MyLib::Vector3 setpos = pObj2D->GetOriginPosition();
+		if (i != m_select)
+		{// 選択肢以外は黒
+			setcol = D3DXCOLOR(0.4f, 0.4f, 0.4f, 1.0f);
+		}
+		else
+		{// 選択肢は横突き出し
+			setpos.x += 20.0f;
+		}
+
+		setcol.a = pObj2D->GetAlpha();
+		pObj2D->SetColor(setcol);
+		pObj2D->SetPosition(setpos);
+	}
+}
+
+//==========================================================================
 // 描画処理
 //==========================================================================
 void CTitle_OptionSelect::Draw()
@@ -414,7 +473,11 @@ void CTitle_OptionSelect::SetBackSelect()
 		pTitle->SetSceneType(CTitle::SCENETYPE::SCENETYPE_NONE);
 
 		// キーコンフィグ取得
-		pTitle->GetSetting()->Uninit();
+		if (m_pOptionMenu != nullptr)
+		{
+			m_pOptionMenu->Kill();
+			m_pOptionMenu = nullptr;
+		}
 		pTitle->SetSetting(nullptr);
 
 
@@ -436,7 +499,8 @@ void CTitle_OptionSelect::ChangeOptionMenu()
 
 	// 選択中のオプションを生成
 	m_pOptionMenu = COptionMenu::Create(m_select);
-
+	// サウンド再生
+	CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_SELECT);
 }
 
 //==========================================================================

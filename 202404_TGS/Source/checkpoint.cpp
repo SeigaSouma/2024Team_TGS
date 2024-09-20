@@ -21,9 +21,23 @@ namespace
 {
 	const char* MODEL = "data\\MODEL\\checkpoint\\flag.x";	// モデルパス
 	const std::string TEX_EFFECT = "data\\TEXTURE\\effect\\rolling2.png";	// エフェクトパス
-	const float ROTATE_TIMER = 0.6f;
 	const ImVec4 WATERCOLOR = ImVec4(0.658f, 0.658f, 1.0, 0.87f); // RGBA
 }
+
+namespace StateTime
+{
+	const float SWING = 2.0f;	// ゆらゆら
+	const float ROTATE = 0.6f;	// 回転
+}
+
+//==========================================================================
+// 関数ポインタ
+//==========================================================================
+CCheckpoint::STATE_FUNC CCheckpoint::m_StateFunc[] =
+{
+	&CCheckpoint::StateSwing,	// ゆらゆら
+	&CCheckpoint::StateRotate,	// 回転
+};
 
 //==========================================================================
 // 静的メンバ変数
@@ -38,13 +52,14 @@ int CCheckpoint::m_nSaveID = 0;
 CCheckpoint::CCheckpoint(int nPriority) : CObjectX(nPriority)
 {
 	// 値のクリア
-	m_fStateTime = 0.0f;	// 状態カウンター
 	m_fLength = 0.0f;
-	m_fPassedTime = 0.0f;
 	m_bIsPassed = false;
-	m_fRotateTime = 0.0f;
+	m_state = State::SWING;	// 状態
+	m_fStateTime = 0.0f;	// 状態カウンター
+	m_fPassedTime = 0.0f;
 	m_pEffect = nullptr;		// エフェクトのポインタ
 	m_pEffekseerObj = nullptr;	// エフェクシアのオブジェクト
+	m_MyIndex = 0;
 }
 
 //==========================================================================
@@ -99,6 +114,11 @@ HRESULT CCheckpoint::Init()
 		return E_FAIL;
 	}
 
+	// ゆらゆらの向き設定
+	m_DestRot.x = UtilFunc::Transformation::Random(-110, 110) * 0.001f;
+	m_DestRot.y = UtilFunc::Transformation::Random(-110, 110) * 0.001f;
+	m_DestRot.z = UtilFunc::Transformation::Random(40, 80) * 0.001f;
+
 	return S_OK;
 }
 
@@ -108,7 +128,10 @@ HRESULT CCheckpoint::Init()
 void CCheckpoint::CreateEffect()
 {
 	// エフェクト生成
-	m_pEffect = CObjectBillboard::Create(GetPosition(), 0.0f);
+	if (m_pEffect == nullptr)
+	{
+		m_pEffect = CObjectBillboard::Create(GetPosition(), 0.0f);
+	}
 	m_pEffect->SetType(CObject::TYPE::TYPE_OBJECTBILLBOARD);
 
 	// テクスチャ設定
@@ -164,59 +187,22 @@ void CCheckpoint::Kill()
 //==========================================================================
 void CCheckpoint::Update()
 {
+	// 状態タイマー加算
+	m_fStateTime += CManager::GetInstance()->GetDeltaTime();
+
+	// 状態別更新
+	(this->*(m_StateFunc[m_state]))();
+
+
 	// 通過済みなら処理しない
-	if (m_bIsPassed)
-	{
-		// 回転時間加算
-		m_fRotateTime += CManager::GetInstance()->GetDeltaTime();
-
-
-		if (m_fRotateTime <= ROTATE_TIMER * 0.5f)
-		{
-			// 水エフェクト生成
-			CreateWaterEffect(4);
-		}
-		else if(m_pEffekseerObj == nullptr)
-		{
-			// エフェクト
-			m_pEffekseerObj = CEffekseerObj::Create(
-				CMyEffekseer::EFKLABEL::EFKLABEL_WATERJUMP,
-				GetPosition() + MyLib::Vector3(300.0f, 0.0f, 0.0f), 0.0f, 0.0f, 60.0f, true);
-
-			// しぶき生成
-			CSplashwater_Manager::Create();
-		}
-
-
-		// 回転
-		MyLib::Vector3 rot = GetRotation();
-		rot.z = UtilFunc::Correction::EasingEaseIn(0.0f, -D3DX_PI, 0.0f, ROTATE_TIMER, m_fRotateTime);
-		SetRotation(rot);
-
-		// エフェクト回転
-		MyLib::Vector3 effectRot = m_pEffect->GetRotation();
-		effectRot.z += UtilFunc::Correction::EasingLinear(0.0f, D3DX_PI * 0.5f, 0.0f, ROTATE_TIMER, m_fRotateTime);
-		m_pEffect->SetRotation(effectRot);
-
-		// エフェクト不透明度
-		float alpha = UtilFunc::Correction::EasingEaseOut(0.7f, 0.0f, 0.0f, ROTATE_TIMER, m_fRotateTime);
-		m_pEffect->SetAlpha(alpha);
-		return;
-	}
-
-	// 位置情報取得
-	float playerlen = 0.0f;
+	if (m_bIsPassed) return;
 
 	// リストループ
 	CListManager<CPlayer> PlayerList = CPlayer::GetListObj();
-	CPlayer* pObj = nullptr;
-	while (PlayerList.ListLoop(&pObj))
-	{
-		// プレイヤーの位置情報取得
-		playerlen = pObj->GetMoveLength();
-	}
+	CPlayer* pPlayer = PlayerList.GetData(0);
+	float playerlen = pPlayer->GetPosition().x;
 
-	if (playerlen >= m_fLength)
+	if (playerlen >= GetPosition().x)
 	{// チェックポイント通過したら
 
 		if (m_nSaveID < m_MyIndex)
@@ -225,15 +211,99 @@ void CCheckpoint::Update()
 			m_nSaveID = m_MyIndex;
 
 			// 通過した時間を保存
-			m_fRotateTime = 0.0f;
 			m_fPassedTime = CTimer::GetInstance()->GetTime();
 			m_bIsPassed = true;
+
+			// 状態設定
+			m_state = State::ROTATE;
+			m_fStateTime = 0.0f;
 
 			// SE再生
 			CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_KARAKURI);
 
 			// エフェクト作成
 			CreateEffect();
+		}
+	}
+}
+
+//==========================================================================
+// ゆらゆら
+//==========================================================================
+void CCheckpoint::StateSwing()
+{
+	MyLib::Vector3 rot = GetRotation();
+
+	// サインカーブ補間
+	float ratio = UtilFunc::Correction::EasingEaseInOutSine(0.0f, 1.0f, 0.0f, StateTime::SWING, m_fStateTime);
+	rot = m_DestRot_Old + (m_DestRot - m_DestRot_Old) * ratio;
+	SetRotation(rot);
+
+	if (m_fStateTime >= StateTime::SWING)
+	{
+		m_fStateTime = 0.0f;
+
+		// 過去の向き保存
+		m_DestRot_Old = m_DestRot;
+
+		// 目標の向き設定
+		m_DestRot.x = UtilFunc::Transformation::Random(-110, 110) * 0.001f;
+		m_DestRot.y = UtilFunc::Transformation::Random(-110, 110) * 0.001f;
+		m_DestRot.z *= -1;
+	}
+}
+
+//==========================================================================
+// 回転
+//==========================================================================
+void CCheckpoint::StateRotate()
+{
+	if (m_fStateTime <= StateTime::ROTATE * 0.5f)
+	{
+		// 水エフェクト生成
+		CreateWaterEffect(4);
+	}
+	else if (m_pEffekseerObj == nullptr)
+	{
+		// エフェクト
+		m_pEffekseerObj = CEffekseerObj::Create(
+			CMyEffekseer::EFKLABEL::EFKLABEL_WATERJUMP,
+			GetPosition() + MyLib::Vector3(300.0f, 0.0f, 0.0f), 0.0f, 0.0f, 60.0f, true);
+
+		// しぶき生成
+		CSplashwater_Manager::Create();
+	}
+
+
+	// 回転
+	MyLib::Vector3 rot = GetRotation();
+	rot.z = UtilFunc::Correction::EasingEaseIn(0.0f, -D3DX_PI, 0.0f, StateTime::ROTATE, m_fStateTime);
+	SetRotation(rot);
+
+	// エフェクト回転
+	MyLib::Vector3 effectRot = m_pEffect->GetRotation();
+	effectRot.z += UtilFunc::Correction::EasingLinear(0.0f, D3DX_PI * 0.5f, 0.0f, StateTime::ROTATE, m_fStateTime);
+	m_pEffect->SetRotation(effectRot);
+
+	// エフェクト不透明度
+	float alpha = UtilFunc::Correction::EasingEaseOut(0.7f, 0.0f, 0.0f, StateTime::ROTATE, m_fStateTime);
+	m_pEffect->SetAlpha(alpha);
+
+	// 時間経過
+	if (m_fStateTime >= StateTime::ROTATE)
+	{
+		m_state = State::SWING;
+		m_fStateTime = 0.0f;
+
+		// ゆらゆらの向き設定
+		m_DestRot.x = UtilFunc::Transformation::Random(-110, 110) * 0.001f;
+		m_DestRot.y = UtilFunc::Transformation::Random(-110, 110) * 0.001f;
+		m_DestRot.z = UtilFunc::Transformation::Random(40, 80) * 0.001f;
+
+		if (m_pEffect != nullptr)
+		{
+			m_pEffect->Uninit();
+			m_pEffect = nullptr;
 		}
 	}
 }
@@ -358,4 +428,25 @@ void CCheckpoint::Load(const std::string filename)
 
 	// ファイルを閉じる
 	File.close();
+}
+
+//==========================================================================
+// チェックポイント通過情報リセット
+//==========================================================================
+void CCheckpoint::ResetSaveID()
+{
+	m_nSaveID = -1;
+
+	// リストループ
+	std::list<CCheckpoint*>::iterator itr = m_List.GetEnd();
+	CCheckpoint* pObj = nullptr;
+
+	while (m_List.ListLoop(itr))
+	{
+		pObj = (*itr);
+		pObj->m_bIsPassed = false;
+		pObj->m_fPassedTime = 0.0f;
+		pObj->SetRotation(0.0f);
+		// pObjか(*itr)を使って処理
+	}
 }

@@ -16,7 +16,12 @@
 #include "titlelogo.h"
 #include "title_pressenter.h"
 #include "camera.h"
-#include "keyconfig_setting.h"
+#include "waterfield.h"
+#include "course.h"
+#include "mapmesh.h"
+#include "stonewall.h"
+#include "peoplemanager.h"
+#include "environment.h"
 
 //==========================================================================
 // 定数定義
@@ -61,6 +66,7 @@ CTitle::CTitle()
 	m_pLogo = nullptr;		// ロゴのポインタ
 	m_pPressEnter = nullptr;	// プレスエンター
 	m_pConfigSetting = nullptr;
+	m_pSpawn_Leaf = nullptr;		// 降る葉生成
 }
 
 //==========================================================================
@@ -121,12 +127,63 @@ HRESULT CTitle::Init()
 	// カメラの初期値設定
 	{
 		CCamera* pCamera = CManager::GetInstance()->GetCamera();
-		pCamera->SetStateCameraV(new CStateCameraV);
-		pCamera->SetRotation(STARTCAMERA::ROT);
-		pCamera->SetPositionR(STARTCAMERA::POSR);
-		pCamera->SetDistance(STARTCAMERA::LENGTH);
-		pCamera->GetCameraMotion()->SetFinish(true);
+		pCamera->SetStateCameraV(DEBUG_NEW CStateCameraV);
 	}
+
+
+	//=============================
+	// コース
+	//=============================
+	CCourse::Create("", CScene::MODE::MODE_TITLE);
+
+	//=============================
+	// 固定平面街フィールド
+	//=============================
+	CMapMesh::Create(CMapMesh::MeshType::TYPE_TOWNFIELD_FIXEDPLANE);
+
+	//=============================
+	// 石垣(奥)
+	//=============================
+	{
+		CStoneWall* pStoneWall = CStoneWall::Create();
+
+		// 基点地点設定
+		std::vector<MyLib::Vector3> vecpos =
+		{
+			MyLib::Vector3(-1500.0f, 0.0f, 3000.0f),
+			MyLib::Vector3(0.0f, 0.0f, 3000.0f),
+			MyLib::Vector3(500.0f, 0.0f, 3000.0f),
+			MyLib::Vector3(2500.0f, 0.0f, 3000.0f),
+		};
+		pStoneWall->SetVecPosition(vecpos);
+		pStoneWall->Reset();
+
+		// 各頂点座標
+		std::vector<MyLib::Vector3> vecVtxpos =
+		{
+			MyLib::Vector3(20000.0f, 0.0f, 2000.0f),
+			MyLib::Vector3(20010.0f, 0.0f, 2000.0f),
+			MyLib::Vector3(90000.0f, 0.0f, 2000.0f),
+			MyLib::Vector3(90010.0f, 0.0f, 2000.0f),
+		};
+		pStoneWall->SetVecVtxPosition(vecVtxpos);
+		pStoneWall->BindVtxPosition();
+	}
+
+	//=============================
+	// 水フィールド
+	//=============================
+	CWaterField::Create(CWaterField::TYPE::TYPE_RIGHT);
+	CWaterField::Create(CWaterField::TYPE::TYPE_LEFT);
+
+	//=============================
+	// 人マネージャ
+	//=============================
+	CPeopleManager::Create(CPeopleManager::Type::TYPE_TITLE);
+
+
+	// 降る葉生成クラス生成
+	m_pSpawn_Leaf = DEBUG_NEW CSpawn_Leaf_Title(0.0f, 0.6f);
 
 	// 成功
 	return S_OK;
@@ -139,6 +196,13 @@ void CTitle::Uninit()
 {
 	m_pThisPtr = nullptr;
 
+	// 降る葉生成クラス
+	if (m_pSpawn_Leaf != nullptr)
+	{
+		delete m_pSpawn_Leaf;
+		m_pSpawn_Leaf = nullptr;
+	}
+
 	// 終了処理
 	CScene::Uninit();
 }
@@ -148,9 +212,14 @@ void CTitle::Uninit()
 //==========================================================================
 void CTitle::Update()
 {
-	CManager::GetInstance()->GetDebugProc()->Print(
-		"現在のモード：【タイトル】\n"
-		"切り替え：【 F 】\n\n");
+	// デルタタイム取得
+	float deltaTime = CManager::GetInstance()->GetDeltaTime();
+
+	// 降る葉生成の更新
+	if (m_pSpawn_Leaf != nullptr)
+	{
+		m_pSpawn_Leaf->Update(deltaTime);
+	}
 
 	if (CManager::GetInstance()->GetFade()->GetState() != CFade::STATE_NONE)
 	{// フェード中は抜ける
@@ -187,7 +256,6 @@ void CTitle::SceneFadeOutLoGo()
 
 	// 不透明度更新
 	float alpha = m_fSceneTime / TIME_FADELOGO;
-	m_pLogo->SetAlpha(alpha);
 
 	// エンターの色
 	m_pPressEnter->SetAlpha(alpha);
@@ -198,7 +266,6 @@ void CTitle::SceneFadeOutLoGo()
 		m_SceneType = SCENETYPE_NONE;
 
 		// 不透明度更新
-		m_pLogo->SetAlpha(1.0f);
 		m_pLogo->Uninit();
 		m_pLogo = nullptr;
 

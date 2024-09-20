@@ -20,6 +20,8 @@
 #include "EffekseerObj.h"
 #include "deadplayer.h"
 #include "suffocation.h"
+#include "goalgametext.h"
+#include "guide.h"
 
 // キーコンフィグ
 #include "keyconfig_keyboard.h"
@@ -46,6 +48,7 @@ namespace
 	const float GOAL_INER = 0.02f;
 	const float GOAL_GRAVITY = -0.7f;
 	const int GOAL_AIRTIMER = 180;
+	const float TIME_GOALWAIT = 2.0f;	// ゴールゲーム中の待機時間
 }
 
 //==========================================================================
@@ -636,7 +639,6 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 					MULTITARGET::OFF_TIMER * multi);
 
 				// コントローラー振動停止
-				pInputGamepad->SetEnableVibration();
 				pInputGamepad->SetVibMulti(0.0f);
 			}
 
@@ -765,7 +767,6 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 		ratio = UtilFunc::Transformation::Clamp(ratio, MIN_RATIO_HEIGHT_BRESS, 1.0f);
 
 		// 振動
-		pInputGamepad->SetEnableVibration();
 		pInputGamepad->SetVibMulti(1.0f * ratio);
 		pInputGamepad->SetVibration(CInputGamepad::VIBRATION_STATE::VIBRATION_STATE_AIR, 0);
 
@@ -918,9 +919,17 @@ void CPlayerControlBaggage::GoalAction(CPlayer* player, CBaggage* pBaggage)
 	if ((m_state == STATE::STATE_WAIT || m_state == STATE::STATE_PRESS) && (pKeyConfigKeyBoard->GetPress(INGAME::ACT_AIR) ||
 		pKeyConfigPad->GetPress(INGAME::ACT_AIR)))
 	{
+		// 待機状態時、遷移
 		if (m_state == STATE::STATE_WAIT)
 		{
 			pCamMotion->SetMotion(CCameraMotion::MOTION::MOTION_GOALBAG, CCameraMotion::EASING::Linear);
+
+			// ガイド削除
+			if (m_pGuide != nullptr)
+			{
+				m_pGuide->Kill();
+				m_pGuide = nullptr;
+			}
 		}
 
 		m_state = STATE::STATE_PRESS;
@@ -933,19 +942,38 @@ void CPlayerControlBaggage::GoalAction(CPlayer* player, CBaggage* pBaggage)
 		}
 	}
 	// 入力されていない
-	else if(!pKeyConfigKeyBoard->GetPress(INGAME::ACT_AIR) ||
+	else if(
+		!pKeyConfigKeyBoard->GetPress(INGAME::ACT_AIR) &&
 		!pKeyConfigPad->GetPress(INGAME::ACT_AIR))
 	{
 		// 状態ごとに設定
 		switch (m_state)
 		{
 		case STATE::STATE_NONE:
-			m_state = STATE::STATE_WAIT;
+
+			// 荷物がおちてカメラモーションも終わり
+			if (pBaggage->GetMove().y == 0.0f && pCamMotion->IsPause())
+			{
+				m_state = STATE::STATE_WAIT;
+
+				// ゴールゲームテキスト生成
+				CGoalGameText::Create();
+			}
 			m_nGoalTimer = GOAL_AIRTIMER;
 			break;
 
 		case STATE::STATE_WAIT:
 			m_nGoalTimer = GOAL_AIRTIMER;
+
+			// ゴールの待機時間加算
+			m_fGoalWaitTimer += CManager::GetInstance()->GetDeltaTime();
+			if (TIME_GOALWAIT <= m_fGoalWaitTimer &&
+				m_pGuide == nullptr)
+			{// 時間経過
+
+				// 操作ガイド生成
+				m_pGuide = CGuide::Create(CGuide::Type::GOAL);
+			}
 			break;
 
 		case STATE::STATE_PRESS:
@@ -1169,7 +1197,7 @@ void CPlayerControlBaggage::Reset(CPlayer* player, CBaggage* pBaggage)
 	MyLib::Vector3 pos = player->GetPosition();
 	MyLib::Vector3 posBaggageOrigin = pBaggage->GetOriginPosition();
 	pBaggage->SetPosition(MyLib::Vector3(pos.x, posBaggageOrigin.y, pos.z));
-	m_state = STATE::STATE_WAIT;
+	m_state = STATE::STATE_NONE;
 
 	if (m_pSuffocation != nullptr)
 	{

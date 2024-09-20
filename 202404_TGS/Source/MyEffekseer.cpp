@@ -93,7 +93,7 @@ HRESULT CMyEffekseer::Init()
 	// Effekseerのオブジェクトはスマートポインタで管理される。変数がなくなると自動的に削除される。
 
 	// エフェクトのマネージャーの作成
-	m_efkManager = ::Effekseer::Manager::Create(8000);
+	m_efkManager = ::Effekseer::Manager::Create(12800);
 
 	// Effekseerのモジュールをセットアップする
 	SetupEffekseerModules(m_efkManager);

@@ -39,7 +39,7 @@ namespace
 COptionMenu_Sound::COptionMenu_Sound(int nPriority) : COptionMenu(nPriority)
 {
 	m_selectType = Select::SELECT_MASTER;	// 選択中の種類
-	m_bChange = false;						// 変更のフラグ
+	m_bNowChange = false;						// 変更のフラグ
 	m_pDrawing = nullptr;		// 選択肢筆
 
 
@@ -133,6 +133,10 @@ HRESULT COptionMenu_Sound::Init()
 
 	// 選択肢筆の初期位置設定
 	m_pDrawing->SetPosition(m_pNumber_Master->GetPosition());
+
+
+	// 選択肢リセット
+	ResetSelect();
 
 	return S_OK;
 }
@@ -257,7 +261,7 @@ void COptionMenu_Sound::StateEdit()
 	CInputKeyboard* pKey = CInputKeyboard::GetInstance();
 	CInputGamepad* pPad = CInputGamepad::GetInstance();
 
-	if (!m_bChange)
+	if (!m_bNowChange)
 	{
 		// サイズリセット
 		{
@@ -282,6 +286,9 @@ void COptionMenu_Sound::StateEdit()
 			// パターンNo.を更新
 			m_selectType = static_cast<Select>((m_selectType + (Select::SELECT_MAX - 1)) % Select::SELECT_MAX);
 			m_pDrawing->SetState(CSelectDraw::State::STATE_DRAWING);
+
+			// サウンド再生
+			CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_WRITING_FINISH);
 		}
 
 		// 下
@@ -292,6 +299,9 @@ void COptionMenu_Sound::StateEdit()
 			// パターンNo.を更新
 			m_selectType = static_cast<Select>(((int)m_selectType + 1) % Select::SELECT_MAX);
 			m_pDrawing->SetState(CSelectDraw::State::STATE_DRAWING);
+
+			// サウンド再生
+			CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_WRITING_FINISH);
 		}
 
 		// 選択肢別音量設定
@@ -323,17 +333,23 @@ void COptionMenu_Sound::StateEdit()
 		pKeyConfigKey->GetTrigger(INGAME::ACT_OK))
 	{
 		// 変更のフラグ切り替え
-		m_bChange = m_bChange ? false : true;
+		m_bNowChange = m_bNowChange ? false : true;
+
+		// SE再生
+		CSound::GetInstance()->PlaySound(CSound::LABEL_SE_DICTION);
 	}
 	else if (pKeyConfigPad->GetTrigger(INGAME::ACT_BACK) ||
 		pKeyConfigKey->GetTrigger(INGAME::ACT_BACK))
 	{
-		m_bChange = false;
+		m_bNowChange = false;
+
+		// SE再生
+		CSound::GetInstance()->PlaySound(CSound::LABEL_SE_DICTION);
 	}
 
 
 	// 変更中のみ音量変更
-	if (m_bChange)
+	if (m_bNowChange)
 	{
 		float fVolume = 1.0f;
 
@@ -375,6 +391,7 @@ void COptionMenu_Sound::StateEdit()
 		{// 増量
 
 			fVolume += 0.1f;
+			pSound->PlaySound(CSound::LABEL_SE_SELECT);
 		}
 		else if ((pPad->GetLStickTrigger(CInputGamepad::STICK::STICK_X) && pPad->GetStickMoveL(0).x < 0) ||
 			pPad->GetTrigger(CInputGamepad::BUTTON::BUTTON_LEFT, 0) ||
@@ -382,6 +399,7 @@ void COptionMenu_Sound::StateEdit()
 		{// 減少
 
 			fVolume -= 0.1f;
+			pSound->PlaySound(CSound::LABEL_SE_SELECT);
 		}
 
 		// 選択肢別音量設定
@@ -408,4 +426,58 @@ void COptionMenu_Sound::StateEdit()
 	m_pNumber_Master->SetValue(pSound->GetVolumeNum() / 2);
 	m_pNumber_SE->SetValue(pSound->GetVolumeNum(CSound::TYPE::TYPE_SE) / 2);
 	m_pNumber_BGM->SetValue(pSound->GetVolumeNum(CSound::TYPE::TYPE_BGM) / 2);
+
+	// 選択肢リセット
+	ResetSelect();
+}
+
+
+//==========================================================================
+// 選択肢リセット
+//==========================================================================
+void COptionMenu_Sound::ResetSelect()
+{
+	// 選択状況に応じたサイズ変更
+	for (int i = 0; i < Select::SELECT_MAX; i++)
+	{
+		D3DXVECTOR2 setsize = m_pNumber_Master->GetSizeOrigin();
+		D3DXCOLOR setcol = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+
+		if (m_bNowChange &&
+			i == m_selectType)
+		{// 選択中は拡大
+			setsize *= MULTIPLY_SELECT;
+		}
+
+		if (i != m_selectType)
+		{// 選択外は暗く
+			setcol = D3DXCOLOR(0.4f, 0.4f, 0.4f, 1.0f);
+		}
+
+
+		// 選択肢別音量取得
+		switch (i)
+		{
+		case COptionMenu_Sound::SELECT_MASTER:
+			m_pNumber_Master->SetSize(setsize);
+			m_pNumber_Master->SetColor(setcol);
+			break;
+
+		case COptionMenu_Sound::SELECT_SE:
+			m_pNumber_SE->SetSize(setsize);
+			m_pNumber_SE->SetColor(setcol);
+			break;
+
+		case COptionMenu_Sound::SELECT_BGM:
+			m_pNumber_BGM->SetSize(setsize);
+			m_pNumber_BGM->SetColor(setcol);
+			break;
+
+		default:
+			break;
+		}
+
+		// テキストの色設定
+		m_pText[i]->SetColor(setcol);
+	}
 }

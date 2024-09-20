@@ -158,6 +158,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\cameratrigger_result.cpp" />
+    <ClCompile Include="Source\course_title.cpp" />
+    <ClCompile Include="Source\environment.cpp" />
     <ClCompile Include="Source\frontobj_manager.cpp" />
     <ClCompile Include="Libraries\Imgui\imgui.cpp" />
     <ClCompile Include="Libraries\Imgui\imgui_demo.cpp" />
@@ -181,10 +183,10 @@
     <ClCompile Include="Source\discovery.cpp" />
     <ClCompile Include="Source\edit_mapblock.cpp" />
     <ClCompile Include="Source\EffekseerObj.cpp" />
+    <ClCompile Include="Source\goalgametext.cpp" />
     <ClCompile Include="Source\guide.cpp" />
     <ClCompile Include="Source\keyconfig_keyboard.cpp" />
     <ClCompile Include="Source\controlkeydisp.cpp" />
-    <ClCompile Include="Source\keyconfig_setting.cpp" />
     <ClCompile Include="Source\kite.cpp" />
     <ClCompile Include="Source\leaf.cpp" />
     <ClCompile Include="Source\leaf_flow.cpp" />
@@ -296,6 +298,7 @@
     <ClCompile Include="Source\object_circlegauge2D.cpp" />
     <ClCompile Include="Source\optionmenu.cpp" />
     <ClCompile Include="Source\optionmenu_keyconfig.cpp" />
+    <ClCompile Include="Source\optionmenu_other.cpp" />
     <ClCompile Include="Source\optionmenu_sound.cpp" />
     <ClCompile Include="Source\particle.cpp" />
     <ClCompile Include="Source\pause.cpp" />
@@ -313,6 +316,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Source\ranking.cpp" />
+    <ClCompile Include="Source\rankingItem.cpp" />
+    <ClCompile Include="Source\rankingItem_top3.cpp" />
     <ClCompile Include="Source\rankingmanager.cpp" />
     <ClCompile Include="Source\rankingscore.cpp" />
     <ClCompile Include="Source\receiver_people.cpp" />
@@ -374,6 +379,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\cameratrigger_result.h" />
+    <ClInclude Include="Source\course_title.h" />
+    <ClInclude Include="Source\environment.h" />
     <ClInclude Include="Source\frontobj_manager.h" />
     <ClInclude Include="Libraries\Imgui\imconfig.h" />
     <ClInclude Include="Libraries\Imgui\imgui.h" />
@@ -398,10 +405,10 @@
     <ClInclude Include="Source\discovery.h" />
     <ClInclude Include="Source\edit_mapblock.h" />
     <ClInclude Include="Source\EffekseerObj.h" />
+    <ClInclude Include="Source\goalgametext.h" />
     <ClInclude Include="Source\guide.h" />
     <ClInclude Include="Source\keyconfig_keyboard.h" />
     <ClInclude Include="Source\controlkeydisp.h" />
-    <ClInclude Include="Source\keyconfig_setting.h" />
     <ClInclude Include="Source\kite.h" />
     <ClInclude Include="Source\leaf.h" />
     <ClInclude Include="Source\leaf_flow.h" />
@@ -515,6 +522,7 @@
     <ClInclude Include="Source\object_circlegauge2D.h" />
     <ClInclude Include="Source\optionmenu.h" />
     <ClInclude Include="Source\optionmenu_keyconfig.h" />
+    <ClInclude Include="Source\optionmenu_other.h" />
     <ClInclude Include="Source\optionmenu_sound.h" />
     <ClInclude Include="Source\particle.h" />
     <ClInclude Include="Source\pause.h" />
@@ -527,6 +535,8 @@
     <ClInclude Include="Source\playercontrol.h" />
     <ClInclude Include="Source\precompile.h" />
     <ClInclude Include="Source\ranking.h" />
+    <ClInclude Include="Source\rankingItem.h" />
+    <ClInclude Include="Source\rankingItem_top3.h" />
     <ClInclude Include="Source\rankingmanager.h" />
     <ClInclude Include="Source\rankingscore.h" />
     <ClInclude Include="Source\receiver_people.h" />

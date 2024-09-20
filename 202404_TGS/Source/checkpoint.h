@@ -22,6 +22,16 @@ class CCheckpoint : public CObjectX
 {
 public:
 
+	//=============================
+	// 列挙型定義
+	//=============================
+	enum State
+	{
+		SWING = 0,
+		ROTATE,
+		MAX
+	};
+
 	CCheckpoint(int nPriority = 6);
 	~CCheckpoint();
 
@@ -43,7 +53,7 @@ public:
 	static CCheckpoint* Create(const float length);
 	static void Load(const std::string filename);
 	static int GetSaveID() { return m_nSaveID; }	// セーブID取得
-	static void ResetSaveID() { m_nSaveID = -1; }	// セーブIDリセット
+	static void ResetSaveID();	// セーブIDリセット
 	static CListManager<CCheckpoint> GetListObj() { return m_List; }	// リスト取得
 
 private:
@@ -51,21 +61,30 @@ private:
 	//=============================
 	// 関数リスト
 	//=============================
+	typedef void(CCheckpoint::* STATE_FUNC)();
+	static STATE_FUNC m_StateFunc[];
 
 	//=============================
 	// メンバ関数
 	//=============================
+	// 状態
+	void StateSwing();	// ゆらゆら
+	void StateRotate();	// 回転
+
+	// その他
 	void CreateEffect();	// エフェクト生成
 	void CreateWaterEffect(int max);	// 水エフェクト生成
 
 	//=============================
 	// メンバ変数
 	//=============================
+	State m_state;					// 状態
 	float m_fStateTime;				// 状態カウンター
 	float m_fLength;				// 距離
-	float m_fRotateTime;			// 回転時間
 	float m_fPassedTime;			// 通過したときの時間
 	bool m_bIsPassed;				// 通過したかどうか
+	MyLib::Vector3 m_DestRot_Old;	// 目標の向き
+	MyLib::Vector3 m_DestRot;		// 目標の向き
 	CObjectBillboard* m_pEffect;	// エフェクトのポインタ
 	CEffekseerObj* m_pEffekseerObj;	// エフェクシアのオブジェクト
 	static CListManager<CCheckpoint> m_List;	// リスト

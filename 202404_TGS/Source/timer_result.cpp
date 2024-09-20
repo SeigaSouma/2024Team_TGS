@@ -100,6 +100,7 @@ HRESULT CTimer_Result::Init()
 
 		for (int j = 0; j < pMultiNumber->GetDigit(); j++)
 		{
+			pNumber[j]->SetType(CObject::TYPE_OBJECT2D);
 			CObject2D* pObj2D = pNumber[j]->GetObject2D();
 			pObj2D->SetSize(D3DXVECTOR2(0.0f, pObj2D->GetSizeOrigin().y));
 			pObj2D->SetAnchorType(CObject2D::AnchorPoint::LEFT);
@@ -188,7 +189,7 @@ void CTimer_Result::ApplyTimer()
 
 		// ˆÊ’uÝ’è
 		MyLib::Vector3 pos = m_pos;
-		pos.x += (m_pClearTime[0]->GetNumber()[0]->GetSize().x * DSTANCE_MULTIPLAY) * i;
+		pos.x += (m_pClearTime[0]->GetNumber()[0]->GetSize().x * DSTANCE_MULTIPLAY) * (2 - i);
 		m_pClearTime[i]->SetPosition(pos);
 
 	}

@@ -31,25 +31,23 @@ private:
 	// キー情報
 	struct KEYINFO
 	{
-		CObject2D* s_p2D;				// 2Dポリゴン
+		CObject2D* s_p2D;				// 説明文字
 		CControlKeyDisp* s_pKeyDisp;	// キーコンフィグ表示
-		float drawtime;					// 書く時間
-		CSelectDraw* pSelect;			// 選択肢筆
 
 		// コンストラクタ
-		KEYINFO() : drawtime(0.0f), pSelect(nullptr), s_p2D(nullptr) { s_pKeyDisp = nullptr; }
+		KEYINFO() : s_p2D(nullptr), s_pKeyDisp(nullptr){}
 	};
 
 	// 切り替え情報
 	struct CHENGEINFO
 	{
-		CObject2D* s_p2D;				// 2Dポリゴン
+		CObject2D* s_p2D;				// 説明文字
 		CControlKeyDisp* s_pKeyDispOK;	// キーコンフィグ表示
 		CControlKeyDisp* s_pKeyDispNO;	// キーコンフィグ表示
 		CSelectDraw* pSelect;			// 選択肢筆
 
 		// コンストラクタ
-		CHENGEINFO() : pSelect(nullptr){ s_p2D = nullptr; s_pKeyDispOK = nullptr; s_pKeyDispNO = nullptr; }
+		CHENGEINFO() : pSelect(nullptr), s_p2D(nullptr), s_pKeyDispOK(nullptr), s_pKeyDispNO(nullptr) { }
 	};
 
 public:
@@ -73,6 +71,7 @@ private:
 	virtual void StateEdit() override;		// 編集
 	void Chenge();
 	void SetAlpha();
+	void ResetSelect();		// 選択肢リセット
 
 	//=============================
 	// メンバ変数
@@ -80,12 +79,11 @@ private:
 	float m_Alpha;
 	float m_fTime;
 	int m_SelectKey;	// 選択中
-	bool m_bNowChange;	// 変更中か否か
 	bool m_bDeath;		// 死亡フラグ
 	KEYINFO m_aKeyConfig[INGAME::ACT_MAX];	// キーコンフィグ用
 	CHENGEINFO m_checkconfig;	// 決定戻る変更用
 	CObject2D* m_pTitle2D;		// 説明用ポリゴン
+	CSelectDraw* m_pSelect;		// 選択肢筆
 };
-
 
 #endif

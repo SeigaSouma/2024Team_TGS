@@ -93,8 +93,8 @@ public:
 	void SetVibMulti(float fMulti) { m_fVibrationMulti = fMulti; }
 
 	// バイブレーション系
-	void SetEnableVibration();
-	bool GetEnableVibration();
+	void SetEnableVibration(bool bUse) { m_bVibrationUse = bUse; }	// バイブの使用状況切り替え
+	bool IsEnableVibration() { return m_bVibrationUse; }			// バイブの使用状況取得
 	void SetVibration(VIBRATION_STATE VibState, int nCntPlayer);
 	int GetnCntPad();
 

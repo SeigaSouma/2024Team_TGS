@@ -60,6 +60,7 @@ public:
 	{
 		TYPE_GAME = 0,
 		TYPE_RESULT,
+		TYPE_TITLE,
 		TYPE_MAX
 	};
 
@@ -103,12 +104,29 @@ protected:
 	static CPeopleManager* m_ThisPtr;				// 自身のポインタ
 };
 
+// リザルトのマネージャ
 class CPeopleManager_Result : public CPeopleManager
 {
 public:
 
 	CPeopleManager_Result() : CPeopleManager() {}
 	~CPeopleManager_Result() {}
+
+	HRESULT Init() override;
+	void Update() override;
+
+private:
+
+};
+
+
+// タイトルのマネージャ
+class CPeopleManager_Title : public CPeopleManager
+{
+public:
+
+	CPeopleManager_Title() : CPeopleManager() {}
+	~CPeopleManager_Title() {}
 
 	HRESULT Init() override;
 	void Update() override;

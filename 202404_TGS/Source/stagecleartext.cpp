@@ -18,9 +18,9 @@
 namespace
 {
 	const char* TEXTURE = "data\\TEXTURE\\battlewin\\goal.png";
-	const float TIME_EXPANSION = 0.3f;			//拡大
-	const float TIME_EXPNONE = 1.0f;			//拡大後何もしない
-	const float TIME_FADEOUT = 0.4f;			// フェードアウト時間
+	const float TIME_EXPANSION = 0.6f;			// 拡大
+	const float TIME_EXPNONE = 1.0f;			// 拡大後何もしない
+	const float TIME_FADEOUT = 0.3f;			// フェードアウト時間
 }
 
 //==========================================================================
@@ -98,7 +98,7 @@ HRESULT CStageClearText::Init()
 
 	// サイズ設定
 	D3DXVECTOR2 size = CTexture::GetInstance()->GetImageSize(nTexIdx);
-	size = UtilFunc::Transformation::AdjustSizeByWidth(size, 400.0f);
+	size = UtilFunc::Transformation::AdjustSizeByWidth(size, 500.0f);
 	SetSize(size);
 	SetSizeOrigin(size);
 
@@ -127,21 +127,25 @@ void CStageClearText::Uninit()
 //==========================================================================
 void CStageClearText::Update()
 {
-	if (IsDeath())
-	{
-		return;
-	}
+	// 状態更新
+	UpdateState();
 
-	// 状態別処理
-	(this->*(m_StateFuncList[m_state]))();
-
-	if (IsDeath())
-	{
-		return;
-	}
+	if (IsDeath())return;;
 
 	// 頂点座標の設定
 	SetVtx();
+}
+
+//==========================================================================
+// 状態更新
+//==========================================================================
+void CStageClearText::UpdateState()
+{
+	// 状態遷移カウンター加算
+	m_fStateTimer += CManager::GetInstance()->GetDeltaTime();
+
+	// 状態別処理
+	(this->*(m_StateFuncList[m_state]))();
 }
 
 //==========================================================================
@@ -149,24 +153,21 @@ void CStageClearText::Update()
 //==========================================================================
 void CStageClearText::StateExpansion()
 {
+	
+	float alpha = UtilFunc::Correction::EaseInBack(0.2f, 1.0f, 0.0f, TIME_EXPANSION, m_fStateTimer);
+	SetAlpha(alpha);
+	
+	// サイズ設定
+	D3DXVECTOR2 size = GetSize();
+	size.x = UtilFunc::Correction::EaseInBack(GetSizeOrigin().x * 0.2f, GetSizeOrigin().x, 0.0f, TIME_EXPANSION, m_fStateTimer);
+	size.y = UtilFunc::Correction::EaseInBack(GetSizeOrigin().y * 0.2f, GetSizeOrigin().y, 0.0f, TIME_EXPANSION, m_fStateTimer);
+	SetSize(size);
+
 	if (m_fStateTimer >= TIME_EXPANSION)
 	{
 		m_fStateTimer = 0.0f;
 		m_state = STATE_EXPNONE;
-		return;
 	}
-
-	// 状態遷移カウンター加算
-	m_fStateTimer += CManager::GetInstance()->GetDeltaTime();
-
-	float ratio = m_fStateTimer / TIME_EXPANSION;
-
-	// サイズ設定
-	D3DXVECTOR2 size = GetSize();
-	size.x = UtilFunc::Correction::EasingEaseIn(0.0f, GetSizeOrigin().x, ratio);
-	size.y = UtilFunc::Correction::EasingEaseIn(0.0f, GetSizeOrigin().y, ratio);
-	SetSize(size);
-
 }
 
 //==========================================================================
@@ -174,9 +175,7 @@ void CStageClearText::StateExpansion()
 //==========================================================================
 void CStageClearText::StateExpNone()
 {
-	// 状態遷移カウンター加算
-	m_fStateTimer += CManager::GetInstance()->GetDeltaTime();
-
+	
 	if (m_fStateTimer >= TIME_EXPNONE)
 	{
 		m_fStateTimer = 0.0f;
@@ -190,11 +189,9 @@ void CStageClearText::StateExpNone()
 //==========================================================================
 void CStageClearText::StateFadeOut()
 {
-	// 状態遷移カウンター加算
-	m_fStateTimer += CManager::GetInstance()->GetDeltaTime();
-
+	
 	// 不透明度更新
-	float alpha = 1.0f - m_fStateTimer / TIME_FADEOUT;
+	float alpha = UtilFunc::Correction::EasingLinear(1.0f, 0.0f, 0.0f, TIME_FADEOUT, m_fStateTimer);
 	SetAlpha(alpha);
 
 	if (TIME_FADEOUT * 0.7f <= m_fStateTimer &&

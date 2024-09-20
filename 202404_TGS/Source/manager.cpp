@@ -37,10 +37,10 @@
 //==========================================================================
 namespace
 {
-	const float TIME_LOAD = 2.0f;	// ロード時間
+	const float TIME_LOAD = 2.0f;	// 必須ロード時間
 
 #if _DEBUG
-	const CScene::MODE STARTMODE = CScene::MODE::MODE_TITLE;
+	const CScene::MODE STARTMODE = CScene::MODE::MODE_GAME;
 #else
 	const CScene::MODE STARTMODE = CScene::MODE::MODE_TITLE;
 #endif
@@ -260,6 +260,7 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		{// 初期化処理が失敗した場合
 			return E_FAIL;
 		}
+		m_pCamera->Reset(STARTMODE);
 
 		// カメラのマトリックス設定
 		CInputMouse::GetInstance()->SetCameraMtx(m_pCamera->GetMtxViewPtr(), m_pCamera->GetMtxProjectionPtr());

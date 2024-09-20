@@ -23,7 +23,7 @@
 namespace
 {
 	const std::string FILENAME = "data\\TEXT\\map\\chunkdata.bin";
-	const int NUM_CHUNK = 5;	// チャンクの数
+	const int NUM_CHUNK = 1;	// チャンクの数
 	const int DECIDE_LEVEL[] =	// レベル
 	{
 		0,
@@ -382,7 +382,7 @@ void CCourseManager::Load()
 	// 距離にあわせた配置を行う
 	for (int i = 0; i < NUM_CHUNK; i++)
 	{
-		CMapBlock* pBlock = new CMapBlock;
+		CMapBlock* pBlock = DEBUG_NEW CMapBlock;
 
 		if (pBlock != nullptr)
 		{
@@ -395,15 +395,14 @@ void CCourseManager::Load()
 
 	//この中で障害物、チェックポイント
 
-#if 1
 	//=============================
 	// 石垣(奥)
 	//=============================
-	CStoneWall* pStoneWall = CStoneWall::Create();
+	m_pStoneWall = CStoneWall::Create();
 
 	// 基点地点設定
-	pStoneWall->SetVecPosition(pCourse->GetVecPosition());
-	pStoneWall->Reset();
+	m_pStoneWall->SetVecPosition(pCourse->GetVecPosition());
+	m_pStoneWall->Reset();
 
 	std::vector<CCourse::VtxInfo> vtxInfo = pCourse->GetVecVtxinfo();
 	std::vector<MyLib::Vector3> vecpos;
@@ -418,18 +417,18 @@ void CCourseManager::Load()
 	}
 
 	// 各頂点座標
-	pStoneWall->SetVecVtxPosition(vecpos);
-	pStoneWall->BindVtxPosition();
+	m_pStoneWall->SetVecVtxPosition(vecpos);
+	m_pStoneWall->BindVtxPosition();
 
 
 	//=============================
 	// 石垣(手前)
 	//=============================
-	CStoneWall* pStoneWall_Front = CStoneWall_Front::Create();
+	m_pStoneWall_Front = CStoneWall_Front::Create();
 
 	// 基点地点設定
-	pStoneWall_Front->SetVecPosition(pCourse->GetVecPosition());
-	pStoneWall_Front->Reset();
+	m_pStoneWall_Front->SetVecPosition(pCourse->GetVecPosition());
+	m_pStoneWall_Front->Reset();
 
 	vtxInfo = pCourse->GetVecVtxinfo();
 	vecpos.clear();
@@ -443,10 +442,11 @@ void CCourseManager::Load()
 	}
 
 	// 各頂点座標
-	pStoneWall_Front->SetVecVtxPosition(vecpos);
-	pStoneWall_Front->BindVtxPosition();
+	m_pStoneWall_Front->SetVecVtxPosition(vecpos);
+	m_pStoneWall_Front->BindVtxPosition();
 
 
+#if 1
 	//=============================
 	// うねりの街フィールド
 	//=============================
@@ -455,7 +455,7 @@ void CCourseManager::Load()
 	pTownField->Reset();
 
 	// 石垣の頂上に頂点をそろえる
-	pTownField->SetVecVtxPosition(pStoneWall->GetVecTopPosition());
+	pTownField->SetVecVtxPosition(m_pStoneWall->GetVecTopPosition());
 	pTownField->BindVtxPosition();
 
 
@@ -467,7 +467,7 @@ void CCourseManager::Load()
 	pTownFieldFront->Reset();
 
 	// 石垣の頂上に頂点をそろえる
-	pTownFieldFront->SetVecVtxPosition(pStoneWall_Front->GetVecTopPosition());
+	pTownFieldFront->SetVecVtxPosition(m_pStoneWall_Front->GetVecTopPosition());
 	pTownFieldFront->BindVtxPosition();
 
 	//=============================

@@ -395,6 +395,44 @@ namespace UtilFunc	// 便利関数
 			return EasingEaseInOut(start, end, ratio);
 		}
 
+		/**
+		@brief	線形補正(サインカーブベースの補間、減速→加速→減速, イーズインアウト)
+		@details https://mo-no.design/blog/wp-content/uploads/2023/02/easeinout_1.mp4
+		@param	start		[in]	初期値
+		@param	end			[in]	目標値
+		@param	startTime	[in]	開始時間
+		@param	endTime		[in]	終了時間
+		@param	currentTime	[in]	現在の時間
+		@return	補正されたfloat値
+		*/
+		inline float EasingEaseInOutSine(float start, float end, float startTime, float endTime, float currentTime)
+		{
+			// 割合
+			float ratio = (currentTime - startTime) / (endTime - startTime);
+			UtilFunc::Transformation::ValueNormalize(ratio, 1.0f, 0.0f);
+
+			return 0.5f * (1.0f - cosf(D3DX_PI * ratio));
+		}
+
+		/**
+		@brief	線形補正(サインカーブベースの補間、減速→加速→減速, イーズインアウト)
+		@details https://mo-no.design/blog/wp-content/uploads/2023/02/easeinout_1.mp4
+		@param	start		[in]	初期値
+		@param	end			[in]	目標値
+		@param	startTime	[in]	開始時間
+		@param	endTime		[in]	終了時間
+		@param	currentTime	[in]	現在の時間
+		@return	補正されたfloat値
+		*/
+		inline MyLib::Vector3 EasingEaseInOutSine(const MyLib::Vector3& start, const MyLib::Vector3& end, float startTime, float endTime, float currentTime)
+		{
+			// 割合
+			float ratio = (currentTime - startTime) / (endTime - startTime);
+			UtilFunc::Transformation::ValueNormalize(ratio, 1.0f, 0.0f);
+
+			return 0.5f * (1.0f - cosf(D3DX_PI * ratio));
+		}
+
 
 
 
@@ -431,6 +469,29 @@ namespace UtilFunc	// 便利関数
 		@return	補正されたfloat値
 		*/
 		inline float EaseOutBack(float start, float end, float startTime, float endTime, float currentTime, float c = 1.70158f)
+		{
+			// 割合
+			float ratio = (currentTime - startTime) / (endTime - startTime);
+			UtilFunc::Transformation::ValueNormalize(ratio, 1.0f, 0.0f);
+
+			ratio -= 1; // t を (t - 1) に変換
+
+			float cal = ratio * ratio * ((c + 1) * ratio + c) + 1;
+			return start + (end - start) * cal;
+		}
+
+		/**
+		@brief	easeOutBack関数
+		@details https://easings.net/ja#easeInBack
+		@param	start		[in]	初期値
+		@param	end			[in]	目標値
+		@param	startTime	[in]	開始時間
+		@param	endTime		[in]	終了時間
+		@param	currentTime	[in]	現在の時間
+		@param	c			[in]	バックの強さ
+		@return	補正されたfloat値
+		*/
+		inline MyLib::Vector3 EaseOutBack(const MyLib::Vector3& start, const MyLib::Vector3& end, float startTime, float endTime, float currentTime, float c = 1.70158f)
 		{
 			// 割合
 			float ratio = (currentTime - startTime) / (endTime - startTime);
@@ -499,6 +560,29 @@ namespace UtilFunc	// 便利関数
 		}
 
 		/**
+		@brief	easeInExpo関数
+		@details https://easings.net/ja#easeInExpo
+		@param	start		[in]	初期値
+		@param	end			[in]	目標値
+		@param	startTime	[in]	開始時間
+		@param	endTime		[in]	終了時間
+		@param	currentTime	[in]	現在の時間
+		@return	補正されたfloat値
+		*/
+		inline MyLib::Vector3 EaseInExpo(const MyLib::Vector3& start, const MyLib::Vector3& end, float startTime, float endTime, float currentTime)
+		{
+			// 割合
+			float ratio = (currentTime - startTime) / (endTime - startTime);
+			UtilFunc::Transformation::ValueNormalize(ratio, 1.0f, 0.0f);
+
+			// イージング計算
+			float eased = (ratio == 0) ? 0 : pow(2, 10 * (ratio - 1));
+
+			// 線形補間（Lerp）を使用して結果をstartからendの範囲に変換
+			return start + (end - start) * eased;
+		}
+
+		/**
 		@brief	easeOutExpo関数
 		@details https://easings.net/ja#easeOutExpo
 		@param	start		[in]	初期値
@@ -509,6 +593,29 @@ namespace UtilFunc	// 便利関数
 		@return	補正されたfloat値
 		*/
 		inline float EaseOutExpo(float start, float end, float startTime, float endTime, float currentTime)
+		{
+			// 割合
+			float ratio = (currentTime - startTime) / (endTime - startTime);
+			UtilFunc::Transformation::ValueNormalize(ratio, 1.0f, 0.0f);
+
+			// イージング計算
+			float eased = (ratio == 1) ? 1 : (1 - pow(2, -10 * ratio));
+
+			// 線形補間（Lerp）を使用して結果をstartからendの範囲に変換
+			return start + (end - start) * eased;
+		}
+
+		/**
+		@brief	easeOutExpo関数
+		@details https://easings.net/ja#easeOutExpo
+		@param	start		[in]	初期値
+		@param	end			[in]	目標値
+		@param	startTime	[in]	開始時間
+		@param	endTime		[in]	終了時間
+		@param	currentTime	[in]	現在の時間
+		@return	補正されたfloat値
+		*/
+		inline MyLib::Vector3 EaseOutExpo(const MyLib::Vector3& start, const MyLib::Vector3& end, float startTime, float endTime, float currentTime)
 		{
 			// 割合
 			float ratio = (currentTime - startTime) / (endTime - startTime);

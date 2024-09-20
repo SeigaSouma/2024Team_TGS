@@ -579,8 +579,9 @@ HRESULT MyMap::ReadText(const char *pTextFile)
 		FileName = "data\\TEXT\\map\\info_title.txt";
 		break;
 
+		//ƒƒ‚F‰¼C³A–{—ˆ‚Ìinfo_ranking.txt‚¾‚Æ—‚¿‚é
 	case CScene::MODE_RANKING:
-		FileName = "data\\TEXT\\map\\info_ranking.txt";
+		FileName = "data\\TEXT\\map\\info_title.txt";
 		break;
 
 	default:

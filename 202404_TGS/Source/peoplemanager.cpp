@@ -67,7 +67,12 @@ CPeopleManager* CPeopleManager::Create(Type type)
 		m_ThisPtr = DEBUG_NEW CPeopleManager_Result;
 		break;
 
+	case CPeopleManager::TYPE_TITLE:
+		m_ThisPtr = DEBUG_NEW CPeopleManager_Title;
+		break;
+
 	default:
+		m_ThisPtr = DEBUG_NEW CPeopleManager;
 		break;
 	}
 
@@ -502,6 +507,9 @@ HRESULT CPeopleManager::ReadText(const std::string& filename)
 }
 
 
+//=============================
+// リザルト版
+//=============================
 //==========================================================================
 // 初期化処理
 //==========================================================================
@@ -544,6 +552,56 @@ HRESULT CPeopleManager_Result::Init()
 // 更新処理
 //==========================================================================
 void CPeopleManager_Result::Update()
+{
+
+}
+
+
+//=============================
+// タイトル版
+//=============================
+//==========================================================================
+// 初期化処理
+//==========================================================================
+HRESULT CPeopleManager_Title::Init()
+{
+
+	// 現在のランク
+	m_Rank = CJudge::JUDGE::JUDGE_BBB;
+
+	// 初期化処理
+	HRESULT hr = CPeopleManager::Init();
+
+
+	MyLib::Vector3 pos = MyLib::Vector3(0.0f, 300.0f, 3000.0f);
+	MyLib::Vector3 spawnpos = pos;
+	MyLib::Vector3 rot = MyLib::Vector3(0.0f, D3DX_PI * 0.5f, 0.0f);
+	int type = 0, patternNum = static_cast<int>(m_PatternByRank[m_Rank].size());
+
+	float fDefLen = CManager::GetInstance()->GetCamera()->GetPositionV().x;
+
+	// 人生成
+	for (float len = fDefLen + -3000.0f; len <= fDefLen + 12000.0f; len += SPAWN_DISTANCE)
+	{
+		type = rand() % patternNum;
+
+		// 位置リセット
+		spawnpos = pos;
+		spawnpos.x += len;
+		spawnpos.z += UtilFunc::Transformation::Random(-50, 50) * 10.0f;
+		spawnpos.z += UtilFunc::Transformation::Random(-50, 50);
+
+		SetPeople(spawnpos, rot, type);
+	}
+
+
+	return hr;
+}
+
+//==========================================================================
+// 更新処理
+//==========================================================================
+void CPeopleManager_Title::Update()
 {
 
 }

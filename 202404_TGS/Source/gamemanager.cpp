@@ -36,6 +36,8 @@
 #include "countdown_start.h"
 #include "guide.h"
 #include "leaf_flow.h"
+#include "environment.h"
+
 
 //==========================================================================
 // 定数定義
@@ -302,6 +304,10 @@ void CGameManager::Update()
 		TurnAway();
 		break;
 
+	case SceneType::SCENE_GOAL:			// ゴール
+		SceneGoal();
+		break;
+
 	case SceneType::SCENE_DEBUG:
 		m_bControll = true;
 		break;
@@ -542,7 +548,7 @@ void CGameManager::SceneWaitAirPush()
 
 		if (m_nGuideTimer == 0 && m_pGuide != nullptr)
 		{
-			m_pGuide->Uninit();
+			m_pGuide->Kill();
 			m_pGuide = nullptr;
 		}
 	}
@@ -550,9 +556,10 @@ void CGameManager::SceneWaitAirPush()
 	{
 		m_nGuideTimer++;
 
-		if (m_nGuideTimer >= GUIDE_NUM)
+		if (m_nGuideTimer >= GUIDE_NUM &&
+			m_pGuide == nullptr)
 		{
-			m_pGuide = CGuide::Create();
+			m_pGuide = CGuide::Create(CGuide::Type::START);
 		}
 
 		pTimer->SetEnableAddTime(false);
@@ -743,6 +750,11 @@ void CGameManager::SetType(SceneType type)
 {
 	m_OldSceneType = m_SceneType;
 	m_SceneType = type;
+
+	if (m_OldSceneType == SceneType::SCENE_GOAL && m_SceneType != SceneType::SCENE_GOAL)
+	{
+		int s = 0;
+	}
 }
 
 //==========================================================================
@@ -755,127 +767,3 @@ CGameManager::SceneType CGameManager::GetType()
 
 
 
-
-//==========================================================================
-// 空気の生成時のトリガー
-//==========================================================================
-void CSpawn_Air::TriggerSpawn()
-{
-	// タイマー関連リセット
-	m_fSpawnTimer = 0.0f;
-	m_fSpawnInterval = DEFAULT_INTERVAL_AIRSPAWN + UtilFunc::Transformation::Random(-20, 20) * 0.01f;
-
-	// プレイヤー取得
-	CPlayer* pPlayer = CPlayer::GetListObj().GetData(0);
-	MyLib::Vector3 playerPos = pPlayer->GetPosition();
-
-	// 基点の位置
-	MyLib::Vector3 basepos = MyLib::Vector3(playerPos.x, 0.0f, playerPos.z) + MyLib::Vector3(-500.0f, 500.0f, 1000.0f);
-
-	int rand = UtilFunc::Transformation::Random(0, 2);
-	switch (rand)
-	{
-	case 0:
-		// 風生成
-		CEffekseerObj::Create(
-			CMyEffekseer::EFKLABEL::EFKLABEL_AIR,
-			basepos + MyLib::Vector3(0.0f, 0.0f, UtilFunc::Transformation::Random(-20, 1) * 100.0f),
-			MyLib::Vector3(0.0f, 0.0f, 0.0f), 0.0f, 20.0f, true);
-		break;
-
-	case 1:
-		// 右の風
-		CEffekseerObj::Create(
-			CMyEffekseer::EFKLABEL::EFKLABEL_AIR,
-			basepos + MyLib::Vector3(0.0f,
-				UtilFunc::Transformation::Random(40, 60) * 10.0f,
-				UtilFunc::Transformation::Random(-5, 15) * 100.0f),
-			MyLib::Vector3(0.0f, 0.0f, 0.0f), 0.0f, 20.0f, true);
-		break;
-
-	case 2:
-		// 右上の風
-		CEffekseerObj::Create(
-			CMyEffekseer::EFKLABEL::EFKLABEL_AIR,
-			basepos + MyLib::Vector3(0.0f,
-				UtilFunc::Transformation::Random(80, 120) * 10.0f,
-				UtilFunc::Transformation::Random(-20, 1) * 100.0f),
-			MyLib::Vector3(0.0f, 0.0f, 0.0f), 0.0f, 20.0f, true);
-		break;
-
-	default:
-		break;
-	}
-
-}
-
-//==========================================================================
-// 流れる葉の生成時のトリガー
-//==========================================================================
-void CSpawn_FlowLeaf::TriggerSpawn()
-{
-	// タイマー関連リセット
-	m_fSpawnTimer = 0.0f;
-	m_fSpawnInterval = DEFAULT_INTERVAL_FLOWLEAFSPAWN + UtilFunc::Transformation::Random(-40, 20) * 0.01f;
-
-	// プレイヤー取得
-	CPlayer* pPlayer = CPlayer::GetListObj().GetData(0);
-	float playerMoveLen = pPlayer->GetMoveLength();
-
-	// 流れる葉生成
-	CLeafFlow* pLeaf = static_cast<CLeafFlow*>(CLeaf::Create(
-		MyLib::Vector3(0.0f, 0.0f, UtilFunc::Transformation::Random(-6, 6) * 100.0f + UtilFunc::Transformation::Random(-90, 90)),
-		CLeaf::Type::TYPE_FLOW));
-
-	pLeaf->SetMoveLen(playerMoveLen - 1000.0f);
-	pLeaf->SetOriginPosition(pLeaf->GetPosition());
-}
-
-
-//==========================================================================
-// 降る葉の更新処理
-//==========================================================================
-void CSpawn_Leaf::Update(float deltaTime)
-{
-	// プレイヤー取得
-	CPlayer* pPlayer = CPlayer::GetListObj().GetData(0);
-	MyLib::Vector3 playerMove = pPlayer->GetMove();	// 移動量取得
-	float fVelocity = pPlayer->GetVelocity();		// 移動速度取得
-
-	// 移動速度割合
-	float ratio = playerMove.x / (fVelocity);
-
-	// 移動速度に応じて生成間隔短くする
-	m_fSpawnTimer += deltaTime * ratio;
-	
-	// 親の更新処理
-	CSpawnEnvironment::Update(deltaTime);
-}
-
-//==========================================================================
-// 降る葉の生成時のトリガー
-//==========================================================================
-void CSpawn_Leaf::TriggerSpawn()
-{
-	// タイマー関連リセット
-	m_fSpawnTimer = 0.0f;
-	m_fSpawnInterval = DEFAULT_INTERVAL_LEAFSPAWN + UtilFunc::Transformation::Random(-40, 40) * 0.01f;
-
-	// プレイヤー取得
-	CPlayer* pPlayer = CPlayer::GetListObj().GetData(0);
-	MyLib::Vector3 playerPos = pPlayer->GetPosition();
-
-	// カメラ取得
-	CCamera* pCamera = CManager::GetInstance()->GetCamera();
-
-	// 基点の位置
-	MyLib::Vector3 basepos = MyLib::Vector3(playerPos.x, 0.0f, playerPos.z) + MyLib::Vector3(0.0f, 700.0f + pCamera->GetPositionR().y, 0.0f);
-
-	// 降る葉生成
-	CLeaf* pLeaf = CLeaf::Create(
-		basepos + MyLib::Vector3(
-			UtilFunc::Transformation::Random(-5, 20) * 100.0f + UtilFunc::Transformation::Random(-90, 90),
-			UtilFunc::Transformation::Random(0, 3) * 100.0f,
-			UtilFunc::Transformation::Random(-5, 5) * 100.0f + UtilFunc::Transformation::Random(-90, 90)),
-		CLeaf::Type::TYPE_FALL);
-}
