@@ -16,11 +16,13 @@ namespace
 {
 	// テクスチャのファイル
 	const std::string TEXTURE_SAMPLE[] = 
-	{ "data\\TEXTURE\\subtitle\\suffocation.png",
+	{ 
+		"data\\TEXTURE\\subtitle\\suffocation_000.png",
 		"data\\TEXTURE\\subtitle\\suffocation_001.png",
 		"data\\TEXTURE\\subtitle\\suffocation_002.png",
 		"data\\TEXTURE\\subtitle\\suffocation_003.png",
 		"data\\TEXTURE\\subtitle\\suffocation_004.png",
+		"data\\TEXTURE\\subtitle\\suffocation_005.png",
 	};
 
 	static int RANDOM_MOVEX = 250;
@@ -100,7 +102,7 @@ HRESULT CSuffocation::Init()
 		m_nTexID[nCnt] = CTexture::GetInstance()->Regist(TEXTURE_SAMPLE[nCnt]);
 	}
 
-	int r = rand() % 5;
+	int r = rand() % 6;
 
 	BindTexture(m_nTexID[r]);
 
@@ -230,11 +232,11 @@ void CSuffocation::Reset()
 	SetOriginPosition(GetPosition());
 
 	m_fStateTime = 0.0f;		// 状態カウンター
-	m_state = State::STATE_SURFACING;			// 状態
+	m_state = State::STATE_SURFACING;	// 状態
 
 	SetAlpha(1.0f);
 
-	int r = rand() % 5;
+	int r = rand() % 6;
 
 	BindTexture(m_nTexID[r]);
 }

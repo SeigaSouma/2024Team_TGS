@@ -33,8 +33,8 @@ namespace StateTime
 	const float DROP_UP = 0.35f;	// 落下_上
 	const float DROP_WAIT = 0.3f;	// 落下_待機
 	const float DROP_DOWN = 0.35f;	// 落下_下
-	const float COMPLETE = 0.5f;	// 完了
-	const float FADEOUT = 0.3f;		// フェードアウト
+	const float COMPLETE = 1.2f;	// 完了
+	const float FADEOUT = 0.5f;		// フェードアウト
 }
 
 // 状態別位置
@@ -120,7 +120,7 @@ HRESULT CCountdown_Start::Init()
 	size = UtilFunc::Transformation::AdjustSizeByWidth(size, 240.0f);
 
 #else	// 縦幅を元にサイズ設定
-	size = UtilFunc::Transformation::AdjustSizeByWidth(size, 120.0f);
+	size = UtilFunc::Transformation::AdjustSizeByWidth(size, 240.0f);
 #endif
 	SetSize(size);
 	SetSizeOrigin(size);
@@ -188,7 +188,7 @@ void CCountdown_Start::StateDrop_UP()
 	MyLib::Vector3 pos = GetPosition();
 
 	// 補正、徐々に加速
-	pos = UtilFunc::Correction::EasingEaseOut(StatePos::ORIGIN_DROP_UP, StatePos::DEST_DROP_UP, 0.0f, StateTime::DROP_UP, m_fStateTime);
+	pos = UtilFunc::Correction::EaseOutExpo(StatePos::ORIGIN_DROP_UP, StatePos::DEST_DROP_UP, 0.0f, StateTime::DROP_UP, m_fStateTime);
 	SetPosition(pos);
 
 	if (m_fStateTime >= StateTime::DROP_UP)
@@ -229,7 +229,7 @@ void CCountdown_Start::StateDrop_DOWN()
 	MyLib::Vector3 pos = GetPosition();
 
 	// 補正、徐々に加速
-	pos = UtilFunc::Correction::EasingEaseOut(StatePos::DEST_DROP_UP, StatePos::DEST_DROP_DOWN, 0.0f, StateTime::DROP_DOWN, m_fStateTime);
+	pos = UtilFunc::Correction::EaseInExpo(StatePos::DEST_DROP_UP, StatePos::DEST_DROP_DOWN, 0.0f, StateTime::DROP_DOWN, m_fStateTime);
 	SetPosition(pos);
 
 	if (m_fStateTime >= StateTime::DROP_DOWN)
@@ -263,9 +263,19 @@ void CCountdown_Start::StateDrop_DOWN()
 		D3DXVECTOR2 size = CTexture::GetInstance()->GetImageSize(texID);
 
 		// 縦幅を元にサイズ設定
-		size = UtilFunc::Transformation::AdjustSizeByWidth(size, 120.0f);
-		SetSize(size);
-		SetSizeOrigin(size);
+		if (m_nCount != 0)
+		{
+			size = UtilFunc::Transformation::AdjustSizeByWidth(size, 240.0f);
+			SetSize(size);
+			SetSizeOrigin(size);
+		}
+		else
+		{// 開始
+			size = UtilFunc::Transformation::AdjustSizeByWidth(size, 240.0f);
+			SetSize(size * 8.0f);
+			SetSizeOrigin(size);
+			SetAlpha(0.0f);
+		}
 	}
 }
 
@@ -274,6 +284,18 @@ void CCountdown_Start::StateDrop_DOWN()
 //==========================================================================
 void CCountdown_Start::StateComplete()
 {
+
+	float ratio = UtilFunc::Correction::EaseInExpo(0.0f, 1.0f, 0.0f, StateTime::COMPLETE * 0.8f, m_fStateTime);
+
+	// 透明度設定
+	SetAlpha(ratio);
+
+	// サイズ設定
+	D3DXVECTOR2 size = GetSize(), sizeOrigin = GetSizeOrigin();
+	size.x = (sizeOrigin.x * 5.0f) + (sizeOrigin.x - (sizeOrigin.x * 5.0f)) * ratio;
+	size.y = (sizeOrigin.y * 5.0f) + (sizeOrigin.y - (sizeOrigin.y * 5.0f)) * ratio;
+	SetSize(size);
+
 	if (m_fStateTime >= StateTime::COMPLETE)
 	{
 		CSound::GetInstance()->PlaySound(CSound::LABEL_SE_COUNTDOWN2);

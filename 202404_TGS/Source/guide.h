@@ -32,6 +32,13 @@ public:
 		STATE_MAX
 	};
 
+	enum Type
+	{
+		START = 0,	// 開始時
+		GOAL,		// ゴール時
+		MAX
+	};
+
 	CGuide(int nPriority = 7);
 	~CGuide();
 
@@ -43,12 +50,14 @@ public:
 	void Update() override;
 	void Draw() override;
 
+	void Kill();
+
 	void SetState(State state);	// 状態設定
 
 	//=============================
 	// 静的関数
 	//=============================
-	static CGuide* Create();	// 生成処理
+	static CGuide* Create(Type type);	// 生成処理
 
 private:
 

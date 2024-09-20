@@ -22,7 +22,8 @@
 //==========================================================================
 namespace
 {
-	const char* MODEL = "data\\MODEL\\box.x";
+	const char* MODEL = "data\\MODEL\\checkpoint\\goal_flag.x";
+	const float TIME_SWING = 2.0f;
 }
 
 //==========================================================================
@@ -47,6 +48,7 @@ CGoalflagX::CGoalflagX(int nPriority) : CObjectX(nPriority)
 	// 値のクリア
 	m_fStateTime = 0.0f;	// 状態カウンター
 	m_state = SAMPLE_WAO;	// 状態
+	m_DestRot = MyLib::Vector3();		// 目標の向き
 	m_bClear = false;
 }
 
@@ -96,6 +98,11 @@ HRESULT CGoalflagX::Init()
 		return E_FAIL;
 	}
 
+	// ゆらゆらの向き設定
+	m_DestRot.x = UtilFunc::Transformation::Random(-110, 110) * 0.001f;
+	m_DestRot.y = UtilFunc::Transformation::Random(-110, 110) * 0.001f;
+	m_DestRot.z = UtilFunc::Transformation::Random(40, 80) * 0.001f;
+
 	return S_OK;
 }
 
@@ -136,6 +143,9 @@ void CGoalflagX::Update()
 	// 状態別処理
 	(this->*(m_GoalflagFuncList[m_state]))();
 
+	// 揺れ
+	Swing();
+
 	// 位置情報取得
 	MyLib::Vector3 pos = CObjectX::GetPosition();
 	MyLib::Vector3 Playerpos;
@@ -170,6 +180,30 @@ void CGoalflagX::Update()
 		pCamera->GetMotion()->SetMotion(CCameraMotion::MOTION::MOTION_GOAL, CCameraMotion::EASING::Linear);
 		CStageClearText::Create(MyLib::Vector3(640.0f, 400.0f, 0.0f));
 		m_bClear = true;
+	}
+}
+
+//==========================================================================
+// 揺れ
+//==========================================================================
+void CGoalflagX::Swing()
+{
+	MyLib::Vector3 rot = GetRotation();
+
+	// サインカーブ補間
+	float ratio = UtilFunc::Correction::EasingEaseInOutSine(0.0f, 1.0f, 0.0f, TIME_SWING, m_fStateTime);
+	rot = m_DestRot_Old + (m_DestRot - m_DestRot_Old) * ratio;
+	SetRotation(rot);
+
+	if (m_fStateTime >= TIME_SWING)
+	{
+		m_fStateTime = 0.0f;
+		
+		m_DestRot_Old = m_DestRot;
+		
+		m_DestRot.x = UtilFunc::Transformation::Random(-110, 110) * 0.001f;
+		m_DestRot.y = UtilFunc::Transformation::Random(-110, 110) * 0.001f;
+		m_DestRot.z *= -1;
 	}
 }
 

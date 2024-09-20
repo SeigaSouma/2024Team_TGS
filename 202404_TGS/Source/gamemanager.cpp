@@ -304,6 +304,10 @@ void CGameManager::Update()
 		TurnAway();
 		break;
 
+	case SceneType::SCENE_GOAL:			// ƒS[ƒ‹
+		SceneGoal();
+		break;
+
 	case SceneType::SCENE_DEBUG:
 		m_bControll = true;
 		break;
@@ -544,7 +548,7 @@ void CGameManager::SceneWaitAirPush()
 
 		if (m_nGuideTimer == 0 && m_pGuide != nullptr)
 		{
-			m_pGuide->Uninit();
+			m_pGuide->Kill();
 			m_pGuide = nullptr;
 		}
 	}
@@ -552,9 +556,10 @@ void CGameManager::SceneWaitAirPush()
 	{
 		m_nGuideTimer++;
 
-		if (m_nGuideTimer >= GUIDE_NUM)
+		if (m_nGuideTimer >= GUIDE_NUM &&
+			m_pGuide == nullptr)
 		{
-			m_pGuide = CGuide::Create();
+			m_pGuide = CGuide::Create(CGuide::Type::START);
 		}
 
 		pTimer->SetEnableAddTime(false);

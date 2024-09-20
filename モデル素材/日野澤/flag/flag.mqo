@@ -2,13 +2,13 @@ Metasequoia Document
 Format Text Ver 1.0
 
 Scene {
-	pos 39.5034 -132.0165 100000.0000
+	pos 39.5034 -132.0165 39062.5000
 	lookat 0.0000 0.0000 0.0000
-	head 28.3668
-	pich -0.0308
+	head 31.9068
+	pich 0.2392
 	bank 0.0000
 	ortho 0
-	zoom2 0.0750
+	zoom2 0.1920
 	amb 0.250 0.250 0.250
 	dirlights 1 {
 		light {
@@ -19,9 +19,9 @@ Scene {
 }
 Material 4 {
 	"mat1" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00)
-	"mat2" col(0.969 0.937 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Downloads\flag_red.png")
+	"mat2" col(0.969 0.937 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム手稲\2024Team_TGS\202404_TGS\data\TEXTURE\checkpoint\flag_red.png")
 	"mat3" col(1.000 0.600 0.000 1.000) dif(0.800) amb(0.600) emi(0.410) spc(0.000) power(5.00)
-	"mat4" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Downloads\flag.png")
+	"mat4" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\Desktop\チーム手稲\2024Team_TGS\202404_TGS\data\TEXTURE\checkpoint\flag_white.png")
 }
 Object "obj2" {
 	visible 15

@@ -1,7 +1,7 @@
 //=============================================================================
 // 
-//  字幕処理 [subtitle.cpp]
-//  Author : 相馬靜雅
+//  字幕処理 [guide.cpp]
+//  Author : 日野澤匠泉
 // 
 //=============================================================================
 #include "guide.h"
@@ -19,7 +19,11 @@
 //==========================================================================
 namespace
 {
-	
+	const std::string TEXTURE[] =
+	{
+		"data\\TEXTURE\\guide\\guide_000.png",	// 開始
+		"data\\TEXTURE\\battlewin\\guide.png",	// ゴール
+	};
 }
 
 // 状態別タイマー
@@ -62,15 +66,16 @@ CGuide::~CGuide()
 //==========================================================================
 // 生成処理
 //==========================================================================
-CGuide* CGuide::Create()
+CGuide* CGuide::Create(Type type)
 {
 	// メモリの確保
 	CGuide* pObj = DEBUG_NEW CGuide;
 
 	if (pObj != nullptr)
 	{
-		//pObj->m_fLifeTimer = life;
-		pObj->SetPosition(MyLib::Vector3(SCREEN_WIDTH * 0.6f,SCREEN_HEIGHT * 0.5f,0.0f));
+		// テクスチャ設定
+		int texID = CTexture::GetInstance()->Regist(TEXTURE[type]);
+		pObj->BindTexture(texID);
 
 		// 初期化処理
 		pObj->Init();
@@ -88,16 +93,14 @@ HRESULT CGuide::Init()
 	// オブジェクト2Dの初期化
 	CObject2D::Init();
 
+	SetPosition(MyLib::Vector3(SCREEN_WIDTH * 0.6f, SCREEN_HEIGHT * 0.5f, 0.0f));
+
 	// 各種変数初期化
 	m_state = State::STATE_FADEIN;	// 状態
 	m_fStateTime = 0.0f;	// 状態カウンター
 
 	// 種類の設定
 	SetType(CObject::TYPE::TYPE_OBJECT2D);
-
-	// テクスチャ設定
-	int texID = CTexture::GetInstance()->Regist("data\\TEXTURE\\guide\\guide_000.png");
-	BindTexture(texID);
 
 	// 縦幅を元にサイズ設定
 	D3DXVECTOR2 size = CTexture::GetInstance()->GetImageSize(GetIdxTexture());
@@ -127,6 +130,20 @@ void CGuide::Uninit()
 {
 	if (m_pKeyDisp != nullptr)
 	{
+		m_pKeyDisp = nullptr;
+	}
+
+	// 終了処理
+	CObject2D::Uninit();
+}
+
+//==========================================================================
+// 削除処理
+//==========================================================================
+void CGuide::Kill()
+{
+	if (m_pKeyDisp != nullptr)
+	{
 		m_pKeyDisp->Uninit();
 		m_pKeyDisp = nullptr;
 	}
@@ -140,23 +157,8 @@ void CGuide::Uninit()
 //==========================================================================
 void CGuide::Update()
 {
-	// 生存時間減算
-	m_fLifeTimer -= CManager::GetInstance()->GetDeltaTime();
-
-	if (m_fLifeTimer <= 0.0f &&
-		m_state != State::STATE_FADEOUT)
-	{
-		m_state = State::STATE_FADEOUT;
-		m_fStateTime = 0.0f;
-	}
-
 	// 状態更新
 	UpdateState();
-
-	if (CManager::GetInstance()->GetInstantFade()->GetState() != CInstantFade::STATE::STATE_NONE)
-	{
-		Uninit();
-	}
 
 	if (IsDeath())
 	{
