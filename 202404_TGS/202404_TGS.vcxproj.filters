@@ -162,6 +162,9 @@
     <Filter Include="direction\goalgame">
       <UniqueIdentifier>{b57d6cd1-5d88-4e66-847f-31821740f1e4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="lostrssmanager">
+      <UniqueIdentifier>{28071454-2189-45fa-94c3-5874bdcb4372}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\ballast.cpp">
@@ -802,6 +805,9 @@
     </ClCompile>
     <ClCompile Include="Source\goalgametext.cpp">
       <Filter>direction\goalgame</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\lostrssmanager.cpp">
+      <Filter>lostrssmanager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1452,6 +1458,9 @@
     </ClInclude>
     <ClInclude Include="Source\goalgametext.h">
       <Filter>direction\goalgame</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\lostrssmanager.h">
+      <Filter>lostrssmanager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

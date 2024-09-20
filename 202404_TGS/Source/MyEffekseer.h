@@ -84,6 +84,7 @@ public:
 	Effekseer::EffectRef LoadEffect(std::string efkpath);	// エフェクト読み込み
 	Effekseer::EffectRef LoadEffect(EFKLABEL label);		// エフェクト読み込み
 	Effekseer::ManagerRef GetEfkManager() { return m_efkManager; }	// エフェクトのマネージャー取得
+	::EffekseerRendererDX9::RendererRef GetEffekseerRenderer() { return efkRenderer; }	// エフェクシアのレンダラー取得
 
 	// 静的関数
 	static CMyEffekseer* GetInstance() { return m_pMyEffekseer; }	// インスタンス取得
@@ -99,7 +100,6 @@ private:
 	void UpdateAll();
 
 	void SetupEffekseerModules(::Effekseer::ManagerRef efkManager);	// モジュールのセットアップ
-	::EffekseerRendererDX9::RendererRef GetEffekseerRenderer() { return efkRenderer; }	// エフェクシアのレンダラー取得
 	Effekseer::EffectRef LoadProcess(const std::u16string& efkpath);	// 読み込み処理
 
 	//=============================

@@ -14,6 +14,7 @@
 #include "objectX.h"
 #include "texture.h"
 #include "calculation.h"
+#include "lostrssmanager.h"
 
 #include "pause.h"
 #include "fade.h"
@@ -87,6 +88,7 @@ CManager::CManager()
 	m_bFirstLoad = false;			// 初回ロード
 	m_bDisp_2D = false;				// 2Dの表示
 	m_bDisp_UI = true;				// UIの表示
+	m_bWindowed = true;
 
 	// ロードフラグリセット
 	m_bLoadComplete = false;
@@ -142,6 +144,11 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	m_bHitStop = false;		// ヒットストップの判定
 	m_nCntHitStop = 0;		// ヒットストップのカウンター
 	m_nNumPlayer = 0;		// プレイヤーの数
+
+	//**********************************
+	// ロストするリソースのマネージャー
+	//**********************************
+	CLostResourceManager::GetInstance();	//取得はしないけど生成はする
 
 	//**********************************
 	// 入力
@@ -697,6 +704,8 @@ void CManager::Uninit()
 		m_pRankingManager = nullptr;
 	}
 
+	// ロストするリソース管理マネージャー破棄
+	CLostResourceManager::Release();
 }
 
 //==========================================================================
@@ -802,6 +811,20 @@ void CManager::Update()
 
 		// 入力機器の更新処理
 		m_pInput->Update();
+
+		if (pInputKeyboard->GetTrigger(DIK_F8))
+		{
+			m_bWindowed = !m_bWindowed;
+
+			if (m_bWindowed == true)
+			{
+				m_pRenderer->SetDisplayMode(CRenderer::DISPLAYMODE::MODE_WINDOW);
+			}
+			else
+			{
+				m_pRenderer->SetDisplayMode(CRenderer::DISPLAYMODE::MODE_FULLSCREEN);
+			}
+		}
 
 		if ((pInputKeyboard->GetTrigger(DIK_P) || pInputGamepad->GetTrigger(CInputGamepad::BUTTON_START, 0)) &&
 			m_pFade->GetState() == CFade::STATE_NONE &&

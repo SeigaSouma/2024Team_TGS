@@ -141,6 +141,7 @@ private:
 	bool m_bFirstLoad;				// 初回ロード
 	bool m_bDisp_2D;					// 2Dの表示
 	bool m_bDisp_UI;					// UIの表示
+	bool m_bWindowed;					// ウィンドウモードか
 
 	static CManager *m_pManager;	// マネージャ
 

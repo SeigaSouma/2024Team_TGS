@@ -9,12 +9,13 @@
 #define _RENDERER_H_	// 二重インクルード防止
 
 #include "main.h"
+#include "lostrssmanager.h"
 
 //==========================================================================
 // クラス定義
 //==========================================================================
 // レンダラークラス定義
-class CRenderer
+class CRenderer : public ILostResource
 {
 private:
 
@@ -43,6 +44,11 @@ private:
 	};
 
 public:
+	enum class DISPLAYMODE
+	{
+		MODE_WINDOW,
+		MODE_FULLSCREEN,
+	};
 
 	struct MultiTarget
 	{
@@ -72,6 +78,9 @@ public:
 	LPDIRECT3DTEXTURE9 GetTextureMT(int idx) { return m_Multitarget.pTextureMT[idx]; }	// レンダリングターゲット用テクスチャ取得
 	float GetGoalAlpha() { return m_MultitargetInfo.fColAlpha; }
 
+	// フルスク関連
+	void SetDisplayMode(DISPLAYMODE mode);
+
 	/**
 	@brief	マルチターゲット画面の描画判定	
 	@param	fGoalAlpha	[in]	目標透明色
@@ -81,11 +90,16 @@ public:
 	*/
 	void SetEnableDrawMultiScreen(float fGoalAlpha, float fGoalMulti, float fTimer);
 
+	// ロストするリソース関連
+	void Backup();
+	void Restore();
+
 private:
 
 	void ResetRendererState();
 	void InitMTRender();	// マルチターゲットレンダラーの初期化
 	void SetMultiTarget();
+	void ResetDevice();		// フルスク切り替え時デバイスリセット
 
 	void DrawMultiTargetScreen(int texIdx, const D3DXCOLOR& col, const D3DXVECTOR2& size);	// マルチターゲット画面の描画
 
@@ -94,6 +108,10 @@ private:
 	D3DPRESENT_PARAMETERS m_d3dpp;	// プレゼンテーションモード
 	MultiTargetInfo m_MultitargetInfo;
 	MultiTarget m_Multitarget;	// マルチターゲット用
+	DISPLAYMODE m_dispMode;					//ディスプレイモード
+	D3DPRESENT_PARAMETERS m_d3dppWindow;	//デバイスリセット時に使用するプレゼンテーションパラメータ（ウィンドウ）
+	D3DPRESENT_PARAMETERS m_d3dppFull;		//デバイスリセット時に使用するプレゼンテーションパラメータ（フルスク）
+	bool m_bResetWait;						//デバイスリセット待ち状態
 };
 
 

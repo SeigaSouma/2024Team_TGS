@@ -75,6 +75,8 @@ HRESULT CDebugProc::Init(HINSTANCE hInstance, HWND hWnd)
 	m_bDisp = false;
 
 #endif
+
+	CLostResourceManager::GetInstance()->Regist(this);
 	
 	// ON
 	//m_bDisp = true;
@@ -93,6 +95,7 @@ void CDebugProc::Uninit()
 		m_pFont->Release();
 		m_pFont = nullptr;
 	}
+	CLostResourceManager::GetInstance()->Remove(this);
 }
 
 //==========================================================================
@@ -250,4 +253,33 @@ void CDebugProc::SetText()
 	pDebug->Print("[F8]：エディットモード切り替え\n");
 
 	pDebug->Print("\n");
+}
+
+//========================
+//バックアップ
+//========================
+void CDebugProc::Backup()
+{
+	//フォント破棄
+	if (m_pFont != nullptr)
+	{
+		m_pFont->Release();
+		m_pFont = nullptr;
+	}
+}
+
+//========================
+//復元
+//========================
+void CDebugProc::Restore()
+{
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();	//デバイスの取得
+
+	//デバッグ表示用フォント生成
+	D3DXCreateFont(pDevice, 18, 0, 0, 0, FALSE,
+		SHIFTJIS_CHARSET, OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH,
+		"Terminal", &m_pFont);
+
+	//バッファクリア
+	memset(&m_aStr, 0, sizeof m_aStr);
 }
