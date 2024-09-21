@@ -22,7 +22,12 @@ namespace
 {
 	const float TIME_TUTORIAL_FADEOUT = 0.3f;	// チュートリアル確認のフェードアウト
 	const MyLib::Vector3 SET_POS = MyLib::Vector3(SCREEN_WIDTH * 0.3f, SCREEN_HEIGHT * 0.85f, 0.0f);
-	const float HEIGHT = 100.0f;
+	const float HEIGHT = 70.0f;
+	const D3DXCOLOR COL_NONESELECT = D3DXCOLOR(0.4f, 0.4f, 0.4f, 1.0f);
+
+	D3DXCOLOR GetColorNonSelect(float alpha) {
+		return D3DXCOLOR(0.4f, 0.4f, 0.4f, alpha);
+	}
 }
 
 namespace FILENAME
@@ -119,7 +124,7 @@ HRESULT CTitle_Select::Init()
 	// テクスチャ設定
 	m_pSelect->BindTexture(pTexture->Regist(FILENAME::BG));
 	D3DXVECTOR2 texture = pTexture->GetImageSize(m_pSelect->GetIdxTexture());
-	D3DXVECTOR2 setsize = UtilFunc::Transformation::AdjustSizeByHeight(texture, HEIGHT);
+	D3DXVECTOR2 setsize = UtilFunc::Transformation::AdjustSizeByHeight(texture, HEIGHT * 1.5f);
 
 	m_pSelect->SetSize(D3DXVECTOR2(0.0f, setsize.y));
 	m_pSelect->SetSizeOrigin(setsize);
@@ -152,6 +157,17 @@ HRESULT CTitle_Select::Init()
 	// 状態遷移
 	SetState(STATE::STATE_FADEIN);
 	m_pSelect->SetPosition(m_ap2D[m_nSelect]->GetPosition() - MyLib::Vector3(m_pSelect->GetSizeOrigin().x, 0.0f, 0.0f));
+
+	// 色設定
+	for (int i = 0; i < SELECT_MAX; i++)
+	{
+		D3DXCOLOR col = D3DXCOLOR(1.0f, 1.0f, 1.0f, m_ap2D[i]->GetAlpha());
+		if (m_nSelect != i)
+		{
+			col = GetColorNonSelect(col.a);
+		}
+		m_ap2D[i]->SetColor(col);
+	}
 
 	// オプション選択肢の生成
 	if (m_pOptionSelect == nullptr)
@@ -279,6 +295,17 @@ void CTitle_Select::StateNone()
 		// 書く時間リセット
 		m_fSelectDrawTime = 0.0f;
 		m_pSelect->SetSize(D3DXVECTOR2(0.0f, m_pSelect->GetSize().y));
+
+		// 色設定
+		for (int i = 0; i < SELECT_MAX; i++)
+		{
+			D3DXCOLOR col = D3DXCOLOR(1.0f, 1.0f, 1.0f, m_ap2D[i]->GetAlpha());
+			if (m_nSelect != i)
+			{
+				col = GetColorNonSelect(col.a);
+			}
+			m_ap2D[i]->SetColor(col);
+		}
 
 		// サウンド再生
 		CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_CURSOR_MOVE);
