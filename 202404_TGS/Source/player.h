@@ -172,8 +172,9 @@ public:
 	CRetry_Ui* GetRetryUI() { return m_pRetryUI; }			// リトライUI取得
 	void CreateRetryUI();										// リトライUI設定
 
-	// ヒット系
+	// 設定系
 	void DeadSetting(MyLib::HitResult_Character* result);
+	void GoalSetting();	// ゴール時の設定
 
 	static CPlayer* Create(int nIdx);	// 生成
 	static CListManager<CPlayer> GetListObj() { return m_List; }	// リスト取得

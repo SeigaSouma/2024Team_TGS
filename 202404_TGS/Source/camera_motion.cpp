@@ -337,6 +337,12 @@ void CCameraMotion::Update()
 		m_fMotionTimer += CManager::GetInstance()->GetDeltaTime();
 		m_fTriggerTimer += CManager::GetInstance()->GetDeltaTime();
 	}
+	else
+	{
+		// トリガー判定リセット
+		m_bTrigger = false;
+		return;
+	}
 
 	//=============================
 	// トリガー判定

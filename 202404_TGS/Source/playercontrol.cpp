@@ -867,6 +867,24 @@ void CPlayerControlBaggage::Action(CPlayer* player, CBaggage* pBaggage)
 }
 
 //==========================================================================
+// ゴール時の設定
+//==========================================================================
+void CPlayerControlBaggage::GoalSetting()
+{
+	// 息エフェクト状態変更
+	if (m_pEffekseerObj != nullptr)
+	{
+		// ゆっくり消す
+		m_pEffekseerObj->SetTrigger(0);
+		m_pEffekseerObj->DeleteLater(1.0f);
+		m_pEffekseerObj = nullptr;
+
+		// SEストップ
+		CSound::GetInstance()->StopSound(CSound::LABEL::LABEL_SE_BRESS_STREAM);
+	}
+}
+
+//==========================================================================
 // 窒息
 //==========================================================================
 void CPlayerControlBaggage::Suffocation(CPlayer* player, CBaggage* pBaggage)
@@ -962,6 +980,8 @@ void CPlayerControlBaggage::GoalAction(CPlayer* player, CBaggage* pBaggage)
 
 				// ゴールゲームテキスト生成
 				CGoalGameText::Create();
+
+				// 目的地紹介するならここ
 			}
 			m_nGoalTimer = GOAL_AIRTIMER;
 			break;

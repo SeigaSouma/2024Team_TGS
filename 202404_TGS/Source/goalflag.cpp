@@ -16,6 +16,7 @@
 #include "camera.h"
 #include "camera_motion.h"
 #include "sound.h"
+#include "blackframe.h"
 
 //==========================================================================
 // 定数定義
@@ -148,16 +149,13 @@ void CGoalflagX::Update()
 
 	// 位置情報取得
 	MyLib::Vector3 pos = CObjectX::GetPosition();
-	MyLib::Vector3 Playerpos;
 
 	// リストループ
 	CListManager<CPlayer> PlayerList = CPlayer::GetListObj();
-	CPlayer* pObj = nullptr;
-	while (PlayerList.ListLoop(&pObj))
-	{
-		// プレイヤーの位置情報取得
-		Playerpos = pObj->GetPosition();
-	}
+	CPlayer* pPlayer = PlayerList.GetData(0);
+	
+	// プレイヤーの位置情報取得
+	MyLib::Vector3 Playerpos = pPlayer->GetPosition();
 
 	if (m_bClear) { return; }
 
@@ -167,6 +165,7 @@ void CGoalflagX::Update()
 		Playerpos.x >= pos.x || pKey->GetTrigger(DIK_3))
 	{// ゴールしたっぺ
 
+		// サウンド再生
 		CSound::GetInstance()->StopSound(CSound::LABEL_BGM_GAME);
 		CSound::GetInstance()->PlaySound(CSound::LABEL_BGM_GOAL);
 
@@ -178,7 +177,17 @@ void CGoalflagX::Update()
 		pCamera->SetStateCameraV(DEBUG_NEW CStateCameraV_Goal);
 		pCamera->GetMotion()->SetPosition(Playerpos);
 		pCamera->GetMotion()->SetMotion(CCameraMotion::MOTION::MOTION_GOAL, CCameraMotion::EASING::Linear);
+
+		// クリアテキスト生成
 		CStageClearText::Create(MyLib::Vector3(640.0f, 400.0f, 0.0f));
+
+		// ゴール時の設定
+		pPlayer->GoalSetting();
+
+		// 黒フレーム削除
+		CBlackFrame::GetInstance()->SetState(CBlackFrame::STATE::STATE_IN);
+
+		// クリア判定ＯＮ
 		m_bClear = true;
 	}
 }

@@ -1817,6 +1817,31 @@ void CPlayer::StateRespawn()
 }
 
 //==========================================================================
+// ゴール時の設定
+//==========================================================================
+void CPlayer::GoalSetting()
+{
+	// 位置取得
+	MyLib::Vector3 pos = GetPosition();
+
+	// 荷物の位置をプレイヤーに同期
+	MyLib::Vector3 posBaggage = m_pBaggage->GetPosition();
+	m_pBaggage->SetPosition(MyLib::Vector3(pos.x, posBaggage.y, pos.z));
+
+	// 状態遷移
+	m_pBaggage->SetState(CBaggage::STATE::STATE_GOAL);
+
+	// 移動量設定
+	SetMove(0.0f);
+
+	// 荷物操作
+	if (m_pControlBaggage != nullptr)
+	{
+		m_pControlBaggage->GoalSetting();
+	}
+}
+
+//==========================================================================
 // 描画処理
 //==========================================================================
 void CPlayer::Draw()

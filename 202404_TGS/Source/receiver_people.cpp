@@ -424,7 +424,7 @@ void CReceiverPeople::StateWait()
 
 
 	// キャッチ判定を取る
-	if (bagpos.y <= mypos.y)
+	if (bagpos.y <= 0.0f)
 	{// 既に落下している
 		m_StartPos = GetPosition();
 		m_StartRot = GetRotation();
@@ -641,6 +641,17 @@ void CReceiverPeople::StateYabai()
 	{
 		// モーション設定
 		pMotion->Set(MOTION::MOTION_YABAI);
+
+		// 注視点を自分に
+		CCamera* pCamera = CManager::GetInstance()->GetCamera();
+		pCamera->GetCameraMotion()->SetPosition(GetPosition() + MyLib::Vector3(0.0f, 50.0f, 0.0f));
+		pCamera->GetCameraMotion()->SetEnablePause(true);
+		pCamera->SetPositionR(GetPosition());
+
+		// 向きも変える
+		MyLib::Vector3 setrot = pCamera->GetRotation();
+		setrot.z = D3DX_PI * -0.05f;
+		pCamera->SetRotation(setrot);
 	}
 
 	// ダイブ設定
@@ -650,6 +661,20 @@ void CReceiverPeople::StateYabai()
 		m_state = STATE::STATE_DIVE;
 		m_fStateTime = 0.0f;
 		CSound::GetInstance()->PlaySound(CSound::LABEL_SE_DIVE);
+
+
+		// 荷物の現在位置を比較する
+		CBaggage* pBaggage = CBaggage::GetListObj().GetData(0);
+
+		// 注視点を荷物に
+		CCamera* pCamera = CManager::GetInstance()->GetCamera();
+		pCamera->GetCameraMotion()->SetPosition(pBaggage->GetPosition());
+		pCamera->SetPositionR(pBaggage->GetPosition() + MyLib::Vector3(0.0f, 50.0f, 0.0f));
+
+		// 向きも変える
+		MyLib::Vector3 setrot = pCamera->GetRotation();
+		setrot.z = D3DX_PI * -0.1f;
+		pCamera->SetRotation(setrot);
 	}
 }
 
@@ -678,6 +703,7 @@ void CReceiverPeople::StateDive()
 	// 荷物取得
 	CBaggage* pBag = CBaggage::GetListObj().GetData(0);
 	MyLib::Vector3 bagpos = pBag->GetPosition();
+	bagpos.y = 0.0f;
 
 	// 位置設定
 	MyLib::Vector3 pos = UtilFunc::Correction::EasingLinear(m_StartPos, bagpos, 0.0f, STATE_TIME::DIVE, m_fMoveTimer);
@@ -692,7 +718,12 @@ void CReceiverPeople::StateDive()
 	// 状態遷移
 	if (m_fMoveTimer >= STATE_TIME::DIVE)
 	{
+		// 状態遷移
 		SetState(STATE::STATE_DROWN);
+		m_fMoveTimer = 0.0f;
+
+		// 向きを調整
+		SetRotation(START_ROT);
 
 		// 水エフェクト
 		CEffekseerObj::Create(
@@ -720,22 +751,25 @@ void CReceiverPeople::StateDrown()
 		pMotion->Set(MOTION::MOTION_DROWN);
 	}
 
-	if (((pMotion->GetType() == MOTION::MOTION_DROWN && pMotion->IsFinish()) ||
-		pMotion->GetType() != MOTION::MOTION_DROWN) && !m_bEnd)
+
+	// 移動時間加算
+	m_fMoveTimer += CManager::GetInstance()->GetDeltaTime();
+
+	if (m_fMoveTimer >= 2.0f &&
+		(
+		((pMotion->GetType() == MOTION::MOTION_DROWN && pMotion->IsFinish()) ||
+		pMotion->GetType() != MOTION::MOTION_DROWN) && !m_bEnd
+			))
 	{// パス終了 or パス以外
 		m_bEnd = true;
 		CCatchResult::Create(MyLib::Vector3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f), CCatchResult::TYPE::TYPE_FAIL);
 	}
 
+	// 荷物の位置にそろえる
 	CBaggage* pBaggage = CBaggage::GetListObj().GetData(0);
-	SetPosition(pBaggage->GetPosition());
-
-	// 向きを調整
-	{
-		m_fMoveTimer += LOOKBACK_TIMER;
-		MyLib::Vector3 rot = UtilFunc::Correction::EasingEaseIn(m_StartRot, START_ROT, 0.0f, 1.0f, m_fMoveTimer);
-		SetRotation(rot);
-	}
+	MyLib::Vector3 bagpos = pBaggage->GetPosition();
+	bagpos.y = 0.0f;
+	SetPosition(bagpos);
 }
 
 //==========================================================================

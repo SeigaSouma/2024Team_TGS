@@ -77,6 +77,7 @@ public:
 	virtual void Action(CPlayer* player, CBaggage* pBaggage);	// アクション
 	void EffectStop();	// エフェクト停止
 	void Reset(CPlayer* player, CBaggage* pBaggage);		// リセット
+	void GoalSetting();	// ゴール時の設定
 	STATE GetState() { return m_state; }
 
 private:
