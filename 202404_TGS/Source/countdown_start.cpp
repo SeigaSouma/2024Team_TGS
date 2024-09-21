@@ -131,6 +131,9 @@ HRESULT CCountdown_Start::Init()
 	// 種類の設定
 	SetType(CObject::TYPE::TYPE_OBJECT2D);
 
+	// サウンド再生
+	CSound::GetInstance()->PlaySound(CSound::LABEL_SE_COUNTDOWN1);
+
 	return S_OK;
 }
 
@@ -211,8 +214,6 @@ void CCountdown_Start::StateDrop_Wait()
 {
 	if (m_fStateTime >= StateTime::DROP_WAIT)
 	{
-		CSound::GetInstance()->PlaySound(CSound::LABEL_SE_COUNTDOWN1);
-
 		// 状態タイマーリセット
 		m_fStateTime = 0.0f;
 
@@ -253,6 +254,14 @@ void CCountdown_Start::StateDrop_DOWN()
 
 			// 目標値に設定
 			SetPosition(StatePos::DEST_COMPLETE);
+
+			// サウンド再生
+			CSound::GetInstance()->PlaySound(CSound::LABEL_SE_COUNTDOWN2);
+		}
+		else
+		{
+			// サウンド再生
+			CSound::GetInstance()->PlaySound(CSound::LABEL_SE_COUNTDOWN1);
 		}
 
 		// テクスチャ設定
@@ -298,8 +307,6 @@ void CCountdown_Start::StateComplete()
 
 	if (m_fStateTime >= StateTime::COMPLETE)
 	{
-		CSound::GetInstance()->PlaySound(CSound::LABEL_SE_COUNTDOWN2);
-
 		// 状態タイマーリセット
 		m_fStateTime = 0.0f;
 

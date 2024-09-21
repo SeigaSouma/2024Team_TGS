@@ -261,8 +261,16 @@ void CTitle_Select::StateNone()
 	//=============================
 	// •ûŒü“ü—Í
 	//=============================
-	if (pInputGamepad->GetTrigger(CInputGamepad::BUTTON_LEFT, 0) || pInputGamepad->GetTrigger(CInputGamepad::BUTTON_RIGHT, 0)
-		|| pInputKeyboard->GetTrigger(DIK_A) || pInputKeyboard->GetTrigger(DIK_D))
+	
+	bool bLeft = (pInputGamepad->GetLStickTrigger(CInputGamepad::STICK::STICK_X) && pInputGamepad->GetStickMoveL(0).x < 0) ||
+		pInputGamepad->GetTrigger(CInputGamepad::BUTTON::BUTTON_LEFT, 0) ||
+		pInputKeyboard->GetTrigger(DIK_A);
+
+	bool bRight = (pInputGamepad->GetLStickTrigger(CInputGamepad::STICK::STICK_X) && pInputGamepad->GetStickMoveL(0).x > 0) ||
+		pInputGamepad->GetTrigger(CInputGamepad::BUTTON::BUTTON_RIGHT, 0) ||
+		pInputKeyboard->GetTrigger(DIK_D);
+	
+	if (bLeft || bRight)
 	{
 		// Ø‚è‘Ö‚¦
 		m_nSelect ^= 1;

@@ -1786,6 +1786,9 @@ void CPlayer::StateRestart()
 		// チェックポイント通過情報リセット
 		CCheckpoint::ResetSaveID();
 
+		// タイマーリセット
+		CGame::GetInstance()->GetTimer()->SetTime(0.0f);
+
 		// リトライUIを消す
 		if (m_pRetryUI != nullptr)
 		{

@@ -440,6 +440,10 @@ void CPlayerControlMove::Move(CPlayer* player)
 				CWaterRipple::Create(block, blocksize, setpos, height, velocity, thickness, 35);
 			}
 
+			// サウンド再生
+			int label = CSound::LABEL::LABEL_SE_PLAYERMOVE01 + UtilFunc::Transformation::Random(0, 7);
+			CSound::GetInstance()->PlaySound(static_cast<CSound::LABEL>(label));
+
 			// インターバルをランダム調整
 			m_nIntervalWaterRipple = DEFAULT_WATERRIPPLE_INTERVAL + UtilFunc::Transformation::Random(-6, 6);
 		}

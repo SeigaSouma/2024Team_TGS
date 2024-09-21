@@ -51,6 +51,7 @@ CSound::SOUNDINFO CSound::m_aSoundInfo[LABEL_MAX] =
 	{ TYPE_SE,"data/SE/shock_creature.wav", 0 },
 	{ TYPE_SE,"data/SE/inthewater1.wav", 0 },
 	{ TYPE_SE,"data/SE/inthewater2.wav", 0 },
+	{ TYPE_SE,"data/SE/inthewater3.wav", 0 },
 	{ TYPE_SE,"data/SE/writing.wav", 0 },
 	{ TYPE_SE,"data/SE/writeFinish.wav", 0 },
 	{ TYPE_SE,"data/SE/cluckbubbles.wav", 0 },
@@ -66,7 +67,14 @@ CSound::SOUNDINFO CSound::m_aSoundInfo[LABEL_MAX] =
 	{ TYPE_SE,"data/BGM/goal.wav", -1 },
 	{ TYPE_SE,"data/SE/select.wav", 0 },
 	{ TYPE_SE,"data/SE/diction.wav", 0 },
-
+	{ TYPE_SE,"data/SE/playermove_01.wav", 0 },	// プレイヤー移動01
+	{ TYPE_SE,"data/SE/playermove_02.wav", 0 },	// プレイヤー移動02
+	{ TYPE_SE,"data/SE/playermove_03.wav", 0 },	// プレイヤー移動03
+	{ TYPE_SE,"data/SE/playermove_04.wav", 0 },	// プレイヤー移動04
+	{ TYPE_SE,"data/SE/playermove_05.wav", 0 },	// プレイヤー移動05
+	{ TYPE_SE,"data/SE/playermove_06.wav", 0 },	// プレイヤー移動06
+	{ TYPE_SE,"data/SE/playermove_07.wav", 0 },	// プレイヤー移動07
+	{ TYPE_SE,"data/SE/playermove_08.wav", 0 },	// プレイヤー移動08
 
 };	// サウンドの情報
 CSound* CSound::m_pThisPtr = nullptr;	// 自身のポインタ

@@ -237,6 +237,11 @@ void CCheckpoint::StateSwing()
 	// サインカーブ補間
 	float ratio = UtilFunc::Correction::EasingEaseInOutSine(0.0f, 1.0f, 0.0f, StateTime::SWING, m_fStateTime);
 	rot = m_DestRot_Old + (m_DestRot - m_DestRot_Old) * ratio;
+
+	if (m_bIsPassed)
+	{// 到着済みは半回転
+		rot.z += D3DX_PI;
+	}
 	SetRotation(rot);
 
 	if (m_fStateTime >= StateTime::SWING)

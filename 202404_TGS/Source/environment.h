@@ -90,7 +90,7 @@ public:
 
 	CSpawn_Leaf() : CSpawnEnvironment() {}
 	CSpawn_Leaf(float timer, float interval) : CSpawnEnvironment(timer, interval) {}
-	~CSpawn_Leaf() {}
+	virtual ~CSpawn_Leaf() {}
 
 	// XVˆ—
 	virtual void Update(float deltaTime) override;

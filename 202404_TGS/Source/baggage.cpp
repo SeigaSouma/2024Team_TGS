@@ -517,6 +517,10 @@ void CBaggage::StateFall()
 			CEffekseerObj::Create(
 				CMyEffekseer::EFKLABEL::EFKLABEL_SPRAYWATER_MINI,
 				pos, MyLib::Vector3(0.0f, 0.0f, 0.0f), 0.0f, 30.0f, true);
+
+
+			// SEÄ¶
+			CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_INTHEWATER3);
 		}
 
 		m_bfall = true;
