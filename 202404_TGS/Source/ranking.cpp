@@ -23,6 +23,8 @@ namespace
 	//ランキングのコンフィグ
 	const float SCROLL_SPEED = -10.0f;
 	const float SCROLL_STOP_POS_Y = 600.0f;
+	const int NUM_RANK = 10;
+	const std::string FILE_BIN = "data\\TEXT\\ranking\\ranking.bin";
 }
 //==========================================================================
 // 静的メンバ変数宣言
@@ -37,6 +39,7 @@ CRanking::CRanking()
 {
 	m_pRankingScore = nullptr;	// ランキングスコアのオブジェクト
 	m_bAllArrival = false;	// 全て到着した判定
+	m_pRankData = nullptr;
 	
 	for (int nCnt = 0; nCnt < 10; nCnt++)
 	{
@@ -67,22 +70,38 @@ HRESULT CRanking::Init()
 	// ランキングのスコア生成
 	/*m_pRankingScore = CRankingScore::Create();*/
 
+	// ランキングデータ格納用構造体を作る
+	m_pRankData = new SRankdata[NUM_RANK];
+
+	// ファイル読み込み
+	Load();
+
+	// ファイル保存
+	Save();
+
 	//仮日付データ
-	int nDate[3] = { 2030,1,1 };
 
-	//TOP3のアイテム生成（順位、時間、総評、日付、基準位置、拡大率、ランキング更新）
-	m_pRanking[0] = CRankingItem_top3::Create(1, 0,1,99, 2, nDate, MyLib::Vector3(250.0f, 250.0f, 0.0f), 0.9f, true);
-	m_pRanking[1] = CRankingItem_top3::Create(2, 1,12,33, 2, nDate, MyLib::Vector3(250.0f, 390.0f, 0.0f), 0.9f, false);
-	m_pRanking[2] = CRankingItem_top3::Create(3, 2,22,22, 3, nDate, MyLib::Vector3(250.0f, 530.0f, 0.0f), 0.9f, false);
+	for (int i = 0; i < NUM_RANK; i++)
+	{
+		int nDate[3] = { m_pRankData[i].year,m_pRankData[i].month,m_pRankData[i].day };
+		int minutes = m_pRankData[i].minutes;
+		int seconds = m_pRankData[i].seconds;
+		int milliseconds = m_pRankData[i].milliSeconds;
+		int allrank = m_pRankData[i].allrank;
+		bool rankin = m_pRankData[i].rankin;
 
-	//下位のアイテム生成（順位、時間、総評、基準位置、拡大率、ランキング更新）
-	m_pRanking[3] = CRankingItem::Create(4, 4,44,44, 3, MyLib::Vector3(250.0f, 700.0f, 0.0f), 0.85f, true);
-	m_pRanking[4] = CRankingItem::Create(5, 55,55,55, 3, MyLib::Vector3(250.0f, 800.0f, 0.0f), 0.85f, false);
-	m_pRanking[5] = CRankingItem::Create(6, 66,66,66, 3, MyLib::Vector3(250.0f, 900.0f, 0.0f), 0.85f, false);
-	m_pRanking[6] = CRankingItem::Create(7, 77,77,77, 3, MyLib::Vector3(250.0f, 1000.0f, 0.0f), 0.85f, false);
-	m_pRanking[7] = CRankingItem::Create(8, 88,88,88, 3, MyLib::Vector3(250.0f, 1100.0f, 0.0f), 0.85f, false);
-	m_pRanking[8] = CRankingItem::Create(9, 99,99,99, 3, MyLib::Vector3(250.0f, 1200.0f, 0.0f), 0.85f, false);
-	m_pRanking[9] = CRankingItem::Create(10, 10,10,10, 3, MyLib::Vector3(250.0f, 1300.0f, 0.0f), 0.85f, false);
+		if (i < 3)
+		{
+			//TOP3のアイテム生成（順位、時間、総評、日付、基準位置、拡大率、ランキング更新）
+			m_pRanking[i] = CRankingItem_top3::Create(i + 1, minutes, seconds, milliseconds, allrank, nDate, MyLib::Vector3(250.0f, 250.0f + i * 140.0f, 0.0f), 0.9f, rankin);
+		}
+		else
+		{
+			int j = i - 3;
+			//下位のアイテム生成（順位、時間、総評、基準位置、拡大率、ランキング更新）
+			m_pRanking[i] = CRankingItem::Create(i + 1, minutes, seconds, milliseconds, allrank, MyLib::Vector3(250.0f, 700.0f + j * 100.0f, 0.0f), 0.85f, rankin);
+		}
+	}
 	
 	CSound::GetInstance()->PlaySound(CSound::LABEL_BGM_RANKING);
 
@@ -97,6 +116,13 @@ void CRanking::Uninit()
 {
 	// ランキングスコアのオブジェクト
 	m_pRankingScore = nullptr;
+
+	// ランキング情報の削除
+	if (m_pRankData != nullptr)
+	{
+		delete[] m_pRankData;
+		m_pRankData = nullptr;
+	}
 
 	// 終了処理
 	CScene::Uninit();
@@ -122,15 +148,6 @@ void CRanking::Update()
 	CKeyConfig* pPad = pConfigMgr->GetConfig(CKeyConfigManager::CONTROL_INPAD);
 	CKeyConfig* pKey = pConfigMgr->GetConfig(CKeyConfigManager::CONTROL_INKEY);
 
-	if (pKey->GetTrigger(OUTGAME::ACT_OK, 0) || pPad->GetTrigger(OUTGAME::ACT_OK, 0))
-	{
-		//スクロール開始処理
-		for (int nCnt = 0; nCnt < 10; nCnt++)
-		{
-			m_pRanking[nCnt]->SetMove(MyLib::Vector3(0.0f, SCROLL_SPEED, 0.0f));
-		}
-	}
-
 	//スクロール停止判定
 	MyLib::Vector3 latestpos = m_pRanking[9]->GetPos();
 	if (latestpos.y <= SCROLL_STOP_POS_Y)
@@ -146,6 +163,15 @@ void CRanking::Update()
 		{
 			// モード設定
 			CManager::GetInstance()->GetFade()->SetFade(CScene::MODE_TITLE);
+		}
+	}
+
+	if (pKey->GetTrigger(OUTGAME::ACT_OK, 0) || pPad->GetTrigger(OUTGAME::ACT_OK, 0))
+	{
+		//スクロール開始処理
+		for (int nCnt = 0; nCnt < 10; nCnt++)
+		{
+			m_pRanking[nCnt]->SetMove(MyLib::Vector3(0.0f, SCROLL_SPEED, 0.0f));
 		}
 	}
 
@@ -170,4 +196,70 @@ void CRanking::Draw()
 void CRanking::SetEnableArrival()
 {
 	m_bAllArrival = true;
+}
+
+//==========================================================================
+// ファイル読み込み
+//==========================================================================
+void CRanking::Load()
+{
+	// ファイルを開く
+	std::ifstream File(FILE_BIN, std::ios::binary);
+	if (!File.is_open()) {
+
+		if (m_pRankData == nullptr)
+		return;
+
+		// 時刻を取得
+		time_t Time = time(NULL);
+
+		// 現在の時刻を現地時間に変換
+		std::tm* now = std::localtime(&Time);
+
+		// 年、月、日、時、分、秒をそれぞれintに変換
+		int year = now->tm_year + 1900;  // 年は1900年からの経過年数
+		int month = now->tm_mon + 1;     // 月は0から始まるので+1
+		int day = now->tm_mday;          // 日
+
+		// 初期値を入れる
+		for (int i = 0; i < NUM_RANK; i++)
+		{
+			m_pRankData[i].year = year;
+			m_pRankData[i].month = month;
+			m_pRankData[i].day = day;
+			m_pRankData[i].minutes = 8 + i * 1;
+			m_pRankData[i].seconds = i % 6 * 10;
+			m_pRankData[i].milliSeconds = 0;
+			m_pRankData[i].allrank = 3;
+			m_pRankData[i].rankin = false;
+		}
+
+		return;
+	}
+
+
+	// データ読み込み
+	File.read(reinterpret_cast<char*>(m_pRankData), sizeof(SRankdata) * NUM_RANK);
+
+	// ファイルを閉じる
+	File.close();
+}
+
+//==========================================================================
+// 保存
+//==========================================================================
+void CRanking::Save()
+{
+	// ファイルを開く
+	std::ofstream File(FILE_BIN, std::ios::binary);
+	if (!File.is_open()) {
+
+		return;
+	}
+
+	// データ保存
+	File.write(reinterpret_cast<const char*>(m_pRankData), sizeof(SRankdata) * NUM_RANK);
+
+	// ファイルを閉じる
+	File.close();
 }
