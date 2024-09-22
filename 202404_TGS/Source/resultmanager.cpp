@@ -13,6 +13,7 @@
 #include "toatalrank.h"
 #include "scroll.h"
 #include "sound.h"
+#include "ranking.h"
 
 //==========================================================================
 // 静的メンバ変数宣言
@@ -89,13 +90,21 @@ void CResultManager::CreateResultScreen()
 	// タイマー
 	m_pTimer = static_cast<CTimer_Result*>(CTimer::Create(CTimer::Type::TYPE_RESULT, 4));
 	m_pTimer->SetTime(m_fClearTime);
-	
 
 	// クリアランク
 	m_pClearRank = CClearRank::Create(m_JudgeRank);
 
 	// トータルランク
 	m_pToatalRank = CToatalRank::Create(m_JudgeRank, m_fClearTime);
+
+	// ランキングデータに保存
+	CRanking::SRankdata nowdata = CRanking::SRankdata();
+	nowdata.allrank = m_pToatalRank->GetRank();
+	nowdata.minutes = static_cast<int>(m_fClearTime / 60);
+	nowdata.seconds = static_cast<int>(m_fClearTime) % 60;
+	nowdata.milliSeconds = static_cast<int>((m_fClearTime - static_cast<int>(m_fClearTime)) * 1000);
+	nowdata.milliSeconds /= 10;
+	CRanking::SetNowData(nowdata);
 }
 
 //==========================================================================

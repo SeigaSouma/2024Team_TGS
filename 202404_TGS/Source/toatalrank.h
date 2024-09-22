@@ -45,7 +45,7 @@ public:
 
 	void SetState(State state);				// ó‘Ôİ’è
 	State GetState() { return m_state; }	// ó‘Ôæ“¾
-
+	CJudge::JUDGE GetRank() { return m_Rank; }
 	bool IsFinish() { return m_bFinish; }	// I—¹
 
 	//=============================

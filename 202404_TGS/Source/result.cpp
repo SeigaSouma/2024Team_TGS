@@ -143,7 +143,7 @@ void CResult::Update()
 	if (pInputKeyboard->GetTrigger(DIK_RETURN) || pInputGamepad->GetTrigger(CInputGamepad::BUTTON_A, 0))
 	{
 		// ƒ‚[ƒhÝ’è
-		CManager::GetInstance()->GetFade()->SetFade(CScene::MODE_TITLE);
+		CManager::GetInstance()->GetFade()->SetFade(CScene::MODE_RANKING);
 	}
 
 }

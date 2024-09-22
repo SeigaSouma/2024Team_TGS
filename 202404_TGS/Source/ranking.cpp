@@ -21,16 +21,18 @@
 namespace
 {
 	//ランキングのコンフィグ
-	const float SCROLL_SPEED = -10.0f;
-	const float SCROLL_STOP_POS_Y = 600.0f;
-	const int NUM_RANK = 10;
-	const std::string FILE_BIN = "data\\TEXT\\ranking\\ranking.bin";
+	const float SCROLL_SPEED = -10.0f;	// スクロール速度
+	const float SCROLL_STOP_POS_Y = 600.0f;	// 停止座標
+	const int NUM_RANK = 10;	// ランキング数
+	const int NUM_ALLRANK = 4;	// 総評ランク数
+	const std::string FILE_BIN = "data\\TEXT\\ranking\\ranking.bin";	// ランキングデータ保存ファイル
 }
 //==========================================================================
 // 静的メンバ変数宣言
 //==========================================================================
 CRankingScore *CRanking::m_pRankingScore = nullptr;	// ランキングスコアのオブジェクト
 bool CRanking::m_bAllArrival = false;		// 全て到着した判定
+CRanking::SRankdata CRanking::m_NowData = CRanking::SRankdata(0, 0, 0, 0, 0, 0, NUM_ALLRANK);
 
 //==========================================================================
 // コンストラクタ
@@ -76,11 +78,16 @@ HRESULT CRanking::Init()
 	// ファイル読み込み
 	Load();
 
+	// ソート
+	Sort();
+
+	// ランクイン確認
+	RankIn();
+
 	// ファイル保存
 	Save();
 
-	//仮日付データ
-
+	// ランキング数分生成
 	for (int i = 0; i < NUM_RANK; i++)
 	{
 		int nDate[3] = { m_pRankData[i].year,m_pRankData[i].month,m_pRankData[i].day };
@@ -124,6 +131,10 @@ void CRanking::Uninit()
 		m_pRankData = nullptr;
 	}
 
+	// リセット
+	m_NowData = SRankdata();
+	m_NowData.allrank = NUM_ALLRANK;
+
 	// 終了処理
 	CScene::Uninit();
 }
@@ -156,22 +167,22 @@ void CRanking::Update()
 		{
 			m_pRanking[nCnt]->SetMove(MyLib::Vector3(0.0f, 0.0f, 0.0f));
 		}
-	}
-	else
-	{
+
 		if (pKey->GetTrigger(OUTGAME::ACT_OK, 0) || pPad->GetTrigger(OUTGAME::ACT_OK, 0))
 		{
 			// モード設定
 			CManager::GetInstance()->GetFade()->SetFade(CScene::MODE_TITLE);
 		}
 	}
-
-	if (pKey->GetTrigger(OUTGAME::ACT_OK, 0) || pPad->GetTrigger(OUTGAME::ACT_OK, 0))
+	else
 	{
-		//スクロール開始処理
-		for (int nCnt = 0; nCnt < 10; nCnt++)
+		if (pKey->GetTrigger(OUTGAME::ACT_OK, 0) || pPad->GetTrigger(OUTGAME::ACT_OK, 0))
 		{
-			m_pRanking[nCnt]->SetMove(MyLib::Vector3(0.0f, SCROLL_SPEED, 0.0f));
+			//スクロール開始処理
+			for (int nCnt = 0; nCnt < 10; nCnt++)
+			{
+				m_pRanking[nCnt]->SetMove(MyLib::Vector3(0.0f, SCROLL_SPEED, 0.0f));
+			}
 		}
 	}
 
@@ -227,10 +238,10 @@ void CRanking::Load()
 			m_pRankData[i].year = year;
 			m_pRankData[i].month = month;
 			m_pRankData[i].day = day;
-			m_pRankData[i].minutes = 8 + i * 1;
+			m_pRankData[i].minutes = 8 + (NUM_RANK - i) * 1;
 			m_pRankData[i].seconds = i % 6 * 10;
 			m_pRankData[i].milliSeconds = 0;
-			m_pRankData[i].allrank = 3;
+			m_pRankData[i].allrank = i % 3 + 1;
 			m_pRankData[i].rankin = false;
 		}
 
@@ -243,6 +254,12 @@ void CRanking::Load()
 
 	// ファイルを閉じる
 	File.close();
+
+	// フラグオフ
+	for (int i = 0; i < NUM_RANK; i++)
+	{
+		m_pRankData[i].rankin = false;
+	}
 }
 
 //==========================================================================
@@ -262,4 +279,116 @@ void CRanking::Save()
 
 	// ファイルを閉じる
 	File.close();
+}
+
+//==========================================================================
+// ソート
+//==========================================================================
+void CRanking::Sort()
+{
+	// 昇順ソート(総評)
+	for (int fst = 0; fst < NUM_RANK - 1; fst++)
+	{
+		int tempNum = fst;	// 仮の一番大きい番号
+
+		for (int sec = fst + 1; sec < NUM_RANK; sec++)
+		{
+			SRankdata* pRank = &m_pRankData[sec];
+
+			if (pRank->allrank < m_pRankData[tempNum].allrank)
+			{// 値が小さい場合
+				tempNum = sec;	// 小さい番号を変更
+			}
+		}
+
+		if (tempNum != fst)
+		{// 変更する場合
+			SRankdata temp = m_pRankData[fst];
+			m_pRankData[fst] = m_pRankData[tempNum];
+			m_pRankData[tempNum] = temp;
+		}
+	}
+
+	// 昇順ソート(タイム)
+	for (int i = 0; i < NUM_ALLRANK; i++)
+	{
+		for (int fst = 0; fst < NUM_RANK - 1; fst++)
+		{
+			// 同ランク内でのみ確認する
+			if (m_pRankData[fst].allrank != i) { continue; }
+
+			int tempNum = fst;	// 仮の一番大きい番号
+			int temptime = (m_pRankData[fst].minutes * 10000.0f) + 
+				(m_pRankData[fst].seconds * 100.0f) + 
+				m_pRankData[fst].milliSeconds;
+
+			for (int sec = fst + 1; sec < NUM_RANK; sec++)
+			{
+				// 同ランク内でのみ比較
+				if (m_pRankData[sec].allrank != i) { continue; }
+
+				SRankdata* pRank = &m_pRankData[sec];
+				int time = (pRank->minutes * 10000.0f) +
+					(pRank->seconds * 100.0f) +
+					pRank->milliSeconds;
+
+				if (time < temptime)
+				{// 値が小さい場合
+					tempNum = sec;	// 小さい番号を変更
+					temptime = time;
+				}
+			}
+
+			if (tempNum != fst)
+			{// 変更する場合
+				SRankdata temp = m_pRankData[fst];
+				m_pRankData[fst] = m_pRankData[tempNum];
+				m_pRankData[tempNum] = temp;
+			}
+		}
+	}
+}
+
+//==========================================================================
+// ランクイン
+//==========================================================================
+void CRanking::RankIn()
+{
+	// 今回のタイムを格納
+	int nowallrank = m_NowData.allrank;
+	int nowtime = (m_NowData.minutes * 10000.0f) +
+		(m_NowData.seconds * 100.0f) +
+		m_NowData.milliSeconds;
+
+	// 最下位のタイムを格納
+	SRankdata* pRank = &m_pRankData[NUM_RANK - 1];
+	int lowestallrank = pRank->allrank;
+	int lowesttime = (pRank->minutes * 10000.0f) +
+		(pRank->seconds * 100.0f) +
+		pRank->milliSeconds;
+
+	// 最下位よりランクが上もしくは同ランク以上かつタイムが速い
+	if (nowallrank < lowestallrank ||
+		(nowallrank <= lowestallrank && nowtime <= lowesttime))
+	{
+		// 時刻を取得
+		time_t Time = time(NULL);
+
+		// 現在の時刻を現地時間に変換
+		std::tm* now = std::localtime(&Time);
+
+		// 年、月、日、時、分、秒をそれぞれintに変換
+		int year = now->tm_year + 1900;  // 年は1900年からの経過年数
+		int month = now->tm_mon + 1;     // 月は0から始まるので+1
+		int day = now->tm_mday;          // 日
+		m_NowData.year = year;
+		m_NowData.month = month;
+		m_NowData.day = day;
+
+		m_pRankData[NUM_RANK - 1] = m_NowData;
+		m_pRankData[NUM_RANK - 1].rankin = true;
+
+		// サイドソート
+		Sort();
+	}
 }
