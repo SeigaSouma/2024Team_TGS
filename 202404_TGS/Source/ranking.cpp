@@ -15,6 +15,14 @@
 
 #include "rankingItem.h"
 #include "rankingItem_top3.h"
+
+// マップ用
+#include "waterfield.h"
+#include "course.h"
+#include "mapmesh.h"
+#include "stonewall.h"
+#include "peoplemanager.h"
+
 //=============================================================================
 // 定数定義
 //=============================================================================
@@ -73,7 +81,7 @@ HRESULT CRanking::Init()
 	/*m_pRankingScore = CRankingScore::Create();*/
 
 	// ランキングデータ格納用構造体を作る
-	m_pRankData = new SRankdata[NUM_RANK];
+	m_pRankData = DEBUG_NEW SRankdata[NUM_RANK];
 
 	// ファイル読み込み
 	Load();
@@ -112,8 +120,67 @@ HRESULT CRanking::Init()
 	
 	CSound::GetInstance()->PlaySound(CSound::LABEL_BGM_RANKING);
 
+	// マップ生成
+	CreateMap();
+
 	// 成功
 	return S_OK;
+}
+
+//==========================================================================
+// マップ生成
+//==========================================================================
+void CRanking::CreateMap()
+{
+	//=============================
+	// コース
+	//=============================
+	CCourse::Create("", CScene::MODE::MODE_TITLE);
+
+	//=============================
+	// 固定平面街フィールド
+	//=============================
+	CMapMesh::Create(CMapMesh::MeshType::TYPE_TOWNFIELD_FIXEDPLANE_RANKING);
+
+	//=============================
+	// 石垣(奥)
+	//=============================
+	{
+		CStoneWall* pStoneWall = CStoneWall::Create();
+
+		// 基点地点設定
+		std::vector<MyLib::Vector3> vecpos =
+		{
+			MyLib::Vector3(-1500.0f, 0.0f, 3000.0f),
+			MyLib::Vector3(0.0f, 0.0f, 3000.0f),
+			MyLib::Vector3(500.0f, 0.0f, 3000.0f),
+			MyLib::Vector3(2500.0f, 0.0f, 3000.0f),
+		};
+		pStoneWall->SetVecPosition(vecpos);
+		pStoneWall->Reset();
+
+		// 各頂点座標
+		std::vector<MyLib::Vector3> vecVtxpos =
+		{
+			MyLib::Vector3(-5000.0f, 0.0f, 2000.0f),
+			MyLib::Vector3(-5010.0f, 0.0f, 2000.0f),
+			MyLib::Vector3(5000.0f, 0.0f, 2000.0f),
+			MyLib::Vector3(5010.0f, 0.0f, 2000.0f),
+		};
+		pStoneWall->SetVecVtxPosition(vecVtxpos);
+		pStoneWall->BindVtxPosition();
+	}
+
+	//=============================
+	// 水フィールド
+	//=============================
+	CWaterField::Create(CWaterField::TYPE::TYPE_RIGHT);
+	CWaterField::Create(CWaterField::TYPE::TYPE_LEFT);
+
+	//=============================
+	// 人マネージャ
+	//=============================
+	m_pPeopleManager = CPeopleManager::Create(CPeopleManager::Type::TYPE_TITLE);
 }
 
 //==========================================================================
@@ -187,7 +254,7 @@ void CRanking::Update()
 	}
 
 	//スクロール更新処理
-	for (int nCnt = 0; nCnt < 10; nCnt++)
+	for (int nCnt = 0; nCnt < NUM_RANK; nCnt++)
 	{
 		m_pRanking[nCnt]->Update();
 	}

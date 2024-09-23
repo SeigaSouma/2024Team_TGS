@@ -80,6 +80,10 @@ CMapMesh* CMapMesh::Create(MeshType type)
 		pObjMeshField = DEBUG_NEW CTownField_FixedPlane_Result;
 		break;
 
+	case CMapMesh::TYPE_TOWNFIELD_FIXEDPLANE_RANKING:
+		pObjMeshField = DEBUG_NEW CTownField_FixedPlane_Ranking;
+		break;
+
 	default:
 		return nullptr;
 		break;

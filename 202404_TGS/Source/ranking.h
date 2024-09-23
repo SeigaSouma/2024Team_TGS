@@ -16,6 +16,8 @@
 //==========================================================================
 class CRankingScore;
 class CRankingItem;
+class CPeopleManager;
+
 //==========================================================================
 // クラス定義
 //==========================================================================
@@ -60,11 +62,13 @@ private:
 	void Save();
 	void Sort();
 	void RankIn();
+	void CreateMap();	// マップ生成
 
 	static bool m_bAllArrival;		// 全て到着した判定
 	static CRankingScore *m_pRankingScore;	// ランキングスコアのオブジェクト
 	CRankingItem* m_pRanking[10];
 	SRankdata* m_pRankData;
+	CPeopleManager* m_pPeopleManager;	// 人マネージャ
 	static SRankdata m_NowData;
 };
 

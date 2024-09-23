@@ -42,10 +42,7 @@
 #define TITLESTATE_CHANGE	(60 * 14)
 #define TITLESTATE_CHASE	(60 * 20)
 #define RESULT_LEN	(500.0f)
-#define RANKING_LEN_DEST	(1000.0f)
-#define RANKING_POS_V	(MyLib::Vector3(70.0f, 362.0f, -160.0f))
 //#define RESULT_LEN	(1000.0f)
-#define RANKINGROT_NONE		(MyLib::Vector3(0.0f, 0.15f, 0.06f))
 #define DECIDECAMERAROT_NONE		(MyLib::Vector3(0.0f, 0.0f, 0.0f))
 #define DECIDECAMERAPOS_NONE		(MyLib::Vector3(0.0f, 230.0f, -50.0f))
 #define DECIDE_LEN	(500.0f)
@@ -54,11 +51,14 @@
 namespace
 {
 	const MyLib::Vector3 TITLE_POSR_DEST = MyLib::Vector3(45271.0f, -34.0f, 591.0f);
+	const MyLib::Vector3 RANKING_POSR_DEST = MyLib::Vector3(625.34f, 503.34f, 2667.39f);	// ランキングの注視点
 	//const MyLib::Vector3 DEFAULT_GAMEROT = MyLib::Vector3(0.0f, 0.0f, -0.10f);	// ゲームのデフォルト向き
 	const MyLib::Vector3 DEFAULT_TITLEROT = MyLib::Vector3(0.0f, 0.67f, -0.08f);	// タイトルのデフォルト向き
-	const MyLib::Vector3 DEFAULT_RESULTROT = MyLib::Vector3(0.0f, 0.0f, -0.15f);	// タイトルのデフォルト向き
+	const MyLib::Vector3 DEFAULT_RESULTROT = MyLib::Vector3(0.0f, 0.0f, -0.15f);	// リザルトのデフォルト向き
+	const MyLib::Vector3 DEFAULT_RANKINGROT = MyLib::Vector3(0.0f, 0.0f, -0.05f);	// ランキングのデフォルト向き
 	const MyLib::Vector3 DEFAULT_GAMEROT = MyLib::Vector3(0.0f, 0.38f, -0.05f);	// ゲームのデフォルト向き
-	const float DEFAULT_TITLELEN = 1265.0f;	// タイトルのデフォルト長さ
+	const float DEFAULT_TITLELEN = 1265.0f;		// タイトルのデフォルト長さ
+	const float DEFAULT_RANKINGLEN = 1540.0f;	// ランキングのデフォルト長さ
 	const float MULTIPLY_POSV_CORRECTION = 2.1f;	// (ゲーム時)視点の補正係数倍率
 	const float MULTIPLY_POSR_CORRECTION = 2.1f;	// (ゲーム時)注視点の補正係数倍率
 	const float DISATNCE_POSR_PLAYER = 0.0f;		// (ゲーム時)プレイヤーとの注視点距離
@@ -380,9 +380,7 @@ void CCamera::MoveCameraStick(int nIdx)
 void CCamera::WarpCamera(MyLib::Vector3 pos)
 {
 	// 注視点の代入
-	m_posR.x = (pos.x + sinf(m_rot.y) * DISATNCE_POSR_PLAYER);
-	m_posR.z = (pos.z + cosf(m_rot.y) * DISATNCE_POSR_PLAYER);
-	m_posR.y = pos.y;
+	m_posR = pos;
 	m_posRDest = m_posR;		// 目標の注視点
 
 	// 視点の代入
@@ -989,8 +987,7 @@ void CCamera::SetCameraVResult()
 //==========================================================================
 void CCamera::SetCameraVRanking()
 {
-	// 視点の代入処理
-	m_posV = MyLib::Vector3(RANKING_POS_V.x, RANKING_POS_V.y, RANKING_POS_V.z);
+	SetCameraVResult();
 }
 
 //==========================================================================
@@ -1567,18 +1564,10 @@ void CCamera::ResetTitle()
 //==========================================================================
 void CCamera::ResetResult()
 {
-	m_posR = MyLib::Vector3(0.0f, 300.0f, 30.0f);	// 注視点(見たい場所)
-	m_posV = MyLib::Vector3(0.0f, 0.0f, 0.0f);	// 視点(カメラの位置)
-	m_posVDest = m_posV;								// 目標の視点
-	m_posRDest = m_posR;								// 目標の注視点
-
-
 	m_posR = MyLib::Vector3(76329.0f, 440.0f, 2989.0f);				// 注視点(見たい場所)
 	m_posV = MyLib::Vector3(76326.0f, 545.27, 2017.0f);	// 視点(カメラの位置)
 	m_posVDest = m_posV;									// 目標の視点
 	m_posRDest = m_posR;									// 目標の注視点
-
-
 	m_vecU = MyLib::Vector3(0.0f, 1.0f, 0.0f);				// 上方向ベクトル
 	m_move = MyLib::Vector3(0.0f, 0.0f, 0.0f);				// 移動量
 	m_rot = DEFAULT_RESULTROT;						// 向き
@@ -1605,16 +1594,13 @@ void CCamera::ResetResult()
 //==========================================================================
 void CCamera::ResetRanking()
 {
-	m_posR = MyLib::Vector3(0.0f, 0.0f, 0.0f);	// 注視点(見たい場所)
-	m_posV = MyLib::Vector3(0.0f, 0.0f, 0.0f);	// 視点(カメラの位置)
-	m_posVDest = m_posV;								// 目標の視点
-	m_posRDest = m_posR;								// 目標の注視点
+	
 	m_vecU = MyLib::Vector3(0.0f, 1.0f, 0.0f);				// 上方向ベクトル
 	m_move = MyLib::Vector3(0.0f, 0.0f, 0.0f);				// 移動量
-	m_TargetPos = MyLib::Vector3(0.0f, 0.0f, 0.0f);		// 目標の位置
-	m_fDistance = RANKING_LEN_DEST;						// 距離
-	m_fDestDistance = RANKING_LEN_DEST;					// 目標の距離
-	m_fOriginDistance = RANKING_LEN_DEST;					// 元の距離
+	m_TargetPos = RANKING_POSR_DEST;		// 目標の位置
+	m_fDistance = DEFAULT_RANKINGLEN;						// 距離
+	m_fDestDistance = DEFAULT_RANKINGLEN;					// 目標の距離
+	m_fOriginDistance = DEFAULT_RANKINGLEN;					// 元の距離
 	m_fDiffHeight = 0.0f;								// 高さの差分
 	m_fDiffHeightSave = 0.0f;							// 高さの差分保存用
 	m_fDiffHeightDest = 0.0f;							// 目標の高さの差分
@@ -1626,11 +1612,18 @@ void CCamera::ResetRanking()
 	m_fDistanceDecrementValue = 0.0f;					// 距離の減少係数
 	m_fHeightMaxDest = 0.0f;							// カメラの最大高さの目標
 
-	m_rot = RANKINGROT_NONE;							// 向き
+	m_rot = DEFAULT_RANKINGROT;							// 向き
 	m_rotVDest = m_rot;									// 目標の視点の向き
 
+	m_posR = RANKING_POSR_DEST;					// 注視点(見たい場所)
+	m_posV = MyLib::Vector3(0.0f, 0.0f, 0.0f);	// 視点(カメラの位置)
+	m_posVDest = m_posV;								// 目標の視点
+	m_posRDest = m_posR;								// 目標の注視点
+
 	// カメラワープ
-	WarpCamera(MyLib::Vector3(0.0f, 0.0f, 0.0f));
+	WarpCamera(m_posR);
+
+	m_bFollow = false;									// 追従フラグ
 }
 
 //==========================================================================

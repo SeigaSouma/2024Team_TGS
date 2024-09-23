@@ -45,4 +45,17 @@ public:
 	virtual HRESULT Init() override;
 };
 
+
+// 街フィールド(固定平面/ランキング)クラス
+class CTownField_FixedPlane_Ranking : public CTownField_FixedPlane
+{
+public:
+
+	CTownField_FixedPlane_Ranking();
+	~CTownField_FixedPlane_Ranking() {}
+
+	// オーバーライドされた関数
+	virtual HRESULT Init() override;
+};
+
 #endif

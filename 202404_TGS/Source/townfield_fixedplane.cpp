@@ -160,7 +160,7 @@ CTownField_FixedPlane_Result::CTownField_FixedPlane_Result() : CTownField_FixedP
 }
 
 //==========================================================================
-// リザルトのコンストラクタ
+// リザルトの初期化
 //==========================================================================
 HRESULT CTownField_FixedPlane_Result::Init()
 {
@@ -173,6 +173,42 @@ HRESULT CTownField_FixedPlane_Result::Init()
 		MyLib::Vector3(100000.0f, 300.0f, 33000.0f),
 		MyLib::Vector3(-30000.0f, 300.0f, -33000.0f),
 		MyLib::Vector3(100000.0f, 300.0f, -33000.0f)
+	};
+	SetVecPosition(m_vecVtxPosition);
+
+	// マップメッシュの初期化処理
+	HRESULT hr = CMapMesh::Init();
+
+	// テクスチャの割り当て
+	int texIdx = CTexture::GetInstance()->Regist(TEXTURE);
+	BindTexture(texIdx);
+
+	return hr;
+}
+
+
+//==========================================================================
+// リザルトのコンストラクタ
+//==========================================================================
+CTownField_FixedPlane_Ranking::CTownField_FixedPlane_Ranking() : CTownField_FixedPlane()
+{
+
+}
+
+//==========================================================================
+// リザルトの初期化
+//==========================================================================
+HRESULT CTownField_FixedPlane_Ranking::Init()
+{
+	// 初期化
+	CTownField_FixedPlane::Init();
+
+	m_vecVtxPosition =
+	{
+		MyLib::Vector3(-30000.0f, 300.0f, 33000.0f),
+		MyLib::Vector3(100000.0f, 300.0f, 33000.0f),
+		MyLib::Vector3(-30000.0f, 300.0f, 2200.0f),
+		MyLib::Vector3(100000.0f, 300.0f, 2200.0f)
 	};
 	SetVecPosition(m_vecVtxPosition);
 
