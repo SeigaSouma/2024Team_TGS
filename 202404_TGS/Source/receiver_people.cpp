@@ -530,6 +530,19 @@ void CReceiverPeople::StateGet()
 		// モーション設定
 		pMotion->Set(MOTION::MOTION_GET);
 
+		// 注視点を自分に
+		CCamera* pCamera = CManager::GetInstance()->GetCamera();
+		pCamera->GetCameraMotion()->SetPosition(GetPosition() + MyLib::Vector3(0.0f, 50.0f, 0.0f));
+		pCamera->GetCameraMotion()->SetEnablePause(true);
+		pCamera->SetPositionR(GetPosition());
+		pCamera->SetDistance(1200.0f);
+
+		// 向きも変える
+		MyLib::Vector3 setrot = pCamera->GetRotation();
+		setrot.z = D3DX_PI * -0.25f;
+		pCamera->SetRotation(setrot);
+
+
 		// 潰れるエフェクト
 		CEffekseerObj::Create(
 			CMyEffekseer::EFKLABEL::EFKLABEL_SMASH,
@@ -827,7 +840,19 @@ void CReceiverPeople::StateWalk()
 		m_fMoveTimer = 0.0f;
 		m_StartPos = bagpos;
 
-		// ゲットエフェクト生成
+		// 注視点を自分に
+		CCamera* pCamera = CManager::GetInstance()->GetCamera();
+		pCamera->GetCameraMotion()->SetPosition(CPlayer::GetListObj().GetData(0)->GetPosition());
+		pCamera->GetCameraMotion()->SetEnablePause(true);
+		pCamera->SetPositionR(GetPosition());
+		pCamera->SetDistance(2500.0f);
+
+		// 向きも変える
+		MyLib::Vector3 setrot = pCamera->GetRotation();
+		setrot.z = D3DX_PI * 0.05f;
+		pCamera->SetRotation(setrot);
+
+		// 瞬間移動エフェクト生成
 		CEffekseerObj::Create(
 			CMyEffekseer::EFKLABEL::EFKLABEL_TP,
 			pos, MyLib::Vector3(0.0f, D3DX_PI * 0.5f, 0.0f), 0.0f, 30.0f, true);
