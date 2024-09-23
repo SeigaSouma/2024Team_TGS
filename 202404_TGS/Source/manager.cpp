@@ -40,7 +40,7 @@ namespace
 	const float TIME_LOAD = 2.0f;	// 必須ロード時間
 
 #if _DEBUG
-	const CScene::MODE STARTMODE = CScene::MODE::MODE_RANKING;
+	const CScene::MODE STARTMODE = CScene::MODE::MODE_GAME;
 #else
 	const CScene::MODE STARTMODE = CScene::MODE::MODE_TITLE;
 #endif
@@ -831,8 +831,17 @@ void CManager::Update()
 
 		if (m_pPause != nullptr)
 		{
+			// ポーズ状況取得
+			bool bPause = m_pPause->IsPause();
+			CCameraMotion* pCamMotion = m_pCamera->GetCameraMotion();
+			if (pCamMotion != nullptr)
+			{
+				pCamMotion->SetEnablePause(bPause);
+			}
+
+
 			// ポーズの更新処理
-			if (m_pPause->IsPause())
+			if (bPause)
 			{// ポーズ中だったら
 				m_pPause->Update();
 

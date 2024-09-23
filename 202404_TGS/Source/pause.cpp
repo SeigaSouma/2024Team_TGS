@@ -24,9 +24,9 @@ namespace
 	{
 		"",
 		"data\\TEXTURE\\pause\\window.png",
-		"data\\TEXTURE\\pause\\game.png",
+		"data\\TEXTURE\\pause\\resume.png",
 		"data\\TEXTURE\\pause\\retry.png",
-		"data\\TEXTURE\\pause\\title.png",
+		"data\\TEXTURE\\pause\\end.png",
 	};
 	const float DIS_POSY = 130.0f;	// ‘I‘ðŽˆ‚ÌŠÔŠu
 }
