@@ -58,8 +58,7 @@ namespace
 		10,	// CCC
 		1,	// DDD
 	};
-	const float DEFAULT_INTERVAL_AIRSPAWN = 1.5f;	// デフォの空気生成間隔
-	//const float DEFAULT_INTERVAL_AIRSPAWN = 5.0f;	// デフォの空気生成間隔
+	const float DEFAULT_INTERVAL_AIRSPAWN = 2.3f;	// デフォの空気生成間隔
 	const float DEFAULT_INTERVAL_FLOWLEAFSPAWN = 0.8f;	// デフォの流れる葉生成間隔
 	const float DEFAULT_INTERVAL_LEAFSPAWN = 2.0f;		// デフォの降る葉生成間隔
 }

@@ -212,8 +212,10 @@ HRESULT CGame::Init()
 	//=============================
 	m_pCourseManager = CCourseManager::Create();
 
+	//=============================
+	// –Ø
+	//=============================
 	MyLib::Vector3 treepos2(-2723.0f, 1500.0f, 12128.0f);
-
 	for (int nCnt = 0; nCnt <= 19; nCnt++)
 	{
 		CTree::Create(treepos2);
@@ -221,7 +223,6 @@ HRESULT CGame::Init()
 	}
 
 	MyLib::Vector3 treepos(-2223.0f, 900.0f, 10128.0f);
-
 	for (int nCnt = 0; nCnt <= 20; nCnt++)
 	{
 		CTree::Create(treepos);

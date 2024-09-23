@@ -215,6 +215,7 @@ void CObject::UpdateAll()
 //==========================================================================
 void CObject::DrawAll()
 {
+	bool bEfkDraw = false;	// エフェクシアの描画
 	for (auto& layer : m_pObj)
 	{
 		for (auto& priority : layer.second)
@@ -229,15 +230,26 @@ void CObject::DrawAll()
 			}
 
 			if (layer.first == LAYER::LAYER_DEFAULT &&
-				priority.first == 3)
+				(priority.first == 3 || (priority.first > 3 && !bEfkDraw)))
 			{
 				// エフェクシアの更新兼描画
 				CMyEffekseer* pEffekseer = CMyEffekseer::GetInstance();
 				if (pEffekseer != nullptr)
 				{
 					pEffekseer->Update();
+					bEfkDraw = true;
 				}
 			}
+		}
+	}
+
+	if (!bEfkDraw)
+	{
+		// エフェクシアの更新兼描画
+		CMyEffekseer* pEffekseer = CMyEffekseer::GetInstance();
+		if (pEffekseer != nullptr)
+		{
+			pEffekseer->Update();
 		}
 	}
 }

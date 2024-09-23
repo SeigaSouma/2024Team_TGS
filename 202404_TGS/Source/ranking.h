@@ -17,6 +17,7 @@
 class CRankingScore;
 class CRankingItem;
 class CPeopleManager;
+class CSpawnEnvironment;
 
 //==========================================================================
 // クラス定義
@@ -69,6 +70,8 @@ private:
 	CRankingItem* m_pRanking[10];
 	SRankdata* m_pRankData;
 	CPeopleManager* m_pPeopleManager;	// 人マネージャ
+	CSpawnEnvironment* m_pSpawn_Air;	// 空気生成
+	CSpawnEnvironment* m_pSpawn_Leaf;	// 降る葉生成
 	static SRankdata m_NowData;
 };
 

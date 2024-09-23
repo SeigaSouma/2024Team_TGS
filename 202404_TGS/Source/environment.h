@@ -16,8 +16,8 @@ class CSpawnEnvironment
 {
 public:
 
-	CSpawnEnvironment() : m_fSpawnTimer(0.0f), m_fSpawnInterval(0.0f) {}
-	CSpawnEnvironment(float timer, float interval) : m_fSpawnTimer(timer), m_fSpawnInterval(interval) {}
+	CSpawnEnvironment() : m_fSpawnTimer(0.0f), m_fSpawnInterval(0.0f), m_fDefaultInterval(0.0f) {}
+	CSpawnEnvironment(float timer, float interval) : m_fSpawnTimer(timer), m_fSpawnInterval(interval), m_fDefaultInterval(interval) {}
 	virtual ~CSpawnEnvironment() {}
 
 	// 更新処理
@@ -35,6 +35,7 @@ protected:
 	//=============================
 	float m_fSpawnTimer;	// 生成タイマー
 	float m_fSpawnInterval;	// 生成間隔
+	const float m_fDefaultInterval;	// 基点の生成間隔
 
 
 };
@@ -49,6 +50,24 @@ public:
 	CSpawn_Air() : CSpawnEnvironment() {}
 	CSpawn_Air(float timer, float interval) : CSpawnEnvironment(timer, interval) {}
 	~CSpawn_Air() {}
+
+protected:
+
+	//=============================
+	// メンバ関数
+	//=============================
+	virtual void TriggerSpawn() override;	// 生成時のトリガー
+
+};
+
+// タイトル用
+class CSpawn_Air_Title : public CSpawn_Air
+{
+public:
+
+	CSpawn_Air_Title() : CSpawn_Air() {}
+	CSpawn_Air_Title(float timer, float interval) : CSpawn_Air(timer, interval) {}
+	~CSpawn_Air_Title() {}
 
 protected:
 
@@ -111,6 +130,26 @@ public:
 	CSpawn_Leaf_Title() : CSpawn_Leaf() {}
 	CSpawn_Leaf_Title(float timer, float interval) : CSpawn_Leaf(timer, interval) {}
 	~CSpawn_Leaf_Title() {}
+
+	// 更新処理
+	virtual void Update(float deltaTime) override;
+
+protected:
+
+	//=============================
+	// メンバ関数
+	//=============================
+	void TriggerSpawn() override;	// 生成時のトリガー
+
+};
+
+class CSpawn_Leaf_Ranking : public CSpawn_Leaf
+{
+public:
+
+	CSpawn_Leaf_Ranking() : CSpawn_Leaf() {}
+	CSpawn_Leaf_Ranking(float timer, float interval) : CSpawn_Leaf(timer, interval) {}
+	~CSpawn_Leaf_Ranking() {}
 
 	// 更新処理
 	virtual void Update(float deltaTime) override;

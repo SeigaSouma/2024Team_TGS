@@ -17,11 +17,13 @@
 #include "rankingItem_top3.h"
 
 // マップ用
+#include "tree.h"
 #include "waterfield.h"
 #include "course.h"
 #include "mapmesh.h"
 #include "stonewall.h"
 #include "peoplemanager.h"
+#include "environment.h"
 
 //=============================================================================
 // 定数定義
@@ -34,7 +36,9 @@ namespace
 	const int NUM_RANK = 10;	// ランキング数
 	const int NUM_ALLRANK = 4;	// 総評ランク数
 	const std::string FILE_BIN = "data\\TEXT\\ranking\\ranking.bin";	// ランキングデータ保存ファイル
+	const float DEFAULT_INTERVAL_AIRSPAWN = 1.5f;	// デフォの空気生成間隔
 }
+
 //==========================================================================
 // 静的メンバ変数宣言
 //==========================================================================
@@ -55,6 +59,9 @@ CRanking::CRanking()
 	{
 		m_pRanking[nCnt] = nullptr;
 	}
+	m_pPeopleManager = nullptr;	// 人マネージャ
+	m_pSpawn_Air = nullptr;		// 空気生成
+	m_pSpawn_Leaf = nullptr;	// 降る葉生成
 }
 
 //==========================================================================
@@ -133,6 +140,23 @@ HRESULT CRanking::Init()
 void CRanking::CreateMap()
 {
 	//=============================
+	// 木
+	//=============================
+	MyLib::Vector3 treepos2(-8723.0f, 1500.0f, 12128.0f);
+	for (int nCnt = 0; nCnt <= 19; nCnt++)
+	{
+		CTree::Create(treepos2);
+		treepos2.x += 2000.0f;
+	}
+
+	MyLib::Vector3 treepos(-8223.0f, 900.0f, 10128.0f);
+	for (int nCnt = 0; nCnt <= 20; nCnt++)
+	{
+		CTree::Create(treepos);
+		treepos.x += 2000.0f;
+	}
+
+	//=============================
 	// コース
 	//=============================
 	CCourse::Create("", CScene::MODE::MODE_TITLE);
@@ -181,6 +205,13 @@ void CRanking::CreateMap()
 	// 人マネージャ
 	//=============================
 	m_pPeopleManager = CPeopleManager::Create(CPeopleManager::Type::TYPE_TITLE);
+
+
+	// 空気の生成クラス生成
+	m_pSpawn_Air = DEBUG_NEW CSpawn_Air_Title(0.0f, DEFAULT_INTERVAL_AIRSPAWN);
+
+	// 降る葉生成クラス生成
+	m_pSpawn_Leaf = DEBUG_NEW CSpawn_Leaf_Ranking(0.0f, 0.6f);
 }
 
 //==========================================================================
@@ -196,6 +227,20 @@ void CRanking::Uninit()
 	{
 		delete[] m_pRankData;
 		m_pRankData = nullptr;
+	}
+
+	// 空気生成の削除
+	if (m_pSpawn_Air != nullptr)
+	{
+		delete m_pSpawn_Air;
+		m_pSpawn_Air = nullptr;
+	}
+
+	// 降る葉生成の削除
+	if (m_pSpawn_Leaf != nullptr)
+	{
+		delete m_pSpawn_Leaf;
+		m_pSpawn_Leaf = nullptr;
 	}
 
 	// リセット
@@ -257,6 +302,20 @@ void CRanking::Update()
 	for (int nCnt = 0; nCnt < NUM_RANK; nCnt++)
 	{
 		m_pRanking[nCnt]->Update();
+	}
+
+	float deltaTime = CManager::GetInstance()->GetDeltaTime();
+
+	// 空気生成の更新
+	if (m_pSpawn_Air != nullptr)
+	{
+		m_pSpawn_Air->Update(deltaTime);
+	}
+
+	// 降る葉生成の更新
+	if (m_pSpawn_Leaf != nullptr)
+	{
+		m_pSpawn_Leaf->Update(deltaTime);
 	}
 }
 
