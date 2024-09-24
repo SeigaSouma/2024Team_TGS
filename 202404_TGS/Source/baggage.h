@@ -140,7 +140,8 @@ private:
 
 	// その他
 	void Controll();	// 操作
-	bool Hit();
+	bool Hit();			// 障害物判定
+	void HitItem();		// アイテムとの判定
 	void DebugTransform();	// デバッグ時変形
 
 	//=============================

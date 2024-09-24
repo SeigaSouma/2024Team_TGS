@@ -15,7 +15,6 @@
 class CCheckpoint;
 class CMap_Obstacle;
 
-
 //==========================================================================
 // クラス定義
 //==========================================================================
@@ -23,7 +22,9 @@ class CMap_Obstacle;
 class CMapBlockInfo
 {
 public:
+	//=============================
 	// 構造体情報
+	//=============================
 	struct SObsacleInfo
 	{
 		MyLib::Vector3 pos;		// 座標
@@ -37,6 +38,17 @@ public:
 			pos(_pos), rot(_rot), scale(_scale), nType(_type) {}
 	};
 
+	// ジャッジ
+	struct SJudgeInfo
+	{
+		float length;	// 距離
+		float height;	// 高さ
+
+		// コンストラクタ
+		SJudgeInfo() : length(0.0f), height(0.0f) {}
+		SJudgeInfo(float _length, float _height) : length(_length), height(_height) {}
+	};
+
 	CMapBlockInfo();
 	~CMapBlockInfo();
 
@@ -47,14 +59,16 @@ public:
 	void ObstacleLoad(std::ifstream* pFile); // 障害物読み込み
 	
 	// リスト
-	void SetObstacleInfo(const std::vector<SObsacleInfo>& info) { m_ObstacleList = info; }
-	std::vector<SObsacleInfo> GetObstacleInfo() { return m_ObstacleList; }
-	void SetMapInfo(const std::vector<SObsacleInfo>& info) { m_MapList = info; }
-	std::vector<SObsacleInfo> GetMapInfo() { return m_MapList; }
-	void SetCheckpointInfo(const std::vector<float>& list) { m_CheckpointList = list; }
-	std::vector<float> GetCheckpointInfo() { return m_CheckpointList; }
+	void SetObstacleInfo(const std::vector<SObsacleInfo>& info) { m_ObstacleList = info; }	// 障害物
+	std::vector<SObsacleInfo> GetObstacleInfo() { return m_ObstacleList; }					// 障害物
+	void SetMapInfo(const std::vector<SObsacleInfo>& info) { m_MapList = info; }			// マップ情報
+	std::vector<SObsacleInfo> GetMapInfo() { return m_MapList; }							// マップ情報
+	void SetCheckpointInfo(const std::vector<float>& list) { m_CheckpointList = list; }		// チェックポイント
+	std::vector<float> GetCheckpointInfo() { return m_CheckpointList; }						// チェックポイント
 	void SetWaterStoneInfo(const std::vector<CWaterStone_Manager::SStoneInfo>& list) { m_WaterStoneList = list; }	// 水中岩
 	std::vector<CWaterStone_Manager::SStoneInfo> GetWaterStoneInfo() { return m_WaterStoneList; }					// 水中岩
+	void SetJudgeInfo(const std::vector<std::vector<SJudgeInfo>>& info) { m_JudgeList = info; }	// ジャッジ
+	std::vector<std::vector<SJudgeInfo>> GetJudgeInfo() { return m_JudgeList; }					// ジャッジ
 
 	void SetLevel(int level) { m_nLevel = level; }	// レベル設定
 	int GetLevel() { return m_nLevel; }				// レベル取得
@@ -62,9 +76,10 @@ public:
 private:
 
 	// 配置情報リスト
-	std::vector<SObsacleInfo> m_ObstacleList;	// 障害物
-	std::vector<SObsacleInfo> m_MapList;		// マップ
-	std::vector<float> m_CheckpointList;		// チェックポイント
+	std::vector<SObsacleInfo> m_ObstacleList;		// 障害物
+	std::vector<SObsacleInfo> m_MapList;			// マップ
+	std::vector<float> m_CheckpointList;			// チェックポイント
+	std::vector<std::vector<SJudgeInfo>> m_JudgeList;	// ジャッジ
 	std::vector<CWaterStone_Manager::SStoneInfo> m_WaterStoneList;	// 水中岩
 	int m_nLevel;	// 難易度
 };
@@ -102,6 +117,7 @@ public:
 	static void SaveBin_Obstacle();		// 障害物セーブ
 	static void SaveBin_Map();			// マップセーブ
 	static void SaveBin_WaterStone();	// 水中岩セーブ
+	static void SaveBin_Judge();		// ジャッジセーブ
 	static void SaveBin_Level();		// レベルセーブ
 	static void LoadBin();	// ロード
 	static void Kill();	// 開放
@@ -116,11 +132,12 @@ private:
 	//=============================
 	// メンバ関数
 	//=============================
-	static std::vector<std::vector<float>> LoadBin_CheckPoint();							// チェックポイント読み込み
-	static std::vector<std::vector<CMapBlockInfo::SObsacleInfo>> LoadBin_Obstacle();		// 障害物読み込み
-	static std::vector<std::vector<CMapBlockInfo::SObsacleInfo>> LoadBin_Map();				// マップ読み込み
-	static std::vector<std::vector<CWaterStone_Manager::SStoneInfo>> LoadBin_WaterStone();	// 水中岩読み込み
-	static std::vector<int> LoadBin_Level(size_t courseSize);								// レベル読み込み
+	static std::vector<std::vector<float>> LoadBin_CheckPoint();								// チェックポイント読み込み
+	static std::vector<std::vector<CMapBlockInfo::SObsacleInfo>> LoadBin_Obstacle();			// 障害物読み込み
+	static std::vector<std::vector<CMapBlockInfo::SObsacleInfo>> LoadBin_Map();					// マップ読み込み
+	static std::vector<std::vector<CWaterStone_Manager::SStoneInfo>> LoadBin_WaterStone();		// 水中岩読み込み
+	static std::vector<std::vector<std::vector<CMapBlockInfo::SJudgeInfo>>> LoadBin_Judge();	// ジャッジ読み込み
+	static std::vector<int> LoadBin_Level(size_t courseSize);									// レベル読み込み
 	void DataDelete();
 	void InfoDelete();
 

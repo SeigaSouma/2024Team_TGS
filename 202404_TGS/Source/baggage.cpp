@@ -18,6 +18,8 @@
 #include "guide.h"
 #include "timer.h"
 #include "object3D.h"
+#include "judgeitem.h"
+#include "judgeitemManager.h"
 
 //==========================================================================
 // 定数定義
@@ -798,10 +800,11 @@ void CBaggage::UIDraw()
 bool CBaggage::Hit()
 {
 #ifndef DEBUG
-	return false;
+	//return false;
 #endif // DEBUG
 
-	
+	// アイテムとの判定
+	HitItem();
 
 	m_nMapBlock = 0;
 	float distanceX = GetPosition().x;
@@ -887,6 +890,47 @@ bool CBaggage::Hit()
 
 	m_bHit = false;
 	return false;
+}
+
+//==========================================================================
+// アイテムとの判定
+//==========================================================================
+void CBaggage::HitItem()
+{
+	CListManager<CJudgeItemManager> list = CJudgeItemManager::GetList();
+
+	// 先頭を保存
+	std::list<CJudgeItemManager*>::iterator itr = list.GetEnd();
+	CJudgeItemManager* pObj = nullptr;
+
+	MyLib::Vector3 MyPos = GetPosition();
+	while (list.ListLoop(itr))
+	{
+		pObj = *itr;
+
+		// コリジョンチェック判定取得
+		if (!pObj->IsCheckCollision()) continue;
+
+		// ジャッジ情報取得
+		std::vector<CJudgeItem*> vecJudge = pObj->GetJudgeItem();
+		
+		MyLib::Vector3 judgePos;
+		for (const auto& judge : vecJudge)
+		{
+			if (judge == nullptr) continue;
+
+			// アイテムの位置
+			judgePos = judge->GetPosition();
+
+			if (!UtilFunc::Collision::SphereRange(MyPos, judgePos, GetAABB().vtxMax.x, judge->GetAABB().vtxMax.y).ishit)
+			{// 当たらなかった
+				continue;
+			}
+
+			// 取得
+			judge->Get();
+		}
+	}
 }
 
 //==========================================================================

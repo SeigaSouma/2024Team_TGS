@@ -185,6 +185,8 @@
     <ClCompile Include="Source\EffekseerObj.cpp" />
     <ClCompile Include="Source\goalgametext.cpp" />
     <ClCompile Include="Source\guide.cpp" />
+    <ClCompile Include="Source\judgeitem.cpp" />
+    <ClCompile Include="Source\judgeitemManager.cpp" />
     <ClCompile Include="Source\keyconfig_keyboard.cpp" />
     <ClCompile Include="Source\controlkeydisp.cpp" />
     <ClCompile Include="Source\kite.cpp" />
@@ -407,6 +409,8 @@
     <ClInclude Include="Source\EffekseerObj.h" />
     <ClInclude Include="Source\goalgametext.h" />
     <ClInclude Include="Source\guide.h" />
+    <ClInclude Include="Source\judgeitem.h" />
+    <ClInclude Include="Source\judgeitemManager.h" />
     <ClInclude Include="Source\keyconfig_keyboard.h" />
     <ClInclude Include="Source\controlkeydisp.h" />
     <ClInclude Include="Source\kite.h" />

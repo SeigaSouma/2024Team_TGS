@@ -12,6 +12,8 @@
 #include "objectX.h"
 #include "frontobj_manager.h"
 #include "edit_map.h"
+#include "judgeitem.h"
+#include "judgeitemManager.h"
 
 //==========================================================================
 // 定数定義
@@ -23,6 +25,7 @@ namespace
 	const std::string FILE_OBSTACLE = "data\\TEXT\\map\\obstacle.bin";		// 障害物のセーブファイル
 	const std::string FILE_MAP = "data\\TEXT\\map\\map.bin";				// マップのセーブファイル
 	const std::string FILE_WATERSTONE = "data\\TEXT\\map\\waterstone.bin";		// 水中岩のセーブファイル
+	const std::string FILE_JUDGE = "data\\TEXT\\map\\judge.bin";			// ジャッジのセーブファイル
 	const std::string FILE_LEVEL = "data\\TEXT\\map\\level.bin";			// レベルのセーブファイル
 	const int NUM_CHUNK = 5;	// チャンクの数
 
@@ -366,6 +369,55 @@ void CMapBlock::SaveBin_WaterStone()
 }
 
 //==========================================================================
+// ジャッジセーブ
+//==========================================================================
+void CMapBlock::SaveBin_Judge()
+{
+	// ファイルを開く
+	std::ofstream File(FILE_JUDGE, std::ios::binary);
+	if (!File.is_open()) {
+		return;
+	}
+
+	// 先頭を保存
+	std::list<CMapBlockInfo*>::iterator itr = m_InfoList.GetEnd();
+	CMapBlockInfo* pObj = nullptr;
+
+	std::vector < std::vector<std::vector<CMapBlockInfo::SJudgeInfo>>> savedata;
+
+	// データコピー
+	while (m_InfoList.ListLoop(itr))
+	{
+		savedata.push_back((*itr)->GetJudgeInfo());
+	}
+
+	// 一番外側のvectorのサイズを保存
+	size_t outer_size = savedata.size();
+	File.write(reinterpret_cast<const char*>(&outer_size), sizeof(size_t));
+
+	for (const auto& inner_vector : savedata)
+	{
+		// 中間のvectorのサイズを保存
+		size_t middle_size = inner_vector.size();
+		File.write(reinterpret_cast<const char*>(&middle_size), sizeof(size_t));
+
+		for (const auto& inner_inner_vector : inner_vector) 
+		{
+			// 内側のvectorのサイズを保存
+			size_t inner_size = inner_inner_vector.size();
+			File.write(reinterpret_cast<const char*>(&inner_size), sizeof(size_t));
+
+			// 内側のvectorのデータ（floatの配列）をバイナリで保存
+			File.write(reinterpret_cast<const char*>(inner_inner_vector.data()), inner_size * sizeof(CMapBlockInfo::SJudgeInfo));
+		}
+	}
+
+
+	// ファイルを閉じる
+	File.close();
+}
+
+//==========================================================================
 // レベルセーブ
 //==========================================================================
 void CMapBlock::SaveBin_Level()
@@ -421,6 +473,9 @@ void CMapBlock::SaveBin()
 	// 水中岩セーブ
 	SaveBin_WaterStone();
 
+	// ジャッジセーブ
+	SaveBin_Judge();
+
 	// レベルセーブ
 	SaveBin_Level();
 }
@@ -453,6 +508,15 @@ void CMapBlock::LoadBin()
 	{
 		waterstone.emplace_back();
 		waterstone.back().push_back(CWaterStone_Manager::SStoneInfo());
+	}
+
+	// ジャッジロード
+	std::vector<std::vector<std::vector<CMapBlockInfo::SJudgeInfo>>> judge = LoadBin_Judge();
+	if (judge.empty())
+	{
+		judge.emplace_back();
+		judge.back().push_back(std::vector<CMapBlockInfo::SJudgeInfo>());
+		judge.back().back().push_back(CMapBlockInfo::SJudgeInfo());
 	}
 
 	// マップロード
@@ -490,6 +554,11 @@ void CMapBlock::LoadBin()
 		if (static_cast<int>(waterstone.size()) > i)
 		{
 			pBlock->SetWaterStoneInfo(waterstone[i]);
+		}
+
+		if (static_cast<int>(judge.size()) > i)
+		{
+			pBlock->SetJudgeInfo(judge[i]);
 		}
 
 		m_InfoList.Regist(pBlock);
@@ -645,6 +714,52 @@ std::vector<std::vector<CWaterStone_Manager::SStoneInfo>> CMapBlock::LoadBin_Wat
 }
 
 //==========================================================================
+// ジャッジ読み込み
+//==========================================================================
+std::vector<std::vector<std::vector<CMapBlockInfo::SJudgeInfo>>> CMapBlock::LoadBin_Judge()
+{
+	// ファイルを開く
+	std::ifstream File(FILE_JUDGE, std::ios::binary);
+	if (!File.is_open()) {
+		// 例外処理
+		return std::vector<std::vector<std::vector<CMapBlockInfo::SJudgeInfo>>>();
+	}
+
+	// まず、外側のベクトルのサイズを読み込む
+	size_t outer_size;
+	File.read(reinterpret_cast<char*>(&outer_size), sizeof(outer_size));
+
+	std::vector<std::vector<std::vector<CMapBlockInfo::SJudgeInfo>>> loaddata(outer_size);
+
+	// 各内側のベクトルに対してデータを読み込む
+	for (auto& inner_vector : loaddata)
+	{
+		// 中間のベクトルのサイズを読み込む
+		size_t middle_size;
+		File.read(reinterpret_cast<char*>(&middle_size), sizeof(middle_size));
+
+		inner_vector.resize(middle_size);
+
+		for (auto& inner_inner_vector : inner_vector)
+		{
+			// 内側のベクトルのサイズを読み込む
+			size_t inner_size;
+			File.read(reinterpret_cast<char*>(&inner_size), sizeof(inner_size));
+
+			inner_inner_vector.resize(inner_size);
+
+			// データ読み込み
+			File.read(reinterpret_cast<char*>(inner_inner_vector.data()), inner_size * sizeof(CMapBlockInfo::SJudgeInfo));
+		}
+	}
+
+	// ファイルを閉じる
+	File.close();
+
+	return loaddata;
+}
+
+//==========================================================================
 // レベル読み込み
 //==========================================================================
 std::vector<int> CMapBlock::LoadBin_Level(size_t courseSize)
@@ -731,6 +846,15 @@ void CMapBlock::Set(const int Idx, const MyLib::Vector3& startpos, float startle
 		{
 			CCheckpoint* p = CCheckpoint::Create(it + startlength);
 			m_CheckpointList.Regist(p);
+		}
+	}
+
+	// ジャッジアイテムの配置
+	{
+		for (const auto& vecjudge : pInfo->GetJudgeInfo())
+		{
+			// ジャッジアイテムマネージャ生成
+			CJudgeItemManager::Create(vecjudge, startlength);
 		}
 	}
 

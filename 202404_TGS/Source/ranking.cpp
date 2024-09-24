@@ -118,7 +118,7 @@ HRESULT CRanking::Init()
 
 		if (i < 3)
 		{
-			//TOP3のアイテム生成（順位、時間、総評、日付、基準位置、拡大率、ランキング更新）
+			// TOP3のアイテム生成（順位、時間、総評、日付、基準位置、拡大率、ランキング更新）
 			m_pRanking[i] = CRankingItem_top3::Create(i + 1, minutes, seconds, milliseconds, allrank, nDate, MyLib::Vector3(250.0f, 250.0f + i * 140.0f, 0.0f), 0.9f, rankin);
 		}
 		else

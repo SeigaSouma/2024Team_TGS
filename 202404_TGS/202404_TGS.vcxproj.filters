@@ -165,6 +165,9 @@
     <Filter Include="lostrssmanager">
       <UniqueIdentifier>{28071454-2189-45fa-94c3-5874bdcb4372}</UniqueIdentifier>
     </Filter>
+    <Filter Include="map\judge">
+      <UniqueIdentifier>{737f2374-27ba-4d0d-8a36-99b346543f00}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\ballast.cpp">
@@ -808,6 +811,12 @@
     </ClCompile>
     <ClCompile Include="Source\lostrssmanager.cpp">
       <Filter>lostrssmanager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\judgeitem.cpp">
+      <Filter>map\judge</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\judgeitemManager.cpp">
+      <Filter>map\judge</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1461,6 +1470,12 @@
     </ClInclude>
     <ClInclude Include="Source\lostrssmanager.h">
       <Filter>lostrssmanager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\judgeitem.h">
+      <Filter>map\judge</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\judgeitemManager.h">
+      <Filter>map\judge</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

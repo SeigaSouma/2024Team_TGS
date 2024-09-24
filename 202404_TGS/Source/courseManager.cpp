@@ -393,8 +393,6 @@ void CCourseManager::Load()
 
 		if (pBlock != nullptr)
 		{
-			
-			
 			pBlock->Set(randIdx[i], vecstart[i], segmentlength[i] + f);
 		}
 	}
@@ -453,7 +451,7 @@ void CCourseManager::Load()
 	m_pStoneWall_Front->BindVtxPosition();
 
 
-#if 1
+#if 0
 	//=============================
 	// うねりの街フィールド
 	//=============================

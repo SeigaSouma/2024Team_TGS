@@ -41,6 +41,8 @@ CEdit_Course::CEdit_Course()
 	m_nCourseEditIdx = 0;		// 操作するインデックス番号
 	m_nCheckPointEditIdx = 0;	// 操作するインデックス番号
 	m_nObstacleEditIdx = 0;		// 操作するインデックス番号
+	m_nJudgeEditIdx = 0;	// 操作するインデックス番号
+	m_nJudgeObjEditIdx = 0;	// 操作するインデックス番号
 	m_nVtxEditIdx = 0;			// 操作するインデックス番号
 	m_bEdit = false;		// 操作中判定
 	m_bDrag = false;		// 掴み判定
@@ -100,6 +102,9 @@ void CEdit_Course::Update()
 
 	// チェックポイント編集
 	TransCheckPoint();
+
+	// ジャッジ編集
+	TransJudge();
 	
 	// ファイル操作
 	FileControl();
@@ -409,6 +414,123 @@ void CEdit_Course::TransCheckPoint()
 			}
 
 		}
+
+		ImGui::TreePop();
+	}
+}
+
+//==========================================================================
+// ジャッジ編集
+//==========================================================================
+void CEdit_Course::TransJudge()
+{
+	ImGui::Dummy(ImVec2(0.0f, 10.0f));
+	if (ImGui::TreeNode("Judge"))
+	{
+		CCourse* pCourse = CGame::GetInstance()->GetCourse();
+		if (pCourse == nullptr) return;
+
+		// コースマネージャ取得
+		CCourseManager* pCourceManager = CCourseManager::GetInstance();
+		if (pCourceManager == nullptr) return;
+
+		float width = 150.0f;
+
+		// チェックポイントのリスト取得
+		std::vector<std::vector<CMapBlockInfo::SJudgeInfo>> vecJudge = CMapBlock::GetInfoList().GetData(m_nCourseEditIdx)->GetJudgeInfo();
+		int judgeSize = vecJudge.size() - 1;
+
+		//=============================
+		// 総数変更
+		//=============================
+		{
+			ImGui::AlignTextToFramePadding();
+			ImGui::Text("Change Judge Num:");
+			ImGui::SameLine();
+			if (ImGui::ArrowButton("##left", ImGuiDir_Left) &&
+				static_cast<int>(vecJudge.size()) > 1)
+			{
+				m_nJudgeEditIdx = 0;
+				m_nJudgeObjEditIdx = 0;
+				vecJudge.pop_back();
+			}
+			ImGui::SameLine(0.0f);
+			if (ImGui::ArrowButton("##right", ImGuiDir_Right))
+			{
+				vecJudge.push_back(std::vector<CMapBlockInfo::SJudgeInfo>());
+				vecJudge.back().emplace_back();
+			}
+			ImGui::SameLine();
+
+			// サイズ
+			ImGui::Text("%d", judgeSize + 1);
+		}
+
+		// 例外処理
+		if (vecJudge.empty())
+		{
+			ImGui::TreePop();
+			return;
+		}
+
+		//=============================
+		// 内容物総数変更
+		//=============================
+		int objSize = vecJudge[m_nJudgeEditIdx].size() - 1;
+		{
+			ImGui::AlignTextToFramePadding();
+			ImGui::Text("Change Obj Num:");
+			ImGui::SameLine();
+			if (ImGui::ArrowButton("##lefttt", ImGuiDir_Left) &&
+				static_cast<int>(vecJudge.size()) > 1)
+			{
+				vecJudge[m_nJudgeEditIdx].pop_back();
+			}
+			ImGui::SameLine(0.0f);
+			if (ImGui::ArrowButton("##righttt", ImGuiDir_Right))
+			{
+				vecJudge[m_nJudgeEditIdx].push_back(CMapBlockInfo::SJudgeInfo());
+			}
+			ImGui::SameLine();
+
+			// サイズ
+			ImGui::Text("%d", objSize + 1);
+		}
+
+
+		// 操作する対象切り替え
+		ImGui::SetNextItemWidth(width);
+		if (ImGui::SliderInt("Judge Edit Idx", &m_nJudgeEditIdx, 0, judgeSize))
+		{
+			m_nJudgeObjEditIdx = 0;
+		}
+
+		ImGui::SetNextItemWidth(width);
+		if (ImGui::SliderInt("Obj Edit Idx", &m_nJudgeObjEditIdx, 0, objSize))
+		{
+
+		}
+
+		if (!vecJudge.empty() && !vecJudge[m_nJudgeEditIdx].empty())
+		{
+			ImGui::DragFloat("Length", &vecJudge[m_nJudgeEditIdx][m_nJudgeObjEditIdx].length, 1.0f, 0.0f, 0.0f, "%.2f");
+			ImGui::DragFloat("Height", &vecJudge[m_nJudgeEditIdx][m_nJudgeObjEditIdx].height, 5.0f, 0.0f, 0.0f, "%.2f");
+		}
+
+		for (const auto& judge : vecJudge[m_nJudgeEditIdx])
+		{
+			std::vector<MyLib::Vector3> vecpos = CGame::GetInstance()->GetCourse()->GetVecPosition();
+			MyLib::Vector3 pos = MySpline::GetSplinePosition_NonLoop(vecpos, judge.length);
+			pos.y += judge.height;
+			CEffect3D::Create(
+				pos,
+				0.0f,
+				D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f),
+				40.0f, 2, CEffect3D::MOVEEFFECT_NONE, CEffect3D::TYPE_NORMAL);
+		}
+
+		// チェックポイントのリスト設定
+		CMapBlock::GetInfoList().GetData(m_nCourseEditIdx)->SetJudgeInfo(vecJudge);
 
 		ImGui::TreePop();
 	}

@@ -47,6 +47,7 @@ private:
 	void FileControl();			// ファイル操作
 	void ChangeLevel();			// レベル変更
 	void TransCheckPoint();		// チェックポイント編集
+	void TransJudge();			// ジャッジ編集
 	void TransObstacle();		// 障害物編集
 	void ChangeEditCourse();	// 編集するコース変更
 	void SelectLine();		// ライン選択
@@ -77,6 +78,8 @@ private:
 	LineData m_lineData;	// 辺情報
 	int m_nCourseEditIdx;	// 操作するインデックス番号
 	int m_nCheckPointEditIdx;	// 操作するインデックス番号
+	int m_nJudgeEditIdx;	// 操作するインデックス番号
+	int m_nJudgeObjEditIdx;	// 操作するインデックス番号
 	int m_nObstacleEditIdx;	// 操作するインデックス番号
 	int m_nVtxEditIdx;		// 操作するインデックス番号
 	bool m_bEdit;			// 操作中判定

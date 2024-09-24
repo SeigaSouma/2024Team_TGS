@@ -329,7 +329,7 @@ void CGameManager::Update()
 		CPeopleManager::GetInstance()->SetRank(CJudge::JUDGE::JUDGE_MAX);
 	}
 
-	
+#if 1
 	// 空気生成
 	if (m_pSpawn_Air != nullptr)
 	{
@@ -347,7 +347,7 @@ void CGameManager::Update()
 	{
 		m_pSpawn_Leaf->Update(deltaTime);
 	}
-
+#endif
 	// テキストの描画
 	CManager::GetInstance()->GetDebugProc()->Print(
 		"---------------- ゲームマネージャ情報 ----------------\n"
