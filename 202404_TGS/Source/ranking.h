@@ -72,6 +72,7 @@ private:
 	CPeopleManager* m_pPeopleManager;	// 人マネージャ
 	CSpawnEnvironment* m_pSpawn_Air;	// 空気生成
 	CSpawnEnvironment* m_pSpawn_Leaf;	// 降る葉生成
+	MyLib::Vector3 m_ScrollMove;		// スクロールの移動量
 	static SRankdata m_NowData;
 };
 

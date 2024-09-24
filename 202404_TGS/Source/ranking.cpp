@@ -31,7 +31,8 @@
 namespace
 {
 	//ランキングのコンフィグ
-	const float SCROLL_SPEED = -10.0f;	// スクロール速度
+	const float SCROLL_SPEED = 35.0f;	// スクロール速度
+	const float SCROLL_STOP_POS_Y_HIGH = 250.0f;	// 停止座標
 	const float SCROLL_STOP_POS_Y = 600.0f;	// 停止座標
 	const int NUM_RANK = 10;	// ランキング数
 	const int NUM_ALLRANK = 4;	// 総評ランク数
@@ -256,46 +257,79 @@ void CRanking::Uninit()
 //==========================================================================
 void CRanking::Update()
 {
-	CManager::GetInstance()->GetDebugProc()->Print(
-		"現在のモード：【ランキング】\n"
-		"切り替え：【 F 】\n\n");
+	if (CManager::GetInstance()->GetFade()->GetState() != CFade::STATE::STATE_NONE)
+	{// フェード中は抜ける
+		return;
+	}
+
+	// デルタタイム取得
+	float deltaTime = CManager::GetInstance()->GetDeltaTime();
 
 	// キーボード情報取得
-	CInputKeyboard *pInputKeyboard = CInputKeyboard::GetInstance();
+	CInputKeyboard* pInputKeyboard = CInputKeyboard::GetInstance();
 
 	// ゲームパッド情報取得
-	CInputGamepad *pInputGamepad = CInputGamepad::GetInstance();
+	CInputGamepad* pInputGamepad = CInputGamepad::GetInstance();
 
 	// キーコンフィグ
 	CKeyConfigManager* pConfigMgr = CKeyConfigManager::GetInstance();
 	CKeyConfig* pPad = pConfigMgr->GetConfig(CKeyConfigManager::CONTROL_INPAD);
 	CKeyConfig* pKey = pConfigMgr->GetConfig(CKeyConfigManager::CONTROL_INKEY);
 
-	//スクロール停止判定
-	MyLib::Vector3 latestpos = m_pRanking[9]->GetPos();
-	if (latestpos.y <= SCROLL_STOP_POS_Y)
+	if (pKey->GetTrigger(OUTGAME::ACT_OK, 0) || 
+		pPad->GetTrigger(OUTGAME::ACT_OK, 0))
 	{
-		for (int nCnt = 0; nCnt < 10; nCnt++)
-		{
-			m_pRanking[nCnt]->SetMove(MyLib::Vector3(0.0f, 0.0f, 0.0f));
-		}
-
-		if (pKey->GetTrigger(OUTGAME::ACT_OK, 0) || pPad->GetTrigger(OUTGAME::ACT_OK, 0))
-		{
-			// モード設定
-			CManager::GetInstance()->GetFade()->SetFade(CScene::MODE_TITLE);
-		}
+		// モード設定
+		CManager::GetInstance()->GetFade()->SetFade(CScene::MODE_TITLE);
 	}
-	else
+
+	// スティックの向き取得
+	float stickrot = fabsf(pInputGamepad->GetStickRotL(0));
+
+	if (pInputKeyboard->GetPress(DIK_W) ||
+		(pInputGamepad->IsTipStick() && (stickrot >= 0.0f && stickrot < D3DX_PI * 0.5f)))
+	{// 上スクロール
+
+		// スクロールの移動量加算
+		float stickRatio = 1.0f - (stickrot / (D3DX_PI * 0.5f));
+		m_ScrollMove.y += (SCROLL_SPEED * stickRatio) * deltaTime;
+	}
+	else if (pInputKeyboard->GetPress(DIK_S) ||
+		(pInputGamepad->IsTipStick() && stickrot > D3DX_PI * 0.5f))
+	{// 下スクロール
+
+		// スクロールの移動量減算
+		float stickRatio = stickrot / D3DX_PI;
+		m_ScrollMove.y -= (SCROLL_SPEED * stickRatio) * deltaTime;
+	}
+
+	// 慣性補正
+	m_ScrollMove.y += (0.0f - m_ScrollMove.y) * 0.08f;
+
+	//=============================
+	//スクロール停止判定
+	//=============================
+	// 下の停止
+	MyLib::Vector3 latestpos = m_pRanking[9]->GetPos();
+	if (latestpos.y <= SCROLL_STOP_POS_Y && 
+		m_ScrollMove.y < 0.0f)
 	{
-		if (pKey->GetTrigger(OUTGAME::ACT_OK, 0) || pPad->GetTrigger(OUTGAME::ACT_OK, 0))
-		{
-			//スクロール開始処理
-			for (int nCnt = 0; nCnt < 10; nCnt++)
-			{
-				m_pRanking[nCnt]->SetMove(MyLib::Vector3(0.0f, SCROLL_SPEED, 0.0f));
-			}
-		}
+		m_ScrollMove.y = 0.0f;
+	}
+
+	// 上の停止
+	MyLib::Vector3 hightpos = m_pRanking[0]->GetPos();
+	if (hightpos.y >= SCROLL_STOP_POS_Y_HIGH &&
+		m_ScrollMove.y > 0.0f)
+	{
+		m_ScrollMove.y = 0.0f;
+	}
+
+
+	//スクロール処理
+	for (int nCnt = 0; nCnt < 10; nCnt++)
+	{
+		m_pRanking[nCnt]->SetMove(m_ScrollMove);
 	}
 
 	//スクロール更新処理
@@ -304,7 +338,6 @@ void CRanking::Update()
 		m_pRanking[nCnt]->Update();
 	}
 
-	float deltaTime = CManager::GetInstance()->GetDeltaTime();
 
 	// 空気生成の更新
 	if (m_pSpawn_Air != nullptr)
