@@ -437,6 +437,8 @@ void CRequestPeople::AttackAction(CMotion::AttackInfo ATKInfo, int nCntATK)
 		if (nCntATK == 0)
 		{
 			pBaggage->SetState(CBaggage::STATE::STATE_APPEARANCE);
+			// SEÄ¶
+			CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_TORIDASU);
 		}
 		else if (nCntATK == 1)
 		{

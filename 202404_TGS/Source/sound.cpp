@@ -75,6 +75,7 @@ CSound::SOUNDINFO CSound::m_aSoundInfo[LABEL_MAX] =
 	{ TYPE_SE,"data/SE/playermove_06.wav", 0 },	// プレイヤー移動06
 	{ TYPE_SE,"data/SE/playermove_07.wav", 0 },	// プレイヤー移動07
 	{ TYPE_SE,"data/SE/playermove_08.wav", 0 },	// プレイヤー移動08
+	{ TYPE_SE,"data/SE/toridasu.wav",0},
 
 };	// サウンドの情報
 CSound* CSound::m_pThisPtr = nullptr;	// 自身のポインタ
