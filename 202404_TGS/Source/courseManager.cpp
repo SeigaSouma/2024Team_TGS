@@ -384,11 +384,18 @@ void CCourseManager::Load()
 	{
 		CMapBlock* pBlock = DEBUG_NEW CMapBlock;
 
+		float f = 100.0f;
+
+		if (i != 0)
+		{
+			f = 0.0f;
+		}
+
 		if (pBlock != nullptr)
 		{
 			
 			
-			pBlock->Set(randIdx[i], vecstart[i], segmentlength[i]);
+			pBlock->Set(randIdx[i], vecstart[i], segmentlength[i] + f);
 		}
 	}
 
