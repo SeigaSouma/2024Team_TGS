@@ -32,8 +32,10 @@ namespace
 {
 	//ランキングのコンフィグ
 	const float SCROLL_SPEED = 35.0f;	// スクロール速度
+	const float SCROLL_AUTOSPEED = 8.0f;	// スクロール速度
 	const float SCROLL_STOP_POS_Y_HIGH = 250.0f;	// 停止座標
 	const float SCROLL_STOP_POS_Y = 600.0f;	// 停止座標
+	const float TIME_NONESCROLL = 2.0f;		// スクロールなしの時間
 	const int NUM_RANK = 10;	// ランキング数
 	const int NUM_ALLRANK = 4;	// 総評ランク数
 	const std::string FILE_BIN = "data\\TEXT\\ranking\\ranking.bin";	// ランキングデータ保存ファイル
@@ -63,6 +65,7 @@ CRanking::CRanking()
 	m_pPeopleManager = nullptr;	// 人マネージャ
 	m_pSpawn_Air = nullptr;		// 空気生成
 	m_pSpawn_Leaf = nullptr;	// 降る葉生成
+	m_fNoneScrollTimer = 0.0f;	// スクロールなしの時間
 }
 
 //==========================================================================
@@ -122,7 +125,7 @@ HRESULT CRanking::Init()
 		{
 			int j = i - 3;
 			//下位のアイテム生成（順位、時間、総評、基準位置、拡大率、ランキング更新）
-			m_pRanking[i] = CRankingItem::Create(i + 1, minutes, seconds, milliseconds, allrank, MyLib::Vector3(250.0f, 700.0f + j * 100.0f, 0.0f), 0.85f, rankin);
+			m_pRanking[i] = CRankingItem::Create(i + 1, minutes, seconds, milliseconds, allrank, MyLib::Vector3(250.0f, 700.0f + j * 150.0f, 0.0f), 0.85f, rankin);
 		}
 	}
 	
@@ -276,38 +279,31 @@ void CRanking::Update()
 	CKeyConfig* pPad = pConfigMgr->GetConfig(CKeyConfigManager::CONTROL_INPAD);
 	CKeyConfig* pKey = pConfigMgr->GetConfig(CKeyConfigManager::CONTROL_INKEY);
 
-	if (pKey->GetTrigger(OUTGAME::ACT_OK, 0) || 
+	//=============================
+	// 遷移
+	//=============================
+	if (pKey->GetTrigger(OUTGAME::ACT_OK, 0) ||
 		pPad->GetTrigger(OUTGAME::ACT_OK, 0))
 	{
 		// モード設定
 		CManager::GetInstance()->GetFade()->SetFade(CScene::MODE_TITLE);
 	}
 
-	// スティックの向き取得
-	float stickrot = fabsf(pInputGamepad->GetStickRotL(0));
+	// スクロールなしの時間加算
+	m_fNoneScrollTimer += deltaTime;
 
-	if (pInputKeyboard->GetPress(DIK_W) ||
-		(pInputGamepad->IsTipStick() && (stickrot >= 0.0f && stickrot < D3DX_PI * 0.5f)))
-	{// 上スクロール
+	// スクロールの操作
+	ControllScroll(deltaTime);
 
-		// スクロールの移動量加算
-		float stickRatio = 1.0f - (stickrot / (D3DX_PI * 0.5f));
-		m_ScrollMove.y += (SCROLL_SPEED * stickRatio) * deltaTime;
+	// スクロールが基底時間されなかった
+	if (m_fNoneScrollTimer >= TIME_NONESCROLL)
+	{
+		m_fNoneScrollTimer = TIME_NONESCROLL;
+		m_ScrollMove.y -= SCROLL_AUTOSPEED * deltaTime;
 	}
-	else if (pInputKeyboard->GetPress(DIK_S) ||
-		(pInputGamepad->IsTipStick() && stickrot > D3DX_PI * 0.5f))
-	{// 下スクロール
-
-		// スクロールの移動量減算
-		float stickRatio = stickrot / D3DX_PI;
-		m_ScrollMove.y -= (SCROLL_SPEED * stickRatio) * deltaTime;
-	}
-
-	// 慣性補正
-	m_ScrollMove.y += (0.0f - m_ScrollMove.y) * 0.08f;
 
 	//=============================
-	//スクロール停止判定
+	// スクロール停止判定
 	//=============================
 	// 下の停止
 	MyLib::Vector3 latestpos = m_pRanking[9]->GetPos();
@@ -326,13 +322,13 @@ void CRanking::Update()
 	}
 
 
-	//スクロール処理
+	// スクロール処理
 	for (int nCnt = 0; nCnt < 10; nCnt++)
 	{
 		m_pRanking[nCnt]->SetMove(m_ScrollMove);
 	}
 
-	//スクロール更新処理
+	// スクロール更新処理
 	for (int nCnt = 0; nCnt < NUM_RANK; nCnt++)
 	{
 		m_pRanking[nCnt]->Update();
@@ -350,6 +346,52 @@ void CRanking::Update()
 	{
 		m_pSpawn_Leaf->Update(deltaTime);
 	}
+}
+
+//==========================================================================
+// スクロールの操作
+//==========================================================================
+void CRanking::ControllScroll(float deltaTime)
+{
+	// キーボード情報取得
+	CInputKeyboard* pInputKeyboard = CInputKeyboard::GetInstance();
+
+	// ゲームパッド情報取得
+	CInputGamepad* pInputGamepad = CInputGamepad::GetInstance();
+
+	// キーコンフィグ
+	CKeyConfigManager* pConfigMgr = CKeyConfigManager::GetInstance();
+	CKeyConfig* pPad = pConfigMgr->GetConfig(CKeyConfigManager::CONTROL_INPAD);
+	CKeyConfig* pKey = pConfigMgr->GetConfig(CKeyConfigManager::CONTROL_INKEY);
+
+	// スティックの向き取得
+	float stickrot = fabsf(pInputGamepad->GetStickRotL(0));
+
+	if (pInputKeyboard->GetPress(DIK_W) ||
+		(pInputGamepad->IsTipStick() && (stickrot >= 0.0f && stickrot < D3DX_PI * 0.5f)))
+	{// 上スクロール
+
+		// スクロールの移動量加算
+		float stickRatio = 1.0f - (stickrot / (D3DX_PI * 0.5f));
+		m_ScrollMove.y += (SCROLL_SPEED * stickRatio) * deltaTime;
+
+		// スクロールなしの時間リセット
+		m_fNoneScrollTimer = 0.0f;
+	}
+	else if (pInputKeyboard->GetPress(DIK_S) ||
+		(pInputGamepad->IsTipStick() && stickrot > D3DX_PI * 0.5f))
+	{// 下スクロール
+
+		// スクロールの移動量減算
+		float stickRatio = stickrot / D3DX_PI;
+		m_ScrollMove.y -= (SCROLL_SPEED * stickRatio) * deltaTime;
+
+		// スクロールなしの時間リセット
+		m_fNoneScrollTimer = 0.0f;
+	}
+
+	// 慣性補正
+	m_ScrollMove.y += (0.0f - m_ScrollMove.y) * 0.08f;
 }
 
 //==========================================================================
