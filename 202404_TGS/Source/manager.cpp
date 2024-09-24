@@ -812,13 +812,6 @@ void CManager::Update()
 		// 入力機器の更新処理
 		m_pInput->Update();
 
-		if (pInputKeyboard->GetTrigger(DIK_F8))
-		{
-			// モード切替
-			bool bWindowed = !IsWindowed();
-			ChangeDisplayMode(bWindowed);
-		}
-
 		if ((pInputKeyboard->GetTrigger(DIK_P) || pInputGamepad->GetTrigger(CInputGamepad::BUTTON_START, 0)) &&
 			m_pFade->GetState() == CFade::STATE_NONE &&
 			(GetMode() == CScene::MODE_GAME || GetMode() == CScene::MODE::MODE_GAMETUTORIAL))
@@ -851,7 +844,7 @@ void CManager::Update()
 				}
 //#if _DEBUG
 
-							// カメラの更新処理
+				// カメラの更新処理
 				m_pCamera->Update();
 //#endif
 
@@ -935,14 +928,6 @@ void CManager::Update()
 		// デバッグ表示の更新処理
 		m_pDebugProc->Update();
 	}
-
-
-	if (pInputKeyboard->GetTrigger(DIK_0))
-	{
-		//m_pRenderer->SetFullScreen();
-	}
-
-
 }
 
 //==========================================================================
