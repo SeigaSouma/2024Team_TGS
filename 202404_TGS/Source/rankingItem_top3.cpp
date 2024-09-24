@@ -379,6 +379,25 @@ void CRankingItem_top3::Uninit()
 			m_pItem[nCntItem] = nullptr;
 		}
 	}
+
+	for (int nCntScoreDegit = 0; nCntScoreDegit <= MAX_SCORE_DEGIT; nCntScoreDegit++)
+	{
+		if (m_pScoreItem[nCntScoreDegit] != nullptr)
+		{
+			m_pScoreItem[nCntScoreDegit]->Uninit();
+			m_pScoreItem[nCntScoreDegit] = nullptr;
+		}
+	}
+
+	for (int nCntDateDegit = 0; nCntDateDegit <= MAX_SCORE_DEGIT; nCntDateDegit++)
+	{
+		if (m_pDateItem[nCntDateDegit] != nullptr)
+		{
+			m_pDateItem[nCntDateDegit]->Uninit();
+			m_pDateItem[nCntDateDegit] = nullptr;
+		}
+	}
+
 	Release();
 }
 
@@ -394,6 +413,24 @@ void CRankingItem_top3::Kill()
 		{
 			m_pItem[nCntItem]->Uninit();
 			m_pItem[nCntItem] = nullptr;
+		}
+	}
+
+	for (int nCntScoreDegit = 0; nCntScoreDegit <= MAX_SCORE_DEGIT; nCntScoreDegit++)
+	{
+		if (m_pScoreItem[nCntScoreDegit] != nullptr)
+		{
+			m_pScoreItem[nCntScoreDegit]->Uninit();
+			m_pScoreItem[nCntScoreDegit] = nullptr;
+		}
+	}
+
+	for (int nCntDateDegit = 0; nCntDateDegit <= MAX_SCORE_DEGIT; nCntDateDegit++)
+	{
+		if (m_pDateItem[nCntDateDegit] != nullptr)
+		{
+			m_pDateItem[nCntDateDegit]->Uninit();
+			m_pDateItem[nCntDateDegit] = nullptr;
 		}
 	}
 }

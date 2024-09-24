@@ -303,6 +303,16 @@ void CRankingItem::Uninit()
 			m_pItem[nCntItem] = nullptr;
 		}
 	}
+
+	for (int nCntScoreDegit = 0; nCntScoreDegit <= MAX_SCORE_DEGIT; nCntScoreDegit++)
+	{
+		if (m_pScoreItem[nCntScoreDegit] != nullptr)
+		{
+			m_pScoreItem[nCntScoreDegit]->Uninit();
+			m_pScoreItem[nCntScoreDegit] = nullptr;
+		}
+	}
+
 	Release();
 }
 
@@ -318,6 +328,15 @@ void CRankingItem::Kill()
 		{
 			m_pItem[nCntItem]->Uninit();
 			m_pItem[nCntItem] = nullptr;
+		}
+	}
+
+	for (int nCntScoreDegit = 0; nCntScoreDegit <= MAX_SCORE_DEGIT; nCntScoreDegit++)
+	{
+		if (m_pScoreItem[nCntScoreDegit] != nullptr)
+		{
+			m_pScoreItem[nCntScoreDegit]->Uninit();
+			m_pScoreItem[nCntScoreDegit] = nullptr;
 		}
 	}
 }

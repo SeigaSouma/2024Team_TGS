@@ -59,7 +59,7 @@ private:
 	//=============================
 	float m_fStateTime;
 	CObject2D* m_pItem[ITEM_MAX];	//項目数
-	CObject2D* m_pScoreItem[6];		//スコアの桁毎obj
+	CObject2D* m_pScoreItem[8];		//スコアの桁毎obj
 	CObject2D* m_pDateItem[10];		//日付データobj
 	int m_nNumRank;					//順位
 	Time m_nTime;					//タイム
