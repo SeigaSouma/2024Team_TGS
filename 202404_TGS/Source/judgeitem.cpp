@@ -144,8 +144,42 @@ void CJudgeItem::Get()
 	Kill();
 
 	// サウンド生成
+	CSound::GetInstance()->PlaySound(CSound::LABEL::LABEL_SE_COIN);
 
 	// エフェクト生成
+	for (int i = 0; i < 8; i++)
+	{
+		// 移動量
+		float randmoveZ = UtilFunc::Transformation::Random(-45, 45) * 1.0f;
+		float randmoveX = UtilFunc::Transformation::Random(-45, 45) * 1.0f;
+		float randmoveY = UtilFunc::Transformation::Random(200, 350) * 0.1f;
+		float randRadius = UtilFunc::Transformation::Random(-30, 30) * 0.1f;
+
+		MyLib::Vector3 move;
+		move.x = randmoveX;
+		move.z = randmoveZ;
+		move.y = randmoveY;
+
+		// 半径
+		float radius = 120.0f + randRadius;
+
+		// 生成位置のぶれ
+		MyLib::Vector3 pos = GetPosition();
+		pos.x += randmoveX * 2.0f;
+		pos.z += randmoveZ * 2.0f;
+		pos.y += randmoveY * 2.0f;
+
+		CEffect3D* pEffect = CEffect3D::Create(
+			pos,
+			move,
+			D3DXCOLOR(1.0f, 0.8f + UtilFunc::Transformation::Random(-100, 100) * 0.001f, 0.0f, 1.0f),
+			radius,
+			30,
+			CEffect3D::MOVEEFFECT::MOVEEFFECT_GENSUI,
+			CEffect3D::TYPE::TYPE_JUJI2);
+		pEffect->SetEnableGravity();
+		pEffect->SetGravityValue(0.8f);
+	}
 }
 
 //==========================================================================

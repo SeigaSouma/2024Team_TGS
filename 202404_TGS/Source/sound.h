@@ -90,6 +90,7 @@ public:
 		LABEL_SE_PLAYERMOVE07,	// プレイヤー移動07
 		LABEL_SE_PLAYERMOVE08,	// プレイヤー移動08
 		LABEL_SE_TORIDASU,
+		LABEL_SE_COIN,			// コイン取得
 		LABEL_MAX
 	};
 
