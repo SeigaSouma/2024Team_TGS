@@ -49,6 +49,7 @@ CCameraMotion::CCameraMotion()
 	m_bFinish = false;			// 終了判定
 	m_bEdit = false;			// エディターフラグ
 	m_bPause = false;			// ポーズ判定
+	m_bSystemPause = false;		// システムポーズ判定
 }
 
 //==========================================================================
@@ -332,7 +333,7 @@ void CCameraMotion::Update()
 
 
 	// モーションタイマー加算
-	if (!m_bPause)
+	if (!m_bPause && !m_bSystemPause)
 	{
 		m_fMotionTimer += CManager::GetInstance()->GetDeltaTime();
 		m_fTriggerTimer += CManager::GetInstance()->GetDeltaTime();
@@ -343,6 +344,7 @@ void CCameraMotion::Update()
 		m_bTrigger = false;
 		return;
 	}
+
 
 	//=============================
 	// トリガー判定

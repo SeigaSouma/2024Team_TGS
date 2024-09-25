@@ -73,6 +73,7 @@ public:
 	bool IsEdit() { return m_bEdit; }
 
 	void SetEnablePause(bool bPause) { m_bPause = bPause; }	// ポーズ判定
+	void SetEnableSystemPause(bool bPause) { m_bSystemPause = bPause; }	// システムポーズ判定
 	bool IsPause() { return m_bPause; }		// ポーズ判定
 
 	TriggerInfo GetTrigger();	// トリガー判定取得
@@ -171,6 +172,7 @@ private:
 	bool m_bFinish;			// 終了判定
 	bool m_bEdit;			// エディット使用中か
 	bool m_bPause;			// ポーズ判定
+	bool m_bSystemPause;	// システムポーズ判定
 	bool m_bTrigger;		// トリガー判定
 	EditInfo m_EditInfo;	// エディット情報
 

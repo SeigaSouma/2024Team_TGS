@@ -829,7 +829,7 @@ void CManager::Update()
 			CCameraMotion* pCamMotion = m_pCamera->GetCameraMotion();
 			if (pCamMotion != nullptr)
 			{
-				pCamMotion->SetEnablePause(bPause);
+				pCamMotion->SetEnableSystemPause(bPause);
 			}
 
 
