@@ -23,7 +23,7 @@
 namespace
 {
 	const std::string FILENAME = "data\\TEXT\\map\\chunkdata.bin";
-	const int NUM_CHUNK = 1;	// チャンクの数
+	const int NUM_CHUNK = 5;	// チャンクの数
 	const int DECIDE_LEVEL[] =	// レベル
 	{
 		0,
@@ -384,11 +384,11 @@ void CCourseManager::Load()
 	{
 		CMapBlock* pBlock = DEBUG_NEW CMapBlock;
 
-		float f = 100.0f;
+		float f = 3000.0f;
 
 		if (i != 0)
 		{
-			f = 0.0f;
+			f = 1450.0f;
 		}
 
 		if (pBlock != nullptr)
