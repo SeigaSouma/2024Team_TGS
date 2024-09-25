@@ -854,7 +854,7 @@ void CMapBlock::Set(const int Idx, const MyLib::Vector3& startpos, float startle
 		for (const auto& vecjudge : pInfo->GetJudgeInfo())
 		{
 			// ジャッジアイテムマネージャ生成
-			CJudgeItemManager::Create(vecjudge, startlength);
+			CJudgeItemManager::Create(vecjudge, startlength, Idx);
 		}
 	}
 

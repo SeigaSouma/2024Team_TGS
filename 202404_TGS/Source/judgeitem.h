@@ -37,8 +37,9 @@ public:
 	//=============================
 	// 静的関数
 	//=============================
-	static CJudgeItem* Create(CJudgeItemManager* pMgr, const float length, const float height);
+	static CJudgeItem* Create(CJudgeItemManager* pMgr, int mapBlock, const float length, const float height);
 	static CListManager<CJudgeItem> GetList() { return m_List; }	// リスト取得
+	static CListManager<CJudgeItem> GetListBlock(int mapblock) { return m_ListBlock[mapblock]; }	// リスト取得
 
 private:
 
@@ -47,8 +48,10 @@ private:
 	//=============================
 	float m_fLength;	// 距離
 	float m_fHeight;	// 高さ
+	int m_nMyBlockIdx;		// ブロックインデックス
 	CJudgeItemManager* m_pMgr;	// マネージャ
 	static CListManager<CJudgeItem> m_List;
+	static std::map<int, CListManager<CJudgeItem>> m_ListBlock;
 };
 
 

@@ -53,13 +53,14 @@ CJudgeItemManager::CJudgeItemManager() : CObject()
 	m_vecJudgeItem.clear();		// ジャッジアイテム
 	m_bCheckCollision = false;	// コリジョンチェック判定
 	m_bBindPoint = false;		// ポイント反映
+	m_nMyBlockIdx = 0;			// ブロックインデックス
 
 }
 
 //==========================================================================
 // 生成
 //==========================================================================
-CJudgeItemManager* CJudgeItemManager::Create(const std::vector<CMapBlockInfo::SJudgeInfo>& vecJudge, float startLen)
+CJudgeItemManager* CJudgeItemManager::Create(const std::vector<CMapBlockInfo::SJudgeInfo>& vecJudge, float startLen, int mapBlock)
 {
 	// インスタンス生成
 	CJudgeItemManager* pJudge = DEBUG_NEW CJudgeItemManager;
@@ -69,6 +70,7 @@ CJudgeItemManager* CJudgeItemManager::Create(const std::vector<CMapBlockInfo::SJ
 		// 引数情報設定
 		pJudge->m_vecJudgeInfo = vecJudge;
 		pJudge->m_fStartLength = startLen;	// 初期地点長さ
+		pJudge->m_nMyBlockIdx = mapBlock;	// マップブロックのインデックス
 
 		// 初期化処理
 		pJudge->Init();
@@ -95,7 +97,7 @@ HRESULT CJudgeItemManager::Init()
 	int i = 0;
 	for (const auto& vecInfo : m_vecJudgeInfo)
 	{
-		CJudgeItem* pItem = CJudgeItem::Create(this, vecInfo.length + m_fStartLength, vecInfo.height);
+		CJudgeItem* pItem = CJudgeItem::Create(this, m_nMyBlockIdx, vecInfo.length + m_fStartLength, vecInfo.height);
 		
 		// 追加
 		m_vecJudgeItem.push_back(pItem);

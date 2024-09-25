@@ -45,6 +45,9 @@
 #include "discovery.h"
 #include "splashwater_manager.h"
 #include "suffocation.h"
+#include "map_block.h"
+#include "judgeitem.h"
+#include "judgeitemManager.h"
 
 // 使用クラス
 #include "playercontrol.h"
@@ -1814,6 +1817,36 @@ void CPlayer::StateRespawn()
 
 	//空気待ち状態にする
 	CGame::GetInstance()->GetGameManager()->SetType(CGameManager::SceneType::SCENE_WAIT_AIRPUSH);
+
+
+
+	// 荷物のマップブロック取得
+	int baggageIdx = m_pBaggage->GetMapBlock();
+	
+	// 荷物と同インデックスのアイテムマネージャ取得
+	CJudgeItemManager* pMapJudgeItemMgr = CJudgeItemManager::GetList().GetData(baggageIdx);
+
+	// 配置済みのアイテム削除
+	for (const auto& judgeItem : pMapJudgeItemMgr->GetJudgeItem())
+	{
+		if (judgeItem == nullptr) continue;
+
+		judgeItem->Kill();
+	}
+
+
+	// マップブロックの情報取得
+	CMapBlockInfo* pMapBlockInfo = CMapBlock::GetInfoList().GetData(baggageIdx);
+	std::vector<std::vector<CMapBlockInfo::SJudgeInfo>> vecJudgeInfo = pMapBlockInfo->GetJudgeInfo();
+
+	for (const auto& judgeInfo : vecJudgeInfo)
+	{
+		for (const auto& judge : judgeInfo)
+		{
+			judge;
+		}
+	}
+
 }
 
 //==========================================================================

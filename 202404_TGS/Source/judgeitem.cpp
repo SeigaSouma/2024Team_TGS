@@ -32,6 +32,7 @@ namespace StateTime
 // 静的メンバ変数
 //==========================================================================
 CListManager<CJudgeItem> CJudgeItem::m_List = {};	// リスト
+std::map<int, CListManager<CJudgeItem>> CJudgeItem::m_ListBlock = {};	// ブロック単位リスト
 
 //==========================================================================
 // コンストラクタ
@@ -41,6 +42,7 @@ CJudgeItem::CJudgeItem(int nPriority) : CObjectX(nPriority)
 	// 値のクリア
 	m_pMgr = nullptr;	// マネージャ
 	m_fLength = 0.0f;
+	m_nMyBlockIdx = 0;		// ブロックインデックス
 }
 
 //==========================================================================
@@ -54,7 +56,7 @@ CJudgeItem::~CJudgeItem()
 //==========================================================================
 // 生成処理
 //==========================================================================
-CJudgeItem* CJudgeItem::Create(CJudgeItemManager* pMgr, const float length, const float height)
+CJudgeItem* CJudgeItem::Create(CJudgeItemManager* pMgr, int mapBlock, const float length, const float height)
 {
 	// メモリの確保
 	CJudgeItem* pObj = DEBUG_NEW CJudgeItem;
@@ -63,6 +65,7 @@ CJudgeItem* CJudgeItem::Create(CJudgeItemManager* pMgr, const float length, cons
 	{
 		// 引数情報
 		pObj->m_pMgr = pMgr;
+		pObj->m_nMyBlockIdx = mapBlock;
 		pObj->m_fHeight = height;
 		pObj->SetLength(length);
 
@@ -80,6 +83,7 @@ HRESULT CJudgeItem::Init()
 {
 	// リストに追加
 	m_List.Regist(this);
+	m_ListBlock[m_nMyBlockIdx].Regist(this);
 
 	// 種類の設定
 	CObject::SetType(TYPE_OBJECTX);
@@ -101,6 +105,7 @@ void CJudgeItem::Uninit()
 {
 	// リストから削除
 	m_List.Delete(this);
+	m_ListBlock[m_nMyBlockIdx].Delete(this);
 
 	// 終了処理
 	CObjectX::Uninit();
@@ -116,6 +121,7 @@ void CJudgeItem::Kill()
 
 	// リストから削除
 	m_List.Delete(this);
+	m_ListBlock[m_nMyBlockIdx].Delete(this);
 
 	// 終了処理
 	CObjectX::Uninit();
