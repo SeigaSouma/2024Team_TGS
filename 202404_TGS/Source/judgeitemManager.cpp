@@ -39,6 +39,7 @@ namespace
 // 静的メンバ変数
 //==========================================================================
 CListManager<CJudgeItemManager> CJudgeItemManager::m_List = {};	// リスト
+std::map<int, CListManager<CJudgeItemManager>> CJudgeItemManager::m_ListBlock = {};	// リスト
 
 //==========================================================================
 // コンストラクタ
@@ -86,6 +87,7 @@ HRESULT CJudgeItemManager::Init()
 {
 	// リストに追加
 	m_List.Regist(this);
+	m_ListBlock[m_nMyBlockIdx].Regist(this);
 
 	// 種類設定
 	SetType(CObject::TYPE::TYPE_OBJECT2D);
@@ -124,13 +126,54 @@ HRESULT CJudgeItemManager::Init()
 }
 
 //==========================================================================
+// リセット
+//==========================================================================
+void CJudgeItemManager::Reset()
+{
+	// アイテムのリストクリア
+	m_vecJudgeItem.clear();
+
+	// ジャッジ生成
+	int minIdx = 0, maxIdx = 0;
+	float minX = 99990.0f, maxX = -99990.0f;
+
+	int i = 0;
+	for (const auto& vecInfo : m_vecJudgeInfo)
+	{
+		CJudgeItem* pItem = CJudgeItem::Create(this, m_nMyBlockIdx, vecInfo.length + m_fStartLength, vecInfo.height);
+
+		// 追加
+		m_vecJudgeItem.push_back(pItem);
+
+		MyLib::Vector3 pos = pItem->GetPosition();
+
+		if (pos.x < minX)
+		{// 最小値更新
+			m_Top = pos;
+			minX = pos.x;
+		}
+
+		if (pos.x > maxX)
+		{// 最大値更新
+			m_Cur = pos;
+			maxX = pos.x;
+		}
+
+		// インデックス更新
+		i++;
+	}
+}
+
+//==========================================================================
 // 終了処理
 //==========================================================================
 void CJudgeItemManager::Uninit()
 {
 	// リストから削除
 	m_List.Delete(this);
+	m_ListBlock[m_nMyBlockIdx].Delete(this);
 }
+
 
 //==========================================================================
 // ジャッジアイテムの削除

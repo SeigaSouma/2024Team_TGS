@@ -32,6 +32,7 @@ public:
 	virtual void Update() override;
 	virtual void Draw() override;
 
+	void Reset();	// リセット
 	void DeleteJudgeItem(CJudgeItem* pItem);	// ジャッジアイテムの削除
 
 	std::vector<CMapBlockInfo::SJudgeInfo> GetJudgeInfo() { return m_vecJudgeInfo; }	// ジャッジ情報取得
@@ -40,6 +41,7 @@ public:
 
 	static CJudgeItemManager* Create(const std::vector<CMapBlockInfo::SJudgeInfo>& vecJudge, float startLen, int mapBlock);	// 生成
 	static CListManager<CJudgeItemManager> GetList() { return m_List; }	// リスト取得
+	static CListManager<CJudgeItemManager> GetListBlock(int mapblock) { return m_ListBlock[mapblock]; };	// リスト
 
 protected:
 

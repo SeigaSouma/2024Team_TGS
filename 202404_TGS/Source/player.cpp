@@ -964,7 +964,7 @@ void CPlayer::ReaspawnCheckPoint()
 	// チェックポイントのID取得
 	int saveID = CCheckpoint::GetSaveID();
 	MyLib::Vector3 pos;
-	float fLength = 0.0f;
+	float fLength = 3000.0f;
 
 	if (saveID > -1)	// チェックポイント通過済み
 	{
@@ -1792,6 +1792,34 @@ void CPlayer::StateRestart()
 		// タイマーリセット
 		CGame::GetInstance()->GetTimer()->SetTime(0.0f);
 
+
+
+		// 全リスト取得
+		CListManager<CJudgeItemManager> list = CJudgeItemManager::GetList();
+
+		// 先頭を保存
+		std::list<CJudgeItemManager*>::iterator itr = list.GetEnd();
+		CJudgeItemManager* pObj = nullptr;
+
+		MyLib::Vector3 MyPos = GetPosition();
+		while (list.ListLoop(itr))
+		{
+			CJudgeItemManager* pMapJudgeItemMgr = *itr;
+
+			// 配置済みのアイテム削除
+			for (const auto& judgeItem : pMapJudgeItemMgr->GetJudgeItem())
+			{
+				if (judgeItem == nullptr) continue;
+
+				judgeItem->Kill();
+			}
+
+			// 再配置
+			pMapJudgeItemMgr->Reset();
+		}
+
+
+
 		// リトライUIを消す
 		if (m_pRetryUI != nullptr)
 		{
@@ -1822,29 +1850,28 @@ void CPlayer::StateRespawn()
 
 	// 荷物のマップブロック取得
 	int baggageIdx = m_pBaggage->GetMapBlock();
-	
-	// 荷物と同インデックスのアイテムマネージャ取得
-	CJudgeItemManager* pMapJudgeItemMgr = CJudgeItemManager::GetList().GetData(baggageIdx);
 
-	// 配置済みのアイテム削除
-	for (const auto& judgeItem : pMapJudgeItemMgr->GetJudgeItem())
+	CListManager<CJudgeItemManager> list = CJudgeItemManager::GetListBlock(baggageIdx);
+
+	// 先頭を保存
+	std::list<CJudgeItemManager*>::iterator itr = list.GetEnd();
+	CJudgeItemManager* pObj = nullptr;
+
+	MyLib::Vector3 MyPos = GetPosition();
+	while (list.ListLoop(itr))
 	{
-		if (judgeItem == nullptr) continue;
+		CJudgeItemManager* pMapJudgeItemMgr = *itr;
 
-		judgeItem->Kill();
-	}
-
-
-	// マップブロックの情報取得
-	CMapBlockInfo* pMapBlockInfo = CMapBlock::GetInfoList().GetData(baggageIdx);
-	std::vector<std::vector<CMapBlockInfo::SJudgeInfo>> vecJudgeInfo = pMapBlockInfo->GetJudgeInfo();
-
-	for (const auto& judgeInfo : vecJudgeInfo)
-	{
-		for (const auto& judge : judgeInfo)
+		// 配置済みのアイテム削除
+		for (const auto& judgeItem : pMapJudgeItemMgr->GetJudgeItem())
 		{
-			judge;
+			if (judgeItem == nullptr) continue;
+
+			judgeItem->Kill();
 		}
+
+		// 再配置
+		pMapJudgeItemMgr->Reset();
 	}
 
 }
