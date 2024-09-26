@@ -224,7 +224,7 @@ void CJudgeItemManager::BindPoint()
 	MyLib::Vector3 posPlayer = pPlayer->GetPosition();
 
 	// ÅŒã‚ğ‚Ü‚¾’´‚¦‚Ä‚¢‚È‚¢
-	if (posPlayer.x < m_Cur.x + 50.0f) return;
+	if (posPlayer.x < m_Cur.x + 200.0f) return;
 
 	// æ“¾”ŒvZ
 	int getNum = 0, allNum = static_cast<int>(m_vecJudgeItem.size());

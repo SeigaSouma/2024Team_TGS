@@ -922,7 +922,7 @@ void CBaggage::HitItem()
 			// アイテムの位置
 			judgePos = judge->GetPosition();
 
-			if (!UtilFunc::Collision::SphereRange(MyPos, judgePos, GetAABB().vtxMax.x, judge->GetAABB().vtxMax.y).ishit)
+			if (!UtilFunc::Collision::SphereRange(MyPos, judgePos, GetAABB().vtxMax.x * 1.25f, judge->GetAABB().vtxMax.y * 1.25f).ishit)
 			{// 当たらなかった
 				continue;
 			}
