@@ -266,8 +266,8 @@ HRESULT CGame::Init()
 	//=============================
 	// 判定ゾーンマネージャ
 	//=============================
-	m_pJudgeZoneManager = CJudgeZoneManager::Create();
-	m_pJudgeZoneManager->Load("data\\TEXT\\judgezonelist\\judgezonelist_01.txt");
+	/*m_pJudgeZoneManager = CJudgeZoneManager::Create();
+	m_pJudgeZoneManager->Load("data\\TEXT\\judgezonelist\\judgezonelist_01.txt");*/
 
 	//=============================
 	// マップUI作成

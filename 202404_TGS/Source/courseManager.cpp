@@ -23,7 +23,7 @@
 namespace
 {
 	const std::string FILENAME = "data\\TEXT\\map\\chunkdata.bin";
-	const int NUM_CHUNK = 1;	// チャンクの数
+	const int NUM_CHUNK = 5;	// チャンクの数
 	const int DECIDE_LEVEL[] =	// レベル
 	{
 		0,
@@ -451,7 +451,7 @@ void CCourseManager::Load()
 	m_pStoneWall_Front->BindVtxPosition();
 
 
-#if 0
+#if 1
 	//=============================
 	// うねりの街フィールド
 	//=============================

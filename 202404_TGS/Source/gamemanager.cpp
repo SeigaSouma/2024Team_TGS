@@ -636,11 +636,11 @@ void CGameManager::TurnAway()
 
 	// 移動方向から角度算出
 	float moveLength = pPlayer->GetMoveLength();
-	MyLib::Vector3 posDest = MySpline::GetSplinePosition/*_NonLoop*/(CGame::GetInstance()->GetCourse()->GetVecPosition(), moveLength + 1.0f);
+	MyLib::Vector3 posDest = MySpline::GetSplinePosition/*_NonLoop*/(CGame::GetInstance()->GetCourse()->GetVecPosition(), moveLength + 20.0f);
 	
+	// 先の位置との向き算出
 	float angleXZ = pPlayer->GetPosition().AngleXZ(posDest);
 	angleXZ += (D3DX_PI * 0.5f);
-	UtilFunc::Transformation::RotNormalize(angleXZ);
 
 	// 角度設定
 	MyLib::Vector3 rot = pCamera->GetRotation();
@@ -652,18 +652,18 @@ void CGameManager::TurnAway()
 //==========================================================================
 void CGameManager::CheckJudgeZone()
 {
-	// プレイヤー取得
-	CListManager<CPlayer> playerList = CPlayer::GetListObj();
-	CPlayer* pPlayer = nullptr;
-	playerList.ListLoop(&pPlayer);
+	//// プレイヤー取得
+	//CListManager<CPlayer> playerList = CPlayer::GetListObj();
+	//CPlayer* pPlayer = nullptr;
+	//playerList.ListLoop(&pPlayer);
 
-	// コース取得
-	CCourse* pCource = CGame::GetInstance()->GetCourse();
+	//// コース取得
+	//CCourse* pCource = CGame::GetInstance()->GetCourse();
 
-	// 進行度計算して確認
-	float progress = pPlayer->GetMoveLength() / pCource->GetCourceLength();
-	CManager::GetInstance()->GetDebugProc()->Print("進行度:%f\n", progress);
-	CJudgeZoneManager::GetInstance()->Check(progress);
+	//// 進行度計算して確認
+	//float progress = pPlayer->GetMoveLength() / pCource->GetCourceLength();
+	//CManager::GetInstance()->GetDebugProc()->Print("進行度:%f\n", progress);
+	//CJudgeZoneManager::GetInstance()->Check(progress);
 }
 
 //==========================================================================
