@@ -23,10 +23,9 @@
 namespace
 {
 	const std::string FILENAME = "data\\TEXT\\map\\chunkdata.bin";
-	const int NUM_CHUNK = 5;	// チャンクの数
+	const int NUM_CHUNK = 4;	// チャンクの数
 	const int DECIDE_LEVEL[] =	// レベル
 	{
-		0,
 		0,
 		1,
 		1,
