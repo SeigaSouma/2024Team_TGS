@@ -638,9 +638,20 @@ void CGameManager::TurnAway()
 	float moveLength = pPlayer->GetMoveLength();
 	MyLib::Vector3 posDest = MySpline::GetSplinePosition/*_NonLoop*/(CGame::GetInstance()->GetCourse()->GetVecPosition(), moveLength + 20.0f);
 	
+	
 	// 先の位置との向き算出
-	float angleXZ = pPlayer->GetPosition().AngleXZ(posDest);
+	MyLib::Vector3 posPlayer = pPlayer->GetPosition();
+	float angleXZ = posPlayer.AngleXZ(posDest);
+
+	// プレイヤーの方が先行
+	if (posDest.x <= posPlayer.x)
+	{
+		angleXZ = posPlayer.AngleXZ(posPlayer + MyLib::Vector3(20.0f, 0.0f, 0.0f));
+	}
+	
+	// 90度回転
 	angleXZ += (D3DX_PI * 0.5f);
+
 
 	// 角度設定
 	MyLib::Vector3 rot = pCamera->GetRotation();

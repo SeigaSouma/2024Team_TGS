@@ -1175,7 +1175,7 @@ void CCamera::SetCamera()
 								D3DXToRadian(45.0f),	// 視野角
 								(float)m_viewport.Width / (float)m_viewport.Height,	// アスペクト比
 								10.0f,		// 手前の制限
-								100000.0f);	// 奥行きの制限
+								150000.0f);	// 奥行きの制限
 
 	// プロジェクションマトリックスの設定
 	pDevice->SetTransform(D3DTS_PROJECTION, &m_mtxProjection);
