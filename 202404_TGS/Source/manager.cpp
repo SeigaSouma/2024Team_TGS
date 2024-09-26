@@ -468,7 +468,7 @@ void CManager::Reset(CScene::MODE mode)
 	}
 
 	// BGMストップ
-	if (m_pSound != nullptr && mode != CScene::MODE_RANKING)
+	if (m_pSound != nullptr)
 	{
 		m_pSound->StopSound();
 	}
