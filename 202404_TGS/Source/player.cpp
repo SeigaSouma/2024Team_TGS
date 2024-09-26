@@ -1818,7 +1818,16 @@ void CPlayer::StateRestart()
 			pMapJudgeItemMgr->Reset();
 		}
 
+		// 通過した時のポイント設定
+		{
+			CGameManager* pMgr = CGame::GetInstance()->GetGameManager();
 
+			if (pMgr != nullptr)
+			{
+				pMgr->SetEvaluationPoint(0);
+				pMgr->SaveEvaluationPoint();
+			}
+		}
 
 		// リトライUIを消す
 		if (m_pRetryUI != nullptr)
@@ -1872,6 +1881,16 @@ void CPlayer::StateRespawn()
 
 		// 再配置
 		pMapJudgeItemMgr->Reset();
+	}
+
+	// 通過した時のポイント設定
+	{
+		CGameManager* pMgr = CGame::GetInstance()->GetGameManager();
+
+		if (pMgr != nullptr)
+		{
+			pMgr->LoadEvaluationPoint();
+		}
 	}
 
 }

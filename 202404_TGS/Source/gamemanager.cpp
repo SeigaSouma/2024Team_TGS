@@ -83,6 +83,7 @@ CGameManager::CGameManager()
 	m_nNowStage = 0;			// 現在のステージ
 	m_nNumStage = 0;			// ステージの総数
 	m_nEvaluationPoint = 0;		// 評価ポイント
+	m_nSaveEvaluationPoint = 0;
 	m_fCameraLengthOld = 0;		// 前のカメラの距離
 	m_fPosRY = 0.0f;
 	m_fSceneTimer = 0.0f;		// シーンタイマー

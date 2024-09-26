@@ -13,6 +13,7 @@
 #include "course.h"
 #include "timer.h"
 #include "splashwater_manager.h"
+#include "gamemanager.h"
 
 //==========================================================================
 // 定数定義
@@ -213,6 +214,16 @@ void CCheckpoint::Update()
 			// 通過した時間を保存
 			m_fPassedTime = CTimer::GetInstance()->GetTime();
 			m_bIsPassed = true;
+
+			// 通過した時のポイント設定
+			{
+				CGameManager* pMgr = CGame::GetInstance()->GetGameManager();
+
+				if (pMgr != nullptr)
+				{
+					pMgr->SaveEvaluationPoint();
+				}
+			}
 
 			// 状態設定
 			m_state = State::ROTATE;

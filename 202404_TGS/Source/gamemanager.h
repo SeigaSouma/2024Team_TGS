@@ -84,6 +84,10 @@ public:
 
 	// 評価関連
 	void AddEvaluationPoint(int point) { m_nEvaluationPoint += point; }	// ポイント加算
+	void SetEvaluationPoint(int point) { m_nEvaluationPoint = point; }	// ポイント設定
+	int GetEvalutionPoint() { return m_nEvaluationPoint; }	// ポイント取得
+	void LoadEvaluationPoint() { m_nEvaluationPoint = m_nSaveEvaluationPoint; }	// 保存したポイントに変更
+	void SaveEvaluationPoint() { m_nSaveEvaluationPoint = m_nEvaluationPoint; }	// ポイントを保存
 
 	void SetReceiverPeople(CReceiverPeople* pPeople) { m_pReceiverPeople = pPeople; }
 
@@ -118,6 +122,7 @@ protected:
 	int m_nNowStage;		// 現在のステージ
 	int m_nNumStage;		// ステージの総数
 	int m_nEvaluationPoint;	// 評価ポイント
+	int m_nSaveEvaluationPoint;	// 保存した評価ポイント
 	int m_nGuideTimer;		//ガイドのタイマー
 	float m_fCameraLengthOld;	// 前のカメラの距離
 	float m_fPosRY;			// プレイヤーと荷物を画面内に収めるときに使うposRのY座標
