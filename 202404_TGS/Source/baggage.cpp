@@ -799,15 +799,6 @@ void CBaggage::UIDraw()
 //==========================================================================
 bool CBaggage::Hit()
 {
-<<<<<<< HEAD
-#ifndef DEBUG
-	//return false;
-=======
-#ifdef _DEBUG
-	return false;
->>>>>>> 1f3186e26cacfcbd542a331708000196a0ca044f
-#endif // DEBUG
-
 	// ƒAƒCƒeƒ€‚Æ‚Ì”»’è
 	HitItem();
 
